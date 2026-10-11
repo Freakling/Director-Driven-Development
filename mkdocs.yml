@@ -1,5 +1,5 @@
 site_name: Director-Driven Development
-site_description: A way of working with AI coding agents. You direct, agents build, an automatic check proves every task.
+site_description: "How-to docs for Director-Driven Development: you direct, AI agents build, one automatic check proves every task. Covers Godot-Director, App-Director and SaaSAllTheThings. Built with App-Director."
 site_url: https://freakling.github.io/Director-Driven-Development/
 site_author: Vikingur Saemundsson
 repo_url: https://github.com/Freakling/Director-Driven-Development
