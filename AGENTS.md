@@ -33,6 +33,7 @@ One row per significant system: what it owns and where its boundary is.
 | Navigation | Page order and sections | `mkdocs.yml` › `nav` | Pages |
 | Theme | Colours, type, cards, tags, buttons, takeaway line | `docs/assets/stylesheets/ddd.css`, `docs/assets/fonts/`, `mkdocs.yml` › `theme` | Pages (CSS classes `ddd-card`, `tag`, `kicker`, `takeaway`) |
 | Selftest | En and em dashes, docs coverage of every framework command, strict build with link and anchor checks | `selftest.sh` | The three framework repos on GitHub (shallow clones cached in `.app-director/state/frameworks`, reused offline), MkDocs |
+| Audit | Compares framework skill files against skill pages and reports undocumented differences | `tools/audit.sh` | The three framework repos (read from `.app-director/state/frameworks/`) |
 | Delivery | Build and deploy to GitHub Pages | `.github/workflows/docs.yml`, `requirements.txt` | Selftest, GitHub Pages |
 
 ## Ownership

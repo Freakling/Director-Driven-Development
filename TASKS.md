@@ -121,7 +121,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: the director says the docs side is good enough to start the orchestrator (demo)
 - Brief: Scope › Later: orchestrator for the three frameworks
 
-### T13 · Audit: the three repos match the skill anchors · todo · M · agent
+### T13 · Audit: the three repos match the skill anchors · done · M · agent
 - Depends on: T12, T6, T7, T8, T9, T10, T11
 - Touches: tools/audit.sh (new), AGENTS.md
 - Done when: an audit compares each common skill in the three framework repos with its skill page and lists every difference that the page doesn't record as unique to that repo (check) · the audit's report names the repo, the skill and the difference (check)
