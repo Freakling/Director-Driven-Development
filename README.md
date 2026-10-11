@@ -10,6 +10,12 @@ The blog explains why: https://saemundsson.se/2026/10/07/director-driven-develop
 - [App-Director](https://github.com/Freakling/App-Director): small web, mobile and desktop apps
 - [SaaSAllTheThings](https://github.com/Freakling/SaaSAllTheThings): multi-tenant B2B SaaS on Azure
 
+## Built with App-Director
+
+This repository is built with [App-Director](https://github.com/Freakling/App-Director): every change is a task in `TASKS.md`, design decisions live in `product/`, and `bash tools/check.sh` passes before every commit. That makes it a public example of the framework in use, and a running test that it works.
+
+Later, the repository also becomes the orchestrator that keeps the three frameworks aligned, App-Director included, so the tool that builds this repo is aligned from it.
+
 ## Working on the docs
 
 The site is built with [MkDocs](https://www.mkdocs.org/) and the Material theme. Pages are Markdown in `docs/`; the navigation is in `mkdocs.yml`; the look follows the graphical profile in `docs/assets/stylesheets/ddd.css`.
@@ -23,7 +29,7 @@ bash selftest.sh      # before every push
 `selftest.sh` fails on:
 
 - en or em dashes in the sources;
-- any command or skill a framework ships that its framework page doesn't mention (it clones the three repos; set `FRAMEWORKS_DIR` to use existing clones);
+- any command or skill a framework ships that its framework page doesn't mention (it keeps clones of the three repos in `.app-director/state/frameworks`, refreshes them when online and reuses them offline; set `FRAMEWORKS_DIR` to use other clones);
 - broken internal links and anchors (`mkdocs build --strict`).
 
 GitHub Actions runs the selftest on every push and pull request, and deploys `main` to GitHub Pages.

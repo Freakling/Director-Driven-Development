@@ -93,6 +93,10 @@ Multi-tenant B2B SaaS on Azure, with an architecture the check enforces.
 
 All three are MIT licensed, run locally, and work with any AI coding assistant that reads `AGENTS.md`. They are built and tested on Claude Code.
 
+## Built with App-Director
+
+This site is built with [App-Director](frameworks/app-director.md). Every change is a task in its [`TASKS.md`](https://github.com/Freakling/Director-Driven-Development/blob/main/TASKS.md), design decisions are recorded in [`product/`](https://github.com/Freakling/Director-Driven-Development/tree/main/product), and one check passes before every commit. The repository is a public example of the framework in use, and a running test that it works.
+
 ## Read more
 
 - The idea behind it: [Director-Driven Development](https://saemundsson.se/2026/10/07/director-driven-development/) on saemundsson.se.
