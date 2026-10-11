@@ -55,7 +55,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: each of the three concepts has its own page, framework-neutral, with per-framework detail only where it explains the idea (demo) · nothing from The loop is lost or repeated across the three pages (check) · `bash tools/check.sh` passes (check)
 - Brief: Scope › Concepts
 
-### T17 · The Records in files concept page · todo · S · agent
+### T17 · The Records in files concept page · done · S · agent
 - Depends on: T15
 - Touches: docs/concept/records.md (new), mkdocs.yml
 - Done when: the page explains the records, one home per fact, and why clearing a session loses nothing, and the pages that touched it link here instead of repeating it (demo) · `bash tools/check.sh` passes (check)

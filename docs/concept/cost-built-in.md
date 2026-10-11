@@ -28,7 +28,7 @@ An independent review reads the change, the task and the rules all over again in
 
 ## Records in files, so sessions can be cleared
 
-Everything a session needs lives in plain files in the repo: the design document, the decision log, the task list, the architecture table and the commit history. Once a task is committed, clearing the session loses nothing. A task interrupted halfway gets a one-line `Note:` in the task list, and the next session picks it up from there. After a design session the conversation has no value left, because every decision is in the files, and the procedure reminds you to clear before the next topic.
+Everything a session needs lives in plain files in the repo. Once a task is committed, clearing the session loses nothing. See [Records in files](records.md). A task interrupted halfway gets a one-line `Note:` in the task list, and the next session picks it up from there. After a design session the conversation has no value left, because every decision is in the files, and the procedure reminds you to clear before the next topic.
 
 ## Task pruning
 

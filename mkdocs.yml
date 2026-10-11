@@ -59,6 +59,7 @@ nav:
       - The check: concept/check.md
       - Task and model sizing: concept/sizing.md
       - Reviews: concept/reviews.md
+      - Records in files: concept/records.md
       - Align and drift reset: concept/drift.md
       - Built-in cost savings: concept/cost-built-in.md
       - Cost tuning for developers: concept/cost-tuning.md

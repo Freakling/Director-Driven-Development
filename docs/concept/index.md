@@ -18,6 +18,7 @@ The director doesn't write the implementation. The director decides what gets bu
 | [The check](check.md) | One automated check that defines done, per framework |
 | [Task and model sizing](sizing.md) | Sizes XS to XL, the model map, escalation and the two-attempt limit |
 | [Reviews](reviews.md) | When a change gets an independent review, per framework |
+| [Records in files](records.md) | The records that hold the project between sessions, and why each fact has one home |
 | [Align and drift reset](drift.md) | The routine consistency pass, and the reset for when a principle is built two ways |
 | [Built-in cost savings](cost-built-in.md) | The cost optimisations the three frameworks build in automatically |
 | [Cost tuning for developers](cost-tuning.md) | What you can adjust yourself, on top of the framework defaults |
@@ -30,7 +31,7 @@ Agent quality drops as context grows, so the codebase is shaped to keep every ta
 - **Read only what the task needs.** Each task names the files it may touch in its `Touches` field. The builder reads those and the records the task points to, by heading or line range.
 - **One task, one commit.** Large tasks are split before they start.
 - **Rules live in testable code.** Rules sit in plain code that tests can build directly. The check fails when they leak into the UI or the wrong layer.
-- **State lives in files, not chat.** A design document, a decision log, a task queue and an architecture table hold everything. Each fact has one home, and is updated in the same change that makes it untrue. Clearing the session loses nothing.
+- **State lives in files, not chat.** The records hold everything a session needs, and each fact has one home. See [Records in files](records.md).
 
 ## What the frameworks add
 
