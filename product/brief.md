@@ -23,8 +23,8 @@ Each core concept of DDD gets its own page in a Concepts section, explained once
 
 ### Common skills
 Every skill that all three frameworks ship gets its own page, to keep each one readable: `/next-task`, `/design`, `/align`, `/drift-reset`, `/prune` and `/refresh-model-sizing`. Each page describes what the skill does and how it works in all three, then has a section that lists what is unique to each repo. Skills only one framework ships stay on that framework's page.
-- **Acceptance check:** one shared page covers `/acceptance` (App-Director, SaaSAllTheThings) and its Godot-Director counterpart `/function-check`, since they are the same concept under two names. `/playtest` and `/feedback` are listed as unique per repo. (agent's call, review later: T21)
-- **Release:** `/release` stays on the App-Director and SaaSAllTheThings pages while only two frameworks ship it, because it works differently in each. It gets a skill page once Godot-Director ships its release skill (T19). (agent's call, review later: T21)
+- **Acceptance check:** one shared page covers `/acceptance` (App-Director, SaaSAllTheThings) and its Godot-Director counterpart `/function-check`, since they are the same concept under two names. `/playtest` and `/feedback` are listed as unique per repo. (confirmed by director: T21 2026-10-11)
+- **Release:** `/release` stays on the App-Director and SaaSAllTheThings pages while only two frameworks ship it, because it works differently in each. It gets a skill page once Godot-Director ships its release skill (T19). (confirmed by director: T21 2026-10-11)
 
 ### Built with App-Director
 The site and its repository are built with App-Director: tasks in `TASKS.md`, design in `product/`, and one check before every commit. The home page and the README say so, which makes the repo a public example of the framework in use and a running test that it works.

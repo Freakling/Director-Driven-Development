@@ -109,13 +109,13 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: one page covers /acceptance in App-Director and SaaSAllTheThings and /function-check in Godot-Director, with /playtest and /feedback under unique per repo (demo) · the selftest's coverage accepts /function-check as covered by this page (check) · `bash tools/check.sh` passes (check)
 - Brief: Scope › Common skills
 
-### T21 · Review the agent's call on Q6 · todo · - · human
+### T21 · Review the agent's call on Q6 · done · - · human
 - Depends on: -
 - Touches: product/brief.md › Scope › Common skills
 - Done when: the director confirms or changes the Acceptance check and Release lines marked "agent's call, review later" (demo)
 - Brief: Scope › Common skills
 
-### T12 · Go-ahead for the orchestrator · todo · - · human
+### T12 · Go-ahead for the orchestrator · done · - · human
 - Depends on: -
 - Touches: -
 - Done when: the director says the docs side is good enough to start the orchestrator (demo)
