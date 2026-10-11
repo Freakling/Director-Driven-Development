@@ -26,6 +26,9 @@ Every skill that all three frameworks ship gets its own page, to keep each one r
 - **Acceptance check:** one shared page covers `/acceptance` (App-Director, SaaSAllTheThings) and its Godot-Director counterpart `/function-check`, since they are the same concept under two names. `/playtest` and `/feedback` are listed as unique per repo. (agent's call, review later: T21)
 - **Release:** `/release` stays on the App-Director and SaaSAllTheThings pages while only two frameworks ship it, because it works differently in each. It gets a skill page once Godot-Director ships its release skill (T19). (agent's call, review later: T21)
 
+### Built with App-Director
+The site and its repository are built with App-Director: tasks in `TASKS.md`, design in `product/`, and one check before every commit. The home page and the README say so, which makes the repo a public example of the framework in use and a running test that it works.
+
 ### Licence
 The site uses the same licence as the three frameworks: MIT, with the copyright notice "© 2026 Vikingur Saemundsson".
 
@@ -37,6 +40,7 @@ Once the director is happy with the docs side, the repository becomes the orches
 - The common skill pages become the anchors: the agreed behaviour of each shared skill, and the recorded differences per repo.
 - A task here pushes tasks to each framework repo's own `TASKS.md`, and that repo's build agents make the changes.
 - This repository acts as the auditor: it checks that the three repos stay aligned with the anchors.
+- It is recursive: App-Director builds this repository, and this repository aligns App-Director along with the other two. The site mentions this once the orchestrator exists.
 
 All orchestrator work waits for the director's go-ahead (T12).
 
