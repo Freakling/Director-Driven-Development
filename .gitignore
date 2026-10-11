@@ -1,2 +1,8 @@
 init/
 site/
+# App Director
+.app-director/state/
+*.adir-new
+.env
+*.local
+.claude/settings.local.json

@@ -1,3 +1,10 @@
 * text=auto eol=lf
 *.ttf binary
 *.png binary
+# App Director
+*.sh text eol=lf
+/.githooks/** text eol=lf
+/.app-director/** text eol=lf
+/.claude/** text eol=lf
+/tools/check.sh text eol=lf
+/tools/setup-clone.sh text eol=lf
