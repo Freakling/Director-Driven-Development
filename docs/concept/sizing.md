@@ -34,4 +34,4 @@ A failed build retries once on the next size's model. The task is then marked wi
 
 After two failed attempts at the same problem, the agent stops and reports instead of guessing further. Each new attempt carries the context of the failed ones, so the limit caps the cost and hands the problem to the director while it's still small enough to explain.
 
-<div class="takeaway"><span>Cost follows complexity, not habit.</span><span class="url" markdown="span">[Token cost optimisation](../token-cost.md)</span></div>
+<div class="takeaway"><span>Cost follows complexity, not habit.</span><span class="url" markdown="span">[Built-in cost savings](cost-built-in.md)</span></div>

@@ -17,7 +17,7 @@ Each framework names what the director owns. In Godot-Director that is design, b
 
 ## The orchestrator
 
-The orchestrator keeps the session small. It starts with `AGENTS.md` and the framework's rules, loads each procedure only when it's used, and keeps only the builder's report after each task. See [Token cost optimisation](../token-cost.md) for what that saves.
+The orchestrator keeps the session small. It starts with `AGENTS.md` and the framework's rules, loads each procedure only when it's used, and keeps only the builder's report after each task. See [Built-in cost savings](cost-built-in.md) for what that saves.
 
 ## The builder
 

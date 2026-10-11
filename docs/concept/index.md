@@ -17,6 +17,8 @@ The director doesn't write the implementation. The director decides what gets bu
 | [Task and model sizing](sizing.md) | Sizes XS to XL, the model map, escalation and the two-attempt limit |
 | [Reviews](reviews.md) | When a change gets an independent review, per framework |
 | [Align and drift reset](drift.md) | The routine consistency pass, and the reset for when a principle is built two ways |
+| [Built-in cost savings](cost-built-in.md) | The cost optimisations the three frameworks build in automatically |
+| [Cost tuning for developers](cost-tuning.md) | What you can adjust yourself, on top of the framework defaults |
 
 ## Code shaped for agents
 

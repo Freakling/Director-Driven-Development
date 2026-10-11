@@ -58,7 +58,8 @@ nav:
       - Task and model sizing: concept/sizing.md
       - Reviews: concept/reviews.md
       - Align and drift reset: concept/drift.md
-  - Token cost optimisation: token-cost.md
+      - Built-in cost savings: concept/cost-built-in.md
+      - Cost tuning for developers: concept/cost-tuning.md
   - Frameworks:
       - frameworks/index.md
       - Godot-Director: frameworks/godot-director.md

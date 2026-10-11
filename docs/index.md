@@ -100,6 +100,6 @@ This site is built with [App-Director](frameworks/app-director.md). Every change
 
 - The idea behind it: [Director-Driven Development](https://saemundsson.se/2026/10/07/director-driven-development/) on saemundsson.se.
 - A worked example: [Build a B2B SaaS on Azure with Director-Driven Development](https://saemundsson.se/2026/10/09/build-a-b2b-saas-on-azure-with-director-driven-development/).
-- Where the tokens go, and how the frameworks keep the bill down: [Token cost optimisation](token-cost.md).
+- Where the tokens go, and how the frameworks keep the bill down: [Built-in cost savings](concept/cost-built-in.md) and [Cost tuning for developers](concept/cost-tuning.md).
 
 <div class="takeaway"><span>The agent proposes. The director decides.</span><span class="url">saemundsson.se</span></div>

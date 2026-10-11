@@ -43,7 +43,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: LICENSE holds the MIT licence with "© 2026 Vikingur Saemundsson", the same text as the framework repos (check) · the README and the site footer name MIT (check)
 - Brief: Scope › Licence
 
-### T15 · Concepts section, overview and the two cost pages · todo · M · agent
+### T15 · Concepts section, overview and the two cost pages · done · M · agent
 - Depends on: -
 - Touches: mkdocs.yml, docs/concept/index.md, docs/token-cost.md, docs/concept/cost-built-in.md (new), docs/concept/cost-tuning.md (new), docs/index.md, docs/concept/sizing.md, docs/concept/reviews.md
 - Done when: the navigation has a Concepts section that opens on a short overview linking every concept page (demo) · "Built-in cost savings" and "Cost tuning for developers" replace the top-level Token cost page, and no link points to the old page (check) · `bash tools/check.sh` passes (check)
