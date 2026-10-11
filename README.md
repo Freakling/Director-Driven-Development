@@ -36,4 +36,4 @@ GitHub Actions runs the selftest on every push and pull request, and deploys `ma
 
 ## License
 
-© 2026 Vikingur Saemundsson. The bundled fonts, Archivo and IBM Plex Mono, are under the SIL Open Font License (`docs/assets/fonts/`).
+© 2026 Vikingur Saemundsson. The code and content are MIT licensed, see [LICENSE](LICENSE). The bundled fonts, Archivo and IBM Plex Mono, are under the SIL Open Font License (`docs/assets/fonts/`).

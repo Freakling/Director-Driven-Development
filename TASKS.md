@@ -37,7 +37,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: the header and the browser tab show a DDD mark in the amber accent on the dark background instead of the Material defaults (demo) · `bash tools/check.sh` passes (check)
 - Brief: Pitch
 
-### T5 · MIT licence, as in the framework repos · todo · XS · agent
+### T5 · MIT licence, as in the framework repos · done · XS · agent
 - Depends on: -
 - Touches: LICENSE (new), README.md, mkdocs.yml
 - Done when: LICENSE holds the MIT licence with "© 2026 Vikingur Saemundsson", the same text as the framework repos (check) · the README and the site footer name MIT (check)

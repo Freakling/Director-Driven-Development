@@ -5,7 +5,7 @@ site_author: Vikingur Saemundsson
 repo_url: https://github.com/Freakling/Director-Driven-Development
 repo_name: Freakling/Director-Driven-Development
 edit_uri: edit/main/docs/
-copyright: © 2026 Vikingur Saemundsson · <a href="https://saemundsson.se">saemundsson.se</a>
+copyright: © 2026 Vikingur Saemundsson · MIT licence · <a href="https://saemundsson.se">saemundsson.se</a>
 
 theme:
   name: material
