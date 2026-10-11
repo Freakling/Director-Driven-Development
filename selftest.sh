@@ -2,7 +2,8 @@
 # Docs site selftest. Run from the repository root: bash selftest.sh
 #
 #   1. No en or em dashes in the site sources.
-#   2. Docs coverage: every command a framework ships is mentioned on its framework page.
+#   2. Docs coverage: every command a framework ships is mentioned on its framework page,
+#      or on the skill page that covers it (see skill_page below).
 #   3. The site builds in strict mode, which fails on broken internal links and anchors.
 #
 # The framework repos are kept as clones under .app-director/state/frameworks (gitignored).
@@ -78,6 +79,14 @@ fi
 
 field() { sed -n "s/^$1:[[:space:]]*['\"]\{0,1\}\([^'\"]*\).*/\1/p" "$2" | head -1; }
 
+# skill_page <repo> <skill>: the skill page that covers a skill under another name, if there is one.
+# Godot-Director's /function-check is the acceptance check, so docs/skills/acceptance.md covers it.
+skill_page() {
+  case "$1:$2" in
+    Godot-Director:function-check) echo docs/skills/acceptance.md ;;
+  esac
+}
+
 for pair in $repos; do
   repo="${pair%%:*}"; page="docs/frameworks/${pair##*:}.md"
   [ -d "$src/$repo" ] || { err "$repo not found in $src"; continue; }
@@ -89,7 +98,13 @@ for pair in $repos; do
     name=$(field name "$f"); desc=$(field description "$f")
     case "$desc" in Deprecated*) continue ;; esac
     count=$((count + 1))
-    grep -qF "\`/$name" "$page" || missing="$missing /$name"
+    grep -qF "\`/$name" "$page" && continue
+    cover=$(skill_page "$repo" "$name")
+    if [ -n "$cover" ] && [ -f "$cover" ] && grep -qF "\`/$name" "$cover"; then
+      echo "ok: /$name of $repo is covered by $cover"
+      continue
+    fi
+    missing="$missing /$name"
   done
   # Installer and standalone skills.
   for f in "$src/$repo"/skills/*/SKILL.md; do

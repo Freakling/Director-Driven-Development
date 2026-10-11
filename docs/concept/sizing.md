@@ -24,7 +24,7 @@ With model sizing on, each size maps to its own build model in `AGENTS.md` under
 | M | Sonnet |
 | L, XL | Opus, with Fable as an alternative for XL |
 
-A size without an entry uses the session's model. Onboarding writes the map, and `/refresh-model-sizing` updates it. It first checks that the assistant can start subagents and choose a model for each one; if it can't, it says so, and every build runs on the session model. For other assistants the same tiers apply: a fast, low-cost model for XS and S, a balanced one for M, and the most capable for L and XL.
+A size without an entry uses the session's model. Onboarding writes the map, and [`/refresh-model-sizing`](../skills/refresh-model-sizing.md) updates it. The skill first checks that the assistant can start subagents and choose a model for each one; if it can't, every build runs on the session model. For other assistants the same tiers apply: a fast, low-cost model for XS and S, a balanced one for M, and the most capable for L and XL.
 
 ## Escalation
 

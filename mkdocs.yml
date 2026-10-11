@@ -68,6 +68,12 @@ nav:
   - Skills:
       - skills/index.md
       - /next-task: skills/next-task.md
+      - /design: skills/design.md
+      - /align: skills/align.md
+      - /drift-reset: skills/drift-reset.md
+      - /prune: skills/prune.md
+      - /refresh-model-sizing: skills/refresh-model-sizing.md
+      - Acceptance check: skills/acceptance.md
   - Frameworks:
       - frameworks/index.md
       - Godot-Director: frameworks/godot-director.md

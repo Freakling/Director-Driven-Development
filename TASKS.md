@@ -73,37 +73,37 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: a Skills section lists the six common skills, and the /next-task page describes the skill in all three frameworks with a "Unique per repo" section for each (demo) · the selftest fails when a skill all three frameworks ship has no page under docs/skills/ (check) · the acceptance template has a "Look up a skill" section (check)
 - Brief: Scope › Common skills, Core Flows › Look up a skill
 
-### T7 · The /design skill page · todo · S · agent
+### T7 · The /design skill page · done · S · agent
 - Depends on: T6
 - Touches: docs/skills/design.md (new), mkdocs.yml
 - Done when: the page describes /design in all three frameworks, with what is unique per repo (demo) · `bash tools/check.sh` passes (check)
 - Brief: Scope › Common skills
 
-### T8 · The /align skill page · todo · S · agent
+### T8 · The /align skill page · done · S · agent
 - Depends on: T6
 - Touches: docs/skills/align.md (new), mkdocs.yml, docs/concept/drift.md
 - Done when: the page describes /align in all three frameworks, with what is unique per repo, and the concept page links to it instead of repeating it (demo) · `bash tools/check.sh` passes (check)
 - Brief: Scope › Common skills
 
-### T9 · The /drift-reset skill page · todo · S · agent
+### T9 · The /drift-reset skill page · done · S · agent
 - Depends on: T6
 - Touches: docs/skills/drift-reset.md (new), mkdocs.yml, docs/concept/drift.md
 - Done when: the page describes /drift-reset and its postmortem in all three frameworks, with what is unique per repo, and the concept page links to it instead of repeating it (demo) · `bash tools/check.sh` passes (check)
 - Brief: Scope › Common skills
 
-### T10 · The /prune skill page · todo · S · agent
+### T10 · The /prune skill page · done · S · agent
 - Depends on: T6
 - Touches: docs/skills/prune.md (new), mkdocs.yml
 - Done when: the page describes /prune in all three frameworks, with what is unique per repo (demo) · `bash tools/check.sh` passes (check)
 - Brief: Scope › Common skills
 
-### T11 · The /refresh-model-sizing skill page · todo · S · agent
+### T11 · The /refresh-model-sizing skill page · done · S · agent
 - Depends on: T6
 - Touches: docs/skills/refresh-model-sizing.md (new), mkdocs.yml, docs/concept/sizing.md
 - Done when: the page describes /refresh-model-sizing in all three frameworks, with what is unique per repo, and the sizing concept page links to it (demo) · `bash tools/check.sh` passes (check)
 - Brief: Scope › Common skills
 
-### T20 · The Acceptance check skill page · todo · S · agent
+### T20 · The Acceptance check skill page · done · S · agent
 - Depends on: T6
 - Touches: docs/skills/acceptance.md (new), mkdocs.yml, selftest.sh
 - Done when: one page covers /acceptance in App-Director and SaaSAllTheThings and /function-check in Godot-Director, with /playtest and /feedback under unique per repo (demo) · the selftest's coverage accepts /function-check as covered by this page (check) · `bash tools/check.sh` passes (check)

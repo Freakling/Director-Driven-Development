@@ -11,13 +11,12 @@ Every framework ships a core set of skills that work the same way across all thr
 | Skill | What it does |
 |---|---|
 | [/next-task](next-task.md) | Pick the next ready item, build it, prove it and commit |
-| /design | Run a design session, record the decisions and open questions |
-| /align | Check whether the codebase matches the design, and flag what doesn't |
-| /drift-reset | Reset a principle that has been built two different ways back to one |
-| /prune | Remove dead code, stale items and obsolete records |
-| /refresh-model-sizing | Update the per-size model map in AGENTS.md from the current best options |
-
-Pages for `/design`, `/align`, `/drift-reset`, `/prune` and `/refresh-model-sizing` are being added as the site grows.
+| [/design](design.md) | Run a design session, record the decisions and open questions |
+| [/align](align.md) | Check whether the codebase matches the design, and flag what doesn't |
+| [/drift-reset](drift-reset.md) | Reset a principle that has been built two different ways back to one |
+| [/prune](prune.md) | Remove dead code, stale items and obsolete records |
+| [/refresh-model-sizing](refresh-model-sizing.md) | Update the per-size model map in AGENTS.md from the current best options |
+| [Acceptance check](acceptance.md) | Prove every (demo) outcome and pass the check before a release |
 
 ## How skills work
 
