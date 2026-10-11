@@ -13,7 +13,9 @@ The director doesn't write the implementation. The director decides what gets bu
 | Page | What it covers |
 |---|---|
 | [Roles](roles.md) | Director, orchestrator, builder and reviewer, and who may do what |
-| [The loop](loop.md) | Decide, build, prove, commit |
+| [Design calls](design-calls.md) | How the director decides: options, records, open questions and placeholders |
+| [Agent development flow](agent-flow.md) | Build, commit and the human rounds that feed back into design |
+| [The check](check.md) | One automated check that defines done, per framework |
 | [Task and model sizing](sizing.md) | Sizes XS to XL, the model map, escalation and the two-attempt limit |
 | [Reviews](reviews.md) | When a change gets an independent review, per framework |
 | [Align and drift reset](drift.md) | The routine consistency pass, and the reset for when a principle is built two ways |

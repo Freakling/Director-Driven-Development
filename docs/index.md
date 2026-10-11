@@ -69,7 +69,7 @@ One task, one commit.
 </div>
 </div>
 
-More in [The loop](concept/loop.md).
+More in [Agent development flow](concept/agent-flow.md).
 
 ## Three frameworks, one model
 

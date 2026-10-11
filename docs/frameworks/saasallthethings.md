@@ -100,6 +100,6 @@ Onboarding works out whether this is a new app, an existing app or an upgrade, s
 ## Read more
 
 - [Build a B2B SaaS on Azure with Director-Driven Development](https://saemundsson.se/2026/10/09/build-a-b2b-saas-on-azure-with-director-driven-development/), the step-by-step guide
-- [The concept](../concept/index.md) and [the loop](../concept/loop.md)
+- [The concept](../concept/index.md) and [agent development flow](../concept/agent-flow.md)
 
 <div class="takeaway"><span>You own the product. The framework owns the architecture.</span><span class="url"><a href="https://github.com/Freakling/SaaSAllTheThings">Freakling/SaaSAllTheThings</a></span></div>

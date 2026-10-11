@@ -63,7 +63,7 @@ Onboarding works out whether this is a new app, an existing app or an upgrade, s
 
 ## Read more
 
-- [The concept](../concept/index.md) and [the loop](../concept/loop.md)
+- [The concept](../concept/index.md) and [agent development flow](../concept/agent-flow.md)
 - [Director-Driven Development](https://saemundsson.se/2026/10/07/director-driven-development/) on saemundsson.se
 
 <div class="takeaway"><span>Logic lives in the logic layer, not the UI.</span><span class="url"><a href="https://github.com/Freakling/App-Director">Freakling/App-Director</a></span></div>

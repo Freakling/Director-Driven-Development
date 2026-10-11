@@ -54,7 +54,9 @@ nav:
   - Concept:
       - concept/index.md
       - Roles: concept/roles.md
-      - The loop: concept/loop.md
+      - Design calls: concept/design-calls.md
+      - Agent development flow: concept/agent-flow.md
+      - The check: concept/check.md
       - Task and model sizing: concept/sizing.md
       - Reviews: concept/reviews.md
       - Align and drift reset: concept/drift.md

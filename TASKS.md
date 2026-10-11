@@ -49,7 +49,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: the navigation has a Concepts section that opens on a short overview linking every concept page (demo) · "Built-in cost savings" and "Cost tuning for developers" replace the top-level Token cost page, and no link points to the old page (check) · `bash tools/check.sh` passes (check)
 - Brief: Scope › Concepts
 
-### T16 · Split The loop into Design calls, Agent development flow and The check · todo · M · agent
+### T16 · Split The loop into Design calls, Agent development flow and The check · done · M · agent
 - Depends on: T15
 - Touches: docs/concept/loop.md, docs/concept/design-calls.md (new), docs/concept/agent-flow.md (new), docs/concept/check.md (new), mkdocs.yml, docs/index.md
 - Done when: each of the three concepts has its own page, framework-neutral, with per-framework detail only where it explains the idea (demo) · nothing from The loop is lost or repeated across the three pages (check) · `bash tools/check.sh` passes (check)
