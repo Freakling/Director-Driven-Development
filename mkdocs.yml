@@ -1,0 +1,64 @@
+site_name: Director-Driven Development
+site_description: A way of working with AI coding agents. You direct, agents build, an automatic check proves every task.
+site_url: https://freakling.github.io/Director-Driven-Development/
+site_author: Vikingur Saemundsson
+repo_url: https://github.com/Freakling/Director-Driven-Development
+repo_name: Freakling/Director-Driven-Development
+edit_uri: edit/main/docs/
+copyright: © 2026 Vikingur Saemundsson · <a href="https://saemundsson.se">saemundsson.se</a>
+
+theme:
+  name: material
+  font: false
+  palette:
+    scheme: slate
+  features:
+    - navigation.sections
+    - navigation.top
+    - navigation.footer
+    - navigation.indexes
+    - content.code.copy
+    - search.highlight
+  icon:
+    repo: fontawesome/brands/github
+
+extra_css:
+  - assets/stylesheets/ddd.css
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - md_in_html
+  - tables
+  - toc:
+      permalink: true
+  - pymdownx.superfences
+  - pymdownx.details
+  - pymdownx.tabbed:
+      alternate_style: true
+
+validation:
+  nav:
+    omitted_files: warn
+    not_found: warn
+  links:
+    not_found: warn
+    anchors: warn
+    absolute_links: warn
+    unrecognized_links: warn
+
+nav:
+  - Home: index.md
+  - Concept:
+      - concept/index.md
+      - Roles: concept/roles.md
+      - The loop: concept/loop.md
+      - Task and model sizing: concept/sizing.md
+      - Reviews: concept/reviews.md
+      - Align and drift reset: concept/drift.md
+  - Token cost optimisation: token-cost.md
+  - Frameworks:
+      - frameworks/index.md
+      - Godot-Director: frameworks/godot-director.md
+      - App-Director: frameworks/app-director.md
+      - SaaSAllTheThings: frameworks/saasallthethings.md
