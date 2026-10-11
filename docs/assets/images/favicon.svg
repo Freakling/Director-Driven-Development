@@ -1,5 +1,11 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-  <title>DDD</title>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="Director-Driven Development">
+  <title>Director-Driven Development</title>
   <rect width="32" height="32" rx="6" fill="#10151F"/>
-  <path d="M9 8 H14 A7 8 0 0 1 14 24 H9 Z" fill="none" stroke="#F2A541" stroke-width="3.5" stroke-linejoin="round"/>
+  <g transform="translate(3 3) scale(0.8125)">
+    <g fill="none" stroke="#F2A541" stroke-width="3" stroke-linejoin="round" stroke-linecap="round">
+      <path d="M6 4 H12 A12 12 0 0 1 12 28 H6 Z"/>
+      <path d="M6 9 H10 A7 7 0 0 1 10 23 H6"/>
+    </g>
+    <path d="M6 13 H8 A3 3 0 0 1 8 19 H6 Z" fill="#F2A541"/>
+  </g>
 </svg>

@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T22 · B1
+**Next IDs:** T23 · B1
 
 ## Milestones
 | Milestone | Status |
@@ -126,6 +126,12 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Touches: tools/audit.sh (new), AGENTS.md
 - Done when: an audit compares each common skill in the three framework repos with its skill page and lists every difference that the page doesn't record as unique to that repo (check) · the audit's report names the repo, the skill and the difference (check)
 - Brief: Scope › Later: orchestrator for the three frameworks
+
+### T22 · The Signal mark as logo and favicon · done · XS · agent
+- Depends on: -
+- Touches: docs/assets/images/logo.svg, docs/assets/images/favicon.svg
+- Done when: the header and the browser tab show the Signal mark in the amber accent instead of the three D's (demo) · `bash tools/check.sh` passes (check)
+- Brief: Scope › Identity
 
 ### T14 · Push alignment tasks to the framework repos · todo · M · agent
 - Depends on: T12, T13
