@@ -19,6 +19,8 @@ theme:
     - navigation.indexes
     - content.code.copy
     - search.highlight
+  logo: assets/images/logo.svg
+  favicon: assets/images/favicon.svg
   icon:
     repo: fontawesome/brands/github
 

@@ -31,7 +31,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: the selftest reuses framework clones kept under `.app-director/state/` and refreshes them when online (check) · `bash tools/check.sh` passes with the network off after one online run (check)
 - Brief: -
 
-### T4 · Logo and favicon in the graphical profile · todo · S · agent
+### T4 · Logo and favicon in the graphical profile · done · S · agent
 - Depends on: -
 - Touches: docs/assets/images/logo.svg (new), docs/assets/images/favicon.svg (new), mkdocs.yml
 - Done when: the header and the browser tab show a DDD mark in the amber accent on the dark background instead of the Material defaults (demo) · `bash tools/check.sh` passes (check)
