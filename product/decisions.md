@@ -30,3 +30,4 @@ Examples:
 2026-10-11 · Q6: one Acceptance check skill page covering /acceptance and /function-check; /release stays on the framework pages until all three ship it · agent's call at the director's request, to review later (T21)
 2026-10-11 · the home page and README say the repo is built with App-Director: a public example of the framework and a self-check that it works · director's direction
 2026-10-11 · the orchestrator is recursive: it aligns App-Director, which builds this repo, along with the other two; the site mentions it once it exists · director's direction; never overclaim
+2026-10-11 · the mark is the Signal: a filled D inside two outlined D's sharing a spine, replacing the three D's in a row · director's choice from four sketches; one clear shape at favicon size

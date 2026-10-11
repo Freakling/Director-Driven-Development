@@ -29,6 +29,9 @@ Every skill that all three frameworks ship gets its own page, to keep each one r
 ### Built with App-Director
 The site and its repository are built with App-Director: tasks in `TASKS.md`, design in `product/`, and one check before every commit. The home page and the README say so, which makes the repo a public example of the framework in use and a running test that it works.
 
+### Identity
+The mark is the Signal: one small filled D nested inside two outlined D's that share a spine, in the amber accent on the dark background. It stands for the director's call going out to the agents. The header logo and the favicon use the same mark.
+
 ### Licence
 The site uses the same licence as the three frameworks: MIT, with the copyright notice "© 2026 Vikingur Saemundsson".
 
