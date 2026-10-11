@@ -65,6 +65,9 @@ nav:
       - Align and drift reset: concept/drift.md
       - Built-in cost savings: concept/cost-built-in.md
       - Cost tuning for developers: concept/cost-tuning.md
+  - Skills:
+      - skills/index.md
+      - /next-task: skills/next-task.md
   - Frameworks:
       - frameworks/index.md
       - Godot-Director: frameworks/godot-director.md

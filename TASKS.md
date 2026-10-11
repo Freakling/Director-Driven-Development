@@ -67,7 +67,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: both concepts move from the overview to their own pages (demo) · `bash tools/check.sh` passes (check)
 - Brief: Scope › Concepts
 
-### T6 · Skills section, and the /next-task page · todo · M · agent
+### T6 · Skills section, and the /next-task page · done · M · agent
 - Depends on: T15, T16, T17, T18
 - Touches: docs/skills/index.md (new), docs/skills/next-task.md (new), mkdocs.yml, selftest.sh, validation/TEMPLATE.md, docs/frameworks/index.md
 - Done when: a Skills section lists the six common skills, and the /next-task page describes the skill in all three frameworks with a "Unique per repo" section for each (demo) · the selftest fails when a skill all three frameworks ship has no page under docs/skills/ (check) · the acceptance template has a "Look up a skill" section (check)

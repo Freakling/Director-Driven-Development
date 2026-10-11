@@ -101,7 +101,24 @@ for pair in $repos; do
   else echo "ok: $page covers all $count commands and skills of $repo"; fi
 done
 
-# 3. Build and links ------------------------------------------------------------------------
+# 3. Skills coverage ------------------------------------------------------------------------
+# Every skill page listed in the nav under Skills must exist on disk.
+# This catches gaps as more skill pages are added: list a skill in mkdocs.yml without
+# creating the file, and the build would warn; this check makes it a hard failure.
+skills_nav=$(sed -n '/^  - Skills:/,/^  - [A-Z]/p' mkdocs.yml | grep '\.md' | sed "s|.*skills/||;s|\.md.*||")
+skills_fail=0
+for skill in $skills_nav; do
+  f="docs/skills/$skill.md"
+  if [ -f "$f" ]; then
+    echo "ok: $f exists"
+  else
+    err "$f is listed in the Skills nav but does not exist on disk"
+    skills_fail=1
+  fi
+done
+[ "$skills_fail" -eq 0 ] && [ -n "$skills_nav" ] && echo "ok: all Skills nav entries have pages on disk"
+
+# 4. Build and links ------------------------------------------------------------------------
 mkdocs=""
 if command -v mkdocs >/dev/null 2>&1; then mkdocs="mkdocs"
 else

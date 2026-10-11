@@ -7,7 +7,7 @@
 - **Tester:**
 - **Build:** <!-- git rev-parse --short HEAD -->
 - **Environment** (local / staging / prod):
-- **Flows checked:** [ ] Grasp DDD in one screen · [ ] Learn the concept · [ ] Pick and install a framework · [ ] Cut token cost · [ ] Follow a link from the blog
+- **Flows checked:** [ ] Grasp DDD in one screen · [ ] Learn the concept · [ ] Pick and install a framework · [ ] Cut token cost · [ ] Look up a skill · [ ] Follow a link from the blog
 
 This is about whether each built behaviour works in the running app, not whether features exist. Tick one box per item. Write what went wrong in Notes; leave both empty if you didn't check it.
 
@@ -46,6 +46,16 @@ This is about whether each built behaviour works in the running app, not whether
 ## Cut token cost
 
 - **The token cost page's tuning steps work as described in Claude Code** *How: try /clear, /usage and /context in a session*
+  - [ ] Works   - [ ] Broken / missing
+  - Notes:
+
+## Look up a skill
+
+- **The /next-task page describes the skill in all three frameworks** *How: open Skills › /next-task and read each "Unique per repo" subsection*
+  - [ ] Works   - [ ] Broken / missing
+  - Notes:
+
+- **Each "Unique per repo" subsection names what differs in that framework and links to its procedure** *How: click the procedure links in all three subsections and confirm they open the right file*
   - [ ] Works   - [ ] Broken / missing
   - Notes:
 
