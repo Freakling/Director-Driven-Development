@@ -5,8 +5,14 @@
 #   2. Docs coverage: every command a framework ships is mentioned on its framework page.
 #   3. The site builds in strict mode, which fails on broken internal links and anchors.
 #
-# FRAMEWORKS_DIR=<folder> uses existing clones of the three framework repos instead of
-# cloning them (each as <folder>/<repo name>).
+# The framework repos are kept as clones under .app-director/state/frameworks (gitignored).
+# Online, each run refreshes them from GitHub. Offline, the cached copy is used with a notice;
+# with no cache and no network, the run fails. CI has no cache, so it clones fresh.
+#
+# FRAMEWORKS_DIR=<folder>      uses existing clones of the three framework repos instead
+#                              (each as <folder>/<repo name>); no cache, no network.
+# FRAMEWORKS_CACHE=<folder>    cache folder (default .app-director/state/frameworks).
+# FRAMEWORKS_REMOTE_BASE=<url> GitHub owner URL (default https://github.com/Freakling).
 
 set -u
 cd "$(dirname "$0")"
@@ -21,14 +27,52 @@ if [ -n "$hits" ]; then err "en or em dashes found:"; echo "$hits" | sed 's/^/  
 
 # 2. Docs coverage --------------------------------------------------------------------------
 repos="Godot-Director:godot-director App-Director:app-director SaaSAllTheThings:saasallthethings"
+remote_base="${FRAMEWORKS_REMOTE_BASE:-https://github.com/Freakling}"
+cache="${FRAMEWORKS_CACHE:-.app-director/state/frameworks}"
+export GIT_TERMINAL_PROMPT=0 GIT_HTTP_LOW_SPEED_LIMIT=1000 GIT_HTTP_LOW_SPEED_TIME=20
+
+# timed <seconds> <git args>: git with a time limit, so an offline run fails fast instead of hanging.
+timed() {
+  local secs="$1"; shift
+  if [ -x /usr/bin/timeout ]; then /usr/bin/timeout "$secs" git "$@"; else git "$@"; fi
+}
+
+# refresh_framework <repo> <dest>: 0 when <dest> holds a current or cached copy of <repo>.
+# Clones when there is no cache. Otherwise fetches the remote's default branch (HEAD) and
+# resets to it; if that fails, the cached copy is kept and a notice is printed.
+# The git metadata sits beside the work tree in <dest>.git, not in <dest>/.git: a nested repo
+# makes `git ls-files -o` list the whole clone, which trips the pre-commit hook.
+refresh_framework() {
+  local repo="$1" dest="$2" gd="$2.git" tmp="$2.partial"
+  if [ -d "$gd" ] && [ -d "$dest" ]; then
+    if timed 15 --git-dir="$gd" fetch -q --depth 1 "$remote_base/$repo.git" HEAD 2>/dev/null \
+       && git --git-dir="$gd" --work-tree="$dest" reset -q --hard FETCH_HEAD; then
+      echo "ok: $repo refreshed from GitHub ($(git --git-dir="$gd" log -1 --format='%h %cs'))"
+    else
+      echo "notice: could not refresh $repo from GitHub (offline?); using the cached copy" \
+        "($(git --git-dir="$gd" log -1 --format='%h %cs' 2>/dev/null || echo unknown))"
+    fi
+    return 0
+  fi
+  rm -rf "$tmp" "$tmp.git"
+  if timed 120 clone -q --depth 1 --separate-git-dir="$tmp.git" "$remote_base/$repo.git" "$tmp" 2>/dev/null; then
+    rm -f "$tmp/.git"; rm -rf "$dest" "$gd"; mv "$tmp" "$dest"; mv "$tmp.git" "$gd"
+    echo "ok: $repo cloned from GitHub into the cache"
+    return 0
+  fi
+  rm -rf "$tmp" "$tmp.git"
+  return 1
+}
+
 if [ -n "${FRAMEWORKS_DIR:-}" ]; then
   src="$FRAMEWORKS_DIR"
 else
-  src="$(mktemp -d)"; trap 'rm -rf "$src"' EXIT
+  src="$cache"; mkdir -p "$src" || { err "can't create cache folder $src"; src=""; }
   for pair in $repos; do
     repo="${pair%%:*}"
-    git clone -q --depth 1 "https://github.com/Freakling/$repo.git" "$src/$repo" \
-      || { err "could not clone $repo"; }
+    [ -n "$src" ] || break
+    refresh_framework "$repo" "$src/$repo" \
+      || err "could not clone $repo: no network and no cached copy in $src/$repo (run once online)"
   done
 fi
 

@@ -26,9 +26,9 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Brief: -
 - Note: the agent can do this with `gh api` once `gh auth status` shows a login in the session's environment.
 
-### T3 · The check runs without network after one online run · todo · S · agent
+### T3 · The check runs without network after one online run · done · S · agent
 - Depends on: -
-- Touches: selftest.sh, tools/check.local.sh
+- Touches: selftest.sh, .gitleaks.toml
 - Done when: the selftest reuses framework clones kept under `.app-director/state/` and refreshes them when online (check) · `bash tools/check.sh` passes with the network off after one online run (check)
 - Brief: -
 

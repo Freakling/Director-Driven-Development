@@ -32,7 +32,7 @@ One row per significant system: what it owns and where its boundary is.
 | Pages | All published text: home, concept, token cost, frameworks | `docs/**/*.md` | Navigation, theme |
 | Navigation | Page order and sections | `mkdocs.yml` › `nav` | Pages |
 | Theme | Colours, type, cards, tags, buttons, takeaway line | `docs/assets/stylesheets/ddd.css`, `docs/assets/fonts/`, `mkdocs.yml` › `theme` | Pages (CSS classes `ddd-card`, `tag`, `kicker`, `takeaway`) |
-| Selftest | En and em dashes, docs coverage of every framework command, strict build with link and anchor checks | `selftest.sh` | The three framework repos on GitHub (shallow clones), MkDocs |
+| Selftest | En and em dashes, docs coverage of every framework command, strict build with link and anchor checks | `selftest.sh` | The three framework repos on GitHub (shallow clones cached in `.app-director/state/frameworks`, reused offline), MkDocs |
 | Delivery | Build and deploy to GitHub Pages | `.github/workflows/docs.yml`, `requirements.txt` | Selftest, GitHub Pages |
 
 ## Ownership
