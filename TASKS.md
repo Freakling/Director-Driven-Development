@@ -8,7 +8,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 | Milestone | Status |
 |---|---|
 | Foundation: site builds, selftest and check passing, CI running | ✅ |
-| Live: the site is published on GitHub Pages | 🟨 in progress |
+| Live: the site is published on GitHub Pages | ✅ |
 | Acceptance: all core flows verified on the live site | ⬜ |
 | Concepts: one page per core concept | ⬜ |
 | Skills: one page per common skill | ⬜ |
@@ -19,12 +19,11 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 
 ## Queue
 
-### T2 · Turn on GitHub Pages and re-run the deploy · todo · - · human
+### T2 · Turn on GitHub Pages and re-run the deploy · done · - · human
 - Depends on: -
 - Touches: repository Settings › Pages
 - Done when: Settings › Pages › Source is "GitHub Actions", the latest Docs run's deploy job succeeds, and https://freakling.github.io/Director-Driven-Development/ loads (demo)
 - Brief: -
-- Note: the agent can do this with `gh api` once `gh auth status` shows a login in the session's environment.
 
 ### T3 · The check runs without network after one online run · done · S · agent
 - Depends on: -
