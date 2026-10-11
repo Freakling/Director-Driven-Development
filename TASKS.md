@@ -61,7 +61,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: the page explains the records, one home per fact, and why clearing a session loses nothing, and the pages that touched it link here instead of repeating it (demo) · `bash tools/check.sh` passes (check)
 - Brief: Scope › Concepts
 
-### T18 · The Code shaped for agents and Ownership concept pages · todo · S · agent
+### T18 · The Code shaped for agents and Ownership concept pages · done · S · agent
 - Depends on: T15
 - Touches: docs/concept/code-shape.md (new), docs/concept/ownership.md (new), docs/concept/index.md, mkdocs.yml
 - Done when: both concepts move from the overview to their own pages (demo) · `bash tools/check.sh` passes (check)

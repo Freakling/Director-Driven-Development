@@ -60,6 +60,8 @@ nav:
       - Task and model sizing: concept/sizing.md
       - Reviews: concept/reviews.md
       - Records in files: concept/records.md
+      - Code shaped for agents: concept/code-shape.md
+      - Ownership: concept/ownership.md
       - Align and drift reset: concept/drift.md
       - Built-in cost savings: concept/cost-built-in.md
       - Cost tuning for developers: concept/cost-tuning.md

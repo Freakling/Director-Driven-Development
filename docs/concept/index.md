@@ -19,19 +19,11 @@ The director doesn't write the implementation. The director decides what gets bu
 | [Task and model sizing](sizing.md) | Sizes XS to XL, the model map, escalation and the two-attempt limit |
 | [Reviews](reviews.md) | When a change gets an independent review, per framework |
 | [Records in files](records.md) | The records that hold the project between sessions, and why each fact has one home |
+| [Code shaped for agents](code-shape.md) | How the codebase is split so that each task reads only what it needs |
+| [Ownership](ownership.md) | Who owns each area, the director or the agent, and what stands in for human-owned assets |
 | [Align and drift reset](drift.md) | The routine consistency pass, and the reset for when a principle is built two ways |
 | [Built-in cost savings](cost-built-in.md) | The cost optimisations the three frameworks build in automatically |
 | [Cost tuning for developers](cost-tuning.md) | What you can adjust yourself, on top of the framework defaults |
-
-## Code shaped for agents
-
-Agent quality drops as context grows, so the codebase is shaped to keep every task's context small.
-
-- **Small, separate units.** Each file works like a small service: input in, output out. SaaSAllTheThings goes furthest, with one type, function or handler per file and a check that fails files over a size limit.
-- **Read only what the task needs.** Each task names the files it may touch in its `Touches` field. The builder reads those and the records the task points to, by heading or line range.
-- **One task, one commit.** Large tasks are split before they start.
-- **Rules live in testable code.** Rules sit in plain code that tests can build directly. The check fails when they leak into the UI or the wrong layer.
-- **State lives in files, not chat.** The records hold everything a session needs, and each fact has one home. See [Records in files](records.md).
 
 ## What the frameworks add
 
@@ -40,7 +32,7 @@ Small batches, a single source of truth, a definition of done, decision records 
 - **Rules are enforced, not suggested.** The check fails the build when a rule is broken, for example game rules in a screen script, a UI file that imports the data layer, or a tenant id read from a request.
 - **Deviation is a decision.** Where the framework owns the architecture (SaaSAllTheThings), the only way past a rule is an architecture decision record (ADR) the director accepts. The check excuses only the exceptions an accepted ADR names. Builders and reviewers flag anything outside their task for the director instead of fixing it on the spot.
 - **Context discipline is a rule.** The orchestrator never reads the code being changed. Its context holds decisions and reports, so a long session stays as sharp as a short one.
-- **Ownership is protected.** Areas the director owns get placeholders instead of generated content. In Godot-Director and App-Director, a hook keeps the agent from writing to the director's own `director/` workspace. In SaaSAllTheThings, a hook asks the director before a framework file changes or an ADR is accepted.
+- **Ownership is protected.** The frameworks back [ownership](ownership.md) with hooks. In Godot-Director and App-Director, a hook keeps the agent from writing to the director's own `director/` workspace. In SaaSAllTheThings, a hook asks the director before a framework file changes or an ADR is accepted.
 
 ## Who it's for
 
