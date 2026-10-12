@@ -31,7 +31,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: the page covers the "other tools" fallback, mid-build design decision recording, the commit-behaviour difference between Godot-Director (immediate commit, no pause) and App-Director and SaaSAllTheThings (pause for approval), and the post-commit /clear note, and `bash tools/audit.sh` reports no differences for next-task (check)
 - Brief: Skills
 
-### T24 · Align /design skill page with framework procedures · todo · S · agent
+### T24 · Align /design skill page with framework procedures · done · S · agent
 - Depends on: T14
 - Touches: docs/skills/design.md
 - Done when: the page covers the commit format (`docs: <summary>` with decision body, design sessions never edit code) and the post-commit /clear prompt, and `bash tools/audit.sh` reports no differences for design (check)
