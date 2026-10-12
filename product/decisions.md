@@ -18,6 +18,7 @@ Examples:
 2026-10-11 · the repo is framework docs first, with a little promotional content that points to the why on the blog · director's choice; the blog keeps the why
 2026-10-11 · later, the repo becomes the orchestrator that keeps the three frameworks' shared skills in parity and tracks their differences · director's direction; the docs come first
 2026-10-11 · audience: hands-on builders; a visit should lead to installing a framework or applying the method in their own setup · director's choice
+2026-10-12 · the framework is for anyone who wants to use AI coding agents to build software and stay in control of what gets built; the docs site is pitched at hands-on builders as the most likely first adopters, but the audience is not limited to developers or tech leads · director's clarification
 2026-10-11 · the site uses the MIT licence, the same as the three frameworks · director's choice: one licence across all repos
 2026-10-11 · no docs pages for the anchoring and factories posts · they explain the why, which belongs on the blog
 2026-10-11 · one docs page per skill that all three frameworks ship, each with a section for what is unique per repo · readable pages, and the base for keeping the repos aligned
@@ -31,3 +32,5 @@ Examples:
 2026-10-11 · the home page and README say the repo is built with App-Director: a public example of the framework and a self-check that it works · director's direction
 2026-10-11 · the orchestrator is recursive: it aligns App-Director, which builds this repo, along with the other two; the site mentions it once it exists · director's direction; never overclaim
 2026-10-11 · the mark is the Signal: a filled D inside two outlined D's sharing a spine, replacing the three D's in a row · director's choice from four sketches; one clear shape at favicon size
+2026-10-12 · Q7: tasks reach framework repos via pull request, not direct commit · director retains control of the merge
+2026-10-12 · the agent may never merge a pull request; code review and comments are permitted, but merge is a human-owned control · director's rule, applies to all repos

@@ -87,7 +87,6 @@ A reader arrives from a saemundsson.se post on the matching docs page, and can g
 
 Q3: Should the site use a custom domain (for example under saemundsson.se) instead of freakling.github.io? (later)
 Q4: Which promotional content belongs on the site (for example a list of posts, talks and workshops, or a "work with me" invitation), and where does it go?
-Q7: How does a task here reach a framework repo: a pull request that adds the item to its TASKS.md, a direct commit, or something else? (later, orchestrator)
 Q8: For Godot-Director's build and release: which platforms and stores come first (for example Windows, macOS, Linux, web, Android, iOS; itch.io, Steam, the mobile stores), and which pipeline host runs the builds (for example GitHub Actions)? (later, orchestrator)
 Q9: What should Godot-Director's build skill be called? `/build` would share its name with the `build.md` procedure the builder already follows; `/export` matches Godot's own term. (later, orchestrator)
 

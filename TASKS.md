@@ -22,7 +22,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 ### T14 · Push alignment tasks to the framework repos · todo · M · agent
 - Depends on: T12, T13
 - Touches: tools/ (new script), AGENTS.md
-- Done when: a difference found by the audit becomes an item in the target repo's TASKS.md, in that repo's item format, by the route Q7 settles (check)
+- Done when: a difference found by the audit becomes a pull request that adds an item to the target repo's TASKS.md, in that repo's item format (check)
 - Brief: Scope › Later: orchestrator for the three frameworks
 
 ### T19 · Godot-Director: build and release skills · todo · M · agent
