@@ -25,6 +25,10 @@ The procedure is at [`framework/.godot-director/procedures/align.md`](https://gi
 - It counts the balance placeholders in the scripts and writes the number into the Content and balance milestone row.
 - The check must pass with no notes about typing or hooks.
 - During onboarding, the fixes go into the install commit instead of a separate one.
+- `AGENTS.md` points to `.godot-director/rules.md`, and `CLAUDE.md` contains `@AGENTS.md`.
+- Items follow `.godot-director/tasks.md`.
+- `bash tools/check.sh` passes with no `note:` about typing or hooks.
+- The `.gitignore` and `.gitattributes` lines that `install.sh` adds are still there. If any are missing, rerun the installer.
 
 ### App-Director
 
@@ -33,6 +37,10 @@ The procedure is at [`framework/.app-director/procedures/align.md`](https://gith
 - It checks the brief, `product/decisions.md`, `validation/TEMPLATE.md` and the check config. The `[ui] dirs` and `[data] dirs` in `tools/check.cfg` must match the folder layout.
 - Every item's `Brief:` value must be an existing heading, or `-` for items that aren't about the product design.
 - The `docs: align` commit body names the conflicts that need the director, so the next pass can tell a repeat.
+- `AGENTS.md` points to `.app-director/rules.md`, and `CLAUDE.md` contains `@AGENTS.md`.
+- Items follow `.app-director/tasks.md`.
+- `bash tools/check.sh` passes.
+- The `.gitignore` and `.gitattributes` lines that `install.sh` adds are still there.
 
 ### SaaSAllTheThings
 
@@ -42,5 +50,9 @@ The procedure is at [`framework/.satt/procedures/align.md`](https://github.com/F
 - It runs `bash tools/check.sh --architecture` and reports any stale ADR exceptions, any proposed ADR waiting longer than a week and the count of source files outside any layer.
 - It checks that `AGENTS.md` › Layout matches the layers in `tools/check.cfg`, and reports workshop notes under `assessment/workshops/` that have no `Processed:` line.
 - It never changes the product or the architecture.
+- `AGENTS.md` points to `.satt/rules.md`, and `CLAUDE.md` contains `@AGENTS.md`.
+- Items follow `.satt/tasks.md`.
+- `bash tools/check.sh` passes and prints no `note:` about the hook or the toolchain.
+- The `.gitignore` and `.gitattributes` lines that `install.sh` adds are still there. If any are missing, rerun the installer.
 
 <div class="takeaway"><span>Run it after every big design change, and let the small drift get caught while it is small.</span><span class="url"><a href="https://saemundsson.se/2026/10/07/director-driven-development/">Why: the blog post</a></span></div>

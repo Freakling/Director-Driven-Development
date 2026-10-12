@@ -37,7 +37,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: the page covers the commit format (`docs: <summary>` with decision body, design sessions never edit code) and the post-commit /clear prompt, and `bash tools/audit.sh` reports no differences for design (check)
 - Brief: Skills
 
-### T25 · Align /align skill page with framework procedures · todo · S · agent
+### T25 · Align /align skill page with framework procedures · done · S · agent
 - Depends on: T14
 - Touches: docs/skills/align.md
 - Done when: the page covers the framework file checks (AGENTS.md pointer, CLAUDE.md import, task format file, `bash tools/check.sh` pass, .gitignore/.gitattributes from install.sh), and `bash tools/audit.sh` reports no differences for align (check)
