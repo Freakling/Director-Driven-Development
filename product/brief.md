@@ -7,11 +7,11 @@
 
 The how-to reference for Director-Driven Development, centred on the three frameworks: what the method is, how the loop and its roles work, how to keep token costs down, and how to install and use Godot-Director, App-Director and SaaSAllTheThings. The blog at saemundsson.se explains why, and every page points to the post behind it; this site explains how. Each framework's repository stays the source of truth for its procedures.
 
-**Who it's for:** hands-on builders: developers and tech leads who direct AI coding agents and want to install and use a framework now.
+**Who it's for:** anyone who wants to use AI coding agents to build software and stay in control of what gets built. The site is aimed at hands-on builders as the most likely first audience, but the framework is not limited to developers or tech leads.
 
 **What a visit should lead to:** the reader installs one of the frameworks, or applies the roles, the loop and the check in their own setup.
 
-**The feeling it should give:** calm, technical and trustworthy: a short, accurate reference in the same dark, one-accent look as the blog figures and LinkedIn cards. (inferred, please confirm)
+**The feeling it should give:** calm, technical and trustworthy: a short, accurate reference in the same dark, one-accent look as the blog figures and LinkedIn cards.
 
 ## Scope
 

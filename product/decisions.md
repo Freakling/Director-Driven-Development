@@ -34,3 +34,4 @@ Examples:
 2026-10-11 · the mark is the Signal: a filled D inside two outlined D's sharing a spine, replacing the three D's in a row · director's choice from four sketches; one clear shape at favicon size
 2026-10-12 · Q7: tasks reach framework repos via pull request, not direct commit · director retains control of the merge
 2026-10-12 · the agent may never merge a pull request; code review and comments are permitted, but merge is a human-owned control · director's rule, applies to all repos
+2026-10-12 · the site's tone and feel: calm, technical and trustworthy, in the same dark one-accent look as the blog figures and LinkedIn cards · confirmed by director
