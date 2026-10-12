@@ -25,7 +25,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: a difference found by the audit becomes an item in TASKS.md for updating the relevant skill page (check)
 - Brief: Scope › Later: orchestrator for the three frameworks
 
-### T23 · Align /next-task skill page with framework procedures · todo · S · agent
+### T23 · Align /next-task skill page with framework procedures · done · S · agent
 - Depends on: T14
 - Touches: docs/skills/next-task.md
 - Done when: the page covers the "other tools" fallback, mid-build design decision recording, the commit-behaviour difference between Godot-Director (immediate commit, no pause) and App-Director and SaaSAllTheThings (pause for approval), and the post-commit /clear note, and `bash tools/audit.sh` reports no differences for next-task (check)
