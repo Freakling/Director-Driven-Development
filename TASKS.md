@@ -43,7 +43,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: the page covers the framework file checks (AGENTS.md pointer, CLAUDE.md import, task format file, `bash tools/check.sh` pass, .gitignore/.gitattributes from install.sh), and `bash tools/audit.sh` reports no differences for align (check)
 - Brief: Skills
 
-### T26 · Align /drift-reset skill page with framework procedures · todo · S · agent
+### T26 · Align /drift-reset skill page with framework procedures · done · S · agent
 - Depends on: T14
 - Touches: docs/skills/drift-reset.md
 - Done when: the page covers the missing details per repo (App-Director: destructive-commands ban and contradictory definition; Godot-Director: reset folder path, human-owned areas, git commit format; SaaSAllTheThings: tenancy and identity as security finding, as-built.md format, ADR compliance gate, security findings priority, split L+ items, /clear before rebuild), and `bash tools/audit.sh` reports no differences for drift-reset (check)
