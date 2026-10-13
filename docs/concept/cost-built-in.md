@@ -42,4 +42,4 @@ The check runs before commits and, in Claude Code, before the agent ends its tur
 
 The frameworks shape code as many small, single-purpose files. A task names exactly the files it touches, and the builder reads a few hundred lines instead of a few thousand. SaaSAllTheThings also enforces it: the check fails source files over 300 lines and Azure Function hosts over 80 lines by default, both set in `tools/check.cfg`.
 
-<div class="takeaway"><span>Spend tokens on judgement, not on context.</span><span class="url" markdown="span">[Cost tuning for developers](cost-tuning.md)</span></div>
+<div class="takeaway" markdown><span>Spend tokens on judgement, not on context.</span><span class="url" markdown="span">[Cost tuning for developers](cost-tuning.md)</span></div>

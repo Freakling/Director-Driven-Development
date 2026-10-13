@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T29 · B1
+**Next IDs:** T29 · B2
 
 ## Milestones
 | Milestone | Status |
@@ -66,6 +66,13 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Touches: an item in Godot-Director's task queue, pushed by the orchestrator; docs/frameworks/godot-director.md once released
 - Done when: Godot-Director has an item for a skill that exports binaries per platform and one that triggers the build pipelines that push builds to the platforms, as Q8 and Q9 settle (check) · once released there, the Godot-Director page documents them and /release gets its own skill page (check)
 - Brief: Scope › Planned framework changes
+
+### B1 · Next-page links in the concept takeaways show as raw Markdown · done · S · agent · high
+- Depends on: -
+- Touches: docs/concept/*.md (nine pages), selftest.sh
+- Repro: open Concepts › The check, scroll to the line at the bottom → expected a link to Reviews / actual the text `[Reviews](reviews.md)`; same on eight more concept pages. The selftest now fails on any unrendered Markdown link in the built site.
+- Found in: ad hoc
+- Brief: -
 
 ## Notes
 - T23-T27 are independent once T14 is done. T19 waits on T14, Q8 and Q9.

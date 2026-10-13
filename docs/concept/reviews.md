@@ -23,4 +23,4 @@ The orchestrator decides from the task's size and the builder's report, which na
 
 The check is the review for every task, every time. It is fast and mechanical, and it never gets tired. The reviewer covers what text matching can't show, such as a data store query that forgets the tenant.
 
-<div class="takeaway"><span>Enforce what's critical, audit the rest.</span><span class="url" markdown="span">[Agent development flow](agent-flow.md)</span></div>
+<div class="takeaway" markdown><span>Enforce what's critical, audit the rest.</span><span class="url" markdown="span">[Agent development flow](agent-flow.md)</span></div>

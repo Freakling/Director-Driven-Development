@@ -144,6 +144,12 @@ fi
 if [ -n "$mkdocs" ]; then
   if out=$($mkdocs build --strict --clean 2>&1); then echo "ok: site builds, no broken links"
   else err "mkdocs build --strict:"; echo "$out" | grep -E 'WARNING|ERROR|Aborted' | sed 's/^/  /'; fi
+  # A Markdown link inside raw HTML without the markdown attribute is printed as text, and
+  # the strict build can't see it. Fail on any [text](page.md) left in the built pages.
+  raw=$(grep -rlE '\]\([^) ]*\.md(#[^)]*)?\)' site --include='*.html' 2>/dev/null)
+  if [ -n "$raw" ]; then err "unrendered Markdown links (add the markdown attribute to the HTML block):"
+    echo "$raw" | sed 's/^/  /'
+  else echo "ok: no unrendered Markdown links"; fi
 else
   err "mkdocs not installed (pip install -r requirements.txt)"
 fi

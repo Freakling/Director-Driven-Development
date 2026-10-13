@@ -16,4 +16,4 @@ Anything the director has not answered goes on the open-questions list. The agen
 
 Each decision the director makes becomes one or more task items in `TASKS.md`. Each item is sized and names the files it touches, so the builder knows exactly what to read and what to change. See [Task and model sizing](sizing.md).
 
-<div class="takeaway"><span>The agent proposes. The director decides.</span><span class="url" markdown="span">[Agent development flow](agent-flow.md)</span></div>
+<div class="takeaway" markdown><span>The agent proposes. The director decides.</span><span class="url" markdown="span">[Agent development flow](agent-flow.md)</span></div>

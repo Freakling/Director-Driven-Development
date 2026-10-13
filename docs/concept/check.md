@@ -24,4 +24,4 @@ The git pre-commit hook runs the check before any commit that touches code. A fa
 
 The check runs for every task, every time. It is fast and mechanical, and it never gets tired. Large changes, and medium ones that cross a risky boundary, also get an independent review before the commit. See [Reviews](reviews.md).
 
-<div class="takeaway"><span>Enforce what's critical, audit the rest.</span><span class="url" markdown="span">[Reviews](reviews.md)</span></div>
+<div class="takeaway" markdown><span>Enforce what's critical, audit the rest.</span><span class="url" markdown="span">[Reviews](reviews.md)</span></div>

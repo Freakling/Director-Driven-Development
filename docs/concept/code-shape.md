@@ -13,4 +13,4 @@ Agent quality drops as context grows. The codebase is shaped so that a task need
 
 Pick one task in your own project and check whether its `Touches` field names only the files that task needs. That check is the quickest way to see how well a codebase is shaped for agents.
 
-<div class="takeaway"><span>A small context is what keeps the agent sharp.</span><span class="url" markdown="span">[Ownership](ownership.md)</span></div>
+<div class="takeaway" markdown><span>A small context is what keeps the agent sharp.</span><span class="url" markdown="span">[Ownership](ownership.md)</span></div>

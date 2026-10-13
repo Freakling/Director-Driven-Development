@@ -24,4 +24,4 @@ Clear ownership tells the director which changes need their judgement, and tells
 
 Open `AGENTS.md` in your own project and check that every area in its ownership table has an owner you would name.
 
-<div class="takeaway"><span>Every area has an owner, and the owner decides.</span><span class="url" markdown="span">[Records in files](records.md)</span></div>
+<div class="takeaway" markdown><span>Every area has an owner, and the owner decides.</span><span class="url" markdown="span">[Records in files](records.md)</span></div>

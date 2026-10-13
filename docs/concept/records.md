@@ -36,4 +36,4 @@ This is also what keeps each session cheap. A builder reads the records its task
 
 The three frameworks differ in their details, but the records work the same way in each. The best way to see them at work is to open a framework's repository and read its `TASKS.md`, its design records and a few of its commit messages. [Choose a framework](../frameworks/index.md) and look at how its records were written.
 
-<div class="takeaway"><span>The files are the memory. The chat is only the conversation.</span><span class="url" markdown="span">[Agent development flow](agent-flow.md)</span></div>
+<div class="takeaway" markdown><span>The files are the memory. The chat is only the conversation.</span><span class="url" markdown="span">[Agent development flow](agent-flow.md)</span></div>
