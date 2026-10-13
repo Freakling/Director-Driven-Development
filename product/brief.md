@@ -41,7 +41,7 @@ Posts about the why, such as the anchoring post and the factories post, get no d
 ### Later: orchestrator for the three frameworks
 Once the director is happy with the docs side, the repository becomes the orchestrator for the three frameworks:
 - The common skill pages become the anchors: the agreed behaviour of each shared skill, and the recorded differences per repo.
-- A task here pushes tasks to each framework repo's own `TASKS.md`, and that repo's build agents make the changes.
+- A task here pushes tasks to each framework repo's own root `TASKS.md`, by pull request, and that repo's build agents make the changes. Each framework repo gets its own root queue before the first push; `project/TASKS.md` is the adopters' template and never receives these tasks.
 - This repository acts as the auditor: it checks that the three repos stay aligned with the anchors.
 - It is recursive: App-Director builds this repository, and this repository aligns App-Director along with the other two. The site mentions this once the orchestrator exists.
 

@@ -35,3 +35,4 @@ Examples:
 2026-10-12 · Q7: tasks reach framework repos via pull request, not direct commit · director retains control of the merge
 2026-10-12 · the agent may never merge a pull request; code review and comments are permitted, but merge is a human-owned control · director's rule, applies to all repos
 2026-10-12 · the site's tone and feel: calm, technical and trustworthy, in the same dark one-accent look as the blog figures and LinkedIn cards · confirmed by director
+2026-10-13 · alignment tasks land in each framework repo's own root TASKS.md, set up before the first push; never in project/TASKS.md · director's choice: each repo runs the loop with its own build agents, and the template stays clean for adopters
