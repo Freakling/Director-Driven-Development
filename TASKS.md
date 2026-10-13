@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T29 · B2
+**Next IDs:** T30 · B2
 
 ## Milestones
 | Milestone | Status |
@@ -55,10 +55,16 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: the page covers the design-question escalation path (when the rule itself should change, offer options or add an Open Question), and `bash tools/audit.sh` reports no differences for acceptance (check)
 - Brief: Skills
 
-### T28 · Build push-alignment.sh: push skill page changes to framework repos · todo · M · agent
+### T28 · Build push-alignment.sh: push skill page changes to framework repos · done · M · agent
 - Depends on: T14
 - Touches: tools/push-alignment.sh (new)
 - Done when: when a skill page anchor changes, the script detects which framework procedures differ from the updated page and opens a pull request to each affected framework repo's TASKS.md with an item to align its procedure (check) · the script does not merge any PR (check)
+- Brief: Scope › Later: orchestrator for the three frameworks
+
+### T29 · Each framework repo gets its own root task queue · todo · M · agent
+- Depends on: T28
+- Touches: a pull request to each framework repo adding a root TASKS.md (the director merges); tools/push-alignment.sh
+- Done when: Godot-Director, App-Director and SaaSAllTheThings each have an open pull request that adds a root TASKS.md in the App Director item format, separate from `project/TASKS.md` (check) · push-alignment.sh skips a repo with no root TASKS.md instead of creating one (check) · `bash tools/check.sh` passes (check)
 - Brief: Scope › Later: orchestrator for the three frameworks
 
 ### T19 · Godot-Director: build and release skills · todo · M · agent

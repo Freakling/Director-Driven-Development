@@ -35,6 +35,7 @@ One row per significant system: what it owns and where its boundary is.
 | Selftest | En and em dashes, docs coverage of every framework command, strict build with link and anchor checks, no unrendered Markdown links | `selftest.sh` | The three framework repos on GitHub (shallow clones cached in `.app-director/state/frameworks`, reused offline), MkDocs |
 | Audit | Compares framework skill files against skill pages and reports undocumented differences | `tools/audit.sh` | The three framework repos (read from `.app-director/state/frameworks/`) |
 | Alignment | Translates audit findings into TASKS.md items for updating skill pages | `tools/push-alignment.sh` (planned, not yet built) | Audit (`tools/audit.sh`), TASKS.md |
+| Orchestrator | Audit of the framework repos against the skill pages, and alignment tasks pushed to them by pull request (dry run unless `--open-prs`; never merges) | `tools/audit.sh`, `tools/push-alignment.sh` | The cached framework repos, the framework repos on GitHub (`gh`), Pages (skill pages) |
 | Delivery | Build and deploy to GitHub Pages | `.github/workflows/docs.yml`, `requirements.txt` | Selftest, GitHub Pages |
 
 ## Ownership
