@@ -8,6 +8,7 @@ The orchestrator picks the next ready task from `TASKS.md`, high-severity bugs f
 
 - The builder reads the files named in the task's `Touches` field, the rows of the architecture table the task involves, and the design sections it names.
 - The task's size picks the model that builds it. See [Task and model sizing](sizing.md).
+- A design question the task does not settle stops the build: the builder reports it as blocked, with options, and the director decides. See [Design calls](design-calls.md#during-a-build).
 - The builder returns a structured report of about 20 lines. The orchestrator keeps the report, not the code, so ten tasks cost about as much context as one.
 
 ## Prove

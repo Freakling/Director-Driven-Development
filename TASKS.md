@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T30 · B2
+**Next IDs:** T31 · B2
 
 ## Milestones
 | Milestone | Status |
@@ -60,6 +60,12 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Touches: tools/push-alignment.sh (new)
 - Done when: when a skill page anchor changes, the script detects which framework procedures differ from the updated page and opens a pull request to each affected framework repo's TASKS.md with an item to align its procedure (check) · the script does not merge any PR (check)
 - Brief: Scope › Later: orchestrator for the three frameworks
+
+### T30 · A builder stops and asks when a task meets a design question · done · XS · agent
+- Depends on: -
+- Touches: docs/concept/design-calls.md, docs/concept/agent-flow.md
+- Done when: Design calls has a "During a build" section on the blocked report, matching `next-task.md` › Report `blocked` in all three frameworks (check) · Agent development flow links to it from the build step (check) · `bash tools/check.sh` passes (check)
+- Brief: Scope › Concepts
 
 ### T29 · Each framework repo gets its own root task queue · todo · M · agent
 - Depends on: T28

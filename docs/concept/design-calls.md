@@ -16,4 +16,8 @@ Anything the director has not answered goes on the open-questions list. The agen
 
 Each decision the director makes becomes one or more task items in `TASKS.md`. Each item is sized and names the files it touches, so the builder knows exactly what to read and what to change. See [Task and model sizing](sizing.md).
 
+## During a build
+
+A builder that runs into a decision its task does not settle stops and reports the task as blocked, with options and a recommendation. The question comes to the director, the answer is recorded like any other design call, and the task is rebuilt with it.
+
 <div class="takeaway" markdown><span>The agent proposes. The director decides.</span><span class="url" markdown="span">[Agent development flow](agent-flow.md)</span></div>
