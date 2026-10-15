@@ -94,6 +94,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Brief: Scope › Planned framework changes
 
 ### T70 · Release App-Director 1.6.0 · in-progress 2026-10-16 · S · agent
+- PRs: App-Director #15 (open)
 - Depends on: T51, T33
 - Touches: work/App-Director: the version files its CLAUDE.md lists, CHANGELOG.md (one pull request; the director merges)
 - Done when: the release pull request, which covers T33 (the research assistant), is merged, and `tools/work-release.sh` has tagged `v1.6.0` and published the GitHub release, following AGENTS.md › Project rules › Framework work › Releases (check) · an item here moves the docs links to `v1.6.0` and updates the pages for what it ships (check)
