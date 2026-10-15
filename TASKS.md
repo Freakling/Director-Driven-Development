@@ -106,7 +106,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: every link into App-Director points at v1.6.0 (check) · App-Director's page lists `/research` as the other two do, and the design and /next-task pages say how its design sessions and R items use the researcher (check) · `bash tools/check.sh` passes (check)
 - Brief: Scope › Common skills
 
-### T71 · Release Godot-Director 3.9.0 · todo · S · agent
+### T71 · Release Godot-Director 3.9.0 · in-progress 2026-10-16 · S · agent
 - Depends on: T51, T19
 - Touches: work/Godot-Director: the version files its CLAUDE.md lists, CHANGELOG.md (one pull request; the director merges)
 - Done when: the release pull request, which covers T19 (export onboarding and /export), is merged, and `tools/work-release.sh` has tagged `v3.9.0` and published the GitHub release, following AGENTS.md › Project rules › Framework work › Releases (check) · an item here moves the docs links to `v3.9.0` and documents export onboarding and /export on the Godot-Director page (check)
@@ -118,7 +118,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: once all three frameworks have released the research assistant, the page describes the shared behaviour and what is unique per repo, matching the released procedures (check) · Design calls links to it (check) · `bash tools/check.sh` passes (check)
 - Brief: Scope › Common skills
 
-### T73 · The /design page links to /research · todo · XS · agent
+### T73 · The /design page links to /research · done · XS · agent
 - Depends on: T34
 - Touches: docs/skills/design.md
 - Done when: where the /design page mentions the researcher, it links to the /research page (check) · `bash tools/check.sh` passes (check)

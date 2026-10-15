@@ -13,6 +13,8 @@
 5. **Finish** by summarising what was decided and what is still open. Once the director approves, the skill commits the design files as `docs: <summary>`, with a body listing each decision (see `rules.md` › Git). A design session never edits source code.
 6. **Clear** the context after the commit. The skill suggests `/clear`, or a fresh session, before the next topic: the records hold everything, and the conversation history no longer adds value.
 
+A question that depends on facts nobody has checked goes to the [researcher](research.md). The researcher writes a note in the repo's research folder, and a decision that followed it ends its `why` with the note's path.
+
 Run it as `/design <topic>` for a topic, or `/design questions` to rank the open questions. Numbers and limits stay placeholders until the director sets them.
 
 ## Unique per repo
@@ -25,7 +27,7 @@ The procedure is at [`framework/.godot-director/procedures/design.md`](https://g
 - If an idea contradicts a Design Pillar, the skill stops and asks which gives way, the pillar or the idea.
 - New items carry a `GDD:` heading and follow the format in `.godot-director/tasks.md`. A big rework is planned in stages: first move rules out of screens, then rework the systems, then rebuild the UI.
 - The session leaves data and scenes alone. Tunable values are placeholders the director edits in the `.tres` files.
-- A complex question that depends on facts nobody has checked goes to the `researcher`. The note goes in `design/research/`, and a decision that followed it ends its `why` with the note's path.
+- Research notes go in `design/research/`.
 
 ### App-Director
 
@@ -34,7 +36,7 @@ The procedure is at [`framework/.app-director/procedures/design.md`](https://git
 - It records decisions in `product/brief.md` and `product/decisions.md`, and open questions live in the brief's Open Questions section.
 - Before the options, it quotes the related lines from `product/decisions.md` word for word, so the director sees the state of play first.
 - New items carry a `Brief:` heading and follow the format in `.app-director/tasks.md`. Numbers and thresholds are set by the human in config or environment variables.
-- A question whose options depend on facts nobody has checked goes to the `researcher`. The note goes in `product/research/`, and a decision that followed it ends its `why` with the note's path.
+- Research notes go in `product/research/`.
 
 ### SaaSAllTheThings
 
@@ -44,6 +46,6 @@ The procedure is at [`framework/.satt/procedures/design.md`](https://github.com/
 - Questions about how the system is built, such as a data store, a client's UI technology or a deviation from the reference, are not product calls. The skill hands them to `/architect` (the `architect.md` procedure).
 - If an idea contradicts a Product Pillar, the skill asks which gives way. New items carry a `PRD:` heading and follow the format in `.satt/tasks.md`, and limits, quotas, prices and timeouts stay `PLACEHOLDER` values.
 - It accepts both `/design questions` and `/design {topic}`.
-- A question that depends on facts nobody has checked goes to the `researcher`. The note goes in `product/research/`, and a decision that followed it ends its `why` with the note's path.
+- Research notes go in `product/research/`.
 
 <div class="takeaway"><span>Write down only what the director decides. Bring your next open question to <code>/design</code> in a fresh session.</span><span class="url"><a href="https://saemundsson.se/2026/10/07/director-driven-development/">Why: the blog post</a></span></div>
