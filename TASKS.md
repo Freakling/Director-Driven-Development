@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T70 · B5
+**Next IDs:** T71 · B5
 
 ## Milestones
 | Milestone | Status |
@@ -86,11 +86,17 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: every link into the three frameworks points at its latest release (check) · the pages describe what these releases changed where they state the old behaviour: the skills, plugins and manual installs take the latest release, and SaaSAllTheThings' page lists `/research` until T34 gives it a skill page (check) · `bash tools/check.sh` passes (check)
 - Brief: Scope › Common skills
 
-### T33 · App-Director: the research assistant · in-progress 2026-10-15 · M · agent
-- PRs: App-Director #14 (open)
+### T33 · App-Director: the research assistant · done · M · agent
+- PRs: App-Director #14 (merged)
 - Depends on: T32, T40
 - Touches: work/App-Director (one pull request; the director merges)
 - Done when: App-Director has a merged pull request that builds the research assistant from `product/anchors/research.md`, with its domain file (stacks, libraries and app-store requirements), an `R<n>` counter on its `Next IDs` line, and the new files in its README, install script, skills folder and selftest, following AGENTS.md › Project rules for framework work (check)
+- Brief: Scope › Planned framework changes
+
+### T70 · Release App-Director 1.6.0 · in-progress 2026-10-16 · S · agent
+- Depends on: T51, T33
+- Touches: work/App-Director: the version files its CLAUDE.md lists, CHANGELOG.md (one pull request; the director merges)
+- Done when: the release pull request, which covers T33 (the research assistant), is merged, and `tools/work-release.sh` has tagged `v1.6.0` and published the GitHub release, following AGENTS.md › Project rules › Framework work › Releases (check) · an item here moves the docs links to `v1.6.0` and updates the pages for what it ships (check)
 - Brief: Scope › Planned framework changes
 
 ### T34 · The Research skill page · todo · S · agent
@@ -115,5 +121,5 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 ## Notes
 - T55, T54 and T56 are released as SaaSAllTheThings v0.7.0, Godot-Director v3.6.0 and App-Director v1.4.0.
 - T34 waits until all three frameworks have released the research assistant.
-- App-Director v1.5.0, Godot-Director v3.8.0 and SaaSAllTheThings v0.8.0 are released; T69 brings the docs up to them. T33 waits on App-Director #14.
+- T70 releases App-Director's research assistant; T34 follows it, since then all three ship it. T19 waits on Godot-Director #10; T31 follows T19.
 - T31 follows T19.
