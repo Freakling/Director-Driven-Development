@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T75 · B5
+**Next IDs:** T76 · B5
 
 ## Milestones
 | Milestone | Status |
@@ -106,8 +106,8 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: every link into App-Director points at v1.6.0 (check) · App-Director's page lists `/research` as the other two do, and the design and /next-task pages say how its design sessions and R items use the researcher (check) · `bash tools/check.sh` passes (check)
 - Brief: Scope › Common skills
 
-### T71 · Release Godot-Director 3.9.0 · in-progress 2026-10-16 · S · agent
-- PRs: Godot-Director #11 (open)
+### T71 · Release Godot-Director 3.9.0 · done · S · agent
+- PRs: Godot-Director #11 (merged); released as v3.9.0
 - Depends on: T51, T19
 - Touches: work/Godot-Director: the version files its CLAUDE.md lists, CHANGELOG.md (one pull request; the director merges)
 - Done when: the release pull request, which covers T19 (export onboarding and /export), is merged, and `tools/work-release.sh` has tagged `v3.9.0` and published the GitHub release, following AGENTS.md › Project rules › Framework work › Releases (check) · an item here moves the docs links to `v3.9.0` and documents export onboarding and /export on the Godot-Director page (check)
@@ -130,6 +130,12 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Touches: docs/frameworks/index.md
 - Done when: "Shared by all three" on the frameworks overview names `/research`, linking its skill page, and the researcher next to the builder and reviewer subagents, and its install line matches the framework pages (each install path takes the latest release) (check) · `bash tools/check.sh` passes (check)
 - Brief: Scope › Common skills
+
+### T75 · Docs follow Godot-Director 3.9.0 · done · S · agent
+- Depends on: T71
+- Touches: docs/frameworks/godot-director.md, docs/skills/*.md
+- Done when: every link into Godot-Director points at v3.9.0 (check) · the Godot-Director page documents export onboarding (with its skip path) and `/export`, accurate to v3.9.0, which also completes T19's docs outcome (check) · `bash tools/check.sh` passes (check)
+- Brief: Scope › Planned framework changes
 
 ### T19 · Godot-Director: export onboarding and /export · done · M · agent
 - PRs: Godot-Director #10 (merged)

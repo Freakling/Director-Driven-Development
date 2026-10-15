@@ -42,11 +42,12 @@ The procedure is at [`framework/.app-director/procedures/next-task.md`](https://
 
 ### Godot-Director
 
-The procedure is at [`framework/.godot-director/procedures/next-task.md`](https://github.com/Freakling/Godot-Director/tree/v3.8.0/framework/.godot-director/procedures/next-task.md) in the Godot-Director repository.
+The procedure is at [`framework/.godot-director/procedures/next-task.md`](https://github.com/Freakling/Godot-Director/tree/v3.9.0/framework/.godot-director/procedures/next-task.md) in the Godot-Director repository.
 
 - The building state file is `.godot/godot-director/building`. The Stop hook checks for it and leaves half-built files alone while it exists.
 - The review diff is written to `.godot/godot-director/review.diff`.
 - New items are formatted following `.godot-director/tasks.md`, and IDs come from `Next IDs` in that file.
+- An item's `Depends on` can name an open question (`Q<n>`). That part is met once the question is no longer in GDD › Open Questions, so a decision made in `/design` makes the item ready.
 - The builder is told to skip the final `bash tools/check.sh` call: step 4 runs the check from the orchestrator session, and the pre-commit hook is the safety net.
 - The report notes that `(play)` outcomes and bug fixes without regression tests will appear in the next function check.
 - After a passing check, recurring warnings may appear as `check: note: recurring warning (N×): <text>`. The skill has a procedure for verifying, proposing and applying suppressions via `tools/check.ignore`.
