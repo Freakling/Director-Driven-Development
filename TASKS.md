@@ -110,15 +110,15 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: a difference the audit finds in a framework's procedure becomes a framework item in this repo's TASKS.md whose `Touches` names that framework's clone under `work/`, instead of a pull request that only adds an item (check) · the script opens no pull requests (check) · AGENTS.md › Architecture describes it in one row, with the stale Alignment row merged into Orchestrator (check) · `bash tools/check.sh` passes (check)
 - Brief: Scope › Later: orchestrator for the three frameworks
 
-### T46 · The upgrade-file check ignores nested clones, in all three frameworks · in-progress 2026-10-15 · S · agent
-- PRs: Godot-Director #2 (open), App-Director #2 (merged), SaaSAllTheThings #2 (merged)
+### T46 · The upgrade-file check ignores nested clones, in all three frameworks · done · S · agent
+- PRs: Godot-Director #2 (merged), App-Director #2 (merged), SaaSAllTheThings #2 (merged)
 - Depends on: B2
 - Touches: work/App-Director, work/Godot-Director, work/SaaSAllTheThings (one pull request per repo; the director merges)
 - Done when: each framework's pre-commit hook, `/align` procedure and onboarding keep only paths that end in its upgrade suffix (`.adir-new`, `.gdir-new`, `.satt-new`), so a nested clone in an ignored folder no longer blocks a commit while a real upgrade file still does, with one merged pull request per repo, following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Later: orchestrator for the three frameworks
 
-### T47 · App-Director's selftest works with gitleaks 8.30 · in-progress 2026-10-15 · S · agent
-- PRs: App-Director #4 (open)
+### T47 · App-Director's selftest works with gitleaks 8.30 · done · S · agent
+- PRs: App-Director #4 (merged)
 - Depends on: -
 - Touches: work/App-Director: selftest.sh, framework/tools/check.sh (one pull request; the director merges)
 - Done when: App-Director's selftest checks "names the file with the secret" and "allowlisted fingerprint passes" pass with gitleaks 8.30.1, which they fail on main today, and still pass with the version they were written for, following AGENTS.md › Project rules for framework work (check)
@@ -130,7 +130,8 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: when the pre-commit hook blocks a commit because gitleaks found a secret in the staged changes, it names the file, as `tools/check.sh` does after App-Director #4, without printing the secret, following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Later: orchestrator for the three frameworks
 
-### T48 · SaaSAllTheThings' selftest skips .NET without the SDK · todo · S · agent
+### T48 · SaaSAllTheThings' selftest skips .NET without the SDK · in-progress 2026-10-15 · S · agent
+- PRs: SaaSAllTheThings #4 (open)
 - Depends on: -
 - Touches: work/SaaSAllTheThings: selftest.sh (one pull request; the director merges)
 - Done when: SaaSAllTheThings' selftest skips its .NET part on a machine with the .NET host but no SDK, where three checks fail on main today, and still runs it where an SDK is installed, following AGENTS.md › Project rules for framework work (check)
@@ -204,7 +205,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Brief: Scope › Planned framework changes
 
 ## Notes
-- T46 waits on the merge of Godot-Director #2. T47 waits on App-Director #4; T49 and T33 change App-Director's selftest.sh, so they wait on it too. T39 changes Godot-Director's selftest.sh, so it waits on Godot-Director #2 too.
+- T48 waits on SaaSAllTheThings #4; T43 changes SaaSAllTheThings' selftest.sh, so it waits on it too. T39 and T19 change Godot-Director's README.md, which Godot-Director #3 (T35) also changes.
 - T35 waits on the merge of Godot-Director #3; T37 follows T35 and the releases.
 - T33, T42 and T43 change next-task.md (open in the T35 pull requests) and selftest.sh (open in the T46 pull requests), so they wait on both. T19 changes Godot-Director's ONBOARDING.md (open in Godot-Director #2). T31 follows T19.
 - T29's pull requests are merged, so all three framework repos have their root queue. T37 waits on the releases; T34 waits until all three frameworks have released the research assistant.
