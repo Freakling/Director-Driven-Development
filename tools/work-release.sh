@@ -24,11 +24,17 @@
 #   - the pull request is not merged, or was not merged into main, or its merge commit is not on
 #     origin/main
 #   - VERSION at the merge commit is missing or not <major>.<minor>.<patch>
-#   - the version files at the merge commit disagree. They are the ones each repo's CLAUDE.md lists
-#     for a release, which its selftest checks:
-#         App-Director, Godot-Director: VERSION and .claude-plugin/plugin.json
-#         SaaSAllTheThings: those two, every skills/*/SKILL.md `metadata.version`, and the
-#                           `--branch v<version>` of every clone line in those files
+#   - a version file at the merge commit is missing, or carries another version. The files are the
+#     ones each repo's CLAUDE.md lists for a release (`For a release` in CLAUDE.md, or
+#     .claude/CLAUDE.md in SaaSAllTheThings), which its selftest checks too:
+#         App-Director:       VERSION, .claude-plugin/plugin.json ("version"), package.json
+#                             ("version"), SKILL.md and skills/app-director/SKILL.md (metadata.version
+#                             and the --branch v<version> of their clone line), scripts/fetch-app-director.sh
+#                             (tag=v<version>), .claude-plugin/marketplace.json ("ref": "v<version>")
+#         Godot-Director:     VERSION, .claude-plugin/plugin.json, skills/godot-director/SKILL.md
+#                             (metadata.version and --branch), .claude-plugin/marketplace.json ("ref")
+#         SaaSAllTheThings:   VERSION, .claude-plugin/plugin.json, every skills/*/SKILL.md
+#                             (metadata.version and --branch where it clones), .claude-plugin/marketplace.json ("ref")
 #   - CHANGELOG.md at the merge commit has no heading for that version, or has an `## Unreleased`
 #     heading above it that still holds entries
 #   - the pull request description (the release notes) is empty or has no "How to install" section,
@@ -150,40 +156,78 @@ printf '%s\n' "$version" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+$' \
   || refuse "VERSION at the merge commit $short is '$version', not <major>.<minor>.<patch>"
 tag="v$version"
 
-plugin_raw="$(show .claude-plugin/plugin.json)" \
-  || refuse ".claude-plugin/plugin.json is missing at the merge commit $short; VERSION says $version"
-plugin_version="$(printf '%s\n' "$plugin_raw" | sed -n 's/.*"version"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p' | head -1)"
-[ "$plugin_version" = "$version" ] \
-  || refuse "the version files disagree: .claude-plugin/plugin.json says '$plugin_version', VERSION says $version"
-checked="VERSION and .claude-plugin/plugin.json"
+# checked: one line per file that agrees, printed by --dry-run.
+checked="    VERSION (version '$version')
+"
+# load <path>: the file as it is at the merge commit, with CRs removed, in $text. Refuses when missing.
+load() {
+  raw="$(show "$1")"
+  [ -n "$raw" ] || refuse "$1 is missing at the merge commit $short; VERSION says $version"
+  text="$(printf '%s\n' "$raw" | tr -d '\r')"
+}
+# agrees <path> <found> <expected> <what>: refuses unless the file carries the expected value.
+agrees() {
+  [ -n "$2" ] || refuse "the version files disagree: $1 has no $4 (VERSION says $version)"
+  [ "$2" = "$3" ] || refuse "the version files disagree: $1 has $4 '$2', VERSION says $version"
+  checked="$checked    $1 ($4 '$2')
+"
+}
+# json_version: the first "version" value in $text (plugin.json, package.json).
+json_version() { printf '%s\n' "$text" | sed -n 's/.*"version"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p' | head -1; }
+# ref_value: the first "ref" value in $text (marketplace.json).
+ref_value() { printf '%s\n' "$text" | sed -n 's/.*"ref"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p' | head -1; }
 
-if [ "$repo" = "SaaSAllTheThings" ]; then
-  skills="$(g ls-tree -r --name-only "$merge" -- skills 2>/dev/null | grep -E '^skills/[^/]+/SKILL\.md$')"
-  [ -n "$skills" ] || refuse "the merge commit $short has no skills/*/SKILL.md; VERSION says $version"
-  count=0
-  while IFS= read -r skill; do
-    [ -n "$skill" ] || continue
-    count=$((count + 1))
-    text="$(show "$skill" | tr -d '\r')"
-    # metadata.version is the version: line inside the frontmatter (between the first two --- lines).
-    skill_version="$(printf '%s\n' "$text" | awk '/^---[ \t]*$/ { n++; next } n == 1 && /^[ \t]*version:/ { sub(/^[ \t]*version:[ \t]*/, ""); print; exit }' | tr -d "\"'")"
-    [ "$skill_version" = "$version" ] \
-      || refuse "the version files disagree: $skill has metadata.version '$skill_version', VERSION says $version"
-    # A skill that clones the framework pins its release tag with --branch v<version>.
-    branches="$(printf '%s\n' "$text" | sed -n 's/.*--branch[[:space:]][[:space:]]*v\([0-9][0-9.]*\).*/\1/p')"
-    clones="$(printf '%s\n' "$text" | grep -Ec 'git.*[[:space:]]clone[[:space:]]')"
-    if [ "${clones:-0}" -gt 0 ] && [ -z "$branches" ]; then
-      refuse "the version files disagree: $skill clones the framework without --branch v$version"
-    fi
-    for b in $branches; do
-      [ "$b" = "$version" ] \
-        || refuse "the version files disagree: $skill clones --branch v$b, VERSION says $version"
-    done
-  done <<EOF
+# skill_check <path>: a SKILL.md carries metadata.version, and a skill that clones the framework pins
+# its release with --branch v<version>.
+skill_check() {
+  load "$1"
+  # metadata.version is the version: line inside the frontmatter (between the first two --- lines).
+  skill_version="$(printf '%s\n' "$text" | awk '/^---[ \t]*$/ { n++; next } n == 1 && /^[ \t]*version:/ { sub(/^[ \t]*version:[ \t]*/, ""); print; exit }' | tr -d "\"'")"
+  agrees "$1" "$skill_version" "$version" "metadata.version"
+  branches="$(printf '%s\n' "$text" | sed -n 's/.*--branch[[:space:]][[:space:]]*\(v[0-9][0-9.]*\).*/\1/p')"
+  clones="$(printf '%s\n' "$text" | grep -Ec 'git.*[[:space:]]clone[[:space:]]')"
+  if [ "${clones:-0}" -gt 0 ] && [ -z "$branches" ]; then
+    refuse "the version files disagree: $1 clones the framework without --branch v$version"
+  fi
+  for b in $branches; do agrees "$1" "$b" "v$version" "--branch"; done
+}
+
+# The files each repo's CLAUDE.md lists for a release (see the header).
+load .claude-plugin/plugin.json
+agrees .claude-plugin/plugin.json "$(json_version)" "$version" '"version"'
+
+case "$repo" in
+  App-Director)
+    load package.json
+    agrees package.json "$(json_version)" "$version" '"version"'
+    skill_check SKILL.md
+    skill_check skills/app-director/SKILL.md
+    load scripts/fetch-app-director.sh
+    fetch_tag="$(printf '%s\n' "$text" | sed -n 's/^tag=\(.*\)$/\1/p' | head -1)"
+    agrees scripts/fetch-app-director.sh "$fetch_tag" "v$version" "tag"
+    load .claude-plugin/marketplace.json
+    agrees .claude-plugin/marketplace.json "$(ref_value)" "v$version" '"ref"'
+    ;;
+  Godot-Director)
+    skill_check skills/godot-director/SKILL.md
+    load .claude-plugin/marketplace.json
+    agrees .claude-plugin/marketplace.json "$(ref_value)" "v$version" '"ref"'
+    ;;
+  SaaSAllTheThings)
+    skills="$(g ls-tree -r --name-only "$merge" -- skills 2>/dev/null | grep -E '^skills/[^/]+/SKILL\.md$')"
+    [ -n "$skills" ] || refuse "the merge commit $short has no skills/*/SKILL.md; VERSION says $version"
+    count=0
+    while IFS= read -r skill; do
+      [ -n "$skill" ] || continue
+      count=$((count + 1))
+      skill_check "$skill"
+    done <<EOF
 $skills
 EOF
-  checked="$checked, metadata.version and the --branch of the $count skills/*/SKILL.md"
-fi
+    load .claude-plugin/marketplace.json
+    agrees .claude-plugin/marketplace.json "$(ref_value)" "v$version" '"ref"'
+    ;;
+esac
 
 # 5. CHANGELOG.md: a heading for the version, and no Unreleased entries above it.
 changelog_raw="$(show CHANGELOG.md)" || refuse "CHANGELOG.md is missing at the merge commit $short"
@@ -244,7 +288,8 @@ fi
 # 8. Dry run: print what would happen.
 if [ "$dry" -eq 1 ]; then
   echo "work-release: DRY RUN for $slug, release pull request #$number merged as $short; nothing is tagged, pushed or published"
-  echo "version: $version (agrees in $checked)"
+  echo "version: $version (the version files checked at $short, all agree):"
+printf '%s' "$checked"
   echo "tag: $tag (annotated) on $merge"
   echo "notes (the description of pull request #$number):"
   sed 's/^/    /' "$notes"

@@ -50,13 +50,13 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: the release pull request, which covers T43 (the research assistant) and T39, is merged, and `tools/work-release.sh` has tagged `v0.8.0` and published the GitHub release, following AGENTS.md › Project rules › Framework work › Releases (check) · an item here moves the docs links to `v0.8.0` and updates the pages for what it ships (check)
 - Brief: Scope › Planned framework changes
 
-### T64 · The release step checks every file that carries the version · in-progress 2026-10-15 · S · agent
+### T64 · The release step checks every file that carries the version · done · S · agent
 - Depends on: T39
 - Touches: tools/work-release.sh
 - Done when: for each framework, `tools/work-release.sh` checks every file its release rule lists as carrying the version (after T39: App-Director's package.json, both SKILL.md files with their --branch, the fetch script's tag and the marketplace ref; Godot-Director's skill version and --branch and the marketplace ref; SaaSAllTheThings' marketplace ref), and refuses a release where one disagrees (check) · `bash tools/check.sh` passes (check)
 - Brief: Scope › Planned framework changes
 
-### T65 · Manual installs clone the latest release · todo · XS · agent
+### T65 · Manual installs clone the latest release · in-progress 2026-10-15 · XS · agent
 - Depends on: T39
 - Touches: work/App-Director: README.md; work/Godot-Director: README.md (one pull request per repo; the director merges)
 - Done when: the manual install option in App-Director's and Godot-Director's READMEs clones the latest release tag instead of main, as SaaSAllTheThings' does if it does, following AGENTS.md › Project rules for framework work (check)
