@@ -110,21 +110,22 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: a difference the audit finds in a framework's procedure becomes a framework item in this repo's TASKS.md whose `Touches` names that framework's clone under `work/`, instead of a pull request that only adds an item (check) · the script opens no pull requests (check) · AGENTS.md › Architecture describes it in one row, with the stale Alignment row merged into Orchestrator (check) · `bash tools/check.sh` passes (check)
 - Brief: Scope › Later: orchestrator for the three frameworks
 
-### T46 · The upgrade-file check ignores nested clones, in all three frameworks · done · S · agent
+### T46 · The upgrade-file check ignores nested clones, in all three frameworks · in-progress 2026-10-15 · S · agent
+- PRs: Godot-Director #2 (open), App-Director #2 (open), SaaSAllTheThings #2 (open)
 - Depends on: B2
 - Touches: work/App-Director, work/Godot-Director, work/SaaSAllTheThings (one pull request per repo; the director merges)
-- Done when: each framework's pre-commit hook, `/align` procedure and onboarding keep only paths that end in its upgrade suffix (`.adir-new`, `.gdir-new`, `.satt-new`), so a nested clone in an ignored folder no longer blocks a commit while a real upgrade file still does, with one open pull request per repo, following AGENTS.md › Project rules for framework work (check)
+- Done when: each framework's pre-commit hook, `/align` procedure and onboarding keep only paths that end in its upgrade suffix (`.adir-new`, `.gdir-new`, `.satt-new`), so a nested clone in an ignored folder no longer blocks a commit while a real upgrade file still does, with one merged pull request per repo, following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Later: orchestrator for the three frameworks
 
 ### T47 · App-Director's selftest works with gitleaks 8.30 · todo · S · agent
 - Depends on: -
-- Touches: work/App-Director (one pull request; the director merges)
+- Touches: work/App-Director: selftest.sh (one pull request; the director merges)
 - Done when: App-Director's selftest checks "names the file with the secret" and "allowlisted fingerprint passes" pass with gitleaks 8.30.1, which they fail on main today, and still pass with the version they were written for, following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Later: orchestrator for the three frameworks
 
 ### T48 · SaaSAllTheThings' selftest skips .NET without the SDK · todo · S · agent
 - Depends on: -
-- Touches: work/SaaSAllTheThings (one pull request; the director merges)
+- Touches: work/SaaSAllTheThings: selftest.sh (one pull request; the director merges)
 - Done when: SaaSAllTheThings' selftest skips its .NET part on a machine with the .NET host but no SDK, where three checks fail on main today, and still runs it where an SDK is installed, following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Later: orchestrator for the three frameworks
 
@@ -137,13 +138,13 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 ### T39 · The framework repos install the latest release · todo · M · agent
 - Depends on: T40
 - Touches: work/App-Director, work/Godot-Director, work/SaaSAllTheThings (one pull request per repo; the director merges)
-- Done when: App-Director and Godot-Director each have an open pull request that makes the skill, the fetch script and, where the marketplace can pin a ref, the plugin install the latest release tag, and that tags every release `v<version>`, following AGENTS.md › Project rules for framework work (check) · SaaSAllTheThings' plugin follows the release tag, with a pull request if it needs a change (check)
+- Done when: App-Director and Godot-Director each have a merged pull request that makes the skill, the fetch script and, where the marketplace can pin a ref, the plugin install the latest release tag, and that tags every release `v<version>`, following AGENTS.md › Project rules for framework work (check) · SaaSAllTheThings' plugin follows the release tag, with a pull request if it needs a change (check)
 - Brief: Scope › Planned framework changes
 
 ### T35 · The shared commit model in the framework repos · todo · M · agent
 - Depends on: T40
 - Touches: work/Godot-Director, work/SaaSAllTheThings, work/App-Director (one pull request per repo; the director merges)
-- Done when: Godot-Director and SaaSAllTheThings each have an open pull request that adopts the commit model in the brief (procedure step 7, run triggers including "grab tasks until you're blocked", `git commit` allowed in settings, push still asking), and App-Director one that adds that trigger phrase, following AGENTS.md › Project rules for framework work (check)
+- Done when: Godot-Director and SaaSAllTheThings each have a merged pull request that adopts the commit model in the brief (procedure step 7, run triggers including "grab tasks until you're blocked", `git commit` allowed in settings, push still asking), and App-Director one that adds that trigger phrase, following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Planned framework changes
 
 ### T37 · Docs follow the shared commit model · todo · XS · agent
@@ -161,19 +162,19 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 ### T33 · App-Director: the research assistant · todo · M · agent
 - Depends on: T32, T40
 - Touches: work/App-Director (one pull request; the director merges)
-- Done when: App-Director has an open pull request that builds the research assistant from `product/anchors/research.md`, with its domain file (stacks, libraries and app-store requirements), an `R<n>` counter on its `Next IDs` line, and the new files in its README, install script, skills folder and selftest, following AGENTS.md › Project rules for framework work (check)
+- Done when: App-Director has a merged pull request that builds the research assistant from `product/anchors/research.md`, with its domain file (stacks, libraries and app-store requirements), an `R<n>` counter on its `Next IDs` line, and the new files in its README, install script, skills folder and selftest, following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Planned framework changes
 
 ### T42 · Godot-Director: the research assistant · todo · M · agent
 - Depends on: T32, T40
 - Touches: work/Godot-Director (one pull request; the director merges)
-- Done when: Godot-Director has an open pull request that builds the research assistant from `product/anchors/research.md`, with its domain file (the Godot docs and engine version, asset licences and store requirements), an `R<n>` counter on its `Next IDs` line, and the new files in its README, install script, skills folder and selftest, following AGENTS.md › Project rules for framework work (check)
+- Done when: Godot-Director has a merged pull request that builds the research assistant from `product/anchors/research.md`, with its domain file (the Godot docs and engine version, asset licences and store requirements), an `R<n>` counter on its `Next IDs` line, and the new files in its README, install script, skills folder and selftest, following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Planned framework changes
 
 ### T43 · SaaSAllTheThings: the research assistant · todo · M · agent
 - Depends on: T32, T40
 - Touches: work/SaaSAllTheThings (one pull request; the director merges)
-- Done when: SaaSAllTheThings has an open pull request that builds the research assistant from `product/anchors/research.md`, with its domain file (Azure and the customer's security framework), an `R<n>` counter on its `Next IDs` line, and the new files in its README, install and bundle scripts, skills folder and selftest, following AGENTS.md › Project rules for framework work (check)
+- Done when: SaaSAllTheThings has a merged pull request that builds the research assistant from `product/anchors/research.md`, with its domain file (Azure and the customer's security framework), an `R<n>` counter on its `Next IDs` line, and the new files in its README, install and bundle scripts, skills folder and selftest, following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Planned framework changes
 
 ### T34 · The Research skill page · todo · S · agent
@@ -185,15 +186,16 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 ### T19 · Godot-Director: export onboarding and /export · todo · M · agent
 - Depends on: T40
 - Touches: work/Godot-Director (one pull request; the director merges); docs/frameworks/godot-director.md once released
-- Done when: Godot-Director has an open pull request whose onboarding asks for missing export settings (target platforms) and where exports run (local, a build container, or hosted CI such as GitHub Actions); when the step is skipped, onboarding adds a GDD open question on both and a setup item that depends on it, so `/design Q<n>` runs the step later and `/next-task` builds it; and that adds an `/export` skill, following AGENTS.md › Project rules for framework work (check) · once released there, the Godot-Director page documents them (check)
+- Done when: Godot-Director has a merged pull request whose onboarding asks for missing export settings (target platforms) and where exports run (local, a build container, or hosted CI such as GitHub Actions); when the step is skipped, onboarding adds a GDD open question on both and a setup item that depends on it, so `/design Q<n>` runs the step later and `/next-task` builds it; and that adds an `/export` skill, following AGENTS.md › Project rules for framework work (check) · once released there, the Godot-Director page documents them (check)
 - Brief: Scope › Planned framework changes
 
 ### T31 · Godot-Director: CI export and CD release · todo · M · agent
 - Depends on: T19
 - Touches: work/Godot-Director (one pull request; the director merges); docs/frameworks/godot-director.md and a /release skill page once released
-- Done when: Godot-Director has an open pull request with CI that runs the export on every change, and CD that releases builds to a platform's UAT branch with optional promotion to production, following AGENTS.md › Project rules for framework work (check) · once released there, the Godot-Director page documents them and /release gets its own skill page (check)
+- Done when: Godot-Director has a merged pull request with CI that runs the export on every change, and CD that releases builds to a platform's UAT branch with optional promotion to production, following AGENTS.md › Project rules for framework work (check) · once released there, the Godot-Director page documents them and /release gets its own skill page (check)
 - Brief: Scope › Planned framework changes
 
 ## Notes
+- T46 waits on the merge of Godot-Director #2, App-Director #2 and SaaSAllTheThings #2. T47 and T48 change selftest.sh, which those pull requests also change, so they wait on App-Director #2 and SaaSAllTheThings #2.
 - T39, T35, T33, T42, T43 and T19 are built in the framework clones, so they wait on T40. T31 follows T19.
 - T29's pull requests are merged, so all three framework repos have their root queue. T37 waits on the releases; T34 waits until all three frameworks have released the research assistant.
