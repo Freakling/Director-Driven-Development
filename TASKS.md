@@ -99,7 +99,8 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: once all three frameworks have released the research assistant, the page describes the shared behaviour and what is unique per repo, matching the released procedures (check) · Design calls links to it (check) · `bash tools/check.sh` passes (check)
 - Brief: Scope › Common skills
 
-### T19 · Godot-Director: export onboarding and /export · todo · M · agent
+### T19 · Godot-Director: export onboarding and /export · in-progress 2026-10-16 · M · agent
+- PRs: Godot-Director #10 (open)
 - Depends on: T40
 - Touches: work/Godot-Director (one pull request; the director merges); docs/frameworks/godot-director.md once released
 - Done when: Godot-Director has a merged pull request whose onboarding asks for missing export settings (target platforms) and where exports run (local, a build container, or hosted CI such as GitHub Actions); when the step is skipped, onboarding adds a GDD open question on both and a setup item that depends on it, so `/design Q<n>` runs the step later and `/next-task` builds it; and that adds an `/export` skill, following AGENTS.md › Project rules for framework work (check) · once released there, the Godot-Director page documents them (check)
