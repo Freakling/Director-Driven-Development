@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T73 · B5
+**Next IDs:** T74 · B5
 
 ## Milestones
 | Milestone | Status |
@@ -112,10 +112,16 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: the release pull request, which covers T19 (export onboarding and /export), is merged, and `tools/work-release.sh` has tagged `v3.9.0` and published the GitHub release, following AGENTS.md › Project rules › Framework work › Releases (check) · an item here moves the docs links to `v3.9.0` and documents export onboarding and /export on the Godot-Director page (check)
 - Brief: Scope › Planned framework changes
 
-### T34 · The Research skill page · in-progress 2026-10-16 · S · agent
+### T34 · The Research skill page · done · S · agent
 - Depends on: T33, T42, T43
 - Touches: docs/skills/research.md (new), docs/skills/index.md, mkdocs.yml, docs/concept/design-calls.md
 - Done when: once all three frameworks have released the research assistant, the page describes the shared behaviour and what is unique per repo, matching the released procedures (check) · Design calls links to it (check) · `bash tools/check.sh` passes (check)
+- Brief: Scope › Common skills
+
+### T73 · The /design page links to /research · todo · XS · agent
+- Depends on: T34
+- Touches: docs/skills/design.md
+- Done when: where the /design page mentions the researcher, it links to the /research page (check) · `bash tools/check.sh` passes (check)
 - Brief: Scope › Common skills
 
 ### T19 · Godot-Director: export onboarding and /export · done · M · agent
@@ -134,5 +140,5 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 ## Notes
 - T55, T54 and T56 are released as SaaSAllTheThings v0.7.0, Godot-Director v3.6.0 and App-Director v1.4.0.
 - T34 waits until all three frameworks have released the research assistant.
-- All three frameworks ship /research, so T34 is ready after T72. T71 releases T19; T31 follows T19.
+- T71 releases T19; T31 follows T19.
 - T31 follows T19.

@@ -6,12 +6,13 @@
 
 Every framework ships a core set of skills that work the same way across all three repositories. These pages describe what each skill does and how it differs by framework. Skills that only one framework ships stay on that framework's page.
 
-## The six common skills
+## The common skills
 
 | Skill | What it does |
 |---|---|
 | [/next-task](next-task.md) | Pick the next ready item, build it, prove it and commit |
 | [/design](design.md) | Run a design session, record the decisions and open questions |
+| [/research](research.md) | A read-only researcher answers one question in a fresh context and writes a dated note |
 | [/align](align.md) | Check whether the codebase matches the design, and flag what doesn't |
 | [/drift-reset](drift-reset.md) | Reset a principle that has been built two different ways back to one |
 | [/prune](prune.md) | Remove dead code, stale items and obsolete records |

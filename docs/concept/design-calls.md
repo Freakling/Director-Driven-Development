@@ -8,6 +8,8 @@ When the agent reaches a decision the brief does not settle, it stops and presen
 
 Only the director's choice is recorded. The design document holds what was decided; the decision log holds one line on why.
 
+When an option depends on facts nobody has checked, such as a service's limits, a licence or a store requirement, the agent first runs a read-only research item. Its note gives the options, the sources with their confidence and a recommendation, and the call is made with the note in front of the director. The note informs the call and never makes it (see [/research](../skills/research.md)).
+
 ## What happens to undecided questions
 
 Anything the director has not answered goes on the open-questions list. The agent never answers an open question itself. Values the director has not set yet are marked `PLACEHOLDER` in the code and config, so the project compiles and checks can run, but nothing real is in their place.
