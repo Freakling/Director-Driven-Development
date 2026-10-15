@@ -138,7 +138,8 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: with gitleaks 8.19.0, which fails every scan command, `tools/check.sh` says it couldn't scan (exit 3, with a hint to upgrade gitleaks) instead of reporting credentials found, its comment about 8.19.0 says so, and the selftest's real-gitleaks checks skip 8.19.0; the minimum version stays 8.18.0, following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Later: orchestrator for the three frameworks
 
-### T52 · App-Director's setup and README name gitleaks 8.19.0 as unusable · todo · XS · agent
+### T52 · App-Director's setup and README name gitleaks 8.19.0 as unusable · in-progress 2026-10-15 · XS · agent
+- PRs: App-Director #7 (open)
 - Depends on: -
 - Touches: work/App-Director: framework/tools/setup-clone.sh, README.md (one pull request; the director merges)
 - Done when: `setup-clone.sh` no longer accepts gitleaks 8.19.0 as at least 8.18.0, and says to upgrade it, and the README's requirement names 8.19.0 as the exception, matching `tools/check.sh` after App-Director #6, following AGENTS.md › Project rules for framework work (check)
@@ -147,7 +148,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 ### T53 · App-Director's fast check notices a changed gitleaks · todo · S · agent
 - Depends on: -
 - Touches: work/App-Director: framework/tools/check.sh, selftest.sh (one pull request; the director merges)
-- Done when: `tools/check.sh --if-changed` doesn't reuse a cached pass when gitleaks was removed or its version changed since that pass, so the secrets step runs again, following AGENTS.md › Project rules for framework work (check)
+- Done when: `tools/check.sh --if-changed` doesn't reuse a cached pass when gitleaks was removed or its version changed since that pass, so the secrets step runs again (check) · the selftest's "setup-clone installs the pre-commit hook" check expects setup-clone's refusal on gitleaks 8.19.0 instead of failing there, following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Later: orchestrator for the three frameworks
 
 ### T48 · SaaSAllTheThings' selftest skips .NET without the SDK · done · S · agent
@@ -234,4 +235,4 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - T51 sets up releases; the first proposals under it cover T46, T47, T35, T48 and T49, which are done.
 - T37 waits on the release of the commit model in all three frameworks; T34 waits until all three have released the research assistant.
 - T31 follows T19.
-- T50 waits on App-Director #6; T53, T39 and T33 change App-Director's selftest.sh or check.sh, so they wait on it too.
+- T50 waits on App-Director #6 and T52 on App-Director #7; when one merges, the other conflicts in its records (Next IDs ends at B5). T53, T39 and T33 change App-Director's selftest.sh or check.sh, so they wait on it too.
