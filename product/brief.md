@@ -31,7 +31,7 @@ Every skill that all three frameworks ship gets its own page, to keep each one r
 - **Release:** `/release` stays on the App-Director and SaaSAllTheThings pages while only two frameworks ship it, because it works differently in each. It gets a skill page once Godot-Director ships its release skill (T31). (confirmed by director: T21 2026-10-11)
 
 ### Built with App-Director
-The site and its repository are built with App-Director: tasks in `TASKS.md`, design in `product/`, and one check before every commit. The home page and the README say so, which makes the repo a public example of the framework in use and a running test that it works.
+The site and its repository are built with App-Director: tasks in `TASKS.md`, design in `product/`, and one check before every commit. The home page and the README say so, which makes the repo a public example of the framework in use and a running test that it works. The home page's Built with App-Director section also links to the internal page on how this repository develops the three frameworks.
 
 ### Identity
 The mark is the Signal: one small filled D nested inside two outlined D's that share a spine, in the amber accent on the dark background. It stands for the director's call going out to the agents. The header logo and the favicon use the same mark.
@@ -45,7 +45,10 @@ Posts about the why, such as the anchoring post and the factories post, get no d
 ### Later: orchestrator for the three frameworks
 Once the director is happy with the docs side, the repository becomes the orchestrator for the three frameworks:
 - The common skill pages become the anchors: the agreed behaviour of each shared skill, and the recorded differences per repo.
-- A task here pushes tasks to each framework repo's own root `TASKS.md`, by pull request, and that repo's build agents make the changes. Each framework repo gets its own root queue before the first push; `project/TASKS.md` is the adopters' template and never receives these tasks.
+- **Framework work is done here.** This repository builds the framework repos' items with App Director, in gitignored clones of the three repos under `work/`. In a clone, the work follows that repo's own developer notes (`CLAUDE.md`) and passes its `selftest.sh`. Every change reaches a framework repo as a pull request that the director merges; the agent never merges.
+  - **One pull request per item.** A framework item waits in this repo's `TASKS.md` until it's built, then reaches the framework's root `TASKS.md` together with its change, so the root queue records what was done there. `project/TASKS.md` is the adopters' template and never receives these items.
+  - **The pull request is the gate.** A framework item commits and pushes without pausing for approval, even as a single task; the director's review and merge on GitHub is the only gate.
+- **An internal page explains it.** A page in the repository, outside the Pages site, describes how framework work runs here, with a flowchart and a sequence diagram.
 - This repository acts as the auditor: it checks that the three repos stay aligned with the anchors.
 - It is recursive: App-Director builds this repository, and this repository aligns App-Director along with the other two. The site mentions this once the orchestrator exists.
 
@@ -101,4 +104,4 @@ A reader arrives from a saemundsson.se post on the matching docs page, and can g
 
 Q3: Should the site use a custom domain (for example under saemundsson.se) instead of freakling.github.io? (later)
 
-<!-- Next Q: 12 -->
+<!-- Next Q: 14 -->
