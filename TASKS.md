@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T61 · B5
+**Next IDs:** T63 · B5
 
 ## Milestones
 | Milestone | Status |
@@ -152,8 +152,8 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: `tools/check.sh --if-changed` doesn't reuse a cached pass when gitleaks was removed or its version changed since that pass, so the secrets step runs again, following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Later: orchestrator for the three frameworks
 
-### T57 · App-Director's selftest expects setup to refuse gitleaks 8.19.0 · in-progress 2026-10-15 · XS · agent
-- PRs: App-Director #10 (open)
+### T57 · App-Director's selftest expects setup to refuse gitleaks 8.19.0 · done · XS · agent
+- PRs: App-Director #10 (merged)
 - Depends on: T52
 - Touches: work/App-Director: selftest.sh (one pull request; the director merges)
 - Done when: with gitleaks 8.19.0, the selftest's "setup-clone installs the pre-commit hook" check expects setup-clone's refusal (App-Director #7) instead of failing, following AGENTS.md › Project rules for framework work (check)
@@ -225,6 +225,18 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: every link into App-Director points at v1.4.0 (check) · the pages describe what 1.4.0 changed for App-Director where they state its old behaviour, apart from the commit model, which T37 rewrites for all three (check) · `bash tools/check.sh` passes (check)
 - Brief: Scope › Common skills
 
+### T61 · Release Godot-Director 3.7.0 · todo · S · agent
+- Depends on: T51
+- Touches: work/Godot-Director: VERSION, .claude-plugin/plugin.json, CHANGELOG.md (one pull request; the director merges)
+- Done when: the release pull request, which covers T42 (the research assistant), is merged, and `tools/work-release.sh` has tagged `v3.7.0` and published the GitHub release, following AGENTS.md › Project rules › Framework work › Releases (check) · an item here moves the docs links to `v3.7.0` and updates the pages for what it ships (check)
+- Brief: Scope › Planned framework changes
+
+### T62 · Release App-Director 1.4.1 · todo · S · agent
+- Depends on: T51
+- Touches: work/App-Director: VERSION, .claude-plugin/plugin.json, CHANGELOG.md (one pull request; the director merges)
+- Done when: the release pull request, which covers T57, is merged, and `tools/work-release.sh` has tagged `v1.4.1` and published the GitHub release, following AGENTS.md › Project rules › Framework work › Releases (check) · an item here moves the docs links to `v1.4.1` and updates the pages for what it ships (check)
+- Brief: Scope › Planned framework changes
+
 ### T41 · The internal framework workflow page · done · S · agent
 - Depends on: T40
 - Touches: product/framework-workflow.md (new), docs/index.md
@@ -262,14 +274,15 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: App-Director has a merged pull request that builds the research assistant from `product/anchors/research.md`, with its domain file (stacks, libraries and app-store requirements), an `R<n>` counter on its `Next IDs` line, and the new files in its README, install script, skills folder and selftest, following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Planned framework changes
 
-### T42 · Godot-Director: the research assistant · in-progress 2026-10-15 · M · agent
-- PRs: Godot-Director #5 (open)
+### T42 · Godot-Director: the research assistant · done · M · agent
+- PRs: Godot-Director #5 (merged)
 - Depends on: T32, T40
 - Touches: work/Godot-Director: framework/.godot-director/{procedures/research.md (new), research-domain.md (new), tasks.md, rules.md, procedures/next-task.md, procedures/design.md, procedures/align.md}, framework/.claude/{agents/researcher.md (new), skills/research/SKILL.md (new), settings.json}, project/TASKS.md, project/design/research/README.md (new), README.md, ONBOARDING.md, selftest.sh, examples/ (one pull request; the director merges)
 - Done when: Godot-Director has a merged pull request that builds the research assistant from `product/anchors/research.md`, with its domain file (the Godot docs and engine version, asset licences and store requirements), an `R<n>` counter on its `Next IDs` line, and the new files in its README, install script, skills folder and selftest, following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Planned framework changes
 
 ### T43 · SaaSAllTheThings: the research assistant · in-progress 2026-10-15 · M · agent
+- PRs: SaaSAllTheThings #6 (open)
 - Depends on: T32, T40
 - Touches: work/SaaSAllTheThings (one pull request; the director merges)
 - Done when: SaaSAllTheThings has a merged pull request that builds the research assistant from `product/anchors/research.md`, with its domain file (Azure and the customer's security framework), an `R<n>` counter on its `Next IDs` line, and the new files in its README, install and bundle scripts, skills folder and selftest, following AGENTS.md › Project rules for framework work (check)
@@ -296,5 +309,5 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 ## Notes
 - T55, T54 and T56 are released as SaaSAllTheThings v0.7.0, Godot-Director v3.6.0 and App-Director v1.4.0, so the commit model is released in all three and T37 is ready after T60.
 - T34 waits until all three frameworks have released the research assistant.
-- T57 waits on App-Director #10; T33 changes App-Director's selftest.sh, so it waits on it too. T39 changes App-Director's selftest.sh and Godot-Director's README.md and selftest.sh, so it waits on #10 and Godot-Director #5.
-- T31 follows T19. T19 changes Godot-Director's README.md and ONBOARDING.md, which Godot-Director #5 (T42) also changes, so it waits on it.
+- T43 waits on SaaSAllTheThings #6. T61 and T62 propose releases for T42 and T57.
+- T31 follows T19.
