@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T69 · B5
+**Next IDs:** T70 · B5
 
 ## Milestones
 | Milestone | Status |
@@ -26,15 +26,15 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: the release pull request, which covers T42 (the research assistant), is merged, and `tools/work-release.sh` has tagged `v3.7.0` and published the GitHub release, following AGENTS.md › Project rules › Framework work › Releases (check) · an item here moves the docs links to `v3.7.0` and updates the pages for what it ships (check)
 - Brief: Scope › Planned framework changes
 
-### T62 · Release App-Director 1.5.0 · in-progress 2026-10-15 · S · agent
-- PRs: App-Director #13 (open)
+### T62 · Release App-Director 1.5.0 · done · S · agent
+- PRs: App-Director #13 (merged); released as v1.5.0
 - Depends on: T51, T64, T65
 - Touches: work/App-Director: the version files its CLAUDE.md lists, CHANGELOG.md (one pull request; the director merges)
 - Done when: the release pull request, which covers T57, T39 and T65, is merged, and `tools/work-release.sh` has tagged `v1.5.0` and published the GitHub release, following AGENTS.md › Project rules › Framework work › Releases (check) · an item here moves the docs links to `v1.5.0` and updates the pages for what it ships (check)
 - Brief: Scope › Planned framework changes
 
-### T67 · Release Godot-Director 3.8.0 · in-progress 2026-10-15 · S · agent
-- PRs: Godot-Director #9 (open)
+### T67 · Release Godot-Director 3.8.0 · done · S · agent
+- PRs: Godot-Director #9 (merged); released as v3.8.0
 - Depends on: T51, T64, T65
 - Touches: work/Godot-Director: the version files its CLAUDE.md lists, CHANGELOG.md (one pull request; the director merges)
 - Done when: the release pull request, which covers T39 and T65, is merged, and `tools/work-release.sh` has tagged `v3.8.0` and published the GitHub release, following AGENTS.md › Project rules › Framework work › Releases (check) · an item here moves the docs links to `v3.8.0` and updates the pages for what it ships (check)
@@ -53,8 +53,8 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: the manual install option in SaaSAllTheThings' README clones the latest release tag instead of main, worded as App-Director #12 and Godot-Director #8 do, following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Planned framework changes
 
-### T63 · Release SaaSAllTheThings 0.8.0 · in-progress 2026-10-15 · S · agent
-- PRs: SaaSAllTheThings #9 (open)
+### T63 · Release SaaSAllTheThings 0.8.0 · done · S · agent
+- PRs: SaaSAllTheThings #9 (merged); released as v0.8.0
 - Depends on: T51, T39, T64, T68
 - Touches: work/SaaSAllTheThings: VERSION, .claude-plugin/plugin.json, .claude-plugin/marketplace.json, skills/*/SKILL.md, CHANGELOG.md (one pull request; the director merges)
 - Done when: the release pull request, which covers T43 (the research assistant), T39 and T68, is merged, and `tools/work-release.sh` has tagged `v0.8.0` and published the GitHub release, following AGENTS.md › Project rules › Framework work › Releases (check) · an item here moves the docs links to `v0.8.0` and updates the pages for what it ships (check)
@@ -79,6 +79,12 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Touches: work/App-Director: SKILL.md, skills/app-director/SKILL.md, package.json, scripts/fetch-app-director.sh, .claude-plugin/marketplace.json, CLAUDE.md, README.md, selftest.sh; work/Godot-Director: skills/godot-director/SKILL.md, .claude-plugin/marketplace.json, CLAUDE.md, README.md, selftest.sh; work/SaaSAllTheThings: .claude-plugin/marketplace.json (one pull request per repo; the director merges)
 - Done when: App-Director and Godot-Director each have a merged pull request that makes the skill, the fetch script and, where the marketplace can pin a ref, the plugin install the latest release tag, and that tags every release `v<version>`, with Godot-Director's `skills/godot-director/SKILL.md` `metadata.version` (3.3.0) and App-Director's root `SKILL.md` and `package.json` versions (1.0.0) kept in step with VERSION, following AGENTS.md › Project rules for framework work (check) · SaaSAllTheThings' plugin follows the release tag, with a pull request if it needs a change (check)
 - Brief: Scope › Planned framework changes
+
+### T69 · Docs follow App-Director 1.5.0, Godot-Director 3.8.0 and SaaSAllTheThings 0.8.0 · in-progress 2026-10-16 · S · agent
+- Depends on: T62, T67, T63
+- Touches: docs/frameworks/*.md, docs/skills/*.md, docs/index.md
+- Done when: every link into the three frameworks points at its latest release (check) · the pages describe what these releases changed where they state the old behaviour: the skills, plugins and manual installs take the latest release, and SaaSAllTheThings' page lists `/research` until T34 gives it a skill page (check) · `bash tools/check.sh` passes (check)
+- Brief: Scope › Common skills
 
 ### T33 · App-Director: the research assistant · in-progress 2026-10-15 · M · agent
 - PRs: App-Director #14 (open)
@@ -108,5 +114,5 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 ## Notes
 - T55, T54 and T56 are released as SaaSAllTheThings v0.7.0, Godot-Director v3.6.0 and App-Director v1.4.0.
 - T34 waits until all three frameworks have released the research assistant.
-- T62, T67 and T63 propose the releases of everything merged since each repo's last release.
+- App-Director v1.5.0, Godot-Director v3.8.0 and SaaSAllTheThings v0.8.0 are released; T69 brings the docs up to them. T33 waits on App-Director #14.
 - T31 follows T19.
