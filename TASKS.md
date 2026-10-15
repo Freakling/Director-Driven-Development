@@ -73,7 +73,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: Godot-Director, App-Director and SaaSAllTheThings each have an open pull request that adds a root TASKS.md in the App Director item format, separate from `project/TASKS.md` (check) · push-alignment.sh skips a repo with no root TASKS.md instead of creating one (check) · `bash tools/check.sh` passes (check)
 - Brief: Scope › Later: orchestrator for the three frameworks
 
-### T36 · The /next-task page states Godot-Director's commit prompt accurately · todo · XS · agent
+### T36 · The /next-task page states Godot-Director's commit prompt accurately · done · XS · agent
 - Depends on: -
 - Touches: docs/skills/next-task.md
 - Done when: the Godot-Director section says that its procedure doesn't pause for approval but its settings ask before every commit, matching the current release (check) · `bash tools/check.sh` passes (check)
@@ -123,5 +123,5 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 
 ## Notes
 - T19 waits on T29 (root queues in the framework repos) and Q10. T31 follows T19.
-- T36 and T32 can start now; T35 waits on T29, and T37 on the releases.
+- T32 can start now; T35 waits on T29, and T37 on the releases.
 - T33 waits on T29; T34 waits until all three frameworks have released the research assistant.

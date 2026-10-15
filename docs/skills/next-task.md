@@ -40,7 +40,7 @@ The procedure is at [`framework/.godot-director/procedures/next-task.md`](https:
 - The review diff is written to `.godot/godot-director/review.diff`.
 - New items are formatted following `.godot-director/tasks.md`, and IDs come from `Next IDs` in that file.
 - The builder is told to skip the final `bash tools/check.sh` call: step 4 runs the check from the orchestrator session, and the pre-commit hook is the safety net.
-- The commit follows `rules.md` › Git and is not paused for approval. It happens as soon as the check passes, and the pre-commit hook is the gate. This differs from App-Director and SaaSAllTheThings, which wait for the director's approval.
+- The procedure commits as soon as the check passes, without pausing in the conversation. The framework's `.claude/settings.json` makes Claude Code ask before every `git commit`, and that prompt counts as the approval, so a run of several tasks asks once per commit. App-Director pauses for approval unless the director has asked for a run, and SaaSAllTheThings always waits for approval.
 - The report notes that `(play)` outcomes and bug fixes without regression tests will appear in the next function check.
 - After a passing check, recurring warnings may appear as `check: note: recurring warning (N x): <text>`. The skill has a procedure for verifying, proposing and applying suppressions via `tools/check.ignore`.
 
