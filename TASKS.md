@@ -255,9 +255,10 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: App-Director has a merged pull request that builds the research assistant from `product/anchors/research.md`, with its domain file (stacks, libraries and app-store requirements), an `R<n>` counter on its `Next IDs` line, and the new files in its README, install script, skills folder and selftest, following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Planned framework changes
 
-### T42 · Godot-Director: the research assistant · todo · M · agent
+### T42 · Godot-Director: the research assistant · in-progress 2026-10-15 · M · agent
+- PRs: Godot-Director #5 (open)
 - Depends on: T32, T40
-- Touches: work/Godot-Director (one pull request; the director merges)
+- Touches: work/Godot-Director: framework/.godot-director/{procedures/research.md (new), research-domain.md (new), tasks.md, rules.md, procedures/next-task.md, procedures/design.md, procedures/align.md}, framework/.claude/{agents/researcher.md (new), skills/research/SKILL.md (new), settings.json}, project/TASKS.md, project/design/research/README.md (new), README.md, ONBOARDING.md, selftest.sh, examples/ (one pull request; the director merges)
 - Done when: Godot-Director has a merged pull request that builds the research assistant from `product/anchors/research.md`, with its domain file (the Godot docs and engine version, asset licences and store requirements), an `R<n>` counter on its `Next IDs` line, and the new files in its README, install script, skills folder and selftest, following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Planned framework changes
 
@@ -288,5 +289,5 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 ## Notes
 - T55 and T54 are released as SaaSAllTheThings v0.7.0 and Godot-Director v3.6.0. T37 waits on App-Director's release (T56).
 - T37 waits on the release of the commit model in all three frameworks; T34 waits until all three have released the research assistant.
-- T31 follows T19.
+- T31 follows T19. T19 changes Godot-Director's README.md and ONBOARDING.md, which Godot-Director #5 (T42) also changes, so it waits on it.
 - T53 waits on App-Director #8; T57 changes App-Director's selftest.sh, so it waits on it too.
