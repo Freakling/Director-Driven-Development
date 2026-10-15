@@ -36,3 +36,6 @@ Examples:
 2026-10-12 · the agent may never merge a pull request; code review and comments are permitted, but merge is a human-owned control · director's rule, applies to all repos
 2026-10-12 · the site's tone and feel: calm, technical and trustworthy, in the same dark one-accent look as the blog figures and LinkedIn cards · confirmed by director
 2026-10-13 · alignment tasks land in each framework repo's own root TASKS.md, set up before the first push; never in project/TASKS.md · director's choice: each repo runs the loop with its own build agents, and the template stays clean for adopters
+2026-10-15 · Q4: no promotional content on the site; it is technical documentation and project orchestration, with how-to guides and a Start here playbook for technical users later · director's choice; the LinkedIn material stays out
+2026-10-15 · Q9: Godot-Director's skill is /export · follows Godot's own term for producing a game's binaries
+2026-10-15 · Q8: Godot-Director onboarding asks for missing export settings (target platforms) and where exports run (local, a build container, or hosted CI such as GitHub Actions), and can be deferred; CI (export) and CD (release to a UAT branch, optional promotion to production) come in a later stage · director's choice

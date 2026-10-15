@@ -16,7 +16,10 @@ The how-to reference for Director-Driven Development, centred on the three frame
 ## Scope
 
 ### Now: framework docs
-The site is framework documentation first. A small amount of promotional content is in scope, as long as it points to the why on the blog rather than repeating it.
+The site is technical documentation and project orchestration. Promotional content, such as the LinkedIn material and graphics in `init/`, doesn't belong on it; pages link to the blog for the why.
+
+### Later: playbook
+How-to guides and a "Start here" playbook that guide technical users through installing and running a framework.
 
 ### Concepts
 Each core concept of DDD gets its own page in a Concepts section, explained once and framework-neutral: Overview, Roles, Design calls, Agent development flow, The check, Reviews, Task and model sizing, Records in files, Code shaped for agents, Ownership, Align and drift reset, Built-in cost savings, and Cost tuning for developers. Concept pages explain the idea; skill pages cover the commands and link to their concept.
@@ -24,7 +27,7 @@ Each core concept of DDD gets its own page in a Concepts section, explained once
 ### Common skills
 Every skill that all three frameworks ship gets its own page, to keep each one readable: `/next-task`, `/design`, `/align`, `/drift-reset`, `/prune` and `/refresh-model-sizing`. Each page describes what the skill does and how it works in all three, then has a section that lists what is unique to each repo. Skills only one framework ships stay on that framework's page.
 - **Acceptance check:** one shared page covers `/acceptance` (App-Director, SaaSAllTheThings) and its Godot-Director counterpart `/function-check`, since they are the same concept under two names. `/playtest` and `/feedback` are listed as unique per repo. (confirmed by director: T21 2026-10-11)
-- **Release:** `/release` stays on the App-Director and SaaSAllTheThings pages while only two frameworks ship it, because it works differently in each. It gets a skill page once Godot-Director ships its release skill (T19). (confirmed by director: T21 2026-10-11)
+- **Release:** `/release` stays on the App-Director and SaaSAllTheThings pages while only two frameworks ship it, because it works differently in each. It gets a skill page once Godot-Director ships its release skill (T31). (confirmed by director: T21 2026-10-11)
 
 ### Built with App-Director
 The site and its repository are built with App-Director: tasks in `TASKS.md`, design in `product/`, and one check before every commit. The home page and the README say so, which makes the repo a public example of the framework in use and a running test that it works.
@@ -49,7 +52,9 @@ All orchestrator work waits for the director's go-ahead (T12).
 
 ### Planned framework changes
 Changes the director has decided for the framework repos, carried out through the orchestrator. The docs describe a change only once it is released in its repo.
-- **Godot-Director gets build and release skills:** one exports the game's binaries for specific platforms; the other triggers the build pipelines that push builds to the platforms. Details are open (Q8, Q9).
+- **Godot-Director gets export and release, in two stages:**
+  1. **Onboarding and `/export`.** Onboarding guides the director through the export settings Godot doesn't already have, such as the target platforms, and asks where exports should run: on the director's machine, in a build container (local or in a cloud), or on a hosted service such as GitHub Actions, with guidance to set it up. This step can be skipped and done at a later stage (Q10). The skill is `/export`, following Godot's own term for producing a game's binaries.
+  2. **CI and CD.** CI runs the Godot export on every change; CD releases builds to a platform's UAT branch and, if the director wants, promotes them to production.
 
 ## Core Flows
 
@@ -86,8 +91,6 @@ A reader arrives from a saemundsson.se post on the matching docs page, and can g
      Work that depends on one gets a PLACEHOLDER. Delete a question when it's decided. -->
 
 Q3: Should the site use a custom domain (for example under saemundsson.se) instead of freakling.github.io? (later)
-Q4: Which promotional content belongs on the site (for example a list of posts, talks and workshops, or a "work with me" invitation), and where does it go?
-Q8: For Godot-Director's build and release: which platforms and stores come first (for example Windows, macOS, Linux, web, Android, iOS; itch.io, Steam, the mobile stores), and which pipeline host runs the builds (for example GitHub Actions)? (later, orchestrator)
-Q9: What should Godot-Director's build skill be called? `/build` would share its name with the `build.md` procedure the builder already follows; `/export` matches Godot's own term. (later, orchestrator)
+Q10: How does a director rerun one onboarding step later, such as Godot-Director's export setup when it was skipped: a command, a flag on the setup skill, or something else? (later, orchestrator)
 
-<!-- Next Q: 10 -->
+<!-- Next Q: 11 -->
