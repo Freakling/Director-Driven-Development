@@ -29,8 +29,10 @@ bash selftest.sh      # before every push
 `selftest.sh` fails on:
 
 - en or em dashes in the sources;
-- any command or skill a framework ships that its framework page doesn't mention (it keeps clones of the three repos in `.app-director/state/frameworks`, refreshes them when online and reuses them offline; set `FRAMEWORKS_DIR` to use other clones);
+- any command or skill a framework ships that its framework page doesn't mention (it keeps a copy of each repo at its latest release in `.app-director/state/frameworks`, moves it to a newer release when online and reuses the cached copy offline; set `FRAMEWORKS_DIR` to use other clones);
 - broken internal links and anchors (`mkdocs build --strict`).
+
+The docs follow each framework's latest release, not `main`, so a page that describes a command only `main` ships gets a warning.
 
 GitHub Actions runs the selftest on every push and pull request, and deploys `main` to GitHub Pages.
 
