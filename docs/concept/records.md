@@ -6,9 +6,10 @@ Nobody holds the project in their head, human or agent. Everything that matters 
 
 | Record | Holds | Changes when |
 |---|---|---|
-| `TASKS.md` | Work, bugs and milestones, with their status and the files each one touches | A task is added, claimed, finished or reprioritised |
+| `TASKS.md` | Work, bugs, research items and milestones, with their status and the files each one touches | A task is added, claimed, finished or reprioritised |
 | `product/brief.md` | What the app should be, in sections, plus the open questions | The director makes a design call or settles a question |
-| `product/decisions.md` | Why a design decision was made, one line each, appended and never rewritten | A design call is decided |
+| `product/decisions.md` | Why a design decision was made, one line each, appended and never rewritten; a line links to the research note it followed | A design call is decided |
+| `product/research/` | The evidence behind a design call: one dated note per topic, with its sources, their confidence and the date the claims were verified | A research item is finished, and a later session reuses or updates the note |
 | `AGENTS.md` | The systems that exist, what each one owns, and the project rules | A system is added, moved or re-scoped |
 | Commit messages | Why each change was made | Every commit |
 

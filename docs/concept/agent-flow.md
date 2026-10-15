@@ -10,16 +10,17 @@ The orchestrator picks the next ready task from `TASKS.md`, high-severity bugs f
 - The task's size picks the model that builds it. See [Task and model sizing](sizing.md).
 - A design question the task does not settle stops the build: the builder reports it as blocked, with options, and the director decides. See [Design calls](design-calls.md#during-a-build).
 - The builder returns a structured report of about 20 lines. The orchestrator keeps the report, not the code, so ten tasks cost about as much context as one.
+- A research item (`R<n>`) goes to a researcher the same way, in a fresh, empty context. Its size picks the researcher's model, as a task's size picks the builder's. When it informs an open question, finishing it makes that question ready for a design call; the question stays open until the director decides. See [/research](../skills/research.md).
 
 ## Prove
 
 One check defines done. See [The check](check.md).
 
-Large changes, and medium ones that cross a risky boundary, also get an independent review before the commit. See [Reviews](reviews.md).
+Large changes, and medium ones that cross a risky boundary, also get an independent review before the commit. See [Reviews](reviews.md). A research item skips both, since it changes no code.
 
 ## Commit
 
-One task, one commit, with the task's records in the same commit. A commit needs the director's approval, which a run the director asks for gives in advance (see [`/next-task`](../skills/next-task.md#commits)); an approval prompt from the assistant counts. The git pre-commit hook runs the check before any commit that touches code, so a failing task cannot land.
+One task, one commit, with the task's records in the same commit. A research item's note is committed with its records in the same way. A commit needs the director's approval, which a run the director asks for gives in advance (see [`/next-task`](../skills/next-task.md#commits)); an approval prompt from the assistant counts. The git pre-commit hook runs the check before any commit that touches code, so a failing task cannot land.
 
 After the commit, the records hold everything about the task. The next task can start after `/clear`, or in a new session, without losing anything. See [Records in files](records.md).
 

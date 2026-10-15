@@ -10,9 +10,11 @@ A session starts with two files: the project's `AGENTS.md` and the framework's r
 
 Everything else loads when it's used. Each command, such as `/next-task` or `/design`, is a short pointer to a procedure file, and the procedure is read only when the command runs. The task format is read only when a task is written. In SaaSAllTheThings, the reference architecture is one file per topic (tenancy, identity, messaging, cost and so on), and the agent reads only the topics a task touches.
 
-## A fresh builder context per task
+## A fresh context per task
 
 The main session never builds anything itself. It hands each task to a builder subagent that starts with an empty context, so nothing from earlier tasks is carried along and paid for again. The builder reads only what its task names, by heading or line range, and its context is thrown away when it's done.
+
+Research gets the same treatment. A researcher starts with an empty context and reads the web pages and sources a question needs there, not in the main session. It returns its note, and the rest of its reading is discarded with its context.
 
 ## An orchestrator that only reads reports
 

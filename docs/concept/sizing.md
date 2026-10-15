@@ -1,6 +1,6 @@
 # Task and model sizing
 
-Every task gets a size before it's built. The size makes the scope clear before any tokens are spent, and it picks the model that builds the task.
+Every task gets a size before it's built. The size makes the scope clear before any tokens are spent, and it picks the model that builds the task. A research item is sized the same way, and its size picks the researcher's model.
 
 ## Sizes
 
@@ -13,6 +13,8 @@ Every task gets a size before it's built. The size makes the scope clear before 
 | XL | A cross-cutting refactor or redesign. Split it before building if you can |
 
 When in doubt, pick the smaller size, and split L and XL tasks where you can. SaaSAllTheThings splits them in a fixed order: contract first, then domain and application, then the host, then the client. Each framework's `tasks.md` has the exact wording for its domain.
+
+For a research item the scope is the question, not code. One fact checked against one source is XS, a comparison of a few options in one area is M, and a comparison that spans several areas is L.
 
 ## The model map
 

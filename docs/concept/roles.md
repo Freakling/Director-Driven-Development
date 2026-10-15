@@ -1,6 +1,6 @@
 # Roles
 
-Four roles share the work. Only one of them is human.
+Five roles share the work. Only one of them is human.
 
 | Role | Who | Does | Never |
 |---|---|---|---|
@@ -8,6 +8,7 @@ Four roles share the work. Only one of them is human.
 | **Orchestrator** | The main session | Picks the next task, records the director's decisions, hands builds off, updates the records | Reads the code being changed |
 | **Builder** | A subagent with a fresh context | Builds one task, runs the check, returns a structured report of about 20 lines | Fixes things outside its task; it reports them instead |
 | **Reviewer** | A read-only subagent with a fresh context | Checks a finished change against its task, the rules and the tests, and returns ranked findings | Edits code |
+| **Researcher** | A read-only subagent with a fresh context | Researches one question and returns a note with options, trade-offs, sources and a recommendation | Decides, records a decision or edits a design document |
 
 ## The director
 
@@ -27,8 +28,12 @@ Each task gets a new builder with an empty context. It reads the files the task 
 
 The reviewer runs only where a mistake is expensive. See [Reviews](reviews.md) for the triggers in each framework. The same read-only agent analyses the system as built during a [drift reset](drift.md) in Godot-Director and App-Director.
 
+## The researcher
+
+A research question gets a researcher with a fresh context. It reads the project's records, the repository and the web, and returns its note to the orchestrator, which writes the file. The researcher informs the director's call and never makes it, so its recommendation is one option among the director's choices. See [/research](../skills/research.md) for how a research item runs.
+
 ## Without subagents
 
-The core of each framework is tool-neutral: the rules, the procedures, the check and the git pre-commit hook work with any assistant that reads `AGENTS.md`. Fresh-context builds, the reviewer, model sizing and the hooks that block risky commands need an assistant that supports subagents and hooks.
+The core of each framework is tool-neutral: the rules, the procedures, the check and the git pre-commit hook work with any assistant that reads `AGENTS.md`. Fresh-context builds, research, the reviewer, model sizing and the hooks that block risky commands need an assistant that supports subagents and hooks.
 
 <div class="takeaway"><span>A director doesn't need to act. A director needs to recognize a good take.</span><span class="url"><a href="https://saemundsson.se/2026/10/07/director-driven-development/">Why: the blog post</a></span></div>
