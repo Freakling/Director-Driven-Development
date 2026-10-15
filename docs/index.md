@@ -102,7 +102,7 @@ All three are MIT licensed, run locally, and work with any AI coding assistant t
 
 ## Built with App-Director
 
-This site is built with [App-Director](frameworks/app-director.md). Every change is a task in its [`TASKS.md`](https://github.com/Freakling/Director-Driven-Development/blob/main/TASKS.md), design decisions are recorded in [`product/`](https://github.com/Freakling/Director-Driven-Development/tree/main/product), and one check passes before every commit. The repository is a public example of the framework in use, and a running test that it works.
+This site is built with [App-Director](frameworks/app-director.md). Every change is a task in its [`TASKS.md`](https://github.com/Freakling/Director-Driven-Development/blob/main/TASKS.md), design decisions are recorded in [`product/`](https://github.com/Freakling/Director-Driven-Development/tree/main/product), and one check passes before every commit. The repository is a public example of the framework in use, and a running test that it works. The same repository also develops the three frameworks: see [how framework work runs](https://github.com/Freakling/Director-Driven-Development/blob/main/product/framework-workflow.md) on GitHub.
 
 ## Read more
 

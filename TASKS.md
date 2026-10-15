@@ -129,7 +129,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: SaaSAllTheThings' selftest skips its .NET part on a machine with the .NET host but no SDK, where three checks fail on main today, and still runs it where an SDK is installed, following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Later: orchestrator for the three frameworks
 
-### T41 · The internal framework workflow page · todo · S · agent
+### T41 · The internal framework workflow page · done · S · agent
 - Depends on: T40
 - Touches: product/framework-workflow.md (new), docs/index.md
 - Done when: `product/framework-workflow.md` explains how framework work runs here, with a flowchart and a sequence diagram in Mermaid that GitHub renders, matching AGENTS.md › Project rules (check) · it isn't part of the Pages build (check) · the home page's Built with App-Director section links to it on GitHub (check) · `bash tools/check.sh` passes (check)
