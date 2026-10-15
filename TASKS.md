@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T74 · B5
+**Next IDs:** T75 · B5
 
 ## Milestones
 | Milestone | Status |
@@ -107,6 +107,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Brief: Scope › Common skills
 
 ### T71 · Release Godot-Director 3.9.0 · in-progress 2026-10-16 · S · agent
+- PRs: Godot-Director #11 (open)
 - Depends on: T51, T19
 - Touches: work/Godot-Director: the version files its CLAUDE.md lists, CHANGELOG.md (one pull request; the director merges)
 - Done when: the release pull request, which covers T19 (export onboarding and /export), is merged, and `tools/work-release.sh` has tagged `v3.9.0` and published the GitHub release, following AGENTS.md › Project rules › Framework work › Releases (check) · an item here moves the docs links to `v3.9.0` and documents export onboarding and /export on the Godot-Director page (check)
@@ -122,6 +123,12 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Depends on: T34
 - Touches: docs/skills/design.md
 - Done when: where the /design page mentions the researcher, it links to the /research page (check) · `bash tools/check.sh` passes (check)
+- Brief: Scope › Common skills
+
+### T74 · The frameworks overview lists the research assistant · in-progress 2026-10-16 · XS · agent
+- Depends on: T34
+- Touches: docs/frameworks/index.md
+- Done when: "Shared by all three" on the frameworks overview names `/research`, linking its skill page, and the researcher next to the builder and reviewer subagents, and its install line matches the framework pages (each install path takes the latest release) (check) · `bash tools/check.sh` passes (check)
 - Brief: Scope › Common skills
 
 ### T19 · Godot-Director: export onboarding and /export · done · M · agent
