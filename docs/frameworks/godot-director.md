@@ -4,7 +4,7 @@
 
 Make the game you designed, with AI doing the building and you staying the director. Godot-Director works for new games and games already in development. You decide the design, the balance and the priorities; the AI builds, tests and keeps the records.
 
-[Repository](https://github.com/Freakling/Godot-Director){ .md-button .md-button--primary } [README](https://github.com/Freakling/Godot-Director#readme){ .md-button } [Procedures](https://github.com/Freakling/Godot-Director/tree/v3.6.0/framework/.godot-director/procedures){ .md-button }
+[Repository](https://github.com/Freakling/Godot-Director){ .md-button .md-button--primary } [README](https://github.com/Freakling/Godot-Director#readme){ .md-button } [Procedures](https://github.com/Freakling/Godot-Director/tree/v3.7.0/framework/.godot-director/procedures){ .md-button }
 
 ## What the check enforces
 
@@ -54,6 +54,7 @@ Onboarding works out whether this is a new game, an existing game or an upgrade,
 |---|---|
 | `/next-task` | Builds the next ready item in a fresh context, proves it with the check, updates the records and commits it once you approve. A run you ask for, such as "grab tasks until you're blocked", commits each item without pausing. Also takes an item ID, a number of items, or `queue` |
 | `/design` | A design session on a topic, or `/design questions` to rank the open questions by what they unblock |
+| `/research` | A read-only researcher answers one question in a fresh context and writes a dated note with its sources to `design/research/`. It informs; you decide. Procedure: [`research.md`](https://github.com/Freakling/Godot-Director/tree/v3.7.0/framework/.godot-director/procedures/research.md) |
 | `/playtest` | Starts a playtest report, or turns a filled-in one into bugs, score trends and design proposals |
 | `/function-check` | Prepares or processes a checklist of built features for you to tick Works or Broken |
 | `/align` | Consistency pass across the GDD, decisions, tasks, `AGENTS.md`, settings and code |

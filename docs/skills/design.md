@@ -19,12 +19,13 @@ Run it as `/design <topic>` for a topic, or `/design questions` to rank the open
 
 ### Godot-Director
 
-The procedure is at [`framework/.godot-director/procedures/design.md`](https://github.com/Freakling/Godot-Director/tree/v3.6.0/framework/.godot-director/procedures/design.md) in the Godot-Director repository.
+The procedure is at [`framework/.godot-director/procedures/design.md`](https://github.com/Freakling/Godot-Director/tree/v3.7.0/framework/.godot-director/procedures/design.md) in the Godot-Director repository.
 
 - It reads the Design Pillars and the GDD's Open Questions, and records decisions in `design/gdd.md` and `design/decisions.md`.
 - If an idea contradicts a Design Pillar, the skill stops and asks which gives way, the pillar or the idea.
 - New items carry a `GDD:` heading and follow the format in `.godot-director/tasks.md`. A big rework is planned in stages: first move rules out of screens, then rework the systems, then rebuild the UI.
 - The session leaves data and scenes alone. Tunable values are placeholders the director edits in the `.tres` files.
+- A complex question that depends on facts nobody has checked goes to the `researcher`. The note goes in `design/research/`, and a decision that followed it ends its `why` with the note's path.
 
 ### App-Director
 
