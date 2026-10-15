@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T47 · B3
+**Next IDs:** T49 · B3
 
 ## Milestones
 | Milestone | Status |
@@ -110,10 +110,22 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: a difference the audit finds in a framework's procedure becomes a framework item in this repo's TASKS.md whose `Touches` names that framework's clone under `work/`, instead of a pull request that only adds an item (check) · the script opens no pull requests (check) · AGENTS.md › Architecture describes it in one row, with the stale Alignment row merged into Orchestrator (check) · `bash tools/check.sh` passes (check)
 - Brief: Scope › Later: orchestrator for the three frameworks
 
-### T46 · The upgrade-file check ignores nested clones, in all three frameworks · todo · S · agent
+### T46 · The upgrade-file check ignores nested clones, in all three frameworks · done · S · agent
 - Depends on: B2
 - Touches: work/App-Director, work/Godot-Director, work/SaaSAllTheThings (one pull request per repo; the director merges)
 - Done when: each framework's pre-commit hook, `/align` procedure and onboarding keep only paths that end in its upgrade suffix (`.adir-new`, `.gdir-new`, `.satt-new`), so a nested clone in an ignored folder no longer blocks a commit while a real upgrade file still does, with one open pull request per repo, following AGENTS.md › Project rules for framework work (check)
+- Brief: Scope › Later: orchestrator for the three frameworks
+
+### T47 · App-Director's selftest works with gitleaks 8.30 · todo · S · agent
+- Depends on: -
+- Touches: work/App-Director (one pull request; the director merges)
+- Done when: App-Director's selftest checks "names the file with the secret" and "allowlisted fingerprint passes" pass with gitleaks 8.30.1, which they fail on main today, and still pass with the version they were written for, following AGENTS.md › Project rules for framework work (check)
+- Brief: Scope › Later: orchestrator for the three frameworks
+
+### T48 · SaaSAllTheThings' selftest skips .NET without the SDK · todo · S · agent
+- Depends on: -
+- Touches: work/SaaSAllTheThings (one pull request; the director merges)
+- Done when: SaaSAllTheThings' selftest skips its .NET part on a machine with the .NET host but no SDK, where three checks fail on main today, and still runs it where an SDK is installed, following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Later: orchestrator for the three frameworks
 
 ### T41 · The internal framework workflow page · todo · S · agent
