@@ -4,7 +4,7 @@
 
 Make the app you designed, with AI doing the building and you staying the director. App-Director works for new apps and apps already in development, on TypeScript, Flutter or Python. You decide what the app does, how it should feel and what gets built next; the AI builds, tests and keeps the records.
 
-[Repository](https://github.com/Freakling/App-Director){ .md-button .md-button--primary } [README](https://github.com/Freakling/App-Director#readme){ .md-button } [Procedures](https://github.com/Freakling/App-Director/tree/v1.4.0/framework/.app-director/procedures){ .md-button }
+[Repository](https://github.com/Freakling/App-Director){ .md-button .md-button--primary } [README](https://github.com/Freakling/App-Director#readme){ .md-button } [Procedures](https://github.com/Freakling/App-Director/tree/v1.5.0/framework/.app-director/procedures){ .md-button }
 
 ## What the check enforces
 
@@ -19,7 +19,7 @@ The UI and data folders are set in `tools/check.cfg`. If gitleaks is missing, to
 
 ## Install
 
-You need git with no uncommitted changes, bash (on Windows it comes with Git for Windows) and [gitleaks](https://github.com/gitleaks/gitleaks#installing) 8.18.0 or newer, except 8.19.0, which can't scan.
+You need git with no uncommitted changes, bash (on Windows it comes with Git for Windows) and [gitleaks](https://github.com/gitleaks/gitleaks#installing) 8.18.0 or newer, except 8.19.0, which can't scan. Every option installs the latest release, tagged `v` followed by its version, not `main`.
 
 === "Skill"
 
@@ -29,7 +29,7 @@ You need git with no uncommitted changes, bash (on Windows it comes with Git for
     npx skills add Freakling/App-Director
     ```
 
-    In Claude Code it becomes the `/app-director` command.
+    In Claude Code it becomes the `/app-director` command. The skill fetches the latest release outside your app and runs onboarding; to pick up a newer release later, run `npx skills add` again.
 
 === "Claude Code plugin"
 
@@ -42,7 +42,13 @@ You need git with no uncommitted changes, bash (on Windows it comes with Git for
 
 === "Manual"
 
-    Clone the repository next to your app as `App-Director/`, then ask your assistant:
+    Clone the latest release next to your app as `App-Director/`, using the release's tag from the [Releases page](https://github.com/Freakling/App-Director/releases):
+
+    ```
+    git clone --branch <tag> --depth 1 https://github.com/Freakling/App-Director.git App-Director
+    ```
+
+    Then ask your assistant:
 
     > Read App-Director/ONBOARDING.md and follow it to install App Director into this project.
 

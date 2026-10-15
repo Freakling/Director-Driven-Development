@@ -6,7 +6,7 @@ Build a B2B SaaS from scratch, or turn a working proof of concept or an existing
 
 The architecture: an event-driven Azure Functions backend, separate Windows and mobile clients, OIDC sign-in with Entra ID and federated identity, pooled multi-tenancy that can move a customer to its own deployment later, and enterprise integrations starting with Navision (Dynamics NAV and Business Central). The product is anchored in the customer's own security framework: architecture sessions read the security and compliance requirements kept in the app's `compliance/` folder, and weigh every option against them.
 
-[Repository](https://github.com/Freakling/SaaSAllTheThings){ .md-button .md-button--primary } [README](https://github.com/Freakling/SaaSAllTheThings#readme){ .md-button } [Procedures](https://github.com/Freakling/SaaSAllTheThings/tree/v0.7.0/framework/.satt/procedures){ .md-button } [Reference architecture](https://github.com/Freakling/SaaSAllTheThings/tree/v0.7.0/framework/.satt/reference){ .md-button }
+[Repository](https://github.com/Freakling/SaaSAllTheThings){ .md-button .md-button--primary } [README](https://github.com/Freakling/SaaSAllTheThings#readme){ .md-button } [Procedures](https://github.com/Freakling/SaaSAllTheThings/tree/v0.8.0/framework/.satt/procedures){ .md-button } [Reference architecture](https://github.com/Freakling/SaaSAllTheThings/tree/v0.8.0/framework/.satt/reference){ .md-button }
 
 ## What the check enforces
 
@@ -43,7 +43,7 @@ The only way past a rule is an architecture decision record that you accept. An 
 
 ## Install
 
-You need git with no uncommitted changes, bash (on Windows it comes with Git for Windows), and the toolchain of your backend stack: the .NET SDK 8 or newer for the default.
+You need git with no uncommitted changes, bash (on Windows it comes with Git for Windows), and the toolchain of your backend stack: the .NET SDK 8 or newer for the default. Every option installs the latest release, tagged `v` followed by its version, not `main`.
 
 === "Claude Code plugin"
 
@@ -56,7 +56,13 @@ You need git with no uncommitted changes, bash (on Windows it comes with Git for
 
 === "Manual"
 
-    Clone the repository into the app's root folder as `SaaSAllTheThings`, then ask your assistant:
+    Clone the latest release into the app's root folder as `SaaSAllTheThings`, using the release's tag from the [Releases page](https://github.com/Freakling/SaaSAllTheThings/releases):
+
+    ```
+    git clone --branch <tag> --depth 1 https://github.com/Freakling/SaaSAllTheThings.git SaaSAllTheThings
+    ```
+
+    Then ask your assistant:
 
     > Read SaaSAllTheThings/ONBOARDING.md and follow it to install SaaSAllTheThings into this project.
 
@@ -86,6 +92,7 @@ Onboarding works out whether this is a new app, an existing app or an upgrade, s
 | `/assess` | A read-only assessment report; "process the workshop notes" turns a workshop's decisions into records |
 | `/roadmap` | Plans the next stage of the move to SaaS as small items |
 | `/design` | A product design session on a topic, or `/design questions` to rank the open questions |
+| `/research` | A read-only researcher answers one question in a fresh context and writes a dated note with its sources to `product/research/`. It informs; you decide. Procedure: [`research.md`](https://github.com/Freakling/SaaSAllTheThings/tree/v0.8.0/framework/.satt/procedures/research.md) |
 | `/architect` | An architecture session that ends in an ADR you accept |
 | `/integrate` | Works out an integration contract with you (direction, system of record, conflicts), then plans it in stages |
 | `/tenant` | Checks readiness for a new customer and hands you the consent and setup steps |

@@ -80,7 +80,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: App-Director and Godot-Director each have a merged pull request that makes the skill, the fetch script and, where the marketplace can pin a ref, the plugin install the latest release tag, and that tags every release `v<version>`, with Godot-Director's `skills/godot-director/SKILL.md` `metadata.version` (3.3.0) and App-Director's root `SKILL.md` and `package.json` versions (1.0.0) kept in step with VERSION, following AGENTS.md › Project rules for framework work (check) · SaaSAllTheThings' plugin follows the release tag, with a pull request if it needs a change (check)
 - Brief: Scope › Planned framework changes
 
-### T69 · Docs follow App-Director 1.5.0, Godot-Director 3.8.0 and SaaSAllTheThings 0.8.0 · in-progress 2026-10-16 · S · agent
+### T69 · Docs follow App-Director 1.5.0, Godot-Director 3.8.0 and SaaSAllTheThings 0.8.0 · done · S · agent
 - Depends on: T62, T67, T63
 - Touches: docs/frameworks/*.md, docs/skills/*.md, docs/index.md
 - Done when: every link into the three frameworks points at its latest release (check) · the pages describe what these releases changed where they state the old behaviour: the skills, plugins and manual installs take the latest release, and SaaSAllTheThings' page lists `/research` until T34 gives it a skill page (check) · `bash tools/check.sh` passes (check)
