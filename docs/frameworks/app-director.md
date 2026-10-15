@@ -4,7 +4,7 @@
 
 Make the app you designed, with AI doing the building and you staying the director. App-Director works for new apps and apps already in development, on TypeScript, Flutter or Python. You decide what the app does, how it should feel and what gets built next; the AI builds, tests and keeps the records.
 
-[Repository](https://github.com/Freakling/App-Director){ .md-button .md-button--primary } [README](https://github.com/Freakling/App-Director#readme){ .md-button } [Procedures](https://github.com/Freakling/App-Director/tree/main/framework/.app-director/procedures){ .md-button }
+[Repository](https://github.com/Freakling/App-Director){ .md-button .md-button--primary } [README](https://github.com/Freakling/App-Director#readme){ .md-button } [Procedures](https://github.com/Freakling/App-Director/tree/v1.3.0/framework/.app-director/procedures){ .md-button }
 
 ## What the check enforces
 

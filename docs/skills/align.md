@@ -18,7 +18,7 @@ When a conflict comes back that was already settled, or one conflict spans sever
 
 ### Godot-Director
 
-The procedure is at [`framework/.godot-director/procedures/align.md`](https://github.com/Freakling/Godot-Director/tree/main/framework/.godot-director/procedures/align.md) in the Godot-Director repository.
+The procedure is at [`framework/.godot-director/procedures/align.md`](https://github.com/Freakling/Godot-Director/tree/v3.5.0/framework/.godot-director/procedures/align.md) in the Godot-Director repository.
 
 - It checks the GDD, `design/decisions.md`, `playtesting/TEMPLATE.md` and `project.godot` against `AGENTS.md`. Every autoload and every rule folder needs an Architecture row.
 - Every file listed under `[screens] known` in `tools/check.cfg` needs an open item that removes it from the list.
@@ -32,7 +32,7 @@ The procedure is at [`framework/.godot-director/procedures/align.md`](https://gi
 
 ### App-Director
 
-The procedure is at [`framework/.app-director/procedures/align.md`](https://github.com/Freakling/App-Director/tree/main/framework/.app-director/procedures/align.md) in the App-Director repository.
+The procedure is at [`framework/.app-director/procedures/align.md`](https://github.com/Freakling/App-Director/tree/v1.3.0/framework/.app-director/procedures/align.md) in the App-Director repository.
 
 - It checks the brief, `product/decisions.md`, `validation/TEMPLATE.md` and the check config. The `[ui] dirs` and `[data] dirs` in `tools/check.cfg` must match the folder layout.
 - Every item's `Brief:` value must be an existing heading, or `-` for items that aren't about the product design.
@@ -44,7 +44,7 @@ The procedure is at [`framework/.app-director/procedures/align.md`](https://gith
 
 ### SaaSAllTheThings
 
-The procedure is at [`framework/.satt/procedures/align.md`](https://github.com/Freakling/SaaSAllTheThings/tree/main/framework/.satt/procedures/align.md) in the SaaSAllTheThings repository.
+The procedure is at [`framework/.satt/procedures/align.md`](https://github.com/Freakling/SaaSAllTheThings/tree/v0.6.0/framework/.satt/procedures/align.md) in the SaaSAllTheThings repository.
 
 - It checks the PRD, `product/decisions.md`, the ADRs and the integration contracts. Every `ADR:` an item names must exist, and every accepted ADR with a temporary deviation needs its removal item.
 - It runs `bash tools/check.sh --architecture` and reports any stale ADR exceptions, any proposed ADR waiting longer than a week and the count of source files outside any layer.

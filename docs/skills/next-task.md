@@ -24,7 +24,7 @@ Tools without a `builder` subagent follow `build.md` directly, or hand it to a s
 
 ### App-Director
 
-The procedure is at [`framework/.app-director/procedures/next-task.md`](https://github.com/Freakling/App-Director/tree/main/framework/.app-director/procedures/next-task.md) in the App-Director repository.
+The procedure is at [`framework/.app-director/procedures/next-task.md`](https://github.com/Freakling/App-Director/tree/v1.3.0/framework/.app-director/procedures/next-task.md) in the App-Director repository.
 
 - The building state file is `.app-director/state/building`. The Stop hook checks for it and leaves half-built files alone while it exists.
 - The review diff is written to `.app-director/state/review.diff`.
@@ -34,7 +34,7 @@ The procedure is at [`framework/.app-director/procedures/next-task.md`](https://
 
 ### Godot-Director
 
-The procedure is at [`framework/.godot-director/procedures/next-task.md`](https://github.com/Freakling/Godot-Director/tree/main/framework/.godot-director/procedures/next-task.md) in the Godot-Director repository.
+The procedure is at [`framework/.godot-director/procedures/next-task.md`](https://github.com/Freakling/Godot-Director/tree/v3.5.0/framework/.godot-director/procedures/next-task.md) in the Godot-Director repository.
 
 - The building state file is `.godot/godot-director/building`. The Stop hook checks for it and leaves half-built files alone while it exists.
 - The review diff is written to `.godot/godot-director/review.diff`.
@@ -46,7 +46,7 @@ The procedure is at [`framework/.godot-director/procedures/next-task.md`](https:
 
 ### SaaSAllTheThings
 
-The procedure is at [`framework/.satt/procedures/next-task.md`](https://github.com/Freakling/SaaSAllTheThings/tree/main/framework/.satt/procedures/next-task.md) in the SaaSAllTheThings repository.
+The procedure is at [`framework/.satt/procedures/next-task.md`](https://github.com/Freakling/SaaSAllTheThings/tree/v0.6.0/framework/.satt/procedures/next-task.md) in the SaaSAllTheThings repository.
 
 - The building state file is `.satt/state/building`. The Stop hook checks for it and leaves half-built files alone while it exists.
 - The review diff is written to `.satt/state/review.diff`.

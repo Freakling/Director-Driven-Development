@@ -4,7 +4,7 @@
 
 Make the game you designed, with AI doing the building and you staying the director. Godot-Director works for new games and games already in development. You decide the design, the balance and the priorities; the AI builds, tests and keeps the records.
 
-[Repository](https://github.com/Freakling/Godot-Director){ .md-button .md-button--primary } [README](https://github.com/Freakling/Godot-Director#readme){ .md-button } [Procedures](https://github.com/Freakling/Godot-Director/tree/main/framework/.godot-director/procedures){ .md-button }
+[Repository](https://github.com/Freakling/Godot-Director){ .md-button .md-button--primary } [README](https://github.com/Freakling/Godot-Director#readme){ .md-button } [Procedures](https://github.com/Freakling/Godot-Director/tree/v3.5.0/framework/.godot-director/procedures){ .md-button }
 
 ## What the check enforces
 

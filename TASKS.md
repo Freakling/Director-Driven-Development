@@ -85,7 +85,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: the selftest keeps each cached framework clone at that framework's latest release tag (`v<version>`), refreshed when online and reused offline (check) · `tools/audit.sh` compares against the same release (check) · AGENTS.md › Architecture and the README say the docs follow releases (check) · `bash tools/check.sh` passes, and any page that describes something only on `main` is reported (check)
 - Brief: Scope › Planned framework changes
 
-### T44 · Framework and skill pages link to the latest release · todo · S · agent
+### T44 · Framework and skill pages link to the latest release · done · S · agent
 - Depends on: T38
 - Touches: docs/frameworks/*.md, docs/skills/*.md, selftest.sh
 - Done when: the buttons on the framework pages and the procedure links on the skill pages point at each framework's latest release tag, not `main` (check) · the selftest reports a link into a framework repo that points at `main` or an older release (check) · `bash tools/check.sh` passes (check)

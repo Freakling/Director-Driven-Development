@@ -5,7 +5,10 @@
 #   2. Docs coverage: every command a framework ships in its latest release is mentioned on its
 #      framework page, or on the skill page that covers it (see skill_page below). A page that
 #      describes a command only main ships gets a warning: the docs follow releases, not main.
-#   3. The site builds in strict mode, which fails on broken internal links and anchors.
+#   3. Framework links: a docs link into a framework repo names that repo's latest release tag, not
+#      main or an older release, and the path it names exists at that release.
+#   4. Skills nav: every skill page listed in the nav exists.
+#   5. The site builds in strict mode, which fails on broken internal links and anchors.
 #
 # The framework repos are kept as copies under .app-director/state/frameworks (gitignored), each
 # at its latest release tag (v<version>). Online, each run moves the copies to the latest release.
@@ -169,7 +172,40 @@ for pair in $repos; do
   fi
 done
 
-# 3. Skills coverage ------------------------------------------------------------------------
+# 3. Framework links ------------------------------------------------------------------------
+# A docs link into a framework repo names that repo's latest release tag, so the pages follow
+# releases. A link to main or to an older release fails, naming the page and the link, and so does
+# a path the release doesn't have. Links to a repo's root (no tree or blob path) are left alone.
+link_re='github\.com/Freakling/(Godot-Director|App-Director|SaaSAllTheThings)/(tree|blob)/[^ )"]*'
+links=$(grep -rnoE --include='*.md' "$link_re" docs 2>/dev/null || true)
+ok_links=0
+for pair in $repos; do
+  repo="${pair%%:*}"
+  [ -d "$src/$repo" ] || continue
+  mine=$(grep -F "github.com/Freakling/$repo/" <<< "$links" || true)
+  [ -n "$mine" ] || continue
+  gd="$src/$repo.git"; [ -n "${FRAMEWORKS_DIR:-}" ] && gd="$src/$repo/.git"
+  rel=$(release_at "$gd")
+  if [ -z "$rel" ]; then
+    err "$repo's copy isn't at a release tag, so the links into it can't be checked; check out its latest release"
+    continue
+  fi
+  while IFS= read -r hit; do
+    where=${hit%%:*}; rest=${hit#*:}; lineno=${rest%%:*}; link=${rest#*:}
+    [[ $link =~ ^github\.com/Freakling/[^/]+/(tree|blob)/([^/]+)/(.*)$ ]] || continue
+    ref=${BASH_REMATCH[2]}; path=${BASH_REMATCH[3]}
+    if [ "$ref" != "$rel" ]; then
+      err "$where:$lineno links to $repo at $ref, not its latest release $rel: $link"
+    elif git --git-dir="$gd" cat-file -e "$rel:$path" 2>/dev/null; then
+      ok_links=$((ok_links + 1))
+    else
+      err "$where:$lineno links to $path, which $repo's latest release $rel doesn't have"
+    fi
+  done <<< "$mine"
+done
+[ "$ok_links" -gt 0 ] && echo "ok: $ok_links links into the framework repos point at their latest release"
+
+# 4. Skills nav -----------------------------------------------------------------------------
 # Every skill page listed in the nav under Skills must exist on disk.
 # This catches gaps as more skill pages are added: list a skill in mkdocs.yml without
 # creating the file, and the build would warn; this check makes it a hard failure.
@@ -186,7 +222,7 @@ for skill in $skills_nav; do
 done
 [ "$skills_fail" -eq 0 ] && [ -n "$skills_nav" ] && echo "ok: all Skills nav entries have pages on disk"
 
-# 4. Build and links ------------------------------------------------------------------------
+# 5. Build and links ------------------------------------------------------------------------
 mkdocs=""
 if command -v mkdocs >/dev/null 2>&1; then mkdocs="mkdocs"
 else

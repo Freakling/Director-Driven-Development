@@ -6,7 +6,7 @@ Build a B2B SaaS from scratch, or turn a working proof of concept or an existing
 
 The architecture: an event-driven Azure Functions backend, separate Windows and mobile clients, OIDC sign-in with Entra ID and federated identity, pooled multi-tenancy that can move a customer to its own deployment later, and enterprise integrations starting with Navision (Dynamics NAV and Business Central). The product is anchored in the customer's own security framework: architecture sessions read the security and compliance requirements kept in the app's `compliance/` folder, and weigh every option against them.
 
-[Repository](https://github.com/Freakling/SaaSAllTheThings){ .md-button .md-button--primary } [README](https://github.com/Freakling/SaaSAllTheThings#readme){ .md-button } [Procedures](https://github.com/Freakling/SaaSAllTheThings/tree/main/framework/.satt/procedures){ .md-button } [Reference architecture](https://github.com/Freakling/SaaSAllTheThings/tree/main/framework/.satt/reference){ .md-button }
+[Repository](https://github.com/Freakling/SaaSAllTheThings){ .md-button .md-button--primary } [README](https://github.com/Freakling/SaaSAllTheThings#readme){ .md-button } [Procedures](https://github.com/Freakling/SaaSAllTheThings/tree/v0.6.0/framework/.satt/procedures){ .md-button } [Reference architecture](https://github.com/Freakling/SaaSAllTheThings/tree/v0.6.0/framework/.satt/reference){ .md-button }
 
 ## What the check enforces
 
