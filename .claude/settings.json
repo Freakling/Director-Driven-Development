@@ -4,6 +4,7 @@
       "Bash(bash tools/check.sh*)",
       "Bash(bash tools/setup-clone.sh*)",
       "Bash(bash tools/work-publish.sh*)",
+      "Bash(bash tools/work-release.sh*)",
       "Bash(bash tools/work-clones.sh*)",
       "Bash(bash tools/stacks/*.sh*)",
       "Bash(npm *)",

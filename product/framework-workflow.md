@@ -15,7 +15,7 @@ flowchart TD
     d2{"Reviews the pull request"}
     d3["Closed without a merge: brought to the director"]
     d4["Stop and report to the director"]
-    d5["Release: the director's call"]
+    d5{"Reviews the release pull request"}
   end
   subgraph REPO["This repo"]
     r1["Item waits in TASKS.md, Touches names work/REPO"]
@@ -27,8 +27,11 @@ flowchart TD
     r7["PRs: line added, item stays in-progress"]
     r8["Item done in TASKS.md"]
     r9["Other open item branches: merge origin/main, resolve record conflicts, selftest, publish"]
-    r10["Docs follow the latest release: selftest and audit"]
+    r10["Docs item: links move to the new tag, pages updated"]
     r11["No ready item: report what is blocked"]
+    r12["/next-task proposes a release of each repo the item touched"]
+    r13["work-release.sh: tag v(version), publish the release"]
+    r14["work-publish.sh: push the release branch, open the release pull request"]
   end
   subgraph CLONE["work/REPO clone"]
     c1["Branch ddd/T(ID) from origin/main"]
@@ -36,11 +39,14 @@ flowchart TD
     c3["Root TASKS.md gets the item as done, and a CHANGELOG entry"]
     c4{"selftest.sh passes"}
     c5["Commit on the branch, one commit"]
+    c6["Release branch: version bump, CHANGELOG heading, release notes"]
   end
   subgraph GH["GitHub"]
     g1["Pull request open"]
     g2["Merged"]
     g3["Latest release tag"]
+    g4["Release pull request open"]
+    g5["Release pull request merged"]
   end
 
   d1 --> r1
@@ -67,7 +73,16 @@ flowchart TD
   d2 -->|"Close"| d3
   g2 -.->|"Next /next-task run"| r2
   r8 --> r9
-  d5 --> g3
+  r8 --> r12
+  r12 --> c6
+  c6 --> r14
+  r14 --> g4
+  g4 --> d5
+  d5 -->|"Merge"| g5
+  d5 -->|"Request changes"| c6
+  d5 -->|"Close"| d3
+  g5 --> r13
+  r13 --> g3
   g3 --> r10
 ```
 
@@ -131,7 +146,16 @@ An item waits while an item it depends on isn't done, so an open pull request bl
 
 Each other open item branch in that repo gets `origin/main` merged in; it is never rebased or force-pushed. Where the record files conflict, keep both entries, and give a duplicate ID the next number. Then run that repo's `selftest.sh` and publish with `bash tools/work-publish.sh work/<repo>`, which updates the open pull request.
 
+## Releases
+
+A release comes when a change is complete. Once an item is done, with all its pull requests merged, the next `/next-task` proposes a release of each framework repo the item touched. The release covers everything merged in that repo since its last release, not only this item.
+
+The proposal is a release pull request that follows the repo's own `CLAUDE.md`: the version bump, the `CHANGELOG.md` heading and the release notes. The release notes are the commit message, which `tools/work-publish.sh` turns into the pull request description. The director decides every release, and merging the pull request is the approval.
+
+After the merge, `bash tools/work-release.sh work/<repo> <pull request number>` tags the merged commit `v<version>` and publishes the GitHub release with that description as its notes. Then an item here moves the docs links to the new tag and updates the pages for what the release ships.
+
 ## The tools
 
 - `tools/work-clones.sh` clones the three repos into `work/`, or fetches the clones already there. It never resets or switches a clone.
 - `tools/work-publish.sh work/<repo>` pushes the item's branch and opens its pull request. It refuses the default branch, never merges and never force-pushes. `--dry-run` prints the commands without running them.
+- `tools/work-release.sh work/<repo> <pull request number>` tags the merged release commit and publishes the GitHub release. It refuses when the pull request isn't merged, the version files disagree, the tag or the release already exists, or the description has no "How to install" section. It pushes only the new tag and never merges, force-pushes or moves a tag. `--dry-run` prints the tag, the notes and the commands without running them.
