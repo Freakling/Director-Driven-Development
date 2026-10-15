@@ -91,7 +91,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: once all three frameworks have released the shared commit model, the /next-task page describes it once for all three and drops the per-repo differences, and Agent development flow matches (check) · `bash tools/check.sh` passes (check)
 - Brief: Scope › Common skills
 
-### T32 · The shared research core as the anchor · todo · M · agent
+### T32 · The shared research core as the anchor · done · M · agent
 - Depends on: -
 - Touches: product/anchors/research.md (new)
 - Done when: the anchor holds the shared research procedure adapted from the director's portable research skill (`init/research/research-skill.md`) with the agreed adaptations: the researcher subagent, `/research`, R items with `Question:` and `Informs:`, the dated research note, sizing, and what each framework's domain file covers (check) · it uses "requirements", "control framework" or "security framework", never "policy" (check) · `bash tools/check.sh` passes (check)
@@ -100,7 +100,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 ### T33 · Push the research assistant to the framework repos · todo · S · agent
 - Depends on: T29, T32
 - Touches: a pull request to each framework repo adding an item (the director merges)
-- Done when: Godot-Director, App-Director and SaaSAllTheThings each have an open pull request adding an item to build the research assistant from the anchor, with that framework's domain file (check)
+- Done when: Godot-Director, App-Director and SaaSAllTheThings each have an open pull request adding an item to build the research assistant from `product/anchors/research.md`, with that framework's domain file, an `R<n>` counter on its `Next IDs` line, and the new files in its README, install and bundle scripts, skills folder and selftest (check)
 - Brief: Scope › Planned framework changes
 
 ### T34 · The Research skill page · todo · S · agent
@@ -123,5 +123,5 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 
 ## Notes
 - T19 waits on T29 (root queues in the framework repos) and Q10. T31 follows T19.
-- T32 can start now; T35 waits on T29, and T37 on the releases.
+- T35 waits on T29, and T37 on the releases.
 - T33 waits on T29; T34 waits until all three frameworks have released the research assistant.
