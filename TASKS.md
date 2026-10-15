@@ -243,7 +243,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: Godot-Director and SaaSAllTheThings each have a merged pull request that adopts the commit model in the brief (procedure step 7, run triggers including "grab tasks until you're blocked", `git commit` allowed in settings, push still asking), and App-Director one that adds that trigger phrase, following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Planned framework changes
 
-### T37 · Docs follow the shared commit model · todo · XS · agent
+### T37 · Docs follow the shared commit model · done · XS · agent
 - Depends on: T35
 - Touches: docs/skills/next-task.md, docs/concept/agent-flow.md
 - Done when: once all three frameworks have released the shared commit model, the /next-task page describes it once for all three and drops the per-repo differences, and Agent development flow matches (check) · `bash tools/check.sh` passes (check)

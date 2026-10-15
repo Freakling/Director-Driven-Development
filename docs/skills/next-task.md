@@ -2,7 +2,7 @@
 
 <div class="kicker">The build loop, one step at a time</div>
 
-Pick the next ready item in `TASKS.md`, have it built in a fresh context, prove it with the check, update the records and commit it. Running `/next-task` once advances the project by one task. Running it with "the next N tasks" or "work through the queue" keeps going until something needs a human decision.
+Pick the next ready item in `TASKS.md`, have it built in a fresh context, prove it with the check, update the records and commit it. Running `/next-task` once advances the project by one task. Running it with "the next N tasks" or "work through the queue" repeats that for each task in turn, committing as it goes (see [Commits](#commits)).
 
 This is the skill that drives the agent development flow. Each run is self-contained: the context that builds the item is fresh, and after the commit the records hold everything a new session needs to continue.
 
@@ -14,11 +14,19 @@ This is the skill that drives the agent development flow. Each run is self-conta
 4. **Verify** by running `bash tools/check.sh --if-changed`. A passing check is the definition of done for this item.
 5. **Update the records**: set the item to `done`, update `AGENTS.md` from the report's `Systems:` line, log any new items from `Found:`, and update milestones.
 6. **Review** when the framework's rules call for one, based on item size and whether the build changed a public contract.
-7. **Commit** the item's files and its records together, then report what changed, the check result and anything waiting on the human.
+7. **Commit** the item's files and its records together (see [Commits](#commits)), then report what changed, the check result and anything waiting on the human.
 
 If a build fails, the skill escalates to the next model size and retries once. If blocked, it brings the question with options and a recommendation to the director. A design decision made this way is recorded following `design.md` before the rebuild, and that record is committed with the item.
 
 Tools without a `builder` subagent follow `build.md` directly, or hand it to a subagent if they have one. Once the item is committed, the records hold everything about it, so a new session (or `/clear` in Claude Code) can start the next item without losing context.
+
+## Commits
+
+One task, one commit: the item's files and its records go in together, and the pre-commit hook runs the check before any commit that touches code, so a failing task cannot land. A single `/next-task` pauses for the director's approval of that commit.
+
+When the director asks for a run, such as "grab tasks until you're blocked", "work through the queue" or "the next N tasks", the request approves the run's commits in advance. Each task commits without pausing, and the final report lists every commit. The run stops when an item is blocked on the director, a build fails, or the director declines a commit. It also ends when nothing is ready.
+
+A run covers commits only, not pushes, deploys or cloud changes. Each framework's settings allow `git commit` without a prompt, so the director's approval is asked for in the conversation, while pushes ask every time.
 
 ## Unique per repo
 
@@ -29,7 +37,6 @@ The procedure is at [`framework/.app-director/procedures/next-task.md`](https://
 - The building state file is `.app-director/state/building`. The Stop hook checks for it and leaves half-built files alone while it exists.
 - The review diff is written to `.app-director/state/review.diff`.
 - New items are formatted following `.app-director/tasks.md`, and IDs come from `Next IDs` in that file.
-- The commit follows `rules.md` › Git and pauses for the director's approval. When the director asks for autonomous work, such as "the next N tasks" or "work through the queue", it commits without pausing and lists all commits in the final report.
 - The report notes that `(demo)` outcomes and bug fixes without regression tests will appear in the next acceptance check.
 
 ### Godot-Director
@@ -40,7 +47,6 @@ The procedure is at [`framework/.godot-director/procedures/next-task.md`](https:
 - The review diff is written to `.godot/godot-director/review.diff`.
 - New items are formatted following `.godot-director/tasks.md`, and IDs come from `Next IDs` in that file.
 - The builder is told to skip the final `bash tools/check.sh` call: step 4 runs the check from the orchestrator session, and the pre-commit hook is the safety net.
-- A single `/next-task` pauses for the director's approval of its commit. When the director asks for a run, such as "grab tasks until you're blocked", "work through the queue" or "the next N tasks", each task commits without pausing, and the final report lists every commit. The run stops when an item is blocked on something only the director can answer, a build fails, or the director declines a commit. The framework's `.claude/settings.json` allows `git commit` without a prompt, so the approval is asked for in the conversation, while `git push` still asks. This is the same run mode as App-Director and SaaSAllTheThings.
 - The report notes that `(play)` outcomes and bug fixes without regression tests will appear in the next function check.
 - After a passing check, recurring warnings may appear as `check: note: recurring warning (N×): <text>`. The skill has a procedure for verifying, proposing and applying suppressions via `tools/check.ignore`.
 
@@ -53,8 +59,7 @@ The procedure is at [`framework/.satt/procedures/next-task.md`](https://github.c
 - New items are formatted following `.satt/tasks.md`, and IDs come from `Next IDs` in that file.
 - A blocked report can carry `blocked: architecture`, which triggers the `architect.md` procedure. The director chooses to comply or to accept a deviation; a deviation requires an accepted Architecture Decision Record (ADR) before the rebuild.
 - If the current stage of the roadmap has no items left, the skill offers `roadmap.md` for the next stage.
-- A single `/next-task` pauses for the director's approval of its commit. When the director asks for a run, such as "grab tasks until you're blocked", "work through the queue" or "the next N tasks", each task commits without pausing, and the final report lists every commit. The run stops when an item is blocked on the director, a build fails, or the director declines a commit.
-- A run approves commits in advance, not pushes, deploys or changes to Azure resources. The framework's `.claude/settings.json` allows `git commit` without a prompt, while `git push` and the `az` and `azd` commands still ask.
+- Its settings ask before the `az` and `azd` commands.
 - The report notes that `(demo)` outcomes and bug fixes without regression tests will appear in the next acceptance check.
 
 <div class="takeaway"><span>One task, one check, one commit: the loop runs as fast as the check.</span><span class="url"><a href="https://saemundsson.se/2026/10/07/director-driven-development/">Why: the blog post</a></span></div>

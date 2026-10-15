@@ -19,7 +19,7 @@ Large changes, and medium ones that cross a risky boundary, also get an independ
 
 ## Commit
 
-One task, one commit, with the task's records in the same commit. A commit needs the director's approval; an approval prompt from the assistant counts. The git pre-commit hook runs the check before any commit that touches code, so a failing task cannot land.
+One task, one commit, with the task's records in the same commit. A commit needs the director's approval, which a run the director asks for gives in advance (see [`/next-task`](../skills/next-task.md#commits)); an approval prompt from the assistant counts. The git pre-commit hook runs the check before any commit that touches code, so a failing task cannot land.
 
 After the commit, the records hold everything about the task. The next task can start after `/clear`, or in a new session, without losing anything. See [Records in files](records.md).
 
