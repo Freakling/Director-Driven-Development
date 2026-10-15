@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T49 · B3
+**Next IDs:** T50 · B3
 
 ## Milestones
 | Milestone | Status |
@@ -117,10 +117,17 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: each framework's pre-commit hook, `/align` procedure and onboarding keep only paths that end in its upgrade suffix (`.adir-new`, `.gdir-new`, `.satt-new`), so a nested clone in an ignored folder no longer blocks a commit while a real upgrade file still does, with one merged pull request per repo, following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Later: orchestrator for the three frameworks
 
-### T47 · App-Director's selftest works with gitleaks 8.30 · todo · S · agent
+### T47 · App-Director's selftest works with gitleaks 8.30 · in-progress 2026-10-15 · S · agent
+- PRs: App-Director #4 (open)
 - Depends on: -
-- Touches: work/App-Director: selftest.sh (one pull request; the director merges)
+- Touches: work/App-Director: selftest.sh, framework/tools/check.sh (one pull request; the director merges)
 - Done when: App-Director's selftest checks "names the file with the secret" and "allowlisted fingerprint passes" pass with gitleaks 8.30.1, which they fail on main today, and still pass with the version they were written for, following AGENTS.md › Project rules for framework work (check)
+- Brief: Scope › Later: orchestrator for the three frameworks
+
+### T49 · App-Director's pre-commit hook names the file with a secret · todo · S · agent
+- Depends on: -
+- Touches: work/App-Director: framework/.githooks/pre-commit, selftest.sh (one pull request; the director merges)
+- Done when: when the pre-commit hook blocks a commit because gitleaks found a secret in the staged changes, it names the file, as `tools/check.sh` does after App-Director #4, without printing the secret, following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Later: orchestrator for the three frameworks
 
 ### T48 · SaaSAllTheThings' selftest skips .NET without the SDK · todo · S · agent
@@ -197,7 +204,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Brief: Scope › Planned framework changes
 
 ## Notes
-- T46 waits on the merge of Godot-Director #2. T39 changes Godot-Director's selftest.sh, so it waits on Godot-Director #2 too.
+- T46 waits on the merge of Godot-Director #2. T47 waits on App-Director #4; T49 and T33 change App-Director's selftest.sh, so they wait on it too. T39 changes Godot-Director's selftest.sh, so it waits on Godot-Director #2 too.
 - T35 waits on the merge of Godot-Director #3; T37 follows T35 and the releases.
 - T33, T42 and T43 change next-task.md (open in the T35 pull requests) and selftest.sh (open in the T46 pull requests), so they wait on both. T19 changes Godot-Director's ONBOARDING.md (open in Godot-Director #2). T31 follows T19.
 - T29's pull requests are merged, so all three framework repos have their root queue. T37 waits on the releases; T34 waits until all three frameworks have released the research assistant.
