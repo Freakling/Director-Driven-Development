@@ -211,7 +211,8 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: every link into Godot-Director points at v3.6.0 (check) · the pages describe what 3.6.0 changed for Godot-Director, such as its commit model, where they state its old behaviour; the shared rewrite stays with T37 (check) · `bash tools/check.sh` passes (check)
 - Brief: Scope › Common skills
 
-### T56 · Release App-Director 1.4.0 · todo · S · agent
+### T56 · Release App-Director 1.4.0 · in-progress 2026-10-15 · S · agent
+- PRs: App-Director #9 (open)
 - Depends on: T51, T52
 - Touches: work/App-Director: VERSION, .claude-plugin/plugin.json, CHANGELOG.md (one pull request; the director merges)
 - Done when: the release pull request, which covers T46, T35, T47, T49, T50 and T52, and the 1.3.1 entry that was never tagged, is merged, and `tools/work-release.sh` has tagged `v1.4.0` and published the GitHub release, following AGENTS.md › Project rules › Framework work › Releases (check) · an item here moves the docs links to `v1.4.0` and updates the pages for what it ships (check)
@@ -225,8 +226,8 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 
 ### T39 · The framework repos install the latest release · todo · M · agent
 - Depends on: T40
-- Touches: work/App-Director: SKILL.md, skills/app-director/SKILL.md, scripts/fetch-app-director.sh, .claude-plugin/marketplace.json, CLAUDE.md, README.md, selftest.sh; work/Godot-Director: skills/godot-director/SKILL.md, .claude-plugin/marketplace.json, CLAUDE.md, README.md, selftest.sh; work/SaaSAllTheThings: .claude-plugin/marketplace.json (one pull request per repo; the director merges)
-- Done when: App-Director and Godot-Director each have a merged pull request that makes the skill, the fetch script and, where the marketplace can pin a ref, the plugin install the latest release tag, and that tags every release `v<version>`, with Godot-Director's `skills/godot-director/SKILL.md` `metadata.version` kept in step with VERSION (it says 3.3.0), following AGENTS.md › Project rules for framework work (check) · SaaSAllTheThings' plugin follows the release tag, with a pull request if it needs a change (check)
+- Touches: work/App-Director: SKILL.md, skills/app-director/SKILL.md, package.json, scripts/fetch-app-director.sh, .claude-plugin/marketplace.json, CLAUDE.md, README.md, selftest.sh; work/Godot-Director: skills/godot-director/SKILL.md, .claude-plugin/marketplace.json, CLAUDE.md, README.md, selftest.sh; work/SaaSAllTheThings: .claude-plugin/marketplace.json (one pull request per repo; the director merges)
+- Done when: App-Director and Godot-Director each have a merged pull request that makes the skill, the fetch script and, where the marketplace can pin a ref, the plugin install the latest release tag, and that tags every release `v<version>`, with Godot-Director's `skills/godot-director/SKILL.md` `metadata.version` (3.3.0) and App-Director's root `SKILL.md` and `package.json` versions (1.0.0) kept in step with VERSION, following AGENTS.md › Project rules for framework work (check) · SaaSAllTheThings' plugin follows the release tag, with a pull request if it needs a change (check)
 - Brief: Scope › Planned framework changes
 
 ### T35 · The shared commit model in the framework repos · done · M · agent
