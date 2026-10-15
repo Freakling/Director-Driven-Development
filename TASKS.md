@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T57 · B3
+**Next IDs:** T57 · B4
 
 ## Milestones
 | Milestone | Status |
@@ -164,7 +164,14 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: AGENTS.md › Project rules › Framework work says when a release is proposed (an item done, for each repo it touched, covering everything merged since that repo's last release), that the proposal is a release pull request following that repo's `CLAUDE.md` (version bump, CHANGELOG heading, release notes), and that the director decides every release (check) · `tools/work-release.sh work/<repo>` tags the merged release commit `v<version>` from VERSION and publishes the GitHub release with the notes from the CHANGELOG; it refuses when the release pull request isn't merged, the tag already exists or the version files disagree, and it never force-pushes or moves a tag; the settings let it run without a prompt (check) · after a release, an item here moves the docs links to the new tag and updates the pages for what the release ships (check) · the internal workflow page shows the release step (check) · `bash tools/check.sh` passes (check)
 - Brief: Scope › Planned framework changes
 
-### T54 · Release Godot-Director 3.6.0 · todo · S · agent
+### B3 · The release notes would carry the commit's Co-Authored-By line · done · XS · agent · med
+- Depends on: -
+- Touches: tools/work-release.sh
+- Repro: a release commit ends with its Co-Authored-By trailer, so the release pull request's description does too; run `tools/work-release.sh` → expected: the published notes end with the release content / actual: they end with "Co-Authored-By: ...", since only the "Generated with Claude Code" line was dropped
+- Found in: T54
+- Brief: Scope › Planned framework changes
+
+### T54 · Release Godot-Director 3.6.0 · in-progress 2026-10-15 · S · agent
 - Depends on: T51
 - Touches: work/Godot-Director: VERSION, .claude-plugin/plugin.json, CHANGELOG.md (one pull request; the director merges)
 - Done when: the release pull request, which covers T46 and T35, is merged, and `tools/work-release.sh` has tagged `v3.6.0` and published the GitHub release, following AGENTS.md › Project rules › Framework work › Releases (check) · an item here moves the docs links to `v3.6.0` and updates the pages for what it ships (check)

@@ -36,7 +36,8 @@
 #   - the tag v<version> exists locally or on origin, or a GitHub release for it exists
 #
 # The release notes are the merged pull request's description, which the director reviewed when
-# merging it, without a closing "Generated with Claude Code" line. The tag is annotated and points
+# merging it, without the closing "Generated with Claude Code" line and the commit's
+# Co-Authored-By trailer. The tag is annotated and points
 # at the merge commit, even when main has moved on since.
 #
 # Usage:  bash tools/work-release.sh work/<repo> <release-pr-number>             tag and publish
@@ -205,7 +206,8 @@ have_heading="${1:-0}"; unreleased_entries="${2:-0}"
 [ "$unreleased_entries" -eq 0 ] \
   || refuse "CHANGELOG.md at the merge commit $short still has $unreleased_entries line(s) under '## Unreleased', above '## $version'; move them under the release heading"
 
-# 6. The release notes: the pull request description, without a closing attribution line.
+# 6. The release notes: the pull request description, without the closing attribution line and
+# commit trailers.
 body="$(gh pr view "$number" -R "$slug" --json body --jq .body 2>/dev/null)" \
   || fail "gh could not read the description of pull request #$number of $slug; nothing was tagged, pushed or published"
 notes="$(mktemp "${TMPDIR:-/tmp}/work-release.XXXXXX")" || exit 1
@@ -218,6 +220,8 @@ printf '%s\n' "$body" | tr -d '\r' | awk '
     n = NR
     while (n > 0 && lines[n] !~ /[^ \t]/) n--
     if (n > 0 && lines[n] ~ /Generated with.*Claude Code/) { n--; while (n > 0 && lines[n] !~ /[^ \t]/) n-- }
+    # The release commit ends with commit trailers (Co-Authored-By), which belong to the commit, not the notes.
+    while (n > 0 && lines[n] ~ /^Co-Authored-By: /) { n--; while (n > 0 && lines[n] !~ /[^ \t]/) n-- }
     for (i = 1; i <= n; i++) print lines[i]
   }' > "$notes"
 [ -s "$notes" ] || refuse "pull request #$number has no description; the release notes come from it"
