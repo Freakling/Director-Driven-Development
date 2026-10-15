@@ -13,7 +13,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 | Concepts: one page per core concept | ✅ |
 | Skills: one page per common skill | ✅ |
 | Polish: identity, licence and offline-safe check | ✅ |
-| Orchestrator: anchors, tasks pushed to the framework repos, audit (blocked by the director, T12) | ⬜ |
+| Orchestrator: anchors, framework items built here and published as pull requests, releases, audit | 🟨 |
 
 ✅ done · 🟨 in progress · ⬜ not started
 
