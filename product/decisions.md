@@ -44,3 +44,5 @@ Examples:
 2026-10-15 · each research item writes a dated note per topic, linked from the decision log · records in files: later sessions reuse the evidence instead of redoing it
 2026-10-15 · one shared research core in all three frameworks (the anchor, adapted from the director's portable research skill), plus one domain reference file per framework · same model as the other common skills; easy to align and audit
 2026-10-15 · research items are sized like tasks and the model map picks the model · cost follows complexity
+2026-10-15 · one commit model in all three frameworks, App-Director's: a single /next-task pauses for approval; a run the director asks for ("grab tasks until you're blocked") commits each task without pausing and stops when blocked, on a failed build or a declined commit; git commit allowed, push and deploy still ask · director's choice; Godot-Director's settings asked on every commit despite its procedure, and SaaSAllTheThings had no run mode
+2026-10-15 · SaaSAllTheThings follows the same commit model · commits are local and reversible; pushing, deploying and Azure changes keep asking, and risky items are reviewed before their commit

@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T35 · B2
+**Next IDs:** T38 · B2
 
 ## Milestones
 | Milestone | Status |
@@ -73,6 +73,24 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: Godot-Director, App-Director and SaaSAllTheThings each have an open pull request that adds a root TASKS.md in the App Director item format, separate from `project/TASKS.md` (check) · push-alignment.sh skips a repo with no root TASKS.md instead of creating one (check) · `bash tools/check.sh` passes (check)
 - Brief: Scope › Later: orchestrator for the three frameworks
 
+### T36 · The /next-task page states Godot-Director's commit prompt accurately · todo · XS · agent
+- Depends on: -
+- Touches: docs/skills/next-task.md
+- Done when: the Godot-Director section says that its procedure doesn't pause for approval but its settings ask before every commit, matching the current release (check) · `bash tools/check.sh` passes (check)
+- Brief: Scope › Common skills
+
+### T35 · Push the shared commit model to the framework repos · todo · S · agent
+- Depends on: T29
+- Touches: a pull request to each framework repo adding an item (the director merges)
+- Done when: Godot-Director and SaaSAllTheThings each have an open pull request adding an item to adopt the commit model in the brief (procedure step 7, run triggers including "grab tasks until you're blocked", `git commit` allowed in settings, push still asking), and App-Director one to add that trigger phrase (check)
+- Brief: Scope › Planned framework changes
+
+### T37 · Docs follow the shared commit model · todo · XS · agent
+- Depends on: T35
+- Touches: docs/skills/next-task.md, docs/concept/agent-flow.md
+- Done when: once all three frameworks have released the shared commit model, the /next-task page describes it once for all three and drops the per-repo differences, and Agent development flow matches (check) · `bash tools/check.sh` passes (check)
+- Brief: Scope › Common skills
+
 ### T32 · The shared research core as the anchor · todo · M · agent
 - Depends on: -
 - Touches: product/anchors/research.md (new)
@@ -105,4 +123,5 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 
 ## Notes
 - T19 waits on T29 (root queues in the framework repos) and Q10. T31 follows T19.
-- T32 can start now. T33 waits on T29; T34 waits until all three frameworks have released the research assistant.
+- T36 and T32 can start now; T35 waits on T29, and T37 on the releases.
+- T33 waits on T29; T34 waits until all three frameworks have released the research assistant.
