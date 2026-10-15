@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T59 · B5
+**Next IDs:** T60 · B5
 
 ## Milestones
 | Milestone | Status |
@@ -178,8 +178,8 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Found in: T54
 - Brief: Scope › Planned framework changes
 
-### T54 · Release Godot-Director 3.6.0 · in-progress 2026-10-15 · S · agent
-- PRs: Godot-Director #4 (open)
+### T54 · Release Godot-Director 3.6.0 · done · S · agent
+- PRs: Godot-Director #4 (merged); released as v3.6.0
 - Depends on: T51
 - Touches: work/Godot-Director: VERSION, .claude-plugin/plugin.json, CHANGELOG.md (one pull request; the director merges)
 - Done when: the release pull request, which covers T46 and T35, is merged, and `tools/work-release.sh` has tagged `v3.6.0` and published the GitHub release, following AGENTS.md › Project rules › Framework work › Releases (check) · an item here moves the docs links to `v3.6.0` and updates the pages for what it ships (check)
@@ -203,6 +203,12 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Depends on: T55
 - Touches: docs/frameworks/saasallthethings.md, docs/skills/*.md, docs/concept/agent-flow.md
 - Done when: every link into SaaSAllTheThings points at v0.7.0 (check) · the pages describe what 0.7.0 changed for SaaSAllTheThings, such as its run mode, where they state its old behaviour; the shared rewrite stays with T37 (check) · `bash tools/check.sh` passes (check)
+- Brief: Scope › Common skills
+
+### T59 · Docs follow Godot-Director 3.6.0 · done · S · agent
+- Depends on: T54
+- Touches: docs/frameworks/godot-director.md, docs/skills/*.md
+- Done when: every link into Godot-Director points at v3.6.0 (check) · the pages describe what 3.6.0 changed for Godot-Director, such as its commit model, where they state its old behaviour; the shared rewrite stays with T37 (check) · `bash tools/check.sh` passes (check)
 - Brief: Scope › Common skills
 
 ### T56 · Release App-Director 1.4.0 · todo · S · agent
@@ -279,7 +285,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Brief: Scope › Planned framework changes
 
 ## Notes
-- T54 (Godot-Director #4) waits on your merge; T55 is released as SaaSAllTheThings v0.7.0.
+- T55 and T54 are released as SaaSAllTheThings v0.7.0 and Godot-Director v3.6.0. T37 waits on App-Director's release (T56).
 - T37 waits on the release of the commit model in all three frameworks; T34 waits until all three have released the research assistant.
 - T31 follows T19.
 - T53 waits on App-Director #8; T57 changes App-Director's selftest.sh, so it waits on it too.

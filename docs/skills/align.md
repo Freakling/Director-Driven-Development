@@ -18,7 +18,7 @@ When a conflict comes back that was already settled, or one conflict spans sever
 
 ### Godot-Director
 
-The procedure is at [`framework/.godot-director/procedures/align.md`](https://github.com/Freakling/Godot-Director/tree/v3.5.0/framework/.godot-director/procedures/align.md) in the Godot-Director repository.
+The procedure is at [`framework/.godot-director/procedures/align.md`](https://github.com/Freakling/Godot-Director/tree/v3.6.0/framework/.godot-director/procedures/align.md) in the Godot-Director repository.
 
 - It checks the GDD, `design/decisions.md`, `playtesting/TEMPLATE.md` and `project.godot` against `AGENTS.md`. Every autoload and every rule folder needs an Architecture row.
 - Every file listed under `[screens] known` in `tools/check.cfg` needs an open item that removes it from the list.

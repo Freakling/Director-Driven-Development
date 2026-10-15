@@ -34,15 +34,15 @@ The procedure is at [`framework/.app-director/procedures/next-task.md`](https://
 
 ### Godot-Director
 
-The procedure is at [`framework/.godot-director/procedures/next-task.md`](https://github.com/Freakling/Godot-Director/tree/v3.5.0/framework/.godot-director/procedures/next-task.md) in the Godot-Director repository.
+The procedure is at [`framework/.godot-director/procedures/next-task.md`](https://github.com/Freakling/Godot-Director/tree/v3.6.0/framework/.godot-director/procedures/next-task.md) in the Godot-Director repository.
 
 - The building state file is `.godot/godot-director/building`. The Stop hook checks for it and leaves half-built files alone while it exists.
 - The review diff is written to `.godot/godot-director/review.diff`.
 - New items are formatted following `.godot-director/tasks.md`, and IDs come from `Next IDs` in that file.
 - The builder is told to skip the final `bash tools/check.sh` call: step 4 runs the check from the orchestrator session, and the pre-commit hook is the safety net.
-- The procedure commits as soon as the check passes, without pausing in the conversation. The framework's `.claude/settings.json` makes Claude Code ask before every `git commit`, and that prompt counts as the approval, so a run of several tasks asks once per commit. App-Director and SaaSAllTheThings pause for approval unless the director has asked for a run.
+- A single `/next-task` pauses for the director's approval of its commit. When the director asks for a run, such as "grab tasks until you're blocked", "work through the queue" or "the next N tasks", each task commits without pausing, and the final report lists every commit. The run stops when an item is blocked on something only the director can answer, a build fails, or the director declines a commit. The framework's `.claude/settings.json` allows `git commit` without a prompt, so the approval is asked for in the conversation, while `git push` still asks. This is the same run mode as App-Director and SaaSAllTheThings.
 - The report notes that `(play)` outcomes and bug fixes without regression tests will appear in the next function check.
-- After a passing check, recurring warnings may appear as `check: note: recurring warning (N x): <text>`. The skill has a procedure for verifying, proposing and applying suppressions via `tools/check.ignore`.
+- After a passing check, recurring warnings may appear as `check: note: recurring warning (N×): <text>`. The skill has a procedure for verifying, proposing and applying suppressions via `tools/check.ignore`.
 
 ### SaaSAllTheThings
 

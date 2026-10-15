@@ -4,7 +4,7 @@
 
 Make the game you designed, with AI doing the building and you staying the director. Godot-Director works for new games and games already in development. You decide the design, the balance and the priorities; the AI builds, tests and keeps the records.
 
-[Repository](https://github.com/Freakling/Godot-Director){ .md-button .md-button--primary } [README](https://github.com/Freakling/Godot-Director#readme){ .md-button } [Procedures](https://github.com/Freakling/Godot-Director/tree/v3.5.0/framework/.godot-director/procedures){ .md-button }
+[Repository](https://github.com/Freakling/Godot-Director){ .md-button .md-button--primary } [README](https://github.com/Freakling/Godot-Director#readme){ .md-button } [Procedures](https://github.com/Freakling/Godot-Director/tree/v3.6.0/framework/.godot-director/procedures){ .md-button }
 
 ## What the check enforces
 
@@ -52,7 +52,7 @@ Onboarding works out whether this is a new game, an existing game or an upgrade,
 
 | Command | What it does |
 |---|---|
-| `/next-task` | Builds the next ready item in a fresh context, proves it with the check, updates the records and commits. Also takes an item ID, a number of items, or `queue` |
+| `/next-task` | Builds the next ready item in a fresh context, proves it with the check, updates the records and commits it once you approve. A run you ask for, such as "grab tasks until you're blocked", commits each item without pausing. Also takes an item ID, a number of items, or `queue` |
 | `/design` | A design session on a topic, or `/design questions` to rank the open questions by what they unblock |
 | `/playtest` | Starts a playtest report, or turns a filled-in one into bugs, score trends and design proposals |
 | `/function-check` | Prepares or processes a checklist of built features for you to tick Works or Broken |
