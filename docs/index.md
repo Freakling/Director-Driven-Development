@@ -44,6 +44,12 @@ Builds one task in a fresh context and returns a short report.
 ### Reviewer
 Reviews large and risky changes in a fresh context, before the commit.
 </div>
+<div class="ddd-card" markdown>
+<span class="tag tag--tertiary">Subagent, read-only</span>
+
+### Researcher
+Researches one question and returns options. It informs, the director decides.
+</div>
 </div>
 
 More in [Roles](concept/roles.md).

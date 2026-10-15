@@ -150,7 +150,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: the concept pages explain the research assistant where their idea covers it, framework-neutral and linking to the /research page for the commands: the researcher among the roles (it informs, the director decides), research items in the agent flow, research notes as records, research items sized like tasks, research in a fresh context as a cost saving, and the overview (check) · nothing repeats the /research page (check) · `bash tools/check.sh` passes (check)
 - Brief: Scope › Concepts
 
-### T77 · The home page shows the researcher among the roles · in-progress 2026-10-16 · XS · agent
+### T77 · The home page shows the researcher among the roles · done · XS · agent
 - Depends on: T76
 - Touches: docs/index.md
 - Done when: the home page's role cards include the researcher, matching the roles page (it informs, the director decides) and linking to it (check) · `bash tools/check.sh` passes (check)
