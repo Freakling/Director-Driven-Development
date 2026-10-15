@@ -142,7 +142,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Brief: Scope › Planned framework changes
 
 ### T35 · The shared commit model in the framework repos · in-progress 2026-10-15 · M · agent
-- PRs: Godot-Director #3 (open), SaaSAllTheThings #3 (open), App-Director #3 (open)
+- PRs: Godot-Director #3 (open), SaaSAllTheThings #3 (merged), App-Director #3 (merged)
 - Depends on: T40
 - Touches: work/Godot-Director and work/SaaSAllTheThings: framework/.<godot-director|satt>/procedures/next-task.md, framework/.claude/settings.json, framework/.<godot-director|satt>/rules.md, framework/.claude/skills/next-task/SKILL.md, README.md, examples/scenarios.md (SaaSAllTheThings also skills/saas-design-session/references/rules.md, from bundle.sh); work/App-Director: framework/.app-director/procedures/next-task.md, framework/.claude/skills/next-task/SKILL.md, README.md, examples/scenarios.md (one pull request per repo; the director merges)
 - Done when: Godot-Director and SaaSAllTheThings each have a merged pull request that adopts the commit model in the brief (procedure step 7, run triggers including "grab tasks until you're blocked", `git commit` allowed in settings, push still asking), and App-Director one that adds that trigger phrase, following AGENTS.md › Project rules for framework work (check)
@@ -198,6 +198,6 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 
 ## Notes
 - T46 waits on the merge of Godot-Director #2. T39 changes Godot-Director's selftest.sh, so it waits on Godot-Director #2 too.
-- T35 waits on the merge of Godot-Director #3, SaaSAllTheThings #3 and App-Director #3; T37 follows T35 and the releases.
+- T35 waits on the merge of Godot-Director #3; T37 follows T35 and the releases.
 - T33, T42 and T43 change next-task.md (open in the T35 pull requests) and selftest.sh (open in the T46 pull requests), so they wait on both. T19 changes Godot-Director's ONBOARDING.md (open in Godot-Director #2). T31 follows T19.
 - T29's pull requests are merged, so all three framework repos have their root queue. T37 waits on the releases; T34 waits until all three frameworks have released the research assistant.
