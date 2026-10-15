@@ -4,7 +4,7 @@
 
 Make the app you designed, with AI doing the building and you staying the director. App-Director works for new apps and apps already in development, on TypeScript, Flutter or Python. You decide what the app does, how it should feel and what gets built next; the AI builds, tests and keeps the records.
 
-[Repository](https://github.com/Freakling/App-Director){ .md-button .md-button--primary } [README](https://github.com/Freakling/App-Director#readme){ .md-button } [Procedures](https://github.com/Freakling/App-Director/tree/v1.3.0/framework/.app-director/procedures){ .md-button }
+[Repository](https://github.com/Freakling/App-Director){ .md-button .md-button--primary } [README](https://github.com/Freakling/App-Director#readme){ .md-button } [Procedures](https://github.com/Freakling/App-Director/tree/v1.4.0/framework/.app-director/procedures){ .md-button }
 
 ## What the check enforces
 
@@ -15,11 +15,11 @@ Make the app you designed, with AI doing the building and you staying the direct
 3. **Stack:** the type check, lint and tests for the app's stack (`tools/stacks/typescript.sh`, `flutter.sh` or `python.sh`).
 4. **Custom:** runs `tools/check.local.sh`, if the app has one.
 
-The UI and data folders are set in `tools/check.cfg`. If gitleaks is missing or too old, the check exits 3 and never passes silently.
+The UI and data folders are set in `tools/check.cfg`. If gitleaks is missing, too old or can't scan, the check exits 3 and never passes silently.
 
 ## Install
 
-You need git with no uncommitted changes, bash (on Windows it comes with Git for Windows) and [gitleaks](https://github.com/gitleaks/gitleaks#installing) 8.18.0 or newer.
+You need git with no uncommitted changes, bash (on Windows it comes with Git for Windows) and [gitleaks](https://github.com/gitleaks/gitleaks#installing) 8.18.0 or newer, except 8.19.0, which can't scan.
 
 === "Skill"
 

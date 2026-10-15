@@ -32,7 +32,7 @@ The procedure is at [`framework/.godot-director/procedures/align.md`](https://gi
 
 ### App-Director
 
-The procedure is at [`framework/.app-director/procedures/align.md`](https://github.com/Freakling/App-Director/tree/v1.3.0/framework/.app-director/procedures/align.md) in the App-Director repository.
+The procedure is at [`framework/.app-director/procedures/align.md`](https://github.com/Freakling/App-Director/tree/v1.4.0/framework/.app-director/procedures/align.md) in the App-Director repository.
 
 - It checks the brief, `product/decisions.md`, `validation/TEMPLATE.md` and the check config. The `[ui] dirs` and `[data] dirs` in `tools/check.cfg` must match the folder layout.
 - Every item's `Brief:` value must be an existing heading, or `-` for items that aren't about the product design.

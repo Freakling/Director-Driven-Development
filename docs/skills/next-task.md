@@ -24,7 +24,7 @@ Tools without a `builder` subagent follow `build.md` directly, or hand it to a s
 
 ### App-Director
 
-The procedure is at [`framework/.app-director/procedures/next-task.md`](https://github.com/Freakling/App-Director/tree/v1.3.0/framework/.app-director/procedures/next-task.md) in the App-Director repository.
+The procedure is at [`framework/.app-director/procedures/next-task.md`](https://github.com/Freakling/App-Director/tree/v1.4.0/framework/.app-director/procedures/next-task.md) in the App-Director repository.
 
 - The building state file is `.app-director/state/building`. The Stop hook checks for it and leaves half-built files alone while it exists.
 - The review diff is written to `.app-director/state/review.diff`.

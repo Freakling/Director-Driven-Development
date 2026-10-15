@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T60 · B5
+**Next IDs:** T61 · B5
 
 ## Milestones
 | Milestone | Status |
@@ -145,8 +145,8 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: `setup-clone.sh` no longer accepts gitleaks 8.19.0 as at least 8.18.0, and says to upgrade it, and the README's requirement names 8.19.0 as the exception, matching `tools/check.sh` after App-Director #6, following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Later: orchestrator for the three frameworks
 
-### T53 · App-Director's fast check notices a changed gitleaks · in-progress 2026-10-15 · S · agent
-- PRs: App-Director #8 (open)
+### T53 · App-Director's fast check notices a changed gitleaks · done · S · agent
+- PRs: App-Director #8 (merged)
 - Depends on: -
 - Touches: work/App-Director: framework/tools/check.sh, selftest.sh (one pull request; the director merges)
 - Done when: `tools/check.sh --if-changed` doesn't reuse a cached pass when gitleaks was removed or its version changed since that pass, so the secrets step runs again, following AGENTS.md › Project rules for framework work (check)
@@ -211,12 +211,18 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: every link into Godot-Director points at v3.6.0 (check) · the pages describe what 3.6.0 changed for Godot-Director, such as its commit model, where they state its old behaviour; the shared rewrite stays with T37 (check) · `bash tools/check.sh` passes (check)
 - Brief: Scope › Common skills
 
-### T56 · Release App-Director 1.4.0 · in-progress 2026-10-15 · S · agent
-- PRs: App-Director #9 (open)
+### T56 · Release App-Director 1.4.0 · done · S · agent
+- PRs: App-Director #9 (merged; its notes gained T53's entry, which merged just before it); released as v1.4.0
 - Depends on: T51, T52
 - Touches: work/App-Director: VERSION, .claude-plugin/plugin.json, CHANGELOG.md (one pull request; the director merges)
 - Done when: the release pull request, which covers T46, T35, T47, T49, T50 and T52, and the 1.3.1 entry that was never tagged, is merged, and `tools/work-release.sh` has tagged `v1.4.0` and published the GitHub release, following AGENTS.md › Project rules › Framework work › Releases (check) · an item here moves the docs links to `v1.4.0` and updates the pages for what it ships (check)
 - Brief: Scope › Planned framework changes
+
+### T60 · Docs follow App-Director 1.4.0 · done · S · agent
+- Depends on: T56
+- Touches: docs/frameworks/app-director.md, docs/skills/*.md
+- Done when: every link into App-Director points at v1.4.0 (check) · the pages describe what 1.4.0 changed for App-Director where they state its old behaviour, apart from the commit model, which T37 rewrites for all three (check) · `bash tools/check.sh` passes (check)
+- Brief: Scope › Common skills
 
 ### T41 · The internal framework workflow page · done · S · agent
 - Depends on: T40
@@ -287,7 +293,6 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Brief: Scope › Planned framework changes
 
 ## Notes
-- T55 and T54 are released as SaaSAllTheThings v0.7.0 and Godot-Director v3.6.0. T37 waits on App-Director's release (T56).
-- T37 waits on the release of the commit model in all three frameworks; T34 waits until all three have released the research assistant.
+- T55, T54 and T56 are released as SaaSAllTheThings v0.7.0, Godot-Director v3.6.0 and App-Director v1.4.0, so the commit model is released in all three and T37 is ready after T60.
+- T34 waits until all three frameworks have released the research assistant.
 - T31 follows T19. T19 changes Godot-Director's README.md and ONBOARDING.md, which Godot-Director #5 (T42) also changes, so it waits on it.
-- T53 waits on App-Director #8; T57 changes App-Director's selftest.sh, so it waits on it too.

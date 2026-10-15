@@ -27,7 +27,7 @@ The skill is `/function-check`. Its procedure is at [`framework/.godot-director/
 
 ### App-Director
 
-The procedure is at [`framework/.app-director/procedures/acceptance.md`](https://github.com/Freakling/App-Director/tree/v1.3.0/framework/.app-director/procedures/acceptance.md) in the App-Director repository.
+The procedure is at [`framework/.app-director/procedures/acceptance.md`](https://github.com/Freakling/App-Director/tree/v1.4.0/framework/.app-director/procedures/acceptance.md) in the App-Director repository.
 
 - It collects the `(demo)` outcomes, and the checklist is written to `validation/YYYY-MM-DD-acceptance.md`.
 - The checklist header names the environment, `local`, `staging` or `prod`, and the *How* hints name the test account and any state the item needs.

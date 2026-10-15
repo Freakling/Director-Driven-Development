@@ -28,7 +28,7 @@ The procedure is at [`framework/.godot-director/procedures/design.md`](https://g
 
 ### App-Director
 
-The procedure is at [`framework/.app-director/procedures/design.md`](https://github.com/Freakling/App-Director/tree/v1.3.0/framework/.app-director/procedures/design.md) in the App-Director repository.
+The procedure is at [`framework/.app-director/procedures/design.md`](https://github.com/Freakling/App-Director/tree/v1.4.0/framework/.app-director/procedures/design.md) in the App-Director repository.
 
 - It records decisions in `product/brief.md` and `product/decisions.md`, and open questions live in the brief's Open Questions section.
 - Before the options, it quotes the related lines from `product/decisions.md` word for word, so the director sees the state of play first.

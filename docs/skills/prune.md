@@ -26,7 +26,7 @@ The procedure is at [`framework/.godot-director/procedures/prune.md`](https://gi
 
 ### App-Director
 
-The procedure is at [`framework/.app-director/procedures/prune.md`](https://github.com/Freakling/App-Director/tree/v1.3.0/framework/.app-director/procedures/prune.md) in the App-Director repository.
+The procedure is at [`framework/.app-director/procedures/prune.md`](https://github.com/Freakling/App-Director/tree/v1.4.0/framework/.app-director/procedures/prune.md) in the App-Director repository.
 
 - Items follow the format in `.app-director/tasks.md`.
 - The skill file gives no threshold. Run it whenever the queue gets hard to read.
