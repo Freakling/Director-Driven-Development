@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T45 · B2
+**Next IDs:** T47 · B3
 
 ## Milestones
 | Milestone | Status |
@@ -91,10 +91,23 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: the buttons on the framework pages and the procedure links on the skill pages point at each framework's latest release tag, not `main` (check) · the selftest reports a link into a framework repo that points at `main` or an older release (check) · `bash tools/check.sh` passes (check)
 - Brief: Scope › Planned framework changes
 
+### B2 · The pre-commit hook takes the framework clones for upgrade files · done · XS · agent · high
+- Depends on: -
+- Touches: .githooks/pre-commit, .app-director/procedures/align.md
+- Repro: with the framework clones in `work/`, run `git commit` → expected: the commit goes ahead / actual: "unmerged App Director upgrade files (*.adir-new) exist", listing `work/App-Director/` and the other clones, because `git ls-files` lists a nested repository in an ignored folder as a directory
+- Found in: T40
+- Brief: Scope › Later: orchestrator for the three frameworks
+
 ### T40 · A workspace for framework work: clones of the three repos · todo · M · agent
 - Depends on: -
 - Touches: .gitignore, tools/work-clones.sh (new), tools/work-publish.sh (new), Claude Code settings, AGENTS.md
 - Done when: `work/` is gitignored, and `tools/work-clones.sh` clones the three framework repos there or fetches an existing clone (check) · `tools/work-publish.sh` pushes a clone's item branch and opens its pull request, refuses `main` and never merges, and the settings let it run without a prompt while every other push keeps asking (check) · AGENTS.md › Project rules says how a framework item is built: in its clone on a branch, following that repo's `CLAUDE.md`, gated by its `selftest.sh`, the item added done to that repo's root TASKS.md with a CHANGELOG entry, then committed and published without pausing, as one pull request the director merges (check) · AGENTS.md › Layout lists `work/`, and the Orchestrator row in Architecture matches (check) · `bash tools/check.sh` passes (check)
+- Brief: Scope › Later: orchestrator for the three frameworks
+
+### T46 · The upgrade-file check ignores nested clones, in all three frameworks · todo · S · agent
+- Depends on: B2
+- Touches: work/App-Director, work/Godot-Director, work/SaaSAllTheThings (one pull request per repo; the director merges)
+- Done when: each framework's pre-commit hook, `/align` procedure and onboarding keep only paths that end in its upgrade suffix (`.adir-new`, `.gdir-new`, `.satt-new`), so a nested clone in an ignored folder no longer blocks a commit while a real upgrade file still does, with one open pull request per repo, following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Later: orchestrator for the three frameworks
 
 ### T41 · The internal framework workflow page · todo · S · agent
