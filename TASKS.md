@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T51 · B3
+**Next IDs:** T52 · B3
 
 ## Milestones
 | Milestone | Status |
@@ -144,6 +144,12 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: SaaSAllTheThings' selftest skips its .NET part on a machine with the .NET host but no SDK, where three checks fail on main today, and still runs it where an SDK is installed, following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Later: orchestrator for the three frameworks
 
+### T51 · Framework releases when a change is complete · todo · M · agent
+- Depends on: T40
+- Touches: tools/work-release.sh (new), Claude Code settings, AGENTS.md, product/framework-workflow.md
+- Done when: AGENTS.md › Project rules › Framework work says when a release is proposed (an item done, for each repo it touched, covering everything merged since that repo's last release), that the proposal is a release pull request following that repo's `CLAUDE.md` (version bump, CHANGELOG heading, release notes), and that the director decides every release (check) · `tools/work-release.sh work/<repo>` tags the merged release commit `v<version>` from VERSION and publishes the GitHub release with the notes from the CHANGELOG; it refuses when the release pull request isn't merged, the tag already exists or the version files disagree, and it never force-pushes or moves a tag; the settings let it run without a prompt (check) · after a release, an item here moves the docs links to the new tag and updates the pages for what the release ships (check) · the internal workflow page shows the release step (check) · `bash tools/check.sh` passes (check)
+- Brief: Scope › Planned framework changes
+
 ### T41 · The internal framework workflow page · done · S · agent
 - Depends on: T40
 - Touches: product/framework-workflow.md (new), docs/index.md
@@ -212,6 +218,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Brief: Scope › Planned framework changes
 
 ## Notes
+- T51 sets up releases; the first proposals under it cover T46 and T47, which are done.
 - T49 waits on App-Director #5; T50 and T33 change App-Director's selftest.sh, so they wait on it too. T48 waits on SaaSAllTheThings #4; T43 changes SaaSAllTheThings' selftest.sh, so it waits on it too. T39 and T19 change Godot-Director's README.md, which Godot-Director #3 (T35) also changes.
 - T35 waits on the merge of Godot-Director #3; T37 follows T35 and the releases.
 - T33, T42 and T43 change next-task.md (open in the T35 pull requests) and selftest.sh (open in the T46 pull requests), so they wait on both. T19 changes Godot-Director's ONBOARDING.md (open in Godot-Director #2). T31 follows T19.
