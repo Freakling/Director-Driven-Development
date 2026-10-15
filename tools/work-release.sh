@@ -262,8 +262,11 @@ g tag -a "$tag" -m "Release $tag" "$merge" \
 g push origin "refs/tags/$tag" \
   || fail "pushing the tag failed; the tag $tag exists in $dir only. Push it with: git -C $dir push origin refs/tags/$tag"
 keep=1
-out="$(gh release create "$tag" --repo "$slug" --title "$tag" --notes-file "$notes" --verify-tag)" \
-  || fail "the tag $tag is pushed, but the release was not published. Publish it with: gh release create $tag --repo $slug --title $tag --notes-file $notes --verify-tag"
+# Path translation is off (MSYS2_ARG_CONV_EXCL above), so hand a Windows gh a Windows path.
+notes_arg="$notes"
+if command -v cygpath >/dev/null 2>&1; then notes_arg="$(cygpath -w "$notes")"; fi
+out="$(gh release create "$tag" --repo "$slug" --title "$tag" --notes-file "$notes_arg" --verify-tag)" \
+  || fail "the tag $tag is pushed, but the release was not published. Publish it with: gh release create $tag --repo $slug --title $tag --notes-file \"$notes_arg\" --verify-tag"
 keep=0
 echo "release: $(printf '%s\n' "$out" | tail -1)"
 exit 0

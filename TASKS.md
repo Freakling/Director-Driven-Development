@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T57 · B4
+**Next IDs:** T59 · B5
 
 ## Milestones
 | Milestone | Status |
@@ -138,17 +138,24 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: with gitleaks 8.19.0, which fails every scan command, `tools/check.sh` says it couldn't scan (exit 3, with a hint to upgrade gitleaks) instead of reporting credentials found, its comment about 8.19.0 says so, and the selftest's real-gitleaks checks skip 8.19.0; the minimum version stays 8.18.0, following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Later: orchestrator for the three frameworks
 
-### T52 · App-Director's setup and README name gitleaks 8.19.0 as unusable · in-progress 2026-10-15 · XS · agent
-- PRs: App-Director #7 (open)
+### T52 · App-Director's setup and README name gitleaks 8.19.0 as unusable · done · XS · agent
+- PRs: App-Director #7 (merged)
 - Depends on: -
 - Touches: work/App-Director: framework/tools/setup-clone.sh, README.md (one pull request; the director merges)
 - Done when: `setup-clone.sh` no longer accepts gitleaks 8.19.0 as at least 8.18.0, and says to upgrade it, and the README's requirement names 8.19.0 as the exception, matching `tools/check.sh` after App-Director #6, following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Later: orchestrator for the three frameworks
 
 ### T53 · App-Director's fast check notices a changed gitleaks · in-progress 2026-10-15 · S · agent
+- PRs: App-Director #8 (open)
 - Depends on: -
 - Touches: work/App-Director: framework/tools/check.sh, selftest.sh (one pull request; the director merges)
-- Done when: `tools/check.sh --if-changed` doesn't reuse a cached pass when gitleaks was removed or its version changed since that pass, so the secrets step runs again (check) · the selftest's "setup-clone installs the pre-commit hook" check expects setup-clone's refusal on gitleaks 8.19.0 instead of failing there, following AGENTS.md › Project rules for framework work (check)
+- Done when: `tools/check.sh --if-changed` doesn't reuse a cached pass when gitleaks was removed or its version changed since that pass, so the secrets step runs again, following AGENTS.md › Project rules for framework work (check)
+- Brief: Scope › Later: orchestrator for the three frameworks
+
+### T57 · App-Director's selftest expects setup to refuse gitleaks 8.19.0 · todo · XS · agent
+- Depends on: T52
+- Touches: work/App-Director: selftest.sh (one pull request; the director merges)
+- Done when: with gitleaks 8.19.0, the selftest's "setup-clone installs the pre-commit hook" check expects setup-clone's refusal (App-Director #7) instead of failing, following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Later: orchestrator for the three frameworks
 
 ### T48 · SaaSAllTheThings' selftest skips .NET without the SDK · done · S · agent
@@ -178,12 +185,25 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: the release pull request, which covers T46 and T35, is merged, and `tools/work-release.sh` has tagged `v3.6.0` and published the GitHub release, following AGENTS.md › Project rules › Framework work › Releases (check) · an item here moves the docs links to `v3.6.0` and updates the pages for what it ships (check)
 - Brief: Scope › Planned framework changes
 
-### T55 · Release SaaSAllTheThings 0.7.0 · in-progress 2026-10-15 · S · agent
-- PRs: SaaSAllTheThings #5 (open)
+### T55 · Release SaaSAllTheThings 0.7.0 · done · S · agent
+- PRs: SaaSAllTheThings #5 (merged); released as v0.7.0
 - Depends on: T51
 - Touches: work/SaaSAllTheThings: VERSION, .claude-plugin/plugin.json, skills/*/SKILL.md, CHANGELOG.md (one pull request; the director merges)
 - Done when: the release pull request, which covers T46, T35 and T48, is merged, and `tools/work-release.sh` has tagged `v0.7.0` and published the GitHub release, following AGENTS.md › Project rules › Framework work › Releases (check) · an item here moves the docs links to `v0.7.0` and updates the pages for what it ships (check)
 - Brief: Scope › Planned framework changes
+
+### B4 · The release step couldn't hand gh its notes on Windows · done · XS · agent · high
+- Depends on: -
+- Touches: tools/work-release.sh
+- Repro: on Git Bash for Windows, run `tools/work-release.sh` for a merged release pull request → expected: the tag is pushed and the release published / actual: the tag is pushed, then `gh release create` fails with "open /tmp/work-release.XXXXXX: The system cannot find the path specified", because the script turns Git Bash's path translation off for its `git show` arguments, so the Windows gh got a /tmp path
+- Found in: T55 (v0.7.0 was published by hand with the kept notes)
+- Brief: Scope › Planned framework changes
+
+### T58 · Docs follow SaaSAllTheThings 0.7.0 · in-progress 2026-10-15 · S · agent
+- Depends on: T55
+- Touches: docs/frameworks/saasallthethings.md, docs/skills/*.md, docs/concept/agent-flow.md
+- Done when: every link into SaaSAllTheThings points at v0.7.0 (check) · the pages describe what 0.7.0 changed for SaaSAllTheThings, such as its run mode, where they state its old behaviour; the shared rewrite stays with T37 (check) · `bash tools/check.sh` passes (check)
+- Brief: Scope › Common skills
 
 ### T56 · Release App-Director 1.4.0 · todo · S · agent
 - Depends on: T51, T52
@@ -259,7 +279,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Brief: Scope › Planned framework changes
 
 ## Notes
-- T54 and T55 are the first releases under T51. T56 waits on T52 (App-Director #7), so one App-Director release covers it.
+- T54 (Godot-Director #4) waits on your merge; T55 is released as SaaSAllTheThings v0.7.0.
 - T37 waits on the release of the commit model in all three frameworks; T34 waits until all three have released the research assistant.
 - T31 follows T19.
-- T52 waits on App-Director #7; T39 and T33 change App-Director's README.md, which #7 also changes, so they wait on it too.
+- T53 waits on App-Director #8; T57 changes App-Director's selftest.sh, so it waits on it too.
