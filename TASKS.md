@@ -45,6 +45,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Brief: Scope › Common skills
 
 ### T68 · SaaSAllTheThings' manual install takes the latest release · in-progress 2026-10-15 · XS · agent
+- PRs: SaaSAllTheThings #8 (open)
 - Depends on: T39
 - Touches: work/SaaSAllTheThings: README.md (one pull request; the director merges)
 - Done when: the manual install option in SaaSAllTheThings' README clones the latest release tag instead of main, worded as App-Director #12 and Godot-Director #8 do, following AGENTS.md › Project rules for framework work (check)
@@ -103,5 +104,5 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 ## Notes
 - T55, T54 and T56 are released as SaaSAllTheThings v0.7.0, Godot-Director v3.6.0 and App-Director v1.4.0.
 - T34 waits until all three frameworks have released the research assistant.
-- T39 is merged in all three. T64 and T65 come first, then the releases T63, T62 and T67, which carry everything merged since each repo's last release.
+- The releases wait on the manual-install pull requests: T62 and T67 on T65 (App-Director #12, Godot-Director #8), T63 on T68 (SaaSAllTheThings #8). T33 and T19 change their repo's README.md, which #12 and #8 also change, so they wait on them too.
 - T31 follows T19.
