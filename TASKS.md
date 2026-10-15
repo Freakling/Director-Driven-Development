@@ -100,7 +100,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: the release pull request, which covers T33 (the research assistant), is merged, and `tools/work-release.sh` has tagged `v1.6.0` and published the GitHub release, following AGENTS.md › Project rules › Framework work › Releases (check) · an item here moves the docs links to `v1.6.0` and updates the pages for what it ships (check)
 - Brief: Scope › Planned framework changes
 
-### T72 · Docs follow App-Director 1.6.0 · in-progress 2026-10-16 · S · agent
+### T72 · Docs follow App-Director 1.6.0 · done · S · agent
 - Depends on: T70
 - Touches: docs/frameworks/app-director.md, docs/skills/*.md
 - Done when: every link into App-Director points at v1.6.0 (check) · App-Director's page lists `/research` as the other two do, and the design and /next-task pages say how its design sessions and R items use the researcher (check) · `bash tools/check.sh` passes (check)
@@ -112,7 +112,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: the release pull request, which covers T19 (export onboarding and /export), is merged, and `tools/work-release.sh` has tagged `v3.9.0` and published the GitHub release, following AGENTS.md › Project rules › Framework work › Releases (check) · an item here moves the docs links to `v3.9.0` and documents export onboarding and /export on the Godot-Director page (check)
 - Brief: Scope › Planned framework changes
 
-### T34 · The Research skill page · todo · S · agent
+### T34 · The Research skill page · in-progress 2026-10-16 · S · agent
 - Depends on: T33, T42, T43
 - Touches: docs/skills/research.md (new), docs/skills/index.md, mkdocs.yml, docs/concept/design-calls.md
 - Done when: once all three frameworks have released the research assistant, the page describes the shared behaviour and what is unique per repo, matching the released procedures (check) · Design calls links to it (check) · `bash tools/check.sh` passes (check)

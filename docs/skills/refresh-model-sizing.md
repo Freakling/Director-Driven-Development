@@ -24,7 +24,7 @@ The procedure is at [`framework/.godot-director/procedures/refresh-model-sizing.
 
 ### App-Director
 
-The procedure is at [`framework/.app-director/procedures/refresh-model-sizing.md`](https://github.com/Freakling/App-Director/tree/v1.5.0/framework/.app-director/procedures/refresh-model-sizing.md) in the App-Director repository.
+The procedure is at [`framework/.app-director/procedures/refresh-model-sizing.md`](https://github.com/Freakling/App-Director/tree/v1.6.0/framework/.app-director/procedures/refresh-model-sizing.md) in the App-Director repository.
 
 - The capability check looks for the `builder` agent definition in `.claude/agents/`, and for a way to pass a different model to each subagent call. If either is missing, the skill stops.
 - The new block replaces any existing `Model sizing` lines in Project rules. If sizing was off, it is switched on.

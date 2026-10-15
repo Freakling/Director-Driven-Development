@@ -31,7 +31,7 @@ The procedure is at [`framework/.godot-director/procedures/drift-reset.md`](http
 
 ### App-Director
 
-The procedure is at [`framework/.app-director/procedures/drift-reset.md`](https://github.com/Freakling/App-Director/tree/v1.5.0/framework/.app-director/procedures/drift-reset.md) in the App-Director repository.
+The procedure is at [`framework/.app-director/procedures/drift-reset.md`](https://github.com/Freakling/App-Director/tree/v1.6.0/framework/.app-director/procedures/drift-reset.md) in the App-Director repository.
 
 - The branch is `drift-reset-YYYY-MM-DD`, and the reset folder is `product/resets/YYYY-MM-DD/`. The working tree must be clean before it starts. If it isn't, the director decides what happens to the changes first.
 - No destructive git commands are used. The reset never discards work or rewrites history, and the git rules are in `rules.md`.

@@ -4,7 +4,7 @@
 
 Make the app you designed, with AI doing the building and you staying the director. App-Director works for new apps and apps already in development, on TypeScript, Flutter or Python. You decide what the app does, how it should feel and what gets built next; the AI builds, tests and keeps the records.
 
-[Repository](https://github.com/Freakling/App-Director){ .md-button .md-button--primary } [README](https://github.com/Freakling/App-Director#readme){ .md-button } [Procedures](https://github.com/Freakling/App-Director/tree/v1.5.0/framework/.app-director/procedures){ .md-button }
+[Repository](https://github.com/Freakling/App-Director){ .md-button .md-button--primary } [README](https://github.com/Freakling/App-Director#readme){ .md-button } [Procedures](https://github.com/Freakling/App-Director/tree/v1.6.0/framework/.app-director/procedures){ .md-button }
 
 ## What the check enforces
 
@@ -60,6 +60,7 @@ Onboarding works out whether this is a new app, an existing app or an upgrade, s
 |---|---|
 | `/next-task` | Builds the next ready item in a fresh context, proves it with the check, updates the records and commits |
 | `/design` | A design session on a topic, or `/design questions` to rank the open questions by what they unblock |
+| `/research` | A read-only researcher answers one question in a fresh context and writes a dated note with its sources to `product/research/`. It informs; you decide. Procedure: [`research.md`](https://github.com/Freakling/App-Director/tree/v1.6.0/framework/.app-director/procedures/research.md) |
 | `/acceptance` | Prepares or processes a checklist of built behaviour for you to tick Works or Broken |
 | `/align` | Consistency pass across the brief, decisions, tasks, `AGENTS.md` and check config |
 | `/drift-reset` | Design drift reset, started only by you; `/drift-reset postmortem` after the rebuild |

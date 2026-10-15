@@ -32,12 +32,13 @@ A run covers commits only, not pushes, deploys or cloud changes. Each framework'
 
 ### App-Director
 
-The procedure is at [`framework/.app-director/procedures/next-task.md`](https://github.com/Freakling/App-Director/tree/v1.5.0/framework/.app-director/procedures/next-task.md) in the App-Director repository.
+The procedure is at [`framework/.app-director/procedures/next-task.md`](https://github.com/Freakling/App-Director/tree/v1.6.0/framework/.app-director/procedures/next-task.md) in the App-Director repository.
 
 - The building state file is `.app-director/state/building`. The Stop hook checks for it and leaves half-built files alone while it exists.
 - The review diff is written to `.app-director/state/review.diff`.
 - New items are formatted following `.app-director/tasks.md`, and IDs come from `Next IDs` in that file.
 - The report notes that `(demo)` outcomes and bug fixes without regression tests will appear in the next acceptance check.
+- A research item (`R<n>`) goes to the `researcher` instead of the builder. No check runs and there is no review: the session writes the note to `product/research/` and commits it with the records.
 
 ### Godot-Director
 
