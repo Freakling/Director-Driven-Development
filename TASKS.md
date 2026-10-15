@@ -145,7 +145,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: `setup-clone.sh` no longer accepts gitleaks 8.19.0 as at least 8.18.0, and says to upgrade it, and the README's requirement names 8.19.0 as the exception, matching `tools/check.sh` after App-Director #6, following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Later: orchestrator for the three frameworks
 
-### T53 · App-Director's fast check notices a changed gitleaks · todo · S · agent
+### T53 · App-Director's fast check notices a changed gitleaks · in-progress 2026-10-15 · S · agent
 - Depends on: -
 - Touches: work/App-Director: framework/tools/check.sh, selftest.sh (one pull request; the director merges)
 - Done when: `tools/check.sh --if-changed` doesn't reuse a cached pass when gitleaks was removed or its version changed since that pass, so the secrets step runs again (check) · the selftest's "setup-clone installs the pre-commit hook" check expects setup-clone's refusal on gitleaks 8.19.0 instead of failing there, following AGENTS.md › Project rules for framework work (check)
@@ -172,12 +172,14 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Brief: Scope › Planned framework changes
 
 ### T54 · Release Godot-Director 3.6.0 · in-progress 2026-10-15 · S · agent
+- PRs: Godot-Director #4 (open)
 - Depends on: T51
 - Touches: work/Godot-Director: VERSION, .claude-plugin/plugin.json, CHANGELOG.md (one pull request; the director merges)
 - Done when: the release pull request, which covers T46 and T35, is merged, and `tools/work-release.sh` has tagged `v3.6.0` and published the GitHub release, following AGENTS.md › Project rules › Framework work › Releases (check) · an item here moves the docs links to `v3.6.0` and updates the pages for what it ships (check)
 - Brief: Scope › Planned framework changes
 
-### T55 · Release SaaSAllTheThings 0.7.0 · todo · S · agent
+### T55 · Release SaaSAllTheThings 0.7.0 · in-progress 2026-10-15 · S · agent
+- PRs: SaaSAllTheThings #5 (open)
 - Depends on: T51
 - Touches: work/SaaSAllTheThings: VERSION, .claude-plugin/plugin.json, skills/*/SKILL.md, CHANGELOG.md (one pull request; the director merges)
 - Done when: the release pull request, which covers T46, T35 and T48, is merged, and `tools/work-release.sh` has tagged `v0.7.0` and published the GitHub release, following AGENTS.md › Project rules › Framework work › Releases (check) · an item here moves the docs links to `v0.7.0` and updates the pages for what it ships (check)
@@ -198,7 +200,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 ### T39 · The framework repos install the latest release · todo · M · agent
 - Depends on: T40
 - Touches: work/App-Director: SKILL.md, skills/app-director/SKILL.md, scripts/fetch-app-director.sh, .claude-plugin/marketplace.json, CLAUDE.md, README.md, selftest.sh; work/Godot-Director: skills/godot-director/SKILL.md, .claude-plugin/marketplace.json, CLAUDE.md, README.md, selftest.sh; work/SaaSAllTheThings: .claude-plugin/marketplace.json (one pull request per repo; the director merges)
-- Done when: App-Director and Godot-Director each have a merged pull request that makes the skill, the fetch script and, where the marketplace can pin a ref, the plugin install the latest release tag, and that tags every release `v<version>`, following AGENTS.md › Project rules for framework work (check) · SaaSAllTheThings' plugin follows the release tag, with a pull request if it needs a change (check)
+- Done when: App-Director and Godot-Director each have a merged pull request that makes the skill, the fetch script and, where the marketplace can pin a ref, the plugin install the latest release tag, and that tags every release `v<version>`, with Godot-Director's `skills/godot-director/SKILL.md` `metadata.version` kept in step with VERSION (it says 3.3.0), following AGENTS.md › Project rules for framework work (check) · SaaSAllTheThings' plugin follows the release tag, with a pull request if it needs a change (check)
 - Brief: Scope › Planned framework changes
 
 ### T35 · The shared commit model in the framework repos · done · M · agent
