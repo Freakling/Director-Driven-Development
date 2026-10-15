@@ -125,7 +125,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: where the /design page mentions the researcher, it links to the /research page (check) · `bash tools/check.sh` passes (check)
 - Brief: Scope › Common skills
 
-### T74 · The frameworks overview lists the research assistant · in-progress 2026-10-16 · XS · agent
+### T74 · The frameworks overview lists the research assistant · done · XS · agent
 - Depends on: T34
 - Touches: docs/frameworks/index.md
 - Done when: "Shared by all three" on the frameworks overview names `/research`, linking its skill page, and the researcher next to the builder and reviewer subagents, and its install line matches the framework pages (each install path takes the latest release) (check) · `bash tools/check.sh` passes (check)
