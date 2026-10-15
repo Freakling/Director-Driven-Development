@@ -152,7 +152,8 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: `tools/check.sh --if-changed` doesn't reuse a cached pass when gitleaks was removed or its version changed since that pass, so the secrets step runs again, following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Later: orchestrator for the three frameworks
 
-### T57 · App-Director's selftest expects setup to refuse gitleaks 8.19.0 · todo · XS · agent
+### T57 · App-Director's selftest expects setup to refuse gitleaks 8.19.0 · in-progress 2026-10-15 · XS · agent
+- PRs: App-Director #10 (open)
 - Depends on: T52
 - Touches: work/App-Director: selftest.sh (one pull request; the director merges)
 - Done when: with gitleaks 8.19.0, the selftest's "setup-clone installs the pre-commit hook" check expects setup-clone's refusal (App-Director #7) instead of failing, following AGENTS.md › Project rules for framework work (check)
@@ -268,7 +269,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: Godot-Director has a merged pull request that builds the research assistant from `product/anchors/research.md`, with its domain file (the Godot docs and engine version, asset licences and store requirements), an `R<n>` counter on its `Next IDs` line, and the new files in its README, install script, skills folder and selftest, following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Planned framework changes
 
-### T43 · SaaSAllTheThings: the research assistant · todo · M · agent
+### T43 · SaaSAllTheThings: the research assistant · in-progress 2026-10-15 · M · agent
 - Depends on: T32, T40
 - Touches: work/SaaSAllTheThings (one pull request; the director merges)
 - Done when: SaaSAllTheThings has a merged pull request that builds the research assistant from `product/anchors/research.md`, with its domain file (Azure and the customer's security framework), an `R<n>` counter on its `Next IDs` line, and the new files in its README, install and bundle scripts, skills folder and selftest, following AGENTS.md › Project rules for framework work (check)
@@ -295,4 +296,5 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 ## Notes
 - T55, T54 and T56 are released as SaaSAllTheThings v0.7.0, Godot-Director v3.6.0 and App-Director v1.4.0, so the commit model is released in all three and T37 is ready after T60.
 - T34 waits until all three frameworks have released the research assistant.
+- T57 waits on App-Director #10; T33 changes App-Director's selftest.sh, so it waits on it too. T39 changes App-Director's selftest.sh and Godot-Director's README.md and selftest.sh, so it waits on #10 and Godot-Director #5.
 - T31 follows T19. T19 changes Godot-Director's README.md and ONBOARDING.md, which Godot-Director #5 (T42) also changes, so it waits on it.
