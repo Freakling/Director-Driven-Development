@@ -98,10 +98,16 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Found in: T40
 - Brief: Scope › Later: orchestrator for the three frameworks
 
-### T40 · A workspace for framework work: clones of the three repos · todo · M · agent
+### T40 · A workspace for framework work: clones of the three repos · done · M · agent
 - Depends on: -
 - Touches: .gitignore, tools/work-clones.sh (new), tools/work-publish.sh (new), Claude Code settings, AGENTS.md
 - Done when: `work/` is gitignored, and `tools/work-clones.sh` clones the three framework repos there or fetches an existing clone (check) · `tools/work-publish.sh` pushes a clone's item branch and opens its pull request, refuses `main` and never merges, and the settings let it run without a prompt while every other push keeps asking (check) · AGENTS.md › Project rules says how a framework item is built: in its clone on a branch, following that repo's `CLAUDE.md`, gated by its `selftest.sh`, the item added done to that repo's root TASKS.md with a CHANGELOG entry, then committed and published without pausing, as one pull request the director merges (check) · AGENTS.md › Layout lists `work/`, and the Orchestrator row in Architecture matches (check) · `bash tools/check.sh` passes (check)
+- Brief: Scope › Later: orchestrator for the three frameworks
+
+### T45 · Alignment items wait in this repo's queue · todo · S · agent
+- Depends on: T40
+- Touches: tools/push-alignment.sh, AGENTS.md
+- Done when: a difference the audit finds in a framework's procedure becomes a framework item in this repo's TASKS.md whose `Touches` names that framework's clone under `work/`, instead of a pull request that only adds an item (check) · the script opens no pull requests (check) · AGENTS.md › Architecture describes it in one row, with the stale Alignment row merged into Orchestrator (check) · `bash tools/check.sh` passes (check)
 - Brief: Scope › Later: orchestrator for the three frameworks
 
 ### T46 · The upgrade-file check ignores nested clones, in all three frameworks · todo · S · agent

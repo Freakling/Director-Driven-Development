@@ -15,9 +15,10 @@ title = "{{APP_NAME}}"
 useDefault = true
 
 [allowlist]
-description = "Framework repo clones cached by selftest.sh under .app-director/state (gitignored, never committed)."
+description = "Framework repo clones: the selftest cache under .app-director/state and the working clones under work/ (both gitignored, never committed)."
 paths = [
   '''\.app-director[\\/]state[\\/]frameworks[\\/]''',
+  '''(^|[\\/])work[\\/](App-Director|Godot-Director|SaaSAllTheThings)[\\/]''',
 ]
 # commits = []
 

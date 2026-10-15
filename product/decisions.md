@@ -52,3 +52,4 @@ Examples:
 2026-10-15 · the framework workflow is an internal page in the repository, outside the Pages site, with a flowchart and a sequence diagram; the home page's Built with App-Director section links to it · director's choice: it's internal workflow, and the link shows the repo at work
 2026-10-15 · Q12: a framework item travels with its change in one pull request; it waits in this repo's TASKS.md until it's built, and the framework's root TASKS.md records what was done · director's choice: one merge per item
 2026-10-15 · Q13: for framework items the pull request is the only gate; a single task commits and pushes without pausing for approval · director's choice: the director reviews the finished change on GitHub, and nothing reaches main without the merge
+2026-10-15 · gitleaks skips the framework clones under work/, as it does the release cache · they're gitignored copies of other repos, never committed here
