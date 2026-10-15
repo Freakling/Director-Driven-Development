@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T63 · B5
+**Next IDs:** T66 · B5
 
 ## Milestones
 | Milestone | Status |
@@ -239,6 +239,24 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: the release pull request, which covers T57, is merged, and `tools/work-release.sh` has tagged `v1.4.1` and published the GitHub release, following AGENTS.md › Project rules › Framework work › Releases (check) · an item here moves the docs links to `v1.4.1` and updates the pages for what it ships (check)
 - Brief: Scope › Planned framework changes
 
+### T63 · Release SaaSAllTheThings 0.8.0 · todo · S · agent
+- Depends on: T51, T39
+- Touches: work/SaaSAllTheThings: VERSION, .claude-plugin/plugin.json, .claude-plugin/marketplace.json, skills/*/SKILL.md, CHANGELOG.md (one pull request; the director merges)
+- Done when: the release pull request, which covers T43 (the research assistant) and T39, is merged, and `tools/work-release.sh` has tagged `v0.8.0` and published the GitHub release, following AGENTS.md › Project rules › Framework work › Releases (check) · an item here moves the docs links to `v0.8.0` and updates the pages for what it ships (check)
+- Brief: Scope › Planned framework changes
+
+### T64 · The release step checks every file that carries the version · todo · S · agent
+- Depends on: T39
+- Touches: tools/work-release.sh
+- Done when: for each framework, `tools/work-release.sh` checks every file its release rule lists as carrying the version (after T39: App-Director's package.json, both SKILL.md files with their --branch, the fetch script's tag and the marketplace ref; Godot-Director's skill version and --branch and the marketplace ref; SaaSAllTheThings' marketplace ref), and refuses a release where one disagrees (check) · `bash tools/check.sh` passes (check)
+- Brief: Scope › Planned framework changes
+
+### T65 · Manual installs clone the latest release · todo · XS · agent
+- Depends on: T39
+- Touches: work/App-Director: README.md; work/Godot-Director: README.md (one pull request per repo; the director merges)
+- Done when: the manual install option in App-Director's and Godot-Director's READMEs clones the latest release tag instead of main, as SaaSAllTheThings' does if it does, following AGENTS.md › Project rules for framework work (check)
+- Brief: Scope › Planned framework changes
+
 ### T41 · The internal framework workflow page · done · S · agent
 - Depends on: T40
 - Touches: product/framework-workflow.md (new), docs/index.md
@@ -246,6 +264,8 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Brief: Scope › Built with App-Director
 
 ### T39 · The framework repos install the latest release · in-progress 2026-10-15 · M · agent
+- PRs: App-Director #11 (open), Godot-Director #7 (open), SaaSAllTheThings #7 (open)
+- Note: Godot-Director #7 pins 3.6.0; merge the 3.7.0 release (#6) first, then its three pins move to 3.7.0 before #7 is merged.
 - Depends on: T40
 - Touches: work/App-Director: SKILL.md, skills/app-director/SKILL.md, package.json, scripts/fetch-app-director.sh, .claude-plugin/marketplace.json, CLAUDE.md, README.md, selftest.sh; work/Godot-Director: skills/godot-director/SKILL.md, .claude-plugin/marketplace.json, CLAUDE.md, README.md, selftest.sh; work/SaaSAllTheThings: .claude-plugin/marketplace.json (one pull request per repo; the director merges)
 - Done when: App-Director and Godot-Director each have a merged pull request that makes the skill, the fetch script and, where the marketplace can pin a ref, the plugin install the latest release tag, and that tags every release `v<version>`, with Godot-Director's `skills/godot-director/SKILL.md` `metadata.version` (3.3.0) and App-Director's root `SKILL.md` and `package.json` versions (1.0.0) kept in step with VERSION, following AGENTS.md › Project rules for framework work (check) · SaaSAllTheThings' plugin follows the release tag, with a pull request if it needs a change (check)
@@ -283,8 +303,8 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: Godot-Director has a merged pull request that builds the research assistant from `product/anchors/research.md`, with its domain file (the Godot docs and engine version, asset licences and store requirements), an `R<n>` counter on its `Next IDs` line, and the new files in its README, install script, skills folder and selftest, following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Planned framework changes
 
-### T43 · SaaSAllTheThings: the research assistant · in-progress 2026-10-15 · M · agent
-- PRs: SaaSAllTheThings #6 (open)
+### T43 · SaaSAllTheThings: the research assistant · done · M · agent
+- PRs: SaaSAllTheThings #6 (merged)
 - Depends on: T32, T40
 - Touches: work/SaaSAllTheThings (one pull request; the director merges)
 - Done when: SaaSAllTheThings has a merged pull request that builds the research assistant from `product/anchors/research.md`, with its domain file (Azure and the customer's security framework), an `R<n>` counter on its `Next IDs` line, and the new files in its README, install and bundle scripts, skills folder and selftest, following AGENTS.md › Project rules for framework work (check)
@@ -311,5 +331,5 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 ## Notes
 - T55, T54 and T56 are released as SaaSAllTheThings v0.7.0, Godot-Director v3.6.0 and App-Director v1.4.0.
 - T34 waits until all three frameworks have released the research assistant.
-- T43 waits on SaaSAllTheThings #6. T61 and T62 propose releases for T42 and T57.
+- T39 waits on App-Director #11, Godot-Director #7 and SaaSAllTheThings #7; T63, T64 and T65 follow it. T61 (Godot-Director #6) waits on your merge; T62 is held for your call.
 - T31 follows T19.
