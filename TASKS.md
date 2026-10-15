@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T54 · B3
+**Next IDs:** T57 · B3
 
 ## Milestones
 | Milestone | Status |
@@ -131,8 +131,8 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: when the pre-commit hook blocks a commit because gitleaks found a secret in the staged changes, it names the file, as `tools/check.sh` does after App-Director #4, without printing the secret, following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Later: orchestrator for the three frameworks
 
-### T50 · App-Director's secrets check treats gitleaks 8.19.0 as unable to scan · in-progress 2026-10-15 · S · agent
-- PRs: App-Director #6 (open)
+### T50 · App-Director's secrets check treats gitleaks 8.19.0 as unable to scan · done · S · agent
+- PRs: App-Director #6 (merged)
 - Depends on: -
 - Touches: work/App-Director: framework/tools/check.sh, selftest.sh (one pull request; the director merges)
 - Done when: with gitleaks 8.19.0, which fails every scan command, `tools/check.sh` says it couldn't scan (exit 3, with a hint to upgrade gitleaks) instead of reporting credentials found, its comment about 8.19.0 says so, and the selftest's real-gitleaks checks skip 8.19.0; the minimum version stays 8.18.0, following AGENTS.md › Project rules for framework work (check)
@@ -162,6 +162,24 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Depends on: T40
 - Touches: tools/work-release.sh (new), Claude Code settings, AGENTS.md, product/framework-workflow.md
 - Done when: AGENTS.md › Project rules › Framework work says when a release is proposed (an item done, for each repo it touched, covering everything merged since that repo's last release), that the proposal is a release pull request following that repo's `CLAUDE.md` (version bump, CHANGELOG heading, release notes), and that the director decides every release (check) · `tools/work-release.sh work/<repo>` tags the merged release commit `v<version>` from VERSION and publishes the GitHub release with the notes from the CHANGELOG; it refuses when the release pull request isn't merged, the tag already exists or the version files disagree, and it never force-pushes or moves a tag; the settings let it run without a prompt (check) · after a release, an item here moves the docs links to the new tag and updates the pages for what the release ships (check) · the internal workflow page shows the release step (check) · `bash tools/check.sh` passes (check)
+- Brief: Scope › Planned framework changes
+
+### T54 · Release Godot-Director 3.6.0 · todo · S · agent
+- Depends on: T51
+- Touches: work/Godot-Director: VERSION, .claude-plugin/plugin.json, CHANGELOG.md (one pull request; the director merges)
+- Done when: the release pull request, which covers T46 and T35, is merged, and `tools/work-release.sh` has tagged `v3.6.0` and published the GitHub release, following AGENTS.md › Project rules › Framework work › Releases (check) · an item here moves the docs links to `v3.6.0` and updates the pages for what it ships (check)
+- Brief: Scope › Planned framework changes
+
+### T55 · Release SaaSAllTheThings 0.7.0 · todo · S · agent
+- Depends on: T51
+- Touches: work/SaaSAllTheThings: VERSION, .claude-plugin/plugin.json, skills/*/SKILL.md, CHANGELOG.md (one pull request; the director merges)
+- Done when: the release pull request, which covers T46, T35 and T48, is merged, and `tools/work-release.sh` has tagged `v0.7.0` and published the GitHub release, following AGENTS.md › Project rules › Framework work › Releases (check) · an item here moves the docs links to `v0.7.0` and updates the pages for what it ships (check)
+- Brief: Scope › Planned framework changes
+
+### T56 · Release App-Director 1.4.0 · todo · S · agent
+- Depends on: T51, T52
+- Touches: work/App-Director: VERSION, .claude-plugin/plugin.json, CHANGELOG.md (one pull request; the director merges)
+- Done when: the release pull request, which covers T46, T35, T47, T49, T50 and T52, and the 1.3.1 entry that was never tagged, is merged, and `tools/work-release.sh` has tagged `v1.4.0` and published the GitHub release, following AGENTS.md › Project rules › Framework work › Releases (check) · an item here moves the docs links to `v1.4.0` and updates the pages for what it ships (check)
 - Brief: Scope › Planned framework changes
 
 ### T41 · The internal framework workflow page · done · S · agent
@@ -232,7 +250,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Brief: Scope › Planned framework changes
 
 ## Notes
-- T51 sets up releases; the first proposals under it cover T46, T47, T35, T48 and T49, which are done.
+- T54 and T55 are the first releases under T51. T56 waits on T52 (App-Director #7), so one App-Director release covers it.
 - T37 waits on the release of the commit model in all three frameworks; T34 waits until all three have released the research assistant.
 - T31 follows T19.
-- T50 waits on App-Director #6 and T52 on App-Director #7; when one merges, the other conflicts in its records (Next IDs ends at B5). T53, T39 and T33 change App-Director's selftest.sh or check.sh, so they wait on it too.
+- T52 waits on App-Director #7; T39 and T33 change App-Director's README.md, which #7 also changes, so they wait on it too.
