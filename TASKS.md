@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T76 · B5
+**Next IDs:** T77 · B5
 
 ## Milestones
 | Milestone | Status |
@@ -143,6 +143,12 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Touches: work/Godot-Director (one pull request; the director merges); docs/frameworks/godot-director.md once released
 - Done when: Godot-Director has a merged pull request whose onboarding asks for missing export settings (target platforms) and where exports run (local, a build container, or hosted CI such as GitHub Actions); when the step is skipped, onboarding adds a GDD open question on both and a setup item that depends on it, so `/design Q<n>` runs the step later and `/next-task` builds it; and that adds an `/export` skill, following AGENTS.md › Project rules for framework work (check) · once released there, the Godot-Director page documents them (check)
 - Brief: Scope › Planned framework changes
+
+### T76 · Concept pages cover the research assistant · in-progress 2026-10-16 · S · agent
+- Depends on: T34
+- Touches: docs/concept/roles.md, docs/concept/agent-flow.md, docs/concept/records.md, docs/concept/sizing.md, docs/concept/cost-built-in.md, docs/concept/index.md
+- Done when: the concept pages explain the research assistant where their idea covers it, framework-neutral and linking to the /research page for the commands: the researcher among the roles (it informs, the director decides), research items in the agent flow, research notes as records, research items sized like tasks, research in a fresh context as a cost saving, and the overview (check) · nothing repeats the /research page (check) · `bash tools/check.sh` passes (check)
+- Brief: Scope › Concepts
 
 ### T31 · Godot-Director: CI export and CD release · todo · M · agent
 - Depends on: T19
