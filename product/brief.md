@@ -53,6 +53,7 @@ All orchestrator work waits for the director's go-ahead (T12).
 
 ### Planned framework changes
 Changes the director has decided for the framework repos, carried out through the orchestrator. The docs describe a change only once it is released in its repo.
+- **Released means a tagged GitHub release.** Every install path (the skill, the fetch scripts, and the plugin where its marketplace can pin a ref) gets the framework's latest release tag; `main` is where changes are integrated. Each release is tagged `v<version>`. The docs follow releases: the selftest checks them against each framework's latest release tag, not `main`.
 - **One commit model in all three.** One task, one commit, with the pre-commit check as the gate. A single `/next-task` pauses for the director's approval of its commit. When the director asks for a run ("grab tasks until you're blocked", "work through the queue", "the next N tasks"), each task commits without pausing, and the run stops only when an item is blocked on the director, a build fails, or the director declines a commit. `git commit` is allowed in each framework's settings; pushing, deploying and changing cloud resources keep asking every time. Godot-Director and SaaSAllTheThings change to match App-Director.
 - **All three get a research assistant.** When a design question is complex, or the director asks for research, a read-only `researcher` subagent researches the topic in a fresh context and reports back. It informs; the director decides: its options and recommendation feed a design call, and it never records a decision, edits the design documents or accepts an ADR.
   - **Research is a task type.** Research items get their own IDs, `R<n>`, like bugs. Instead of `Done when` they have `Question:` and, when they inform an open question, `Informs: Q<n>`. They are sized like any task, and the size picks the model. An item is done when its research note exists.
@@ -101,4 +102,4 @@ A reader arrives from a saemundsson.se post on the matching docs page, and can g
 Q3: Should the site use a custom domain (for example under saemundsson.se) instead of freakling.github.io? (later)
 Q10: How does a director rerun one onboarding step later, such as Godot-Director's export setup when it was skipped: a command, a flag on the setup skill, or something else? (later, orchestrator)
 
-<!-- Next Q: 11 -->
+<!-- Next Q: 12 -->

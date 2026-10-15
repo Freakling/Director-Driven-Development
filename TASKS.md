@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T38 · B2
+**Next IDs:** T40 · B2
 
 ## Milestones
 | Milestone | Status |
@@ -79,6 +79,18 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: the Godot-Director section says that its procedure doesn't pause for approval but its settings ask before every commit, matching the current release (check) · `bash tools/check.sh` passes (check)
 - Brief: Scope › Common skills
 
+### T38 · The selftest checks the docs against each framework's latest release · todo · S · agent
+- Depends on: -
+- Touches: selftest.sh, tools/audit.sh, README.md, AGENTS.md
+- Done when: the selftest keeps each cached framework clone at that framework's latest release tag (`v<version>`), refreshed when online and reused offline (check) · `tools/audit.sh` compares against the same release (check) · AGENTS.md › Architecture and the README say the docs follow releases (check) · `bash tools/check.sh` passes, and any page that describes something only on `main` is reported (check)
+- Brief: Scope › Planned framework changes
+
+### T39 · Push "install the latest release" to the framework repos · todo · S · agent
+- Depends on: T29
+- Touches: a pull request to each framework repo adding an item (the director merges)
+- Done when: App-Director and Godot-Director each have an open pull request adding an item to make the skill, the fetch script and, where the marketplace can pin a ref, the plugin install the latest release tag, and to tag every release `v<version>`; SaaSAllTheThings one to check that its plugin also follows the release tag (check)
+- Brief: Scope › Planned framework changes
+
 ### T35 · Push the shared commit model to the framework repos · todo · S · agent
 - Depends on: T29
 - Touches: a pull request to each framework repo adding an item (the director merges)
@@ -123,5 +135,5 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 
 ## Notes
 - T19 waits on Q10 and the merged root queues. T31 follows T19.
-- T29's pull requests are open (Godot-Director #1, App-Director #1, SaaSAllTheThings #1). T35 and T33 can run once the director has merged them; push-alignment.sh skips a repo without a root TASKS.md. T37 waits on the releases.
+- T29's pull requests are open (Godot-Director #1, App-Director #1, SaaSAllTheThings #1). T35, T39 and T33 can run once the director has merged them; push-alignment.sh skips a repo without a root TASKS.md. T37 waits on the releases.
 - T33 waits on T29; T34 waits until all three frameworks have released the research assistant.
