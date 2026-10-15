@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T71 · B5
+**Next IDs:** T73 · B5
 
 ## Milestones
 | Milestone | Status |
@@ -93,11 +93,23 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: App-Director has a merged pull request that builds the research assistant from `product/anchors/research.md`, with its domain file (stacks, libraries and app-store requirements), an `R<n>` counter on its `Next IDs` line, and the new files in its README, install script, skills folder and selftest, following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Planned framework changes
 
-### T70 · Release App-Director 1.6.0 · in-progress 2026-10-16 · S · agent
-- PRs: App-Director #15 (open)
+### T70 · Release App-Director 1.6.0 · done · S · agent
+- PRs: App-Director #15 (merged); released as v1.6.0
 - Depends on: T51, T33
 - Touches: work/App-Director: the version files its CLAUDE.md lists, CHANGELOG.md (one pull request; the director merges)
 - Done when: the release pull request, which covers T33 (the research assistant), is merged, and `tools/work-release.sh` has tagged `v1.6.0` and published the GitHub release, following AGENTS.md › Project rules › Framework work › Releases (check) · an item here moves the docs links to `v1.6.0` and updates the pages for what it ships (check)
+- Brief: Scope › Planned framework changes
+
+### T72 · Docs follow App-Director 1.6.0 · in-progress 2026-10-16 · S · agent
+- Depends on: T70
+- Touches: docs/frameworks/app-director.md, docs/skills/*.md
+- Done when: every link into App-Director points at v1.6.0 (check) · App-Director's page lists `/research` as the other two do, and the design and /next-task pages say how its design sessions and R items use the researcher (check) · `bash tools/check.sh` passes (check)
+- Brief: Scope › Common skills
+
+### T71 · Release Godot-Director 3.9.0 · todo · S · agent
+- Depends on: T51, T19
+- Touches: work/Godot-Director: the version files its CLAUDE.md lists, CHANGELOG.md (one pull request; the director merges)
+- Done when: the release pull request, which covers T19 (export onboarding and /export), is merged, and `tools/work-release.sh` has tagged `v3.9.0` and published the GitHub release, following AGENTS.md › Project rules › Framework work › Releases (check) · an item here moves the docs links to `v3.9.0` and documents export onboarding and /export on the Godot-Director page (check)
 - Brief: Scope › Planned framework changes
 
 ### T34 · The Research skill page · todo · S · agent
@@ -106,8 +118,8 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: once all three frameworks have released the research assistant, the page describes the shared behaviour and what is unique per repo, matching the released procedures (check) · Design calls links to it (check) · `bash tools/check.sh` passes (check)
 - Brief: Scope › Common skills
 
-### T19 · Godot-Director: export onboarding and /export · in-progress 2026-10-16 · M · agent
-- PRs: Godot-Director #10 (open)
+### T19 · Godot-Director: export onboarding and /export · done · M · agent
+- PRs: Godot-Director #10 (merged)
 - Depends on: T40
 - Touches: work/Godot-Director (one pull request; the director merges); docs/frameworks/godot-director.md once released
 - Done when: Godot-Director has a merged pull request whose onboarding asks for missing export settings (target platforms) and where exports run (local, a build container, or hosted CI such as GitHub Actions); when the step is skipped, onboarding adds a GDD open question on both and a setup item that depends on it, so `/design Q<n>` runs the step later and `/next-task` builds it; and that adds an `/export` skill, following AGENTS.md › Project rules for framework work (check) · once released there, the Godot-Director page documents them (check)
@@ -122,5 +134,5 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 ## Notes
 - T55, T54 and T56 are released as SaaSAllTheThings v0.7.0, Godot-Director v3.6.0 and App-Director v1.4.0.
 - T34 waits until all three frameworks have released the research assistant.
-- T70 releases App-Director's research assistant; T34 follows it, since then all three ship it. T19 waits on Godot-Director #10; T31 follows T19.
+- All three frameworks ship /research, so T34 is ready after T72. T71 releases T19; T31 follows T19.
 - T31 follows T19.
