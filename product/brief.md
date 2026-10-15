@@ -62,7 +62,7 @@ Changes the director has decided for the framework repos, carried out through th
   - **One core, a domain file each:** the research procedure is the same in all three (the anchor, adapted from the director's portable research skill); each framework adds one reference file for its domain: Azure and the customer's security framework in SaaSAllTheThings; stacks, libraries and app-store requirements in App-Director; the Godot docs and engine version, asset licences and store requirements in Godot-Director.
   - **Evidence rules:** claims rest on sources actually read, primary sources first, with confidence labels and a verified-as-of date. The project's records supply the context. Confidential project text never goes to public search.
 - **Godot-Director gets export and release, in two stages:**
-  1. **Onboarding and `/export`.** Onboarding guides the director through the export settings Godot doesn't already have, such as the target platforms, and asks where exports should run: on the director's machine, in a build container (local or in a cloud), or on a hosted service such as GitHub Actions, with guidance to set it up. This step can be skipped and done at a later stage (Q10). The skill is `/export`, following Godot's own term for producing a game's binaries.
+  1. **Onboarding and `/export`.** Onboarding guides the director through the export settings Godot doesn't already have, such as the target platforms, and asks where exports should run: on the director's machine, in a build container (local or in a cloud), or on a hosted service such as GitHub Actions, with guidance to set it up. The director can skip this step. Skipping adds an open question to the GDD (which platforms to export to, and where exports run) and an item to set up exports that depends on it. The director runs the step later with `/design Q<n>`, and `/next-task` builds the setup; changing it later is a design session too. The skill is `/export`, following Godot's own term for producing a game's binaries.
   2. **CI and CD.** CI runs the Godot export on every change; CD releases builds to a platform's UAT branch and, if the director wants, promotes them to production.
 
 ## Core Flows
@@ -100,6 +100,5 @@ A reader arrives from a saemundsson.se post on the matching docs page, and can g
      Work that depends on one gets a PLACEHOLDER. Delete a question when it's decided. -->
 
 Q3: Should the site use a custom domain (for example under saemundsson.se) instead of freakling.github.io? (later)
-Q10: How does a director rerun one onboarding step later, such as Godot-Director's export setup when it was skipped: a command, a flag on the setup skill, or something else? (later, orchestrator)
 
 <!-- Next Q: 12 -->

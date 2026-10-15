@@ -124,7 +124,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 ### T19 · Godot-Director: export onboarding and /export · todo · M · agent
 - Depends on: T12, T14, T29
 - Touches: an item in Godot-Director's task queue, pushed by the orchestrator; docs/frameworks/godot-director.md once released
-- Done when: Godot-Director has an item for onboarding that asks for missing export settings (target platforms) and where exports run (local, a build container, or hosted CI such as GitHub Actions), can be skipped, and can be rerun as Q10 settles, plus an `/export` skill (check) · once released there, the Godot-Director page documents them (check)
+- Done when: Godot-Director has an item for onboarding that asks for missing export settings (target platforms) and where exports run (local, a build container, or hosted CI such as GitHub Actions); when the step is skipped, onboarding adds a GDD open question on both and a setup item that depends on it, so `/design Q<n>` runs the step later and `/next-task` builds it; and an item for an `/export` skill (check) · once released there, the Godot-Director page documents them (check)
 - Brief: Scope › Planned framework changes
 
 ### T31 · Godot-Director: CI export and CD release · todo · M · agent
@@ -134,6 +134,6 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Brief: Scope › Planned framework changes
 
 ## Notes
-- T19 waits on Q10 and the merged root queues. T31 follows T19.
+- T19 waits on the merged root queues. T31 follows T19.
 - T29's pull requests are open (Godot-Director #1, App-Director #1, SaaSAllTheThings #1). T35, T39 and T33 can run once the director has merged them; push-alignment.sh skips a repo without a root TASKS.md. T37 waits on the releases.
 - T33 waits on T29; T34 waits until all three frameworks have released the research assistant.
