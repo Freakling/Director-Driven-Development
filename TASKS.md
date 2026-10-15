@@ -225,7 +225,8 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: every link into App-Director points at v1.4.0 (check) · the pages describe what 1.4.0 changed for App-Director where they state its old behaviour, apart from the commit model, which T37 rewrites for all three (check) · `bash tools/check.sh` passes (check)
 - Brief: Scope › Common skills
 
-### T61 · Release Godot-Director 3.7.0 · todo · S · agent
+### T61 · Release Godot-Director 3.7.0 · in-progress 2026-10-15 · S · agent
+- PRs: Godot-Director #6 (open)
 - Depends on: T51
 - Touches: work/Godot-Director: VERSION, .claude-plugin/plugin.json, CHANGELOG.md (one pull request; the director merges)
 - Done when: the release pull request, which covers T42 (the research assistant), is merged, and `tools/work-release.sh` has tagged `v3.7.0` and published the GitHub release, following AGENTS.md › Project rules › Framework work › Releases (check) · an item here moves the docs links to `v3.7.0` and updates the pages for what it ships (check)
@@ -234,6 +235,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 ### T62 · Release App-Director 1.4.1 · todo · S · agent
 - Depends on: T51
 - Touches: work/App-Director: VERSION, .claude-plugin/plugin.json, CHANGELOG.md (one pull request; the director merges)
+- Note: held for the director: T57 changed only the selftest, which isn't installed into apps, so this release would ship nothing new to users. Fold it into the next App-Director release, or propose it on its own?
 - Done when: the release pull request, which covers T57, is merged, and `tools/work-release.sh` has tagged `v1.4.1` and published the GitHub release, following AGENTS.md › Project rules › Framework work › Releases (check) · an item here moves the docs links to `v1.4.1` and updates the pages for what it ships (check)
 - Brief: Scope › Planned framework changes
 
@@ -243,7 +245,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: `product/framework-workflow.md` explains how framework work runs here, with a flowchart and a sequence diagram in Mermaid that GitHub renders, matching AGENTS.md › Project rules (check) · it isn't part of the Pages build (check) · the home page's Built with App-Director section links to it on GitHub (check) · `bash tools/check.sh` passes (check)
 - Brief: Scope › Built with App-Director
 
-### T39 · The framework repos install the latest release · todo · M · agent
+### T39 · The framework repos install the latest release · in-progress 2026-10-15 · M · agent
 - Depends on: T40
 - Touches: work/App-Director: SKILL.md, skills/app-director/SKILL.md, package.json, scripts/fetch-app-director.sh, .claude-plugin/marketplace.json, CLAUDE.md, README.md, selftest.sh; work/Godot-Director: skills/godot-director/SKILL.md, .claude-plugin/marketplace.json, CLAUDE.md, README.md, selftest.sh; work/SaaSAllTheThings: .claude-plugin/marketplace.json (one pull request per repo; the director merges)
 - Done when: App-Director and Godot-Director each have a merged pull request that makes the skill, the fetch script and, where the marketplace can pin a ref, the plugin install the latest release tag, and that tags every release `v<version>`, with Godot-Director's `skills/godot-director/SKILL.md` `metadata.version` (3.3.0) and App-Director's root `SKILL.md` and `package.json` versions (1.0.0) kept in step with VERSION, following AGENTS.md › Project rules for framework work (check) · SaaSAllTheThings' plugin follows the release tag, with a pull request if it needs a change (check)
@@ -307,7 +309,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Brief: Scope › Planned framework changes
 
 ## Notes
-- T55, T54 and T56 are released as SaaSAllTheThings v0.7.0, Godot-Director v3.6.0 and App-Director v1.4.0, so the commit model is released in all three and T37 is ready after T60.
+- T55, T54 and T56 are released as SaaSAllTheThings v0.7.0, Godot-Director v3.6.0 and App-Director v1.4.0.
 - T34 waits until all three frameworks have released the research assistant.
 - T43 waits on SaaSAllTheThings #6. T61 and T62 propose releases for T42 and T57.
 - T31 follows T19.
