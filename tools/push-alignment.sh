@@ -13,7 +13,9 @@
 # Default is a DRY RUN: nothing is cloned, pushed or opened; it prints, per affected repo,
 # the branch, the item and the exact gh/git commands. A live run needs --open-prs. The live
 # path works in a temporary clone, never in the cache, and skips a repo that already has an
-# open pull request from the same branch (safe to re-run).
+# open pull request from the same branch (safe to re-run). It also skips a repo whose default
+# branch has no root TASKS.md ("no root TASKS.md; merge the root queue PR first"): it adds
+# items to an existing queue and never creates the file. The dry run checks the cached clone.
 #
 # Usage:  bash tools/push-alignment.sh              dry run (no network, no changes)
 #         bash tools/push-alignment.sh --open-prs   open the pull requests
@@ -24,10 +26,12 @@ cd "$(dirname "$0")/.." || exit 1
 
 FRAMEWORKS_DIR=".app-director/state/frameworks"
 GH_OWNER="Freakling"
-# PLACEHOLDER: the framework repos have no root TASKS.md today (only project/TASKS.md, the
-# template that ships to adopters, which must not receive this item). Where the item goes in
-# each repo is undecided; the live path creates this file when it is missing.
+# Each framework repo keeps its own work queue in a root TASKS.md (product/decisions.md,
+# 2026-10-13). project/TASKS.md is the template that ships to adopters and never receives these
+# items. This script never creates the root file: a repo without one is skipped until its root
+# queue pull request is merged.
 TASKS_PATH="TASKS.md"
+NO_QUEUE_MSG="skip: no root $TASKS_PATH; merge the root queue PR first"
 BASE_BRANCH="main"
 TMP_ROOT="${TMPDIR:-/tmp}/push-alignment-$$"
 trap 'rm -rf "$TMP_ROOT"' EXIT
@@ -87,12 +91,10 @@ make_item() {
 }
 
 # add_item <tasks file> <item file> <id>: adds the item before "## Notes" and bumps Next IDs.
+# The file must exist: the callers skip a repo that has no root TASKS.md.
 add_item() {
   local f="$1" item="$2" id="$3" num next
   num="${id#T}"; next="T$((num + 1))"
-  if [ ! -f "$f" ]; then
-    printf '# Tasks\n\n**Next IDs:** T1 · B1\n\n## Queue\n\n## Notes\n' > "$f"
-  fi
   awk -v itemfile="$item" -v next="$next" '
     /^\*\*Next IDs:\*\*/ { sub(/T[0-9]+/, next) }
     /^## Notes/ && !done { while ((getline l < itemfile) > 0) print l; print ""; done=1 }
@@ -108,6 +110,13 @@ for repo in App-Director Godot-Director SaaSAllTheThings; do
   set -- $skills
   branch="ddd-align/$(echo "$*" | tr ' ' '+')"
   slug="$GH_OWNER/$repo"
+  if [ "$live" -eq 0 ] && [ ! -f "$FRAMEWORKS_DIR/$repo/$TASKS_PATH" ]; then
+    # Dry run: no network, so look at the cached shallow clone of the default branch.
+    echo ""
+    echo "== $slug"
+    echo "$NO_QUEUE_MSG (checked in the cached clone; nothing would be created)"
+    continue
+  fi
   id="$(next_id "$FRAMEWORKS_DIR/$repo/$TASKS_PATH")"
   make_item "$id" "$repo" "$@" > "$TMP_ROOT/$repo.item"
   title="Align procedures with the DDD skill pages: $*"
@@ -145,6 +154,11 @@ for repo in App-Director Godot-Director SaaSAllTheThings; do
   fi
   clone="$TMP_ROOT/clone-$repo"
   gh repo clone "$slug" "$clone" -- --depth 1 -q || { echo "error: clone of $slug failed" >&2; exit 2; }
+  if [ ! -f "$clone/$TASKS_PATH" ]; then
+    # The default branch has no root queue yet: never create it here.
+    echo "$NO_QUEUE_MSG"
+    continue
+  fi
   id="$(next_id "$clone/$TASKS_PATH")"
   make_item "$id" "$repo" "$@" > "$TMP_ROOT/$repo.item"
   git -C "$clone" checkout -q -b "$branch" || exit 2

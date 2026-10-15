@@ -67,7 +67,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: Design calls has a "During a build" section on the blocked report, matching `next-task.md` › Report `blocked` in all three frameworks (check) · Agent development flow links to it from the build step (check) · `bash tools/check.sh` passes (check)
 - Brief: Scope › Concepts
 
-### T29 · Each framework repo gets its own root task queue · todo · M · agent
+### T29 · Each framework repo gets its own root task queue · done · M · agent
 - Depends on: T28
 - Touches: a pull request to each framework repo adding a root TASKS.md (the director merges); tools/push-alignment.sh
 - Done when: Godot-Director, App-Director and SaaSAllTheThings each have an open pull request that adds a root TASKS.md in the App Director item format, separate from `project/TASKS.md` (check) · push-alignment.sh skips a repo with no root TASKS.md instead of creating one (check) · `bash tools/check.sh` passes (check)
@@ -122,6 +122,6 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Brief: Scope › Planned framework changes
 
 ## Notes
-- T19 waits on T29 (root queues in the framework repos) and Q10. T31 follows T19.
-- T35 waits on T29, and T37 on the releases.
+- T19 waits on Q10 and the merged root queues. T31 follows T19.
+- T29's pull requests are open (Godot-Director #1, App-Director #1, SaaSAllTheThings #1). T35 and T33 can run once the director has merged them; push-alignment.sh skips a repo without a root TASKS.md. T37 waits on the releases.
 - T33 waits on T29; T34 waits until all three frameworks have released the research assistant.
