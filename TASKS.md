@@ -81,6 +81,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Brief: Scope › Planned framework changes
 
 ### T33 · App-Director: the research assistant · in-progress 2026-10-15 · M · agent
+- PRs: App-Director #14 (open)
 - Depends on: T32, T40
 - Touches: work/App-Director (one pull request; the director merges)
 - Done when: App-Director has a merged pull request that builds the research assistant from `product/anchors/research.md`, with its domain file (stacks, libraries and app-store requirements), an `R<n>` counter on its `Next IDs` line, and the new files in its README, install script, skills folder and selftest, following AGENTS.md › Project rules for framework work (check)
