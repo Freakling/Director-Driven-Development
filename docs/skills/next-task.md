@@ -40,20 +40,21 @@ The procedure is at [`framework/.godot-director/procedures/next-task.md`](https:
 - The review diff is written to `.godot/godot-director/review.diff`.
 - New items are formatted following `.godot-director/tasks.md`, and IDs come from `Next IDs` in that file.
 - The builder is told to skip the final `bash tools/check.sh` call: step 4 runs the check from the orchestrator session, and the pre-commit hook is the safety net.
-- The procedure commits as soon as the check passes, without pausing in the conversation. The framework's `.claude/settings.json` makes Claude Code ask before every `git commit`, and that prompt counts as the approval, so a run of several tasks asks once per commit. App-Director pauses for approval unless the director has asked for a run, and SaaSAllTheThings always waits for approval.
+- The procedure commits as soon as the check passes, without pausing in the conversation. The framework's `.claude/settings.json` makes Claude Code ask before every `git commit`, and that prompt counts as the approval, so a run of several tasks asks once per commit. App-Director and SaaSAllTheThings pause for approval unless the director has asked for a run.
 - The report notes that `(play)` outcomes and bug fixes without regression tests will appear in the next function check.
 - After a passing check, recurring warnings may appear as `check: note: recurring warning (N x): <text>`. The skill has a procedure for verifying, proposing and applying suppressions via `tools/check.ignore`.
 
 ### SaaSAllTheThings
 
-The procedure is at [`framework/.satt/procedures/next-task.md`](https://github.com/Freakling/SaaSAllTheThings/tree/v0.6.0/framework/.satt/procedures/next-task.md) in the SaaSAllTheThings repository.
+The procedure is at [`framework/.satt/procedures/next-task.md`](https://github.com/Freakling/SaaSAllTheThings/tree/v0.7.0/framework/.satt/procedures/next-task.md) in the SaaSAllTheThings repository.
 
 - The building state file is `.satt/state/building`. The Stop hook checks for it and leaves half-built files alone while it exists.
 - The review diff is written to `.satt/state/review.diff`.
 - New items are formatted following `.satt/tasks.md`, and IDs come from `Next IDs` in that file.
 - A blocked report can carry `blocked: architecture`, which triggers the `architect.md` procedure. The director chooses to comply or to accept a deviation; a deviation requires an accepted Architecture Decision Record (ADR) before the rebuild.
 - If the current stage of the roadmap has no items left, the skill offers `roadmap.md` for the next stage.
-- The commit follows `rules.md` › Git and pauses for the director's approval.
+- A single `/next-task` pauses for the director's approval of its commit. When the director asks for a run, such as "grab tasks until you're blocked", "work through the queue" or "the next N tasks", each task commits without pausing, and the final report lists every commit. The run stops when an item is blocked on the director, a build fails, or the director declines a commit.
+- A run approves commits in advance, not pushes, deploys or changes to Azure resources. The framework's `.claude/settings.json` allows `git commit` without a prompt, while `git push` and the `az` and `azd` commands still ask.
 - The report notes that `(demo)` outcomes and bug fixes without regression tests will appear in the next acceptance check.
 
 <div class="takeaway"><span>One task, one check, one commit: the loop runs as fast as the check.</span><span class="url"><a href="https://saemundsson.se/2026/10/07/director-driven-development/">Why: the blog post</a></span></div>

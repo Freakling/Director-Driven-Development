@@ -36,7 +36,7 @@ The procedure is at [`framework/.app-director/procedures/design.md`](https://git
 
 ### SaaSAllTheThings
 
-The procedure is at [`framework/.satt/procedures/design.md`](https://github.com/Freakling/SaaSAllTheThings/tree/v0.6.0/framework/.satt/procedures/design.md) in the SaaSAllTheThings repository.
+The procedure is at [`framework/.satt/procedures/design.md`](https://github.com/Freakling/SaaSAllTheThings/tree/v0.7.0/framework/.satt/procedures/design.md) in the SaaSAllTheThings repository.
 
 - It records decisions in the PRD (`product/prd.md`) and `product/decisions.md`. A decision about an external system's data also goes into `integrations/<system>/contract.md`.
 - Questions about how the system is built, such as a data store, a client's UI technology or a deviation from the reference, are not product calls. The skill hands them to `/architect` (the `architect.md` procedure).

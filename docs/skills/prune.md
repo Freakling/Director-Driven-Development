@@ -33,7 +33,7 @@ The procedure is at [`framework/.app-director/procedures/prune.md`](https://gith
 
 ### SaaSAllTheThings
 
-The procedure is at [`framework/.satt/procedures/prune.md`](https://github.com/Freakling/SaaSAllTheThings/tree/v0.6.0/framework/.satt/procedures/prune.md) in the SaaSAllTheThings repository.
+The procedure is at [`framework/.satt/procedures/prune.md`](https://github.com/Freakling/SaaSAllTheThings/tree/v0.7.0/framework/.satt/procedures/prune.md) in the SaaSAllTheThings repository.
 
 - Items follow the format in `.satt/tasks.md`.
 - The skill suggests pruning once `TASKS.md` holds more than about ten done items.

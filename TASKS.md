@@ -199,7 +199,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Found in: T55 (v0.7.0 was published by hand with the kept notes)
 - Brief: Scope › Planned framework changes
 
-### T58 · Docs follow SaaSAllTheThings 0.7.0 · in-progress 2026-10-15 · S · agent
+### T58 · Docs follow SaaSAllTheThings 0.7.0 · done · S · agent
 - Depends on: T55
 - Touches: docs/frameworks/saasallthethings.md, docs/skills/*.md, docs/concept/agent-flow.md
 - Done when: every link into SaaSAllTheThings points at v0.7.0 (check) · the pages describe what 0.7.0 changed for SaaSAllTheThings, such as its run mode, where they state its old behaviour; the shared rewrite stays with T37 (check) · `bash tools/check.sh` passes (check)

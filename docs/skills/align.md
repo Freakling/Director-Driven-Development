@@ -44,7 +44,7 @@ The procedure is at [`framework/.app-director/procedures/align.md`](https://gith
 
 ### SaaSAllTheThings
 
-The procedure is at [`framework/.satt/procedures/align.md`](https://github.com/Freakling/SaaSAllTheThings/tree/v0.6.0/framework/.satt/procedures/align.md) in the SaaSAllTheThings repository.
+The procedure is at [`framework/.satt/procedures/align.md`](https://github.com/Freakling/SaaSAllTheThings/tree/v0.7.0/framework/.satt/procedures/align.md) in the SaaSAllTheThings repository.
 
 - It checks the PRD, `product/decisions.md`, the ADRs and the integration contracts. Every `ADR:` an item names must exist, and every accepted ADR with a temporary deviation needs its removal item.
 - It runs `bash tools/check.sh --architecture` and reports any stale ADR exceptions, any proposed ADR waiting longer than a week and the count of source files outside any layer.

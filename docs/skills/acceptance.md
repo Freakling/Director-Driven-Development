@@ -36,7 +36,7 @@ The procedure is at [`framework/.app-director/procedures/acceptance.md`](https:/
 
 ### SaaSAllTheThings
 
-The procedure is at [`framework/.satt/procedures/acceptance.md`](https://github.com/Freakling/SaaSAllTheThings/tree/v0.6.0/framework/.satt/procedures/acceptance.md) in the SaaSAllTheThings repository.
+The procedure is at [`framework/.satt/procedures/acceptance.md`](https://github.com/Freakling/SaaSAllTheThings/tree/v0.7.0/framework/.satt/procedures/acceptance.md) in the SaaSAllTheThings repository.
 
 - It collects the `(demo)` outcomes, and the checklist is written to `validation/YYYY-MM-DD-acceptance.md` with the environment, `local` or `dev`.
 - Each item names the client and the role to use. Items about tenant isolation tell the tester to sign in as the second test tenant and confirm that the first tenant's data isn't visible.
