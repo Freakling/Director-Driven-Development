@@ -27,6 +27,7 @@ Each core concept of DDD gets its own page in a Concepts section, explained once
 ### Common skills
 Every skill that all three frameworks ship gets its own page, to keep each one readable: `/next-task`, `/design`, `/align`, `/drift-reset`, `/prune` and `/refresh-model-sizing`. Each page describes what the skill does and how it works in all three, then has a section that lists what is unique to each repo. Skills only one framework ships stay on that framework's page.
 - **Acceptance check:** one shared page covers `/acceptance` (App-Director, SaaSAllTheThings) and its Godot-Director counterpart `/function-check`, since they are the same concept under two names. `/playtest` and `/feedback` are listed as unique per repo. (confirmed by director: T21 2026-10-11)
+- **Research:** `/research` gets a skill page once all three frameworks ship the research assistant (T34).
 - **Release:** `/release` stays on the App-Director and SaaSAllTheThings pages while only two frameworks ship it, because it works differently in each. It gets a skill page once Godot-Director ships its release skill (T31). (confirmed by director: T21 2026-10-11)
 
 ### Built with App-Director
@@ -52,6 +53,12 @@ All orchestrator work waits for the director's go-ahead (T12).
 
 ### Planned framework changes
 Changes the director has decided for the framework repos, carried out through the orchestrator. The docs describe a change only once it is released in its repo.
+- **All three get a research assistant.** When a design question is complex, or the director asks for research, a read-only `researcher` subagent researches the topic in a fresh context and reports back. It informs; the director decides: its options and recommendation feed a design call, and it never records a decision, edits the design documents or accepts an ADR.
+  - **Research is a task type.** Research items get their own IDs, `R<n>`, like bugs. Instead of `Done when` they have `Question:` and, when they inform an open question, `Informs: Q<n>`. They are sized like any task, and the size picks the model. An item is done when its research note exists.
+  - **Two ways to start:** on the fly, when the designer delegates or the director runs `/research`, the item is created and run at once; for later, the item is queued, and the tasks that depend on its outcome list it under `Depends on`. `/next-task` hands research items to the researcher instead of the builder. A finished item that informs a question makes that question ready for a design call; tasks that need the decision stay gated by the question.
+  - **Research notes:** each item writes a dated note per topic in the project: the conclusion, the options, the sources with confidence, and the date the claims were verified. The decision log line links to it, so later sessions reuse it.
+  - **One core, a domain file each:** the research procedure is the same in all three (the anchor, adapted from the director's portable research skill); each framework adds one reference file for its domain: Azure and the customer's security framework in SaaSAllTheThings; stacks, libraries and app-store requirements in App-Director; the Godot docs and engine version, asset licences and store requirements in Godot-Director.
+  - **Evidence rules:** claims rest on sources actually read, primary sources first, with confidence labels and a verified-as-of date. The project's records supply the context. Confidential project text never goes to public search.
 - **Godot-Director gets export and release, in two stages:**
   1. **Onboarding and `/export`.** Onboarding guides the director through the export settings Godot doesn't already have, such as the target platforms, and asks where exports should run: on the director's machine, in a build container (local or in a cloud), or on a hosted service such as GitHub Actions, with guidance to set it up. This step can be skipped and done at a later stage (Q10). The skill is `/export`, following Godot's own term for producing a game's binaries.
   2. **CI and CD.** CI runs the Godot export on every change; CD releases builds to a platform's UAT branch and, if the director wants, promotes them to production.

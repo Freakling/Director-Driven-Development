@@ -39,3 +39,8 @@ Examples:
 2026-10-15 · Q4: no promotional content on the site; it is technical documentation and project orchestration, with how-to guides and a Start here playbook for technical users later · director's choice; the LinkedIn material stays out
 2026-10-15 · Q9: Godot-Director's skill is /export · follows Godot's own term for producing a game's binaries
 2026-10-15 · Q8: Godot-Director onboarding asks for missing export settings (target platforms) and where exports run (local, a build container, or hosted CI such as GitHub Actions), and can be deferred; CI (export) and CD (release to a UAT branch, optional promotion to production) come in a later stage · director's choice
+2026-10-15 · all three frameworks get a research assistant: a read-only researcher subagent that the designer delegates to, plus /research for the director; it informs and never decides · director's choice; same pattern as builder and reviewer, keeps the design session's context small
+2026-10-15 · research is a task type with its own IDs (R<n>), Question: and Informs: Q<n> instead of Done when; started on the fly or queued for later, with dependent tasks blocked on it · director's choice; research flows through the same queue as any work
+2026-10-15 · each research item writes a dated note per topic, linked from the decision log · records in files: later sessions reuse the evidence instead of redoing it
+2026-10-15 · one shared research core in all three frameworks (the anchor, adapted from the director's portable research skill), plus one domain reference file per framework · same model as the other common skills; easy to align and audit
+2026-10-15 · research items are sized like tasks and the model map picks the model · cost follows complexity

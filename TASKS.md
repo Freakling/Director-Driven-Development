@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T32 · B2
+**Next IDs:** T35 · B2
 
 ## Milestones
 | Milestone | Status |
@@ -73,6 +73,24 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: Godot-Director, App-Director and SaaSAllTheThings each have an open pull request that adds a root TASKS.md in the App Director item format, separate from `project/TASKS.md` (check) · push-alignment.sh skips a repo with no root TASKS.md instead of creating one (check) · `bash tools/check.sh` passes (check)
 - Brief: Scope › Later: orchestrator for the three frameworks
 
+### T32 · The shared research core as the anchor · todo · M · agent
+- Depends on: -
+- Touches: product/anchors/research.md (new)
+- Done when: the anchor holds the shared research procedure adapted from the director's portable research skill (`init/research/research-skill.md`) with the agreed adaptations: the researcher subagent, `/research`, R items with `Question:` and `Informs:`, the dated research note, sizing, and what each framework's domain file covers (check) · it uses "requirements", "control framework" or "security framework", never "policy" (check) · `bash tools/check.sh` passes (check)
+- Brief: Scope › Planned framework changes
+
+### T33 · Push the research assistant to the framework repos · todo · S · agent
+- Depends on: T29, T32
+- Touches: a pull request to each framework repo adding an item (the director merges)
+- Done when: Godot-Director, App-Director and SaaSAllTheThings each have an open pull request adding an item to build the research assistant from the anchor, with that framework's domain file (check)
+- Brief: Scope › Planned framework changes
+
+### T34 · The Research skill page · todo · S · agent
+- Depends on: T33
+- Touches: docs/skills/research.md (new), docs/skills/index.md, mkdocs.yml, docs/concept/design-calls.md
+- Done when: once all three frameworks have released the research assistant, the page describes the shared behaviour and what is unique per repo, matching the released procedures (check) · Design calls links to it (check) · `bash tools/check.sh` passes (check)
+- Brief: Scope › Common skills
+
 ### T19 · Godot-Director: export onboarding and /export · todo · M · agent
 - Depends on: T12, T14, T29
 - Touches: an item in Godot-Director's task queue, pushed by the orchestrator; docs/frameworks/godot-director.md once released
@@ -87,3 +105,4 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 
 ## Notes
 - T19 waits on T29 (root queues in the framework repos) and Q10. T31 follows T19.
+- T32 can start now. T33 waits on T29; T34 waits until all three frameworks have released the research assistant.
