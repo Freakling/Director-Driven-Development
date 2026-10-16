@@ -400,7 +400,8 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Brief: Scope › Common skills
 
 ### T100 · The framework repos ignore OS metadata files · in-progress 2026-10-16 · XS · agent
-- PRs: Godot-Director #16 (merged). App-Director: pushed straight to main as ba91b84, unsigned, with the director's one-off go-ahead, as the plugin scanner test: every GitHub-made merge and squash commit was rejected (including the squash-merged e654e82 and deedda6) while plain commits passed. SaaSAllTheThings: pending the test's result.
+- PRs: Godot-Director #16 (merged). App-Director: ba91b84 on main (a one-off test push). SaaSAllTheThings: the .gitignore wasn't the cause, so its copy is optional (see the note).
+- Note: the plugin directory's scanner accepts a commit it detects as a tagged release (v1.2.3, v1.3.0, v1.3.1 and, on 2026-10-16, Godot-Director v3.13.0, a GitHub squash merge) and reports every bare commit as "files the scanner won't accept", including release commits tagged after the scheduled check first saw them. Neither the files nor GitHub-made commits were the cause. The rule that follows: tag a release right after its merge, which tools/work-release.sh does.
 - Depends on: -
 - Touches: work/Godot-Director: .gitignore; work/App-Director: .gitignore; work/SaaSAllTheThings: .gitignore (one pull request per repo; the director squash-merges)
 - Done when: each framework's own `.gitignore` ignores `.DS_Store`, `Thumbs.db`, `desktop.ini` and `__MACOSX/`, as the plugin directory's scanner asks, in a pull request the director squash-merges to test whether single-parent commits pass the scan, following AGENTS.md › Project rules for framework work (check)
