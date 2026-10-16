@@ -326,7 +326,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: the Start here walkthrough has a SaaSAllTheThings version (building a SaaS, including the assessment of an existing app), accurate to the latest release, reached from the overview and the SaaSAllTheThings page (check) · `bash tools/check.sh` passes (check)
 - Brief: Scope › How-to guides
 
-### T120 · The home page and the Godot-Director page link the start pages · in-progress 2026-10-16 · XS · agent
+### T120 · The home page and the Godot-Director page link the start pages · done · XS · agent
 - Depends on: T113
 - Touches: docs/index.md, docs/frameworks/godot-director.md
 - Done when: the home page's "where do I start?" link leads to the How-to overview or names the three start pages, and the Godot-Director page's Install section links "Where do I start with a game?" as the other two framework pages link theirs (check) · `bash tools/check.sh` passes (check)
