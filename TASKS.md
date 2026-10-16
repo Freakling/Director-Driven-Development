@@ -342,7 +342,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 
 ### T127 · Godot-Director: the play log base and the logging rules · in-progress 2026-10-17 · L · agent
 - Depends on: -
-- Touches: work/Godot-Director: the play log base (new, framework-owned), the project's PlayLog autoload seed, rules.md, tools/check.sh and check.gd (the minimum Godot 4.5 and loading every .gd and .tscn under the screen dirs), ONBOARDING.md, install.sh, selftest.sh
+- Touches: work/Godot-Director: framework/tools/play_log_base.gd (new), project/tools/play_log.gd (new), framework/.godot-director/rules.md, framework/tools/check.sh, check.gd, setup-clone.sh and ui_capture.sh (the minimum Godot 4.5), framework/.godot-director/procedures/ui-design.md, framework/.godot-director/templates/release-workflow.yml, install.sh, skills/godot-director/SKILL.md, README.md, ONBOARDING.md, PRIVACY.md, CLAUDE.md, examples/market-day/*, selftest.sh
 - Done when: the play log base writes the per-run text log and its JSONL twin with stable event ids, the session header, startup buffering, flush per line, the engine Logger (Godot 4.5), the tail, start_capture() for tests, scrubbing, and nothing under the check, with the project hooks the spec names (spec section 3.1) (check) · rules.md has the logging, drivability, agent-visible state, seeded randomness and privacy rules (spec section 4) (check) · the minimum Godot is 4.5 everywhere it's stated and checked, and the check loads every script and scene under the screen dirs (spec section 3.5, last point) (check) · following AGENTS.md › Project rules for framework work; built on the branch `ddd/autoplay`, published with the other stages as one pull request (check)
 - Brief: Scope › Planned framework changes
 
