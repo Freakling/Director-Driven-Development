@@ -34,7 +34,7 @@ The install paths themselves are on each framework page: [Godot-Director](../fra
 
 - **The session was open during the install or update.** Restart Claude Code.
 - **Claude Code is open in another folder.** The commands live in the project's own `.claude/` folder. Open Claude Code in the project's root folder, the one that holds `AGENTS.md`.
-- **The framework isn't installed in this project.** Install it first: [Where do I start?](start.md) for a new game, [I already have a project. Can I use this?](existing.md) for an existing one.
+- **The framework isn't installed in this project.** Install it first: [Where do I start with a game?](start.md), [with an app?](start-app.md) or [with a SaaS?](start-saas.md) for a new project, [I already have a project. Can I use this?](existing.md) for an existing one.
 - **It's an older install.** Update as above. A command added in a later release isn't in an older install.
 
 You can always say what you want in plain words, such as "Do the next task". The agent follows the same procedure as the command.

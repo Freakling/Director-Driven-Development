@@ -74,7 +74,7 @@ You need git with no uncommitted changes, bash (on Windows it comes with Git for
 
     Then ask your assistant to "SaaS all the things" in the app's folder.
 
-Onboarding works out whether this is a new app, an existing app or an upgrade, settles the backend stack with you, interviews you or reads the app (including its single-tenant habits and secrets), writes the first stages of the roadmap into `TASKS.md`, and ends with one commit for you to approve. Restart Claude Code afterwards so the commands load. Each new clone later needs `bash tools/setup-clone.sh`.
+Onboarding works out whether this is a new app, an existing app or an upgrade, settles the backend stack with you, interviews you or reads the app (including its single-tenant habits and secrets), writes the first stages of the roadmap into `TASKS.md`, and ends with one commit for you to approve. Restart Claude Code afterwards so the commands load. Each new clone later needs `bash tools/setup-clone.sh`. Step by step, with what onboarding asks: [where do I start with a SaaS?](../how-to/start-saas.md), or [I already have a project](../how-to/existing.md#an-existing-saas-or-proof-of-concept-saasallthethings) for an existing app or proof of concept, which starts with an assessment.
 
 ## Skills you can use without installing
 

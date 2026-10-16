@@ -79,7 +79,9 @@ nav:
   - How-to:
       - how-to/index.md
       - Start here:
-          - "Where do I start?": how-to/start.md
+          - "Where do I start with a game?": how-to/start.md
+          - "Where do I start with an app?": how-to/start-app.md
+          - "Where do I start with a SaaS?": how-to/start-saas.md
           - "I already have a project. Can I use this?": how-to/existing.md
       - Day to day:
           - "How do I get things built?": how-to/build.md

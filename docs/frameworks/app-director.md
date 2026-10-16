@@ -52,7 +52,7 @@ You need git with no uncommitted changes, bash (on Windows it comes with Git for
 
     > Read App-Director/ONBOARDING.md and follow it to install App Director into this project.
 
-Onboarding works out whether this is a new app, an existing app or an upgrade, sets up the toolchain, interviews you or reads the code, agrees who owns what, and ends with one commit for you to approve. Restart Claude Code afterwards so the commands load. Each new clone later needs `bash tools/setup-clone.sh`.
+Onboarding works out whether this is a new app, an existing app or an upgrade, sets up the toolchain, interviews you or reads the code, agrees who owns what, and ends with one commit for you to approve. Restart Claude Code afterwards so the commands load. Each new clone later needs `bash tools/setup-clone.sh`. Step by step, with what onboarding asks: [where do I start with an app?](../how-to/start-app.md), or [I already have a project](../how-to/existing.md#an-existing-app-app-director) for an existing app.
 
 ## Commands
 

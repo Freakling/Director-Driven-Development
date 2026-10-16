@@ -8,7 +8,9 @@ The skill pages say what each command does. These pages say what you do. Each de
 
 ## Start here
 
-- [Where do I start?](start.md)
+- [Where do I start with a game?](start.md)
+- [Where do I start with an app?](start-app.md)
+- [Where do I start with a SaaS?](start-saas.md)
 - [I already have a project. Can I use this?](existing.md)
 
 ## Day to day

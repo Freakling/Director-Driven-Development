@@ -1,10 +1,10 @@
-# Where do I start?
+# Where do I start with a game?
 
 <div class="kicker">From a game idea to a first built task, with Godot-Director</div>
 
 > Install Godot-Director into an empty game folder, restart Claude Code, and let onboarding interview you about the game. It ends with one commit for you to approve. Then say "Do the next task".
 
-This page is for someone with a game idea and no project yet. [Godot-Director](../frameworks/godot-director.md) is the framework for games in Godot 4. App-Director and SaaSAllTheThings will get their own "Where do I start?" pages later. If a game already exists, go to [I already have a project. Can I use this?](existing.md)
+This page is for someone with a game idea and no project yet. [Godot-Director](../frameworks/godot-director.md) is the framework for games in Godot 4. For an app, see [Where do I start with an app?](start-app.md). For a multi-tenant B2B SaaS on Azure, see [Where do I start with a SaaS?](start-saas.md) If a game already exists, go to [I already have a project. Can I use this?](existing.md#an-existing-game-godot-director)
 
 ## Short answer
 

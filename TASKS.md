@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T120 · B5
+**Next IDs:** T121 · B5
 
 ## Milestones
 | Milestone | Status |
@@ -314,16 +314,22 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: each framework's root TASKS.md `Next IDs` line carries the `R<n>` counter its own align procedure asks for, following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Framework features
 
-### T112 · Where do I start, for App-Director · in-progress 2026-10-16 · S · agent
+### T112 · Where do I start, for App-Director · done · S · agent
 - Depends on: T110
 - Touches: docs/how-to/ (the Start here pages), mkdocs.yml, product/brief.md (Screens page count)
 - Done when: the Start here walkthrough has an App-Director version (building an app), accurate to the latest release, reached from the overview and the App-Director page (check) · `bash tools/check.sh` passes (check)
 - Brief: Scope › How-to guides
 
-### T113 · Where do I start, for SaaSAllTheThings · in-progress 2026-10-16 · S · agent
+### T113 · Where do I start, for SaaSAllTheThings · done · S · agent
 - Depends on: T110
 - Touches: docs/how-to/ (the Start here pages), mkdocs.yml, product/brief.md (Screens page count)
 - Done when: the Start here walkthrough has a SaaSAllTheThings version (building a SaaS, including the assessment of an existing app), accurate to the latest release, reached from the overview and the SaaSAllTheThings page (check) · `bash tools/check.sh` passes (check)
+- Brief: Scope › How-to guides
+
+### T120 · The home page and the Godot-Director page link the start pages · in-progress 2026-10-16 · XS · agent
+- Depends on: T113
+- Touches: docs/index.md, docs/frameworks/godot-director.md
+- Done when: the home page's "where do I start?" link leads to the How-to overview or names the three start pages, and the Godot-Director page's Install section links "Where do I start with a game?" as the other two framework pages link theirs (check) · `bash tools/check.sh` passes (check)
 - Brief: Scope › How-to guides
 
 ### T84 · App-Director: /ui-design with Playwright capture · in-progress 2026-10-16 · L · agent
