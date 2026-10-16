@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T100 · B5
+**Next IDs:** T101 · B5
 
 ## Milestones
 | Milestone | Status |
@@ -229,7 +229,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: once Godot-Director has released /ui-design, App-Director has a merged pull request that builds it from the anchor with the Playwright adapter for web apps, following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Planned framework changes
 
-### T85 · SaaSAllTheThings: /ui-design with Playwright capture · todo · L · agent
+### T85 · SaaSAllTheThings: /ui-design with Playwright capture · in-progress 2026-10-16 · L · agent
 - Depends on: T83
 - Touches: work/SaaSAllTheThings (one pull request; the director merges)
 - Note: build now on a local branch; no push and no pull request until T98 (the director's UAT) is done, then update from the anchor and publish.
@@ -277,6 +277,14 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Touches: docs/skills/align.md
 - Done when: once all three have released it, the /align page describes the brief-against-reality step (check) · `bash tools/check.sh` passes (check)
 - Brief: Scope › Common skills
+
+### T100 · The framework repos ignore OS metadata files · in-progress 2026-10-16 · XS · agent
+- PRs: Godot-Director #16 (open; squash-merge to test the scanner)
+- Depends on: -
+- Touches: work/Godot-Director: .gitignore; work/App-Director: .gitignore; work/SaaSAllTheThings: .gitignore (one pull request per repo; the director squash-merges)
+- Done when: each framework's own `.gitignore` ignores `.DS_Store`, `Thumbs.db`, `desktop.ini` and `__MACOSX/`, as the plugin directory's scanner asks, in a pull request the director squash-merges to test whether single-parent commits pass the scan, following AGENTS.md › Project rules for framework work (check)
+- Note: Godot-Director first, as a test: if the squash-merged commit passes the plugin scanner, the same change goes to App-Director and SaaSAllTheThings once their clones' local /ui-design builds are committed.
+- Brief: Scope › Orchestrator for the three frameworks
 
 ### T87 · App-Director: the human-written product brief · todo · S · agent
 - Depends on: -
