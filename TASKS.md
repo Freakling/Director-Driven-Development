@@ -446,12 +446,14 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Brief: Scope › Framework features
 
 ### T122 · Release Godot-Director 3.13.0 · in-progress 2026-10-16 · S · agent
+- PRs: Godot-Director #24 (open)
 - Depends on: T51
 - Touches: work/Godot-Director: the version files its CLAUDE.md lists, CHANGELOG.md (one pull request; the director squash-merges)
 - Done when: the release pull request, which covers the align reality step (T94), the R counter (T119) and the human-written GDD (T88), is merged, and `tools/work-release.sh` has tagged `v3.13.0` and published the GitHub release, following AGENTS.md › Project rules › Framework work › Releases (check) · an item here moves the docs links to `v3.13.0` and updates the pages for what it ships (check)
 - Brief: Scope › Framework features
 
 ### T123 · Release SaaSAllTheThings 0.9.0 · in-progress 2026-10-16 · S · agent
+- PRs: SaaSAllTheThings #14 (open)
 - Depends on: T51
 - Touches: work/SaaSAllTheThings: the version files its CLAUDE.md lists, CHANGELOG.md (one pull request; the director squash-merges)
 - Done when: the release pull request, which covers the align reality step (T95), the R counter (T119) and the human-written SaaS brief (T89), is merged, and `tools/work-release.sh` has tagged `v0.9.0` and published the GitHub release, following AGENTS.md › Project rules › Framework work › Releases (check) · an item here moves the docs links to `v0.9.0` and updates the pages for what it ships (check)
