@@ -4,6 +4,8 @@
 
 `/prune` moves finished items out of `TASKS.md` and into `TASKS-archive.md`, and removes notes that are no longer true. The queue stays short enough to read, and the history stays in the repository.
 
+How to use it: [the /prune guide](../how-to/prune.md).
+
 ## What it does
 
 1. **Move** every item marked done from `TASKS.md` to the end of `TASKS-archive.md`. Each item keeps its heading and its fields unchanged. If the archive doesn't exist yet, the skill creates it with a short header that says IDs are never reused.

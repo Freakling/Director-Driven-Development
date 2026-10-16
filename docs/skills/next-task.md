@@ -6,6 +6,8 @@ Pick the next ready item in `TASKS.md`, have it built in a fresh context, prove 
 
 This is the skill that drives the agent development flow. Each run is self-contained: the context that builds the item is fresh, and after the commit the records hold everything a new session needs to continue.
 
+How to use it: [the /next-task guide](../how-to/next-task.md).
+
 ## What it does
 
 1. **Pick** the next ready item: a `todo` `agent` item whose dependencies are all `done`, in file order (which is the director's priority order). High-severity bugs come first. If nothing is ready, the skill reports what is blocking and stops.

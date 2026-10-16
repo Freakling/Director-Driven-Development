@@ -58,18 +58,18 @@ Onboarding works out whether this is a new game, an existing game or an upgrade,
 
 | Command | What it does |
 |---|---|
-| `/next-task` | Builds the next ready item in a fresh context, proves it with the check, updates the records and commits it once you approve. A run you ask for, such as "grab tasks until you're blocked", commits each item without pausing. Also takes an item ID, a number of items, or `queue` |
-| `/design` | A design session on a topic, or `/design questions` to rank the open questions by what they unblock |
-| `/research` | A read-only researcher answers one question in a fresh context and writes a dated note with its sources to `design/research/`. It informs; you decide. Procedure: [`research.md`](https://github.com/Freakling/Godot-Director/tree/v3.11.0/framework/.godot-director/procedures/research.md) |
+| `/next-task` | Builds the next ready item in a fresh context, proves it with the check, updates the records and commits it once you approve. A run you ask for, such as "grab tasks until you're blocked", commits each item without pausing. Also takes an item ID, a number of items, or `queue`. Step by step: [the guide](../how-to/next-task.md) |
+| `/design` | A design session on a topic, or `/design questions` to rank the open questions by what they unblock. Step by step: [the guide](../how-to/design.md) |
+| `/research` | A read-only researcher answers one question in a fresh context and writes a dated note with its sources to `design/research/`. It informs; you decide. Procedure: [`research.md`](https://github.com/Freakling/Godot-Director/tree/v3.11.0/framework/.godot-director/procedures/research.md). Step by step: [the guide](../how-to/research.md) |
 | `/export` | Exports the game with Godot's export presets into `builds/`, one folder per preset, and reports the files. It changes no source file. Procedure: [`export.md`](https://github.com/Freakling/Godot-Director/tree/v3.11.0/framework/.godot-director/procedures/export.md) |
-| `/ui-design` | Captures the game's screens for you to draw over, turns your drawing into a screen spec, and checks the built screen against that spec. Procedure: [`ui-design.md`](https://github.com/Freakling/Godot-Director/tree/v3.11.0/framework/.godot-director/procedures/ui-design.md) |
-| `/release` | Checks the build, exports it with `/export`, and uploads it to the UAT stage. Production only when you ask and say yes. Shared behaviour and this repo's section: [`/release`](../skills/release.md). Procedure: [`release.md`](https://github.com/Freakling/Godot-Director/tree/v3.11.0/framework/.godot-director/procedures/release.md) |
+| `/ui-design` | Captures the game's screens for you to draw over, turns your drawing into a screen spec, and checks the built screen against that spec. Procedure: [`ui-design.md`](https://github.com/Freakling/Godot-Director/tree/v3.11.0/framework/.godot-director/procedures/ui-design.md). Step by step: [the guide](../how-to/ui-design.md) |
+| `/release` | Checks the build, exports it with `/export`, and uploads it to the UAT stage. Production only when you ask and say yes. Shared behaviour and this repo's section: [`/release`](../skills/release.md). Procedure: [`release.md`](https://github.com/Freakling/Godot-Director/tree/v3.11.0/framework/.godot-director/procedures/release.md). Step by step: [the guide](../how-to/release.md) |
 | `/playtest` | Starts a playtest report, or turns a filled-in one into bugs, score trends and design proposals |
-| `/function-check` | Prepares or processes a checklist of built features for you to tick Works or Broken |
-| `/align` | Consistency pass across the GDD, decisions, tasks, `AGENTS.md`, settings and code |
-| `/drift-reset` | Design drift reset, started only by you; `/drift-reset postmortem` after the rebuild |
-| `/prune` | Moves done items to `TASKS-archive.md` |
-| `/refresh-model-sizing` | Sets or updates the model for each task size |
+| `/function-check` | Prepares or processes a checklist of built features for you to tick Works or Broken. Step by step: [the guide](../how-to/acceptance.md) |
+| `/align` | Consistency pass across the GDD, decisions, tasks, `AGENTS.md`, settings and code. Step by step: [the guide](../how-to/align.md) |
+| `/drift-reset` | Design drift reset, started only by you; `/drift-reset postmortem` after the rebuild. Step by step: [the guide](../how-to/drift-reset.md) |
+| `/prune` | Moves done items to `TASKS-archive.md`. Step by step: [the guide](../how-to/prune.md) |
+| `/refresh-model-sizing` | Sets or updates the model for each task size. Step by step: [the guide](../how-to/refresh-model-sizing.md) |
 
 To design a screen by drawing, you draw annotated boxes over screenshots of the running game in [Excalidraw](https://excalidraw.com), which is free, runs in the browser and needs no account, and save each drawing in `director/ui/`. The agent captures the screens, reads your drawing, records the layout in `design/ui/`, builds the screen to it and verifies the result. A layout lint catches squeezed text, controls running off the screen, overlapping and unreachable controls.
 

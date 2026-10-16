@@ -6,6 +6,8 @@
 
 `/research` answers one question in a fresh context and writes a dated note with its options, trade-offs, sources and a recommendation. The researcher reads and changes nothing; the note is its only output. A design session uses the note as input to a design call. The note records no decision.
 
+How to use it: [the /research guide](../how-to/research.md).
+
 ## What it does
 
 1. **Reuse** an earlier note when one exists. The skill lists the note folder for the topic and reuses a note whose Verified as of date is recent enough for its claims. Otherwise it researches only what has changed.

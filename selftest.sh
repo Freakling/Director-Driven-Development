@@ -8,10 +8,12 @@
 #   3. Framework links: a docs link into a framework repo names that repo's latest release tag, not
 #      main or an older release, and the path it names exists at that release.
 #   4. Skills nav: every skill page listed in the nav exists.
-#   5. The brief's own claims (product/brief.md): the page counts in its Screens table match the nav
+#   5. How-to links: a skill page whose guide is in docs/how-to/ links that guide, so a reader of the
+#      skill page finds the step-by-step guide.
+#   6. The brief's own claims (product/brief.md): the page counts in its Screens table match the nav
 #      sections in mkdocs.yml; every Brief: value in TASKS.md, and every brief heading named in
 #      tools/*.sh, is a heading in the brief; no Later or Planned section names a done item.
-#   6. The site builds in strict mode, which fails on broken internal links and anchors.
+#   7. The site builds in strict mode, which fails on broken internal links and anchors.
 #
 # The framework repos are kept as copies under .app-director/state/frameworks (gitignored), each
 # at its latest release tag (v<version>). Online, each run moves the copies to the latest release.
@@ -225,7 +227,25 @@ for skill in $skills_nav; do
 done
 [ "$skills_fail" -eq 0 ] && [ -n "$skills_nav" ] && echo "ok: all Skills nav entries have pages on disk"
 
-# 5. The brief's claims ---------------------------------------------------------------------
+# 5. How-to links ---------------------------------------------------------------------------
+# Every guide in docs/how-to/ (except the section's index) has a skill page of the same name in
+# docs/skills/. That skill page must link the guide, so a reader of the skill finds the steps.
+howto_fail=0; howto_n=0
+for guide in docs/how-to/*.md; do
+  [ -f "$guide" ] || continue
+  name=$(basename "$guide" .md)
+  [ "$name" = index ] && continue
+  skill="docs/skills/$name.md"
+  [ -f "$skill" ] || continue
+  howto_n=$((howto_n + 1))
+  if ! grep -qE "\]\(\.\./how-to/$name\.md[)#]" "$skill"; then
+    err "$skill has a guide, $guide, but doesn't link it (add a link to ../how-to/$name.md)"
+    howto_fail=1
+  fi
+done
+[ "$howto_fail" -eq 0 ] && [ "$howto_n" -gt 0 ] && echo "ok: all $howto_n skill pages with a guide link it"
+
+# 6. The brief's claims ---------------------------------------------------------------------
 # The brief is checked against the rest of the repo. TASKS-archive.md is read only for the done
 # items below: archived items stay unchanged by rule, so their Brief: values (which may name old
 # headings) are not checked.
@@ -339,7 +359,7 @@ else
   [ "$later_fail" -eq 0 ] && echo "ok: Later and Planned brief sections name no done items"
 fi
 
-# 6. Build and links ------------------------------------------------------------------------
+# 7. Build and links ------------------------------------------------------------------------
 mkdocs=""
 if command -v mkdocs >/dev/null 2>&1; then mkdocs="mkdocs"
 else

@@ -4,6 +4,8 @@
 
 `/align` checks that the design, the decision log, the task queue, the assistant's rules file, the settings and the code still agree with each other. It is the routine pass that catches drift while it is still small. The concept behind it is on [Align and drift reset](../concept/drift.md).
 
+How to use it: [the /align guide](../how-to/align.md).
+
 ## What it does
 
 1. **Check the placeholders and entry files.** No template value is left unfilled, the rules file points to the right place, and no install file is left unmerged.

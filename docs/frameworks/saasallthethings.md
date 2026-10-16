@@ -88,21 +88,21 @@ Onboarding works out whether this is a new app, an existing app or an upgrade, s
 
 | Command | What it does |
 |---|---|
-| `/next-task` | Builds the next ready item in a fresh context within the reference architecture, proves it with the check, updates the records and commits it once you approve. A run you ask for, such as "grab tasks until you're blocked", commits each item without pausing |
+| `/next-task` | Builds the next ready item in a fresh context within the reference architecture, proves it with the check, updates the records and commits it once you approve. A run you ask for, such as "grab tasks until you're blocked", commits each item without pausing. Step by step: [the guide](../how-to/next-task.md) |
 | `/assess` | A read-only assessment report; "process the workshop notes" turns a workshop's decisions into records |
 | `/roadmap` | Plans the next stage of the move to SaaS as small items |
-| `/design` | A product design session on a topic, or `/design questions` to rank the open questions |
-| `/research` | A read-only researcher answers one question in a fresh context and writes a dated note with its sources to `product/research/`. It informs; you decide. Procedure: [`research.md`](https://github.com/Freakling/SaaSAllTheThings/tree/v0.8.0/framework/.satt/procedures/research.md) |
+| `/design` | A product design session on a topic, or `/design questions` to rank the open questions. Step by step: [the guide](../how-to/design.md) |
+| `/research` | A read-only researcher answers one question in a fresh context and writes a dated note with its sources to `product/research/`. It informs; you decide. Procedure: [`research.md`](https://github.com/Freakling/SaaSAllTheThings/tree/v0.8.0/framework/.satt/procedures/research.md). Step by step: [the guide](../how-to/research.md) |
 | `/architect` | An architecture session that ends in an ADR you accept |
 | `/integrate` | Works out an integration contract with you (direction, system of record, conflicts), then plans it in stages |
 | `/tenant` | Checks readiness for a new customer and hands you the consent and setup steps |
-| `/acceptance` | Prepares or processes a checklist of built behaviour for you to tick Works or Broken |
+| `/acceptance` | Prepares or processes a checklist of built behaviour for you to tick Works or Broken. Step by step: [the guide](../how-to/acceptance.md) |
 | `/feedback` | Turns a customer or pilot session into bugs, score trends and product proposals |
-| `/release` | Check, what-if, deploy and smoke test, each Azure step with your approval. Production is yours to run. Shared behaviour and this repo's section: [`/release`](../skills/release.md) |
-| `/align` | Consistency pass across the PRD, decisions, ADRs, integration contracts, tasks, `AGENTS.md`, settings and code |
-| `/drift-reset` | Product design drift reset, started only by you; `/drift-reset postmortem` after the rebuild |
-| `/prune` | Moves done items to `TASKS-archive.md` |
-| `/refresh-model-sizing` | Sets or updates the model for each task size |
+| `/release` | Check, what-if, deploy and smoke test, each Azure step with your approval. Production is yours to run. Shared behaviour and this repo's section: [`/release`](../skills/release.md). Step by step: [the guide](../how-to/release.md) |
+| `/align` | Consistency pass across the PRD, decisions, ADRs, integration contracts, tasks, `AGENTS.md`, settings and code. Step by step: [the guide](../how-to/align.md) |
+| `/drift-reset` | Product design drift reset, started only by you; `/drift-reset postmortem` after the rebuild. Step by step: [the guide](../how-to/drift-reset.md) |
+| `/prune` | Moves done items to `TASKS-archive.md`. Step by step: [the guide](../how-to/prune.md) |
+| `/refresh-model-sizing` | Sets or updates the model for each task size. Step by step: [the guide](../how-to/refresh-model-sizing.md) |
 
 ## Read more
 

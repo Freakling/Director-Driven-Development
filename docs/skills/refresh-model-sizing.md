@@ -4,6 +4,8 @@
 
 `/refresh-model-sizing` sets or updates the model that builds each task size. It writes one entry per size, XS through XL, into the project's rules file. The sizes and the reasons behind the map are on [Task and model sizing](../concept/sizing.md).
 
+How to use it: [the /refresh-model-sizing guide](../how-to/refresh-model-sizing.md).
+
 ## What it does
 
 1. **Check the capability.** Model sizing needs an assistant that can start a builder subagent and choose that subagent's model for each call. If the assistant can't do both, the skill says so, writes nothing, and every build runs on the session's model.

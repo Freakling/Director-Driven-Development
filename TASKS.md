@@ -248,13 +248,13 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: each common skill and the acceptance check has a guide in the same three parts as the /ui-design guide, accurate to the latest releases (check) · the overview lists them (check) · `bash tools/check.sh` passes (check)
 - Brief: Scope › How-to guides
 
-### T106 · Pages link to their How-to guides · in-progress 2026-10-16 · S · agent
+### T106 · Pages link to their How-to guides · done · S · agent
 - Depends on: T104
 - Touches: docs/skills/*.md, docs/frameworks/*.md, docs/concept/*.md, selftest.sh
 - Done when: every skill page with a guide has a "How to use this skill" link to it near the top, and the framework pages link the guides for their skills (today, the Godot-Director page links the /ui-design guide) (check) · concept pages link a guide where a reader would want the practical steps (check) · the selftest fails when a skill page has a guide in docs/how-to/ but doesn't link it (check) · `bash tools/check.sh` passes (check)
 - Brief: Scope › How-to guides
 
-### T107 · How to review and merge the framework pull requests · todo · S · agent
+### T107 · How to review and merge the framework pull requests · in-progress 2026-10-16 · S · agent
 - Depends on: T104
 - Touches: docs/how-to/merging.md (new), docs/how-to/index.md, mkdocs.yml, product/brief.md (Screens page count)
 - Done when: a guide for the director covers reviewing a framework pull request, merging with "Squash and merge" (and why: the plugin directory's scanner), what "Merging is blocked" and conflicts mean and that the agent brings an open branch up to date after each merge, what happens after a merge (the item is done, a release is proposed, the release pull request, the docs follow), and that the agent never merges, describing only what's in place (check) · `bash tools/check.sh` passes (check)

@@ -6,6 +6,8 @@
 
 `/release` takes the game, app or service from a passing check to the target the request names. Each framework runs it against its own target: a platform, an upload stage, or an environment. The skill follows the release procedure of its repository, which is the source of truth.
 
+How to use it: [the /release guide](../how-to/release.md).
+
 ## What it does
 
 1. **Ready?** The working tree is clean and `bash tools/check.sh` passes. A failing check stops the release, since a build that fails the check isn't worth shipping.
