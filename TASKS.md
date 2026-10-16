@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T108 · B5
+**Next IDs:** T109 · B5
 
 ## Milestones
 | Milestone | Status |
@@ -223,7 +223,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Brief: Scope › Planned framework changes
 
 ### T103 · /ui-design tells the director how to use Excalidraw · in-progress 2026-10-16 · S · agent
-- PRs: Godot-Director #18 (open, brought up to date with #16 and #17); App-Director and SaaSAllTheThings committed on their local /ui-design branches
+- PRs: Godot-Director #18 (merged); App-Director and SaaSAllTheThings committed on their local /ui-design branches, published after T98
 - Depends on: T83
 - Touches: product/anchors/ui-design.md; work/Godot-Director: framework/.godot-director/procedures/ui-design.md, project/design/ui/README.md, examples/market-day/design/ui/README.md (one pull request; the director squash-merges); work/App-Director and work/SaaSAllTheThings: the same files on the local branches ddd/T84 and ddd/T85 (no push until T98)
 - Done when: whenever /ui-design hands the director a starter drawing, it says plainly that nothing needs installing (excalidraw.com in the browser, no account, Excalidraw+ not needed), how to open the starter (the menu's Open, or drag the file in), how to save it to `director/ui/<screen>.excalidraw` (Save to… or Ctrl+S; Chrome and Edge let you pick the folder, other browsers save to Downloads, so move and rename it), and that the drawing stays on the machine unless Live collaboration or a shareable link is used (check) · the anchor and the drawing guide each project gets say the same (check) · following AGENTS.md › Project rules for framework work (check)
@@ -235,7 +235,13 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: the nav has a How-to section after Skills with an overview page (check) · the /ui-design guide walks a first-time user through it as Godot-Director ships it: what to know (what it's for, that nothing needs installing, where drawings and specs go), what to do (set up the catalog, capture, draw and save in Excalidraw, process, build, verify, with what the agent asks at each step), and the caveats (sizes, overlays for an autoload's HUD, untested platforms, privacy), linking to the procedure at the latest release (check) · the brief's Screens table gives the section's real page count (check) · `bash tools/check.sh` passes (check)
 - Brief: Scope › How-to guides
 
-### T105 · How-to guides for the common skills · todo · M · agent
+### T108 · Release Godot-Director 3.12.0 · in-progress 2026-10-16 · S · agent
+- Depends on: T51
+- Touches: work/Godot-Director: the version files its CLAUDE.md lists, CHANGELOG.md (one pull request; the director squash-merges)
+- Done when: the release pull request, which covers the .gitignore (T100), the protected-space fix (T101) and the Excalidraw instructions (T103), is merged, and `tools/work-release.sh` has tagged `v3.12.0` and published the GitHub release, following AGENTS.md › Project rules › Framework work › Releases (check) · an item here moves the docs links to `v3.12.0` (check)
+- Brief: Scope › Framework features
+
+### T105 · How-to guides for the common skills · in-progress 2026-10-16 · M · agent
 - Depends on: T104
 - Touches: docs/how-to/*.md (new), docs/how-to/index.md, mkdocs.yml, product/brief.md (Screens page count)
 - Done when: each common skill and the acceptance check has a guide in the same three parts as the /ui-design guide, accurate to the latest releases (check) · the overview lists them (check) · `bash tools/check.sh` passes (check)
