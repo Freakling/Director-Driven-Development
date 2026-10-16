@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T119 · B5
+**Next IDs:** T120 · B5
 
 ## Milestones
 | Milestone | Status |
@@ -308,6 +308,12 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: App-Director's README gives the plugin update commands (`/plugin marketplace update` and `/plugin update`, and the restart), as Godot-Director's and SaaSAllTheThings' do, following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Framework features
 
+### T119 · The framework repos' own queues carry an R counter · todo · XS · agent
+- Depends on: -
+- Touches: work/App-Director: TASKS.md; work/Godot-Director: TASKS.md; work/SaaSAllTheThings: TASKS.md (one pull request per repo; the director merges)
+- Done when: each framework's root TASKS.md `Next IDs` line carries the `R<n>` counter its own align procedure asks for, following AGENTS.md › Project rules for framework work (check)
+- Brief: Scope › Framework features
+
 ### T112 · Where do I start, for App-Director · todo · S · agent
 - Depends on: T110
 - Touches: docs/how-to/ (the Start here pages), mkdocs.yml, product/brief.md (Screens page count)
@@ -353,18 +359,21 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Brief: Scope › Common skills
 
 ### T93 · App-Director: align checks the brief against reality · in-progress 2026-10-16 · S · agent
+- PRs: App-Director #17 (open)
 - Depends on: T92
 - Touches: work/App-Director: framework/.app-director/procedures/align.md (one pull request; the director merges)
 - Done when: App-Director has a merged pull request whose align procedure adds a "Brief against reality" step as `product/anchors/align.md` says: read the whole design doc, check every statement of state against the built product, done items and latest releases, and check every decision since the last `docs: align` commit instead of a spot check, adapted to the brief, following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Common skills
 
 ### T94 · Godot-Director: align checks the GDD against reality · in-progress 2026-10-16 · S · agent
+- PRs: Godot-Director #20 (open)
 - Depends on: T92
 - Touches: work/Godot-Director: framework/.godot-director/procedures/align.md (one pull request; the director merges)
 - Done when: Godot-Director has a merged pull request whose align procedure adds a "Brief against reality" step as `product/anchors/align.md` says: read the whole design doc, check every statement of state against the built product, done items and latest releases, and check every decision since the last `docs: align` commit instead of a spot check, adapted to the GDD, following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Common skills
 
 ### T95 · SaaSAllTheThings: align checks the PRD and ADRs against reality · in-progress 2026-10-16 · S · agent
+- PRs: SaaSAllTheThings #10 (open)
 - Depends on: T92
 - Touches: work/SaaSAllTheThings: framework/.satt/procedures/align.md (one pull request; the director merges)
 - Done when: SaaSAllTheThings has a merged pull request whose align procedure adds a "Brief against reality" step as `product/anchors/align.md` says: read the whole design doc, check every statement of state against the built product, done items and latest releases, and check every decision since the last `docs: align` commit instead of a spot check, adapted to the PRD and the ADRs, following AGENTS.md › Project rules for framework work (check)
