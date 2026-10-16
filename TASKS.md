@@ -217,14 +217,16 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Brief: Scope › Planned framework changes
 
 ### T84 · App-Director: /ui-design with Playwright capture · todo · L · agent
-- Depends on: T98
+- Depends on: T83
 - Touches: work/App-Director (one pull request; the director merges)
+- Note: build now on a local branch; no push and no pull request until T98 (the director's UAT) is done, then update from the anchor and publish.
 - Done when: once Godot-Director has released /ui-design, App-Director has a merged pull request that builds it from the anchor with the Playwright adapter for web apps, following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Planned framework changes
 
 ### T85 · SaaSAllTheThings: /ui-design with Playwright capture · todo · L · agent
-- Depends on: T98
+- Depends on: T83
 - Touches: work/SaaSAllTheThings (one pull request; the director merges)
+- Note: build now on a local branch; no push and no pull request until T98 (the director's UAT) is done, then update from the anchor and publish.
 - Done when: once Godot-Director has released /ui-design, SaaSAllTheThings has a merged pull request that builds it from the anchor with the Playwright adapter, following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Planned framework changes
 
