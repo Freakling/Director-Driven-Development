@@ -225,7 +225,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 ### T84 · App-Director: /ui-design with Playwright capture · in-progress 2026-10-16 · L · agent
 - Depends on: T83
 - Touches: work/App-Director (one pull request; the director merges)
-- Note: build now on a local branch; no push and no pull request until T98 (the director's UAT) is done, then update from the anchor and publish.
+- Note: built, reviewed (nine findings fixed) and committed locally on ddd/T84 (a637da3); no push and no pull request until T98 (the director's UAT) is done, then update from the anchor and publish.
 - Done when: once Godot-Director has released /ui-design, App-Director has a merged pull request that builds it from the anchor with the Playwright adapter for web apps, following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Planned framework changes
 
