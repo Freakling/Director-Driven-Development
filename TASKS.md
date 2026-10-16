@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T116 · B5
+**Next IDs:** T117 · B5
 
 ## Milestones
 | Milestone | Status |
@@ -288,6 +288,12 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Depends on: T111
 - Touches: docs/how-to/trouble.md (new), docs/how-to/*.md, docs/how-to/index.md, mkdocs.yml, selftest.sh, product/brief.md (Screens page count)
 - Done when: a When things go wrong page "Something isn't there, or doesn't work" says to make sure you're on the latest release, with the upgrade command for each install path of each framework and the restart of Claude Code, then the common causes a new director hits (a skill missing, the check failing, a clone without setup-clone.sh, no display for capture), accurate to the latest releases (check) · no How-to or other page tells the reader to upgrade or restart inside a guide, or names a framework version number in prose; pages that need it link the troubleshooting page instead (check) · the selftest fails when a docs page names a framework version number outside a link to a release tag (check) · `bash tools/check.sh` passes (check)
+- Brief: Scope › How-to guides
+
+### T116 · The UI How-to offers editing it yourself · todo · XS · agent
+- Depends on: T115
+- Touches: docs/how-to/ui.md
+- Done when: "How do I work with UI changes?" has a third way, editing the screen yourself in Godot (or your editor for an app): commit through the normal flow so the check runs, tell the agent what changed so the screen spec and catalog follow, and when this path is the right one, accurate to the released rules on ownership and the check (check) · `bash tools/check.sh` passes (check)
 - Brief: Scope › How-to guides
 
 ### T112 · Where do I start, for App-Director · todo · S · agent
