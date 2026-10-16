@@ -29,7 +29,7 @@ This guide is for someone who has never run `/prune`. All three frameworks ship 
 ## More
 
 - The [`/prune` skill page](../skills/prune.md), with what is unique to each framework.
-- The procedures, which are the source of truth for the steps: [Godot-Director v3.11.0](https://github.com/Freakling/Godot-Director/tree/v3.11.0/framework/.godot-director/procedures/prune.md), [App-Director v1.6.0](https://github.com/Freakling/App-Director/tree/v1.6.0/framework/.app-director/procedures/prune.md) and [SaaSAllTheThings v0.8.0](https://github.com/Freakling/SaaSAllTheThings/tree/v0.8.0/framework/.satt/procedures/prune.md).
+- The procedures, which are the source of truth for the steps: [Godot-Director v3.12.0](https://github.com/Freakling/Godot-Director/tree/v3.12.0/framework/.godot-director/procedures/prune.md), [App-Director v1.6.0](https://github.com/Freakling/App-Director/tree/v1.6.0/framework/.app-director/procedures/prune.md) and [SaaSAllTheThings v0.8.0](https://github.com/Freakling/SaaSAllTheThings/tree/v0.8.0/framework/.satt/procedures/prune.md).
 - The [How-to guides](index.md) for the other guides.
 
 <div class="takeaway"><span>Prune when the queue gets hard to read. The history stays in the archive.</span><span class="url"><a href="index.md">All how-to guides</a></span></div>

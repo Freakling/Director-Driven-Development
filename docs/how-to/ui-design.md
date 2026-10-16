@@ -4,7 +4,7 @@
 
 > You draw what the screen should do. The agent reads your drawing, builds the screen to it and checks the built screen against the drawing.
 
-This guide is for someone who has never used `/ui-design`. It takes one screen from the first capture to a checked build. Godot-Director ships `/ui-design`, so the guide describes Godot-Director. App-Director and SaaSAllTheThings don't ship it yet. The [skill entry on the Godot-Director page](../frameworks/godot-director.md#commands) lists the command, and the [procedure at v3.11.0](https://github.com/Freakling/Godot-Director/tree/v3.11.0/framework/.godot-director/procedures/ui-design.md) has the details.
+This guide is for someone who has never used `/ui-design`. It takes one screen from the first capture to a checked build. Godot-Director ships `/ui-design`, so the guide describes Godot-Director. App-Director and SaaSAllTheThings don't ship it yet. The [skill entry on the Godot-Director page](../frameworks/godot-director.md#commands) lists the command, and the [procedure at v3.12.0](https://github.com/Freakling/Godot-Director/tree/v3.12.0/framework/.godot-director/procedures/ui-design.md) has the details.
 
 ## What you need to know
 
@@ -16,7 +16,7 @@ This guide is for someone who has never used `/ui-design`. It takes one screen f
 
 ### Once per game
 
-1. Upgrade the game to Godot-Director 3.11.0 (see [Install](../frameworks/godot-director.md#install)), then restart Claude Code so the new skill loads.
+1. Upgrade the game to Godot-Director 3.12.0 (see [Install](../frameworks/godot-director.md#install)), then restart Claude Code so the new skill loads.
 2. Run `/ui-design list`. The agent prints the screens in the catalog, `tools/ui_screens.gd`, which starts with the game's main scene, and any screen scenes it finds that the catalog doesn't cover.
 3. Ask the agent to add the missing screens to the catalog. Each entry names the scene the screen opens and how to put it in a representative state. Name the overlays a player sees over the screen too (see the caveats below).
 
@@ -30,7 +30,7 @@ This guide is for someone who has never used `/ui-design`. It takes one screen f
 
 The agent tells you where the starter drawing is.
 
-**Draw.** Open the starter in [Excalidraw](https://excalidraw.com), in the browser or as the desktop app.
+**Draw.** Open the starter in [Excalidraw](https://excalidraw.com), in the browser or as the desktop app; the `/ui-design` capture step says how to open it and save it.
 
 1. The screenshot is locked inside a frame named after the screen. The faint numbered boxes are what the screen has now. Hide or delete them, and delete the legend beside the frame once you know it.
 2. Draw one rectangle per thing you care about. The first line inside the box is its name, such as `Gear list`. The lines after it can hold any of these keys, which the agent understands when you use them and never requires: `shows:`, `does:` or `click:`, `key:`, `size:` (`fixed`, `fill` or `fit`), `stick:`, `scroll:`, `empty:` and `hidden when:`.
@@ -71,7 +71,7 @@ Then run `/function-check`. For the screen, it links a compare image: your drawi
 ## More
 
 - The `/ui-design` entry on the [Godot-Director page](../frameworks/godot-director.md#commands), with its command summary.
-- The [`ui-design` procedure at v3.11.0](https://github.com/Freakling/Godot-Director/tree/v3.11.0/framework/.godot-director/procedures/ui-design.md), which is the source of truth for the steps.
+- The [`ui-design` procedure at v3.12.0](https://github.com/Freakling/Godot-Director/tree/v3.12.0/framework/.godot-director/procedures/ui-design.md), which is the source of truth for the steps.
 - The [How-to guides](index.md) for the other guides.
 
 <div class="takeaway"><span>You draw the screen. The agent builds it and checks it against your drawing.</span><span class="url"><a href="index.md">All how-to guides</a></span></div>

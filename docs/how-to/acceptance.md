@@ -40,7 +40,7 @@ This guide is for someone who has never run an acceptance check. App-Director an
 ## More
 
 - The [acceptance check skill page](../skills/acceptance.md), with what is unique to each framework.
-- The procedures, which are the source of truth for the steps: [App-Director v1.6.0](https://github.com/Freakling/App-Director/tree/v1.6.0/framework/.app-director/procedures/acceptance.md), [SaaSAllTheThings v0.8.0](https://github.com/Freakling/SaaSAllTheThings/tree/v0.8.0/framework/.satt/procedures/acceptance.md) and, for `/function-check`, [Godot-Director v3.11.0](https://github.com/Freakling/Godot-Director/tree/v3.11.0/framework/.godot-director/procedures/function-check.md).
+- The procedures, which are the source of truth for the steps: [App-Director v1.6.0](https://github.com/Freakling/App-Director/tree/v1.6.0/framework/.app-director/procedures/acceptance.md), [SaaSAllTheThings v0.8.0](https://github.com/Freakling/SaaSAllTheThings/tree/v0.8.0/framework/.satt/procedures/acceptance.md) and, for `/function-check`, [Godot-Director v3.12.0](https://github.com/Freakling/Godot-Director/tree/v3.12.0/framework/.godot-director/procedures/function-check.md).
 - The [How-to guides](index.md) for the other guides.
 
 <div class="takeaway"><span>Tests prove the rules, and you prove the rest. Run the check before you close a milestone.</span><span class="url"><a href="index.md">All how-to guides</a></span></div>

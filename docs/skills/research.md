@@ -54,9 +54,9 @@ The procedure is at [`framework/.app-director/procedures/research.md`](https://g
 
 ### Godot-Director
 
-The procedure is at [`framework/.godot-director/procedures/research.md`](https://github.com/Freakling/Godot-Director/tree/v3.11.0/framework/.godot-director/procedures/research.md) in the Godot-Director repository.
+The procedure is at [`framework/.godot-director/procedures/research.md`](https://github.com/Freakling/Godot-Director/tree/v3.12.0/framework/.godot-director/procedures/research.md) in the Godot-Director repository.
 
-- The domain file, [`research-domain.md`](https://github.com/Freakling/Godot-Director/tree/v3.11.0/framework/.godot-director/research-domain.md), covers the Godot docs for the project's engine version, plugins and assets (maintenance, engine version support and licence), export and store requirements, and comparable games as design references.
+- The domain file, [`research-domain.md`](https://github.com/Freakling/Godot-Director/tree/v3.12.0/framework/.godot-director/research-domain.md), covers the Godot docs for the project's engine version, plugins and assets (maintenance, engine version support and licence), export and store requirements, and comparable games as design references.
 - Comparable games are design references with Low or Medium confidence, and each option names the Design Pillar it serves or strains.
 - Notes go in `design/research/`, named `YYYY-MM-DD-<slug>.md`.
 - The item heading is `GDD:`, and an item that informs no question writes `Informs: (none)`.

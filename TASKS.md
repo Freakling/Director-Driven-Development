@@ -260,13 +260,13 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: a guide for the director covers reviewing a framework pull request, merging with "Squash and merge" (and why: the plugin directory's scanner), what "Merging is blocked" and conflicts mean and that the agent brings an open branch up to date after each merge, what happens after a merge (the item is done, a release is proposed, the release pull request, the docs follow), and that the agent never merges, describing only what's in place (check) · `bash tools/check.sh` passes (check)
 - Brief: Scope › How-to guides
 
-### T114 · Docs follow Godot-Director 3.12.0 · in-progress 2026-10-16 · XS · agent
+### T114 · Docs follow Godot-Director 3.12.0 · done · XS · agent
 - Depends on: T108
 - Touches: docs/frameworks/godot-director.md, docs/skills/*.md, docs/how-to/*.md
 - Done when: every link into Godot-Director points at v3.12.0 (check) · `bash tools/check.sh` passes (check)
 - Brief: Scope › Framework features
 
-### T109 · The How-to section becomes a FAQ: structure and the day-to-day questions · todo · M · agent
+### T109 · The How-to section becomes a FAQ: structure and the day-to-day questions · in-progress 2026-10-16 · M · agent
 - Depends on: T107
 - Touches: docs/how-to/*.md, docs/how-to/index.md, mkdocs.yml, docs/skills/*.md, docs/frameworks/*.md, docs/concept/*.md, selftest.sh, product/framework-workflow.md, product/brief.md (Screens page count)
 - Done when: the nav has the three groups (Start here, Day to day, When things go wrong) with question titles and short stable addresses, the overview lists the questions by group, and the merging guide is moved into `product/framework-workflow.md` and off the site (check) · the six Day to day questions are written to the brief's page model (short answer, two ways with when to use which, steps with what the agent asks, caveats, ties), replacing the skill-named pages, accurate to the latest releases (check) · skill, framework and concept pages link the question that answers them, and the selftest checks that every skill page links a How-to page (check) · placeholders stand in for the Start here and When things go wrong pages until T110 and T111 land, or the groups are added by those items; either way `bash tools/check.sh` passes (check)

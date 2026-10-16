@@ -40,7 +40,7 @@ Differences in what you do:
 ## More
 
 - The [`/drift-reset` skill page](../skills/drift-reset.md), with what is unique to each framework, and the concept page [Align and drift reset](../concept/drift.md).
-- The procedures, which are the source of truth for the steps: [Godot-Director v3.11.0](https://github.com/Freakling/Godot-Director/tree/v3.11.0/framework/.godot-director/procedures/drift-reset.md), [App-Director v1.6.0](https://github.com/Freakling/App-Director/tree/v1.6.0/framework/.app-director/procedures/drift-reset.md) and [SaaSAllTheThings v0.8.0](https://github.com/Freakling/SaaSAllTheThings/tree/v0.8.0/framework/.satt/procedures/drift-reset.md).
+- The procedures, which are the source of truth for the steps: [Godot-Director v3.12.0](https://github.com/Freakling/Godot-Director/tree/v3.12.0/framework/.godot-director/procedures/drift-reset.md), [App-Director v1.6.0](https://github.com/Freakling/App-Director/tree/v1.6.0/framework/.app-director/procedures/drift-reset.md) and [SaaSAllTheThings v0.8.0](https://github.com/Freakling/SaaSAllTheThings/tree/v0.8.0/framework/.satt/procedures/drift-reset.md).
 - The [How-to guides](index.md) for the other guides.
 
 <div class="takeaway"><span>Align often, reset when you have to, and start only when you are ready to rebuild.</span><span class="url"><a href="index.md">All how-to guides</a></span></div>
