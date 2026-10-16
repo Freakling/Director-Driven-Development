@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T101 · B5
+**Next IDs:** T103 · B5
 
 ## Milestones
 | Milestone | Status |
@@ -225,7 +225,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 ### T84 · App-Director: /ui-design with Playwright capture · in-progress 2026-10-16 · L · agent
 - Depends on: T83
 - Touches: work/App-Director (one pull request; the director merges)
-- Note: built, reviewed (nine findings fixed) and committed locally on ddd/T84 (a637da3); no push and no pull request until T98 (the director's UAT) is done, then update from the anchor and publish.
+- Note: built, reviewed (nine findings fixed) and committed locally on ddd/T84 (a637da3); no push and no pull request until T98 (the director's UAT) is done, then update from the anchor and publish. Before publishing, fix the selftest's two off-machine note checks, whose `^` anchors match only when that note comes first (found in T85).
 - Done when: once Godot-Director has released /ui-design, App-Director has a merged pull request that builds it from the anchor with the Playwright adapter for web apps, following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Planned framework changes
 
@@ -285,6 +285,20 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: each framework's own `.gitignore` ignores `.DS_Store`, `Thumbs.db`, `desktop.ini` and `__MACOSX/`, as the plugin directory's scanner asks, in a pull request the director squash-merges to test whether single-parent commits pass the scan, following AGENTS.md › Project rules for framework work (check)
 - Note: Godot-Director first, as a test: if the squash-merged commit passes the plugin scanner, the same change goes to App-Director and SaaSAllTheThings once their clones' local /ui-design builds are committed.
 - Brief: Scope › Orchestrator for the three frameworks
+
+### T101 · The protected-space hook blocks absolute paths · todo · S · agent · high
+- Depends on: -
+- Touches: work/Godot-Director: framework/.claude/hooks/guard-protected.sh, selftest.sh; work/App-Director: framework/.claude/hooks/guard-protected.sh, selftest.sh (one pull request per repo; the director squash-merges)
+- Done when: in Godot-Director and App-Director, the hook blocks a write to `director/` whether Claude Code sends a relative path or an absolute one (Windows `C:\\...\\director\\x`, forward-slash and POSIX forms), resolved against the project root, and still allows paths that merely contain "director" elsewhere, with selftest cases for each, following AGENTS.md › Project rules for framework work (check)
+- Note: found while building T85: the hook compares the raw path with `director/...`, and Claude Code sends absolute paths, so the protected space wasn't enforced. SaaSAllTheThings' new guard (T85) handles it.
+- Brief: Scope › Orchestrator for the three frameworks
+
+### T102 · The secrets scan doesn't flag drawings · todo · S · agent
+- Depends on: T84, T85
+- Touches: work/App-Director and work/SaaSAllTheThings: the secrets step of framework/tools/check.sh or the gitleaks config seed (one pull request per repo; the director squash-merges)
+- Done when: a committed drawing in `director/ui/*.excalidraw`, whose embedded base64 screenshot can match a key pattern, doesn't fail the check, while a real key in any other file still does, following AGENTS.md › Project rules for framework work (check)
+- Note: found while building T85. Ships with /ui-design, so it waits for T84 and T85.
+- Brief: Scope › Planned framework changes
 
 ### T87 · App-Director: the human-written product brief · todo · S · agent
 - Depends on: -
