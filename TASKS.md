@@ -183,20 +183,21 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Brief: Scope › Planned framework changes
 
 ### T81 · Godot-Director: UI capture, catalog and lint · in-progress 2026-10-16 · L · agent
-- Note: built and reviewed; committed on ddd/ui-design in the clone, published with T82 and T83 as one pull request (the director's request).
+- PRs: Godot-Director #14 (open; one pull request for T81 to T83, the director's request)
 - Depends on: T80
 - Touches: work/Godot-Director: tools/ui_capture.sh, ui_capture.gd, ui_catalog.gd, ui_lint.gd, ui_overlay.gd (new), project tools/ui_screens.gd and ui_capture.cfg seeds, procedures/ui-design.md (new, list and capture), the /ui-design skill, rules.md, install.sh, selftest.sh (one pull request; the director merges)
 - Done when: Godot-Director has a merged pull request where `/ui-design list` and `capture` work as the anchor's Godot adapter says, with the spec's acceptance criteria 1 and 5 met in its own test project, following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Planned framework changes
 
 ### T82 · Godot-Director: drawings and screen specs · in-progress 2026-10-16 · M · agent
-- Note: built; committed on ddd/ui-design in the clone, published with T81 and T83 as one pull request.
+- PRs: Godot-Director #14 (open)
 - Depends on: T81
 - Touches: work/Godot-Director: tools/ui_drawing.gd (new), the starter drawing in capture, procedures/ui-design.md (process), design/ui/README.md seed, tasks.md (`UI:` field), design.md, selftest.sh (one pull request; the director merges)
 - Done when: Godot-Director has a merged pull request where capture writes a starter drawing and `/ui-design process` reads a drawing through `drawing.json`, confirms its reading, settles open points and records the screen spec and items, as the anchor says, with the spec's acceptance criteria 2, 3 and 4 met, following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Planned framework changes
 
 ### T83 · Godot-Director: verify and the workflow hooks · in-progress 2026-10-16 · M · agent
+- PRs: Godot-Director #14 (open)
 - Depends on: T82
 - Touches: work/Godot-Director: procedures/ui-design.md (verify), build.md, review.md, function-check.md, align.md, tools/check.sh and check.gd (optional lint), the AGENTS.md template, install.sh, README.md, ONBOARDING.md, selftest.sh (one pull request; the director merges)
 - Done when: Godot-Director has a merged pull request where `/ui-design verify` writes compare images and lists deviations, and the build, review, function check, align and the optional check lint use the screen spec, as the anchor says, with the spec's acceptance criteria 6 to 9 met, following AGENTS.md › Project rules for framework work (check)
