@@ -303,12 +303,14 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Brief: Scope › How-to guides
 
 ### T118 · App-Director's README says how to update the plugin · in-progress 2026-10-16 · XS · agent
+- PRs: App-Director #18 (open; carries T119 too)
 - Depends on: -
 - Touches: work/App-Director: README.md (one pull request; the director merges)
 - Done when: App-Director's README gives the plugin update commands (`/plugin marketplace update` and `/plugin update`, and the restart), as Godot-Director's and SaaSAllTheThings' do, following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Framework features
 
 ### T119 · The framework repos' own queues carry an R counter · in-progress 2026-10-16 · XS · agent
+- PRs: App-Director #18 (open), Godot-Director #21 (open), SaaSAllTheThings #11 (open)
 - Depends on: -
 - Touches: work/App-Director: TASKS.md; work/Godot-Director: TASKS.md; work/SaaSAllTheThings: TASKS.md (one pull request per repo; the director merges)
 - Done when: each framework's root TASKS.md `Next IDs` line carries the `R<n>` counter its own align procedure asks for, following AGENTS.md › Project rules for framework work (check)
