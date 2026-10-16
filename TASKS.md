@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T121 · B5
+**Next IDs:** T122 · B5
 
 ## Milestones
 | Milestone | Status |
@@ -436,6 +436,12 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Touches: work/SaaSAllTheThings: a project seed for the template, ONBOARDING.md, the assessment procedure, README.md (one pull request; the director merges)
 - Done when: SaaSAllTheThings has a merged pull request with a SaaS variant of the director's product brief template that also asks about enterprise architecture, requirements, security requirements and the control frameworks the customer must meet, worded for the human to answer and anchored in the customer's security framework, shipped into every project as a template for the human to fill in, presented in onboarding as an alternative or addition to the chat interview with a word on why it helps (value and context for later development), and scanned by onboarding for new and existing projects to build the initial assessment and design records, with what it inferred marked, following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Planned framework changes
+
+### T121 · App-Director's README says "an agreed placeholder" · todo · XS · agent
+- Depends on: T87
+- Touches: work/App-Director: README.md (one pull request; the director merges)
+- Done when: the README's ownership line says human-owned areas get an agreed placeholder instead of generated content, in place of "a documented placeholder policy", following AGENTS.md › Project rules for framework work (check)
+- Brief: Scope › Framework features
 
 ### T90 · The docs describe the starting document · todo · XS · agent
 - Depends on: T87, T88, T89
