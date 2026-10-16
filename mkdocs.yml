@@ -76,6 +76,9 @@ nav:
       - /refresh-model-sizing: skills/refresh-model-sizing.md
       - /release: skills/release.md
       - Acceptance check: skills/acceptance.md
+  - How-to:
+      - how-to/index.md
+      - /ui-design: how-to/ui-design.md
   - Frameworks:
       - frameworks/index.md
       - Godot-Director: frameworks/godot-director.md

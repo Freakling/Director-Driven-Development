@@ -229,7 +229,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: whenever /ui-design hands the director a starter drawing, it says plainly that nothing needs installing (excalidraw.com in the browser, no account, Excalidraw+ not needed), how to open the starter (the menu's Open, or drag the file in), how to save it to `director/ui/<screen>.excalidraw` (Save to… or Ctrl+S; Chrome and Edge let you pick the folder, other browsers save to Downloads, so move and rename it), and that the drawing stays on the machine unless Live collaboration or a shareable link is used (check) · the anchor and the drawing guide each project gets say the same (check) · following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Planned framework changes
 
-### T104 · The How-to section and the /ui-design guide · todo · S · agent
+### T104 · The How-to section and the /ui-design guide · done · S · agent
 - Depends on: -
 - Touches: docs/how-to/index.md (new), docs/how-to/ui-design.md (new), mkdocs.yml, docs/index.md, product/brief.md (Screens page count)
 - Done when: the nav has a How-to section after Skills with an overview page (check) · the /ui-design guide walks a first-time user through it as Godot-Director ships it: what to know (what it's for, that nothing needs installing, where drawings and specs go), what to do (set up the catalog, capture, draw and save in Excalidraw, process, build, verify, with what the agent asks at each step), and the caveats (sizes, overlays for an autoload's HUD, untested platforms, privacy), linking to the procedure at the latest release (check) · the brief's Screens table gives the section's real page count (check) · `bash tools/check.sh` passes (check)
