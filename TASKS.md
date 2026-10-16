@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T115 · B5
+**Next IDs:** T116 · B5
 
 ## Milestones
 | Milestone | Status |
@@ -282,6 +282,12 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Depends on: T109
 - Touches: docs/how-to/ (the When things go wrong pages), docs/how-to/index.md, mkdocs.yml, product/brief.md (Screens page count)
 - Done when: "The system was not built as I intended" explains the drift reset step by step with a worked example drawn from a framework's example project, and says when `/align` is enough (check) · the records and the code disagreeing, a long task list, and cost each have their question page to the brief's page model, accurate to the latest releases (check) · `bash tools/check.sh` passes (check)
+- Brief: Scope › How-to guides
+
+### T115 · Troubleshooting: Something isn't there, or doesn't work · todo · S · agent
+- Depends on: T111
+- Touches: docs/how-to/trouble.md (new), docs/how-to/*.md, docs/how-to/index.md, mkdocs.yml, selftest.sh, product/brief.md (Screens page count)
+- Done when: a When things go wrong page "Something isn't there, or doesn't work" says to make sure you're on the latest release, with the upgrade command for each install path of each framework and the restart of Claude Code, then the common causes a new director hits (a skill missing, the check failing, a clone without setup-clone.sh, no display for capture), accurate to the latest releases (check) · no How-to or other page tells the reader to upgrade or restart inside a guide, or names a framework version number in prose; pages that need it link the troubleshooting page instead (check) · the selftest fails when a docs page names a framework version number outside a link to a release tag (check) · `bash tools/check.sh` passes (check)
 - Brief: Scope › How-to guides
 
 ### T112 · Where do I start, for App-Director · todo · S · agent

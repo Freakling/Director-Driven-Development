@@ -57,6 +57,7 @@ One row per significant system: what it owns and where its boundary is.
 - Not a typed code base: "Statically typed" in the rules doesn't apply; there is no app code. The check is gitleaks plus `tools/check.local.sh` (the selftest).
 - Accuracy first: check every statement against the latest release of the three framework repos (`Freakling/Godot-Director`, `Freakling/App-Director`, `Freakling/SaaSAllTheThings`) before writing it. Never overclaim, and never mention version history or past versions.
 - Link, don't copy: framework procedures stay in their repos; pages link to them.
+- Latest only: every page assumes the latest release of each framework, and the site isn't versioned. No page tells the reader to upgrade, names a framework version number in prose, or says to restart so a new skill loads; the troubleshooting page in How-to is the one place that says "make sure you're on the latest release", with the upgrade commands per framework, and other pages link it when a step may fail on an older install.
 - Voice: positive framing; no open-question endings (end with an invitation); no flashy titles; don't repeat information (a table and a figure saying the same thing: keep one); no en or em dashes.
 - Words: "requirements", "control framework" or "security framework", never "policy". SaaSAllTheThings is anchored in the customer's security framework; it is not "compliance as code". "Secure by design", not "security by design".
 - Framework work: an item whose `Touches` names a clone under `work/` is built in that clone, not in this repo.
