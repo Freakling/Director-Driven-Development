@@ -204,6 +204,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Brief: Scope › Planned framework changes
 
 ### T97 · Release Godot-Director 3.11.0 · in-progress 2026-10-16 · S · agent
+- PRs: Godot-Director #15 (open)
 - Depends on: T51, T83
 - Touches: work/Godot-Director: the version files its CLAUDE.md lists, CHANGELOG.md (one pull request; the director merges)
 - Done when: the release pull request, which covers T81 to T83 (/ui-design), is merged, and `tools/work-release.sh` has tagged `v3.11.0` and published the GitHub release, following AGENTS.md › Project rules › Framework work › Releases (check) · an item here moves the docs links to `v3.11.0` and documents /ui-design on the Godot-Director page (check)
