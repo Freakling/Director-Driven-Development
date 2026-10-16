@@ -353,7 +353,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Brief: Scope › Common skills
 
 ### T100 · The framework repos ignore OS metadata files · in-progress 2026-10-16 · XS · agent
-- PRs: Godot-Director #16 (merged with a merge commit, so not the scanner test; Godot-Director #17 was squash-merged as e654e82 and is the test)
+- PRs: Godot-Director #16 (merged). App-Director: pushed straight to main as ba91b84, unsigned, with the director's one-off go-ahead, as the plugin scanner test: every GitHub-made merge and squash commit was rejected (including the squash-merged e654e82 and deedda6) while plain commits passed. SaaSAllTheThings: pending the test's result.
 - Depends on: -
 - Touches: work/Godot-Director: .gitignore; work/App-Director: .gitignore; work/SaaSAllTheThings: .gitignore (one pull request per repo; the director squash-merges)
 - Done when: each framework's own `.gitignore` ignores `.DS_Store`, `Thumbs.db`, `desktop.ini` and `__MACOSX/`, as the plugin directory's scanner asks, in a pull request the director squash-merges to test whether single-parent commits pass the scan, following AGENTS.md › Project rules for framework work (check)
