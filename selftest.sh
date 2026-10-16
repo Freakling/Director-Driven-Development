@@ -8,7 +8,10 @@
 #   3. Framework links: a docs link into a framework repo names that repo's latest release tag, not
 #      main or an older release, and the path it names exists at that release.
 #   4. Skills nav: every skill page listed in the nav exists.
-#   5. The site builds in strict mode, which fails on broken internal links and anchors.
+#   5. The brief's own claims (product/brief.md): the page counts in its Screens table match the nav
+#      sections in mkdocs.yml; every Brief: value in TASKS.md, and every brief heading named in
+#      tools/*.sh, is a heading in the brief; no Later or Planned section names a done item.
+#   6. The site builds in strict mode, which fails on broken internal links and anchors.
 #
 # The framework repos are kept as copies under .app-director/state/frameworks (gitignored), each
 # at its latest release tag (v<version>). Online, each run moves the copies to the latest release.
@@ -222,7 +225,121 @@ for skill in $skills_nav; do
 done
 [ "$skills_fail" -eq 0 ] && [ -n "$skills_nav" ] && echo "ok: all Skills nav entries have pages on disk"
 
-# 5. Build and links ------------------------------------------------------------------------
+# 5. The brief's claims ---------------------------------------------------------------------
+# The brief is checked against the rest of the repo. TASKS-archive.md is read only for the done
+# items below: archived items stay unchanged by rule, so their Brief: values (which may name old
+# headings) are not checked.
+brief="product/brief.md"
+if [ ! -f "$brief" ] || [ ! -f TASKS.md ]; then
+  err "product/brief.md or TASKS.md is missing, so the brief's claims can't be checked"
+else
+  brief_heads=$(grep -E '^#+ ' "$brief" | sed -E 's/^#+ +//; s/[[:space:]]+$//')
+
+  # Screens: a row "| Concepts (13 pages) | ... |" must match its nav section's page count. The
+  # section matches by name, ignoring case and a plural s ("Concepts" is the nav's "Concept").
+  # One awk run reads mkdocs.yml (the nav) and then the brief (the Screens rows).
+  screens=$(awk '
+    function norm(s) { s = tolower(s); sub(/s$/, "", s); return s }
+    function flush() { if (title != "") { nav[norm(title)] = count; navname[norm(title)] = title }; title = "" }
+    FILENAME == ARGV[1] {
+      if ($0 ~ /^nav:/) { innav = 1; next }
+      if ($0 ~ /^[^ #]/) { if (innav) flush(); innav = 0; next }
+      if (!innav) next
+      if ($0 ~ /^  - [^ ]/) { flush(); title = $0; sub(/^  - /, "", title); sub(/:.*$/, "", title); count = 0; next }
+      if ($0 ~ /^      - /) count++
+      next
+    }
+    FNR == 1 { flush() }
+    /^## / { insc = ($0 ~ /^## Screens[ \t]*$/); next }
+    insc && /^\|/ {
+      cell = $0; sub(/^\|/, "", cell); sub(/\|.*$/, "", cell)
+      sub(/^[ \t]+/, "", cell); sub(/[ \t]+$/, "", cell)
+      if (match(cell, /\([0-9]+ pages\)/)) {
+        label = substr(cell, 1, RSTART - 1); sub(/[ \t]+$/, "", label)
+        want = substr(cell, RSTART, RLENGTH); gsub(/[^0-9]/, "", want)
+        k = norm(label)
+        if (k in nav) print label "|" want "|" navname[k] "|" nav[k]
+        else print label "|" want "|" "|"
+      }
+    }
+  ' mkdocs.yml "$brief")
+  screens_fail=0; screens_n=0
+  while IFS='|' read -r label want title have; do
+    [ -n "$label" ] || continue
+    screens_n=$((screens_n + 1))
+    if [ -z "$title" ]; then
+      err "product/brief.md Screens: \"$label\" has no matching section in mkdocs.yml's nav"; screens_fail=1
+    elif [ "$want" != "$have" ]; then
+      err "product/brief.md Screens: \"$label\" says $want pages, but the nav section \"$title\" in mkdocs.yml has $have"
+      screens_fail=1
+    fi
+  done <<< "$screens"
+  if [ "$screens_n" -eq 0 ]; then err "product/brief.md has no Screens rows with a page count"
+  elif [ "$screens_fail" -eq 0 ]; then echo "ok: brief Screens page counts match mkdocs.yml's nav ($screens_n sections)"; fi
+
+  # missing_part <value>: prints the first part of a "Section › Sub" value that isn't a heading of
+  # the brief, and fails. A value is one or more parts; each part must be a heading (text only).
+  missing_part() {
+    local part
+    while IFS= read -r part; do
+      [ -n "$part" ] || continue
+      grep -qxF -- "$part" <<< "$brief_heads" || { printf '%s' "$part"; return 1; }
+    done <<< "$(awk -v s="$1" 'BEGIN { n = split(s, a, " › "); for (i = 1; i <= n; i++) print a[i] }')"
+    return 0
+  }
+
+  # Brief: values in TASKS.md (the open queue; "-" means none), and the brief headings named in
+  # tools/*.sh as BRIEF="..." assignments (push-alignment.sh files its items under one).
+  heads_fail=0
+  while IFS= read -r hit; do
+    [ -n "$hit" ] || continue
+    lineno=${hit%%:*}; val=${hit#*:- Brief: }
+    val=$(printf '%s' "$val" | sed 's/[[:space:]]*$//')
+    [ "$val" = "-" ] && continue
+    bad=$(missing_part "$val") || { err "TASKS.md:$lineno has Brief: \"$val\", and \"$bad\" isn't a heading in product/brief.md"; heads_fail=1; }
+  done <<< "$(grep -n '^- Brief: ' TASKS.md)"
+  for f in tools/*.sh; do
+    [ -f "$f" ] || continue
+    while IFS= read -r hit; do
+      [ -n "$hit" ] || continue
+      lineno=${hit%%:*}; val=${hit#*BRIEF=\"}; val=${val%%\"*}
+      bad=$(missing_part "$val") || { err "$f:$lineno names brief heading \"$val\", and \"$bad\" isn't a heading in product/brief.md"; heads_fail=1; }
+    done <<< "$(grep -nE '^[[:space:]]*BRIEF="[^"]*"' "$f")"
+  done
+  [ "$heads_fail" -eq 0 ] && echo "ok: brief headings named in TASKS.md and tools/ are headings in product/brief.md"
+
+  # Later and Planned sections: the item IDs they name (T<n>, B<n>, R<n>), against the items that are
+  # done in TASKS.md or TASKS-archive.md. A section is a ## or ### heading; its text runs to the next
+  # heading of the same or a higher level.
+  done_list=$(awk -F' · ' -v OFS='\t' '/^### (T|B|R)[0-9]+ · / { id = $1; sub(/^### /, "", id); if ($3 ~ /^done/) print id, FILENAME }' \
+    TASKS.md $([ -f TASKS-archive.md ] && echo TASKS-archive.md) 2>/dev/null)
+  later=$(awk '
+    /^#+ / {
+      lvl = $0; sub(/[^#].*$/, "", lvl); lvl = length(lvl)
+      title = $0; sub(/^#+ +/, "", title); sub(/[ \t]+$/, "", title)
+      if (insec && lvl <= curlvl) insec = 0
+      if (lvl >= 2 && lvl <= 3 && title ~ /^(Later|Planned)/) { insec = 1; curlvl = lvl; sec = title }
+      next
+    }
+    insec {
+      s = " " $0 " "
+      while (match(s, /[^A-Za-z0-9][TBR][0-9]+[^0-9]/)) {
+        id = substr(s, RSTART, RLENGTH); gsub(/[^TBR0-9]/, "", id)
+        print sec "\t" id
+        s = substr(s, RSTART + RLENGTH - 1)
+      }
+    }
+  ' "$brief" | sort -u)
+  later_fail=0
+  while IFS=$'\t' read -r sec id; do
+    [ -n "$sec" ] || continue
+    where=$(awk -F'\t' -v id="$id" '$1 == id { print $2; exit }' <<< "$done_list")
+    if [ -n "$where" ]; then err "product/brief.md: \"$sec\" names $id, which is done in $where"; later_fail=1; fi
+  done <<< "$later"
+  [ "$later_fail" -eq 0 ] && echo "ok: Later and Planned brief sections name no done items"
+fi
+
+# 6. Build and links ------------------------------------------------------------------------
 mkdocs=""
 if command -v mkdocs >/dev/null 2>&1; then mkdocs="mkdocs"
 else

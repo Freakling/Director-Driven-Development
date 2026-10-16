@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T91 · B5
+**Next IDs:** T97 · B5
 
 ## Milestones
 | Milestone | Status |
@@ -216,6 +216,42 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Depends on: T84, T85
 - Touches: docs/skills/ui-design.md (new), docs/skills/index.md, mkdocs.yml, docs/frameworks/*.md, docs/concept/ownership.md
 - Done when: once all three frameworks have released /ui-design, the page describes the shared behaviour and what is unique per repo, matching the released procedures, in the skills index and nav (check) · `bash tools/check.sh` passes (check)
+- Brief: Scope › Common skills
+
+### T91 · The selftest checks the brief's own claims · done · S · agent
+- Depends on: -
+- Touches: selftest.sh
+- Done when: the selftest fails when a page count in the brief's Screens table differs from that section in `mkdocs.yml`'s nav (check) · it fails when a `Brief:` value in TASKS.md, or a brief heading named in `tools/`, isn't a heading in the brief (check) · it fails when a brief section whose heading starts with "Later" or "Planned" names an item that is done in TASKS.md or the archive (check) · `bash tools/check.sh` passes (check)
+- Brief: Scope › Built with App-Director
+
+### T92 · The align anchor: brief against reality · todo · S · agent
+- Depends on: -
+- Touches: product/anchors/align.md (new)
+- Done when: the anchor describes a "Brief against reality" step as `product/anchors/align.md` says: read the whole design doc, check every statement of state against the built product, done items and latest releases, and check every decision since the last `docs: align` commit instead of a spot check, with placeholders for each framework's design records (brief; PRD and ADRs; GDD) and where each looks for done items and releases (check) · `bash tools/check.sh` passes (check)
+- Brief: Scope › Common skills
+
+### T93 · App-Director: align checks the brief against reality · todo · S · agent
+- Depends on: T92
+- Touches: work/App-Director: framework/.app-director/procedures/align.md (one pull request; the director merges)
+- Done when: App-Director has a merged pull request whose align procedure adds a "Brief against reality" step as `product/anchors/align.md` says: read the whole design doc, check every statement of state against the built product, done items and latest releases, and check every decision since the last `docs: align` commit instead of a spot check, adapted to the brief, following AGENTS.md › Project rules for framework work (check)
+- Brief: Scope › Common skills
+
+### T94 · Godot-Director: align checks the GDD against reality · todo · S · agent
+- Depends on: T92
+- Touches: work/Godot-Director: framework/.godot-director/procedures/align.md (one pull request; the director merges)
+- Done when: Godot-Director has a merged pull request whose align procedure adds a "Brief against reality" step as `product/anchors/align.md` says: read the whole design doc, check every statement of state against the built product, done items and latest releases, and check every decision since the last `docs: align` commit instead of a spot check, adapted to the GDD, following AGENTS.md › Project rules for framework work (check)
+- Brief: Scope › Common skills
+
+### T95 · SaaSAllTheThings: align checks the PRD and ADRs against reality · todo · S · agent
+- Depends on: T92
+- Touches: work/SaaSAllTheThings: framework/.satt/procedures/align.md (one pull request; the director merges)
+- Done when: SaaSAllTheThings has a merged pull request whose align procedure adds a "Brief against reality" step as `product/anchors/align.md` says: read the whole design doc, check every statement of state against the built product, done items and latest releases, and check every decision since the last `docs: align` commit instead of a spot check, adapted to the PRD and the ADRs, following AGENTS.md › Project rules for framework work (check)
+- Brief: Scope › Common skills
+
+### T96 · The /align page describes the reality step · todo · XS · agent
+- Depends on: T93, T94, T95
+- Touches: docs/skills/align.md
+- Done when: once all three have released it, the /align page describes the brief-against-reality step (check) · `bash tools/check.sh` passes (check)
 - Brief: Scope › Common skills
 
 ### T87 · App-Director: the human-written product brief · todo · S · agent
