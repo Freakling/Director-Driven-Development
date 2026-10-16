@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T109 · B5
+**Next IDs:** T114 · B5
 
 ## Milestones
 | Milestone | Status |
@@ -258,6 +258,36 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Depends on: T104
 - Touches: docs/how-to/merging.md (new), docs/how-to/index.md, mkdocs.yml, product/brief.md (Screens page count)
 - Done when: a guide for the director covers reviewing a framework pull request, merging with "Squash and merge" (and why: the plugin directory's scanner), what "Merging is blocked" and conflicts mean and that the agent brings an open branch up to date after each merge, what happens after a merge (the item is done, a release is proposed, the release pull request, the docs follow), and that the agent never merges, describing only what's in place (check) · `bash tools/check.sh` passes (check)
+- Brief: Scope › How-to guides
+
+### T109 · The How-to section becomes a FAQ: structure and the day-to-day questions · todo · M · agent
+- Depends on: T107
+- Touches: docs/how-to/*.md, docs/how-to/index.md, mkdocs.yml, docs/skills/*.md, docs/frameworks/*.md, docs/concept/*.md, selftest.sh, product/framework-workflow.md, product/brief.md (Screens page count)
+- Done when: the nav has the three groups (Start here, Day to day, When things go wrong) with question titles and short stable addresses, the overview lists the questions by group, and the merging guide is moved into `product/framework-workflow.md` and off the site (check) · the six Day to day questions are written to the brief's page model (short answer, two ways with when to use which, steps with what the agent asks, caveats, ties), replacing the skill-named pages, accurate to the latest releases (check) · skill, framework and concept pages link the question that answers them, and the selftest checks that every skill page links a How-to page (check) · placeholders stand in for the Start here and When things go wrong pages until T110 and T111 land, or the groups are added by those items; either way `bash tools/check.sh` passes (check)
+- Brief: Scope › How-to guides
+
+### T110 · Start here: Where do I start, for Godot-Director · todo · M · agent
+- Depends on: T109
+- Touches: docs/how-to/ (the Start here pages), docs/how-to/index.md, mkdocs.yml, product/brief.md (Screens page count)
+- Done when: "Where do I start?" walks a new director through building a game with Godot-Director: what to have installed, installing the framework, onboarding and every question it asks with how to answer, the first task, and where to go next, accurate to the latest release (check) · "I already have a project. Can I use this?" covers onboarding an existing game, accurate to the latest release (check) · `bash tools/check.sh` passes (check)
+- Brief: Scope › How-to guides
+
+### T111 · When things go wrong: the four questions · todo · M · agent
+- Depends on: T109
+- Touches: docs/how-to/ (the When things go wrong pages), docs/how-to/index.md, mkdocs.yml, product/brief.md (Screens page count)
+- Done when: "The system was not built as I intended" explains the drift reset step by step with a worked example drawn from a framework's example project, and says when `/align` is enough (check) · the records and the code disagreeing, a long task list, and cost each have their question page to the brief's page model, accurate to the latest releases (check) · `bash tools/check.sh` passes (check)
+- Brief: Scope › How-to guides
+
+### T112 · Where do I start, for App-Director · todo · S · agent
+- Depends on: T110
+- Touches: docs/how-to/ (the Start here pages), mkdocs.yml, product/brief.md (Screens page count)
+- Done when: the Start here walkthrough has an App-Director version (building an app), accurate to the latest release, reached from the overview and the App-Director page (check) · `bash tools/check.sh` passes (check)
+- Brief: Scope › How-to guides
+
+### T113 · Where do I start, for SaaSAllTheThings · todo · S · agent
+- Depends on: T110
+- Touches: docs/how-to/ (the Start here pages), mkdocs.yml, product/brief.md (Screens page count)
+- Done when: the Start here walkthrough has a SaaSAllTheThings version (building a SaaS, including the assessment of an existing app), accurate to the latest release, reached from the overview and the SaaSAllTheThings page (check) · `bash tools/check.sh` passes (check)
 - Brief: Scope › How-to guides
 
 ### T84 · App-Director: /ui-design with Playwright capture · in-progress 2026-10-16 · L · agent
