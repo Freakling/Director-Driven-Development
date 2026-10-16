@@ -156,7 +156,8 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: the home page's role cards include the researcher, matching the roles page (it informs, the director decides) and linking to it (check) · `bash tools/check.sh` passes (check)
 - Brief: Pitch
 
-### T31 · Godot-Director: CI export and CD release · todo · M · agent
+### T31 · Godot-Director: CI export and CD release · in-progress 2026-10-16 · M · agent
+- PRs: Godot-Director #12 (open)
 - Depends on: T19
 - Touches: work/Godot-Director (one pull request; the director merges); docs/frameworks/godot-director.md and a /release skill page once released
 - Done when: Godot-Director has a merged pull request with CI that runs the export on every change, and CD that releases builds to a platform's UAT branch with optional promotion to production, following AGENTS.md › Project rules for framework work (check) · once released there, the Godot-Director page documents them and /release gets its own skill page (check)

@@ -68,6 +68,10 @@ Changes the director has decided for the framework repos, carried out through th
 - **Godot-Director gets export and release, in two stages:**
   1. **Onboarding and `/export`.** Onboarding guides the director through the export settings Godot doesn't already have, such as the target platforms, and asks where exports should run: on the director's machine, in a build container (local or in a cloud), or on a hosted service such as GitHub Actions, with guidance to set it up. The director can skip this step. Skipping adds an open question to the GDD (which platforms to export to, and where exports run) and an item to set up exports that depends on it. The director runs the step later with `/design Q<n>`, and `/next-task` builds the setup; changing it later is a design session too. The skill is `/export`, following Godot's own term for producing a game's binaries.
   2. **CI and CD.** CI runs the Godot export on every change; CD releases builds to a platform's UAT branch and, if the director wants, promotes them to production.
+     - **Targets:** the director supplies an upload command per export preset, one for the UAT branch or channel and one for production; Godot-Director builds in no store knowledge.
+     - **CI:** a GitHub Actions workflow ships with the framework, while `/export` and `/release` stay plain commands any CI service can run.
+     - **Promotion:** `/release` promotes to production only when the director asks and the check passes; the shipped workflow also has an optional protected production job the director approves on GitHub.
+     - **Credentials:** platform credentials live only in CI secrets. Onboarding lists the names to set; they never enter the repo, `export_presets.cfg` or the chat.
 
 ## Core Flows
 
