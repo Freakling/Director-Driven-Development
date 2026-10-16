@@ -4,7 +4,7 @@
 
 > Set the model for each task size with `/refresh-model-sizing`, then use the habits below. Most of the savings are built in.
 
-All three frameworks ship `/refresh-model-sizing`: Godot-Director, App-Director and SaaSAllTheThings. Nothing to install: run it in Claude Code, in the project where the framework is installed.
+All three frameworks ship `/refresh-model-sizing`: App-Director, Godot-Director and SaaSAllTheThings. Nothing to install: run it in Claude Code, in the project where the framework is installed.
 
 ## Short answer
 
@@ -49,14 +49,14 @@ Saying it and typing the command run the same procedure. The explicit command pa
 - **Not every assistant qualifies.** Without subagents or per-call models, sizing is skipped and the agent writes nothing. Builds simply use the session's model. A size without an entry also uses the session's model, so keep the main session on a model you are happy to pay for.
 - **A run keeps reports.** A session that works through a queue holds one short report per task, which is small but not zero. Clear after a batch, not only after a task.
 - **Framework differences.**
-    - Godot-Director: if sizing is off, the agent asks before turning it on. In an assistant that can't do both things, it suggests a note such as `Model sizing: not supported` in Project rules, so later sessions don't ask again.
     - App-Director: the new block replaces any existing `Model sizing` lines, and turns sizing on if it was off.
+    - Godot-Director: if sizing is off, the agent asks before turning it on. In an assistant that can't do both things, it suggests a note such as `Model sizing: not supported` in Project rules, so later sessions don't ask again.
     - SaaSAllTheThings: if a block with five entries already exists, the agent shows the values and asks whether to update them or leave them. To turn sizing off, ask for it: the agent writes `Model sizing: off` and removes the size entries.
 
 ## Related
 
 - The [`/refresh-model-sizing` skill page](../skills/refresh-model-sizing.md), and the concepts [Task and model sizing](../concept/sizing.md), [Built-in cost savings](../concept/cost-built-in.md) and [Cost tuning for developers](../concept/cost-tuning.md).
 - Building in runs or one task at a time: [How do I get things built?](build.md)
-- The procedures: [Godot-Director](https://github.com/Freakling/Godot-Director/tree/v3.13.0/framework/.godot-director/procedures/refresh-model-sizing.md), [App-Director](https://github.com/Freakling/App-Director/tree/v1.7.0/framework/.app-director/procedures/refresh-model-sizing.md) and [SaaSAllTheThings](https://github.com/Freakling/SaaSAllTheThings/tree/v0.9.0/framework/.satt/procedures/refresh-model-sizing.md).
+- The procedures: [App-Director](https://github.com/Freakling/App-Director/tree/v1.7.0/framework/.app-director/procedures/refresh-model-sizing.md), [Godot-Director](https://github.com/Freakling/Godot-Director/tree/v3.13.0/framework/.godot-director/procedures/refresh-model-sizing.md) and [SaaSAllTheThings](https://github.com/Freakling/SaaSAllTheThings/tree/v0.9.0/framework/.satt/procedures/refresh-model-sizing.md).
 
 <div class="takeaway"><span>Refresh the map when the models change, and the cost of each task follows its size.</span><span class="url"><a href="index.md">All questions</a></span></div>

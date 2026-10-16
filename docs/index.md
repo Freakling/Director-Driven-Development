@@ -91,12 +91,12 @@ The same loop runs all three. Only the rules the check enforces change.
 
 <div class="ddd-cards" markdown>
 <div class="ddd-card" markdown>
-### [Godot-Director](frameworks/godot-director.md)
-Games in Godot 4. The check fails when a screen script holds game rules.
-</div>
-<div class="ddd-card" markdown>
 ### [App-Director](frameworks/app-director.md)
 Small web, mobile and desktop apps, on TypeScript, Flutter or Python.
+</div>
+<div class="ddd-card" markdown>
+### [Godot-Director](frameworks/godot-director.md)
+Games in Godot 4. The check fails when a screen script holds game rules.
 </div>
 <div class="ddd-card" markdown>
 ### [SaaSAllTheThings](frameworks/saasallthethings.md)
@@ -114,7 +114,7 @@ This site is built with [App-Director](frameworks/app-director.md). Every change
 
 - The idea behind it: [Director-Driven Development](https://saemundsson.se/2026/10/07/director-driven-development/) on saemundsson.se.
 - A worked example: [Build a B2B SaaS on Azure with Director-Driven Development](https://saemundsson.se/2026/10/09/build-a-b2b-saas-on-azure-with-director-driven-development/).
-- Answers to the questions a director asks, in the order they come up, such as where do I start with a [game](how-to/start.md), an [app](how-to/start-app.md) or a [SaaS](how-to/start-saas.md): the [How-to](how-to/index.md) section.
+- Answers to the questions a director asks, in the order they come up, such as where do I start with an [app](how-to/start.md), a [game](how-to/start-game.md) or a [SaaS](how-to/start-saas.md): the [How-to](how-to/index.md) section.
 - Where the tokens go, and how the frameworks keep the bill down: [Built-in cost savings](concept/cost-built-in.md) and [Cost tuning for developers](concept/cost-tuning.md).
 
 <div class="takeaway"><span>The agent proposes. The director decides.</span><span class="url">saemundsson.se</span></div>

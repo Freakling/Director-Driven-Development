@@ -4,7 +4,7 @@
 
 > Ask one question. A read-only researcher looks into it in a fresh context and saves a dated note with options, trade-offs, sources and a recommendation. It informs; you decide.
 
-All three frameworks ship `/research`: Godot-Director, App-Director and SaaSAllTheThings. Nothing to install: run it in Claude Code, in the project where the framework is installed.
+All three frameworks ship `/research`: App-Director, Godot-Director and SaaSAllTheThings. Nothing to install: run it in Claude Code, in the project where the framework is installed.
 
 ## Two ways to do it
 
@@ -32,13 +32,13 @@ Notes are named `YYYY-MM-DD-<slug>.md`. They go in `design/research/` in Godot-D
 - **Sources have tiers.** Tier 1 is your own records and binding requirements, and tier 5 is search previews and unverified posts. Lower tiers help find evidence, but they are never the only basis for a high-impact recommendation.
 - **A larger question costs more.** The item has a size like any task, and the size picks the model. A note that says the question needs more than its size allows is rerun once on the next larger model.
 - **Framework differences.**
-    - Godot-Director: comparable games count as design references, with Low or Medium confidence, and each option names the Design Pillar it serves or strains.
     - App-Director: its domain file covers stacks and libraries, licences, and app-store and platform requirements.
+    - Godot-Director: comparable games count as design references, with Low or Medium confidence, and each option names the Design Pillar it serves or strains.
     - SaaSAllTheThings: its domain file covers Azure, the reference architecture and your security framework, and each requirement is traced to its control. For an architecture question, the note ends with a summary ready for an ADR, which `/architect` then uses.
 
 ## Related
 
 - The [`/research` skill page](../skills/research.md), and the concept [Design calls](../concept/design-calls.md).
-- The procedures: [Godot-Director](https://github.com/Freakling/Godot-Director/tree/v3.13.0/framework/.godot-director/procedures/research.md), [App-Director](https://github.com/Freakling/App-Director/tree/v1.7.0/framework/.app-director/procedures/research.md) and [SaaSAllTheThings](https://github.com/Freakling/SaaSAllTheThings/tree/v0.9.0/framework/.satt/procedures/research.md).
+- The procedures: [App-Director](https://github.com/Freakling/App-Director/tree/v1.7.0/framework/.app-director/procedures/research.md), [Godot-Director](https://github.com/Freakling/Godot-Director/tree/v3.13.0/framework/.godot-director/procedures/research.md) and [SaaSAllTheThings](https://github.com/Freakling/SaaSAllTheThings/tree/v0.9.0/framework/.satt/procedures/research.md).
 
 <div class="takeaway"><span>Ask one question, read the note from the top, then make the call.</span><span class="url"><a href="index.md">All questions</a></span></div>

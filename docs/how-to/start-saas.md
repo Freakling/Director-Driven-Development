@@ -4,7 +4,7 @@
 
 > Install SaaSAllTheThings in the app's repository, restart Claude Code, and let onboarding settle the stack and interview you about the product. It ends with one commit for you to approve and the first stages of the roadmap in `TASKS.md`. Then say "Do the next task".
 
-This page is for someone with a B2B SaaS idea and no code yet. [SaaSAllTheThings](../frameworks/saasallthethings.md) builds a multi-tenant SaaS on Azure: you own the product, and the framework owns the architecture and enforces it. For a game, see [Where do I start with a game?](start.md). For a smaller web, mobile or desktop app, see [Where do I start with an app?](start-app.md) If you already have a proof of concept or a running app, go to [I already have a project. Can I use this?](existing.md#an-existing-saas-or-proof-of-concept-saasallthethings): the path starts with an assessment of what you have.
+This page is for someone with a B2B SaaS idea and no code yet. [SaaSAllTheThings](../frameworks/saasallthethings.md) builds a multi-tenant SaaS on Azure: you own the product, and the framework owns the architecture and enforces it. For a game, see [Where do I start with a game?](start-game.md). For a smaller web, mobile or desktop app, see [Where do I start with an app?](start.md) If you already have a proof of concept or a running app, go to [I already have a project. Can I use this?](existing.md#an-existing-saas-or-proof-of-concept-saasallthethings): the path starts with an assessment of what you have.
 
 ## Short answer
 

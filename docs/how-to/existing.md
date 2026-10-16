@@ -4,7 +4,98 @@
 
 > Yes. Install the framework into the project you have. Onboarding reads it, fills in the records from what it finds, marks every guess for you to confirm, and ends with one commit for you to approve. Your own files are kept.
 
-Pick the section for what you have: [a game](#an-existing-game-godot-director) (Godot-Director), [an app](#an-existing-app-app-director) (App-Director), or [a SaaS or proof of concept](#an-existing-saas-or-proof-of-concept-saasallthethings) (SaaSAllTheThings, which starts with an assessment). Starting from an idea instead? See [Where do I start with a game?](start.md), [with an app?](start-app.md) or [with a SaaS?](start-saas.md)
+Pick the section for what you have: [an app](#an-existing-app-app-director) (App-Director), [a game](#an-existing-game-godot-director) (Godot-Director), or [a SaaS or proof of concept](#an-existing-saas-or-proof-of-concept-saasallthethings) (SaaSAllTheThings, which starts with an assessment). Starting from an idea instead? See [Where do I start with an app?](start.md), [with a game?](start-game.md) or [with a SaaS?](start-saas.md)
+
+## An existing app (App-Director)
+
+A web, mobile or desktop app that already has code, for [App-Director](../frameworks/app-director.md). Install App-Director into the app you have. Onboarding reads the code, writes the product brief and the architecture table from what it finds, marks every guess for you to confirm, and ends with one commit for you to approve.
+
+### Short answer
+
+- **Install it the way you would into a new app.** The paths and the commands are in the [install section](../frameworks/app-director.md#install), and [Where do I start with an app?](start.md#install-the-framework) compares them.
+- **Onboarding detects the mode.** Source code and config files without App-Director mean an existing app. You confirm what it found.
+- **It reads, it does not interview.** The agent scans the code, fills in the records from what is there, and asks you only about what the code cannot tell.
+- **It overwrites nothing of yours.** A file you already have is kept and brought into the framework's shape; your content stays.
+- **A failing check is information.** Existing apps often fail the check at first. The failures become the first items in your queue.
+
+### What to have ready
+
+- git, bash (Git Bash on Windows), gitleaks 8.18.0 or newer except 8.19.0, and the tools of your stack, as for a new app. The full list is in [Where do I start with an app?](start.md#what-to-have-installed).
+- **A clean git tree.** Commit or stash your changes first; onboarding stops until the tree is clean. Then the install is one reviewable diff. For a repository with files and no commits, the agent commits them as they are before installing.
+
+### Steps: what onboarding does
+
+#### 1. Confirm the mode
+
+The agent tells you the mode it detected and asks you to confirm. An existing app has source code and config files and no App-Director yet.
+
+#### 2. Files are installed, yours are kept
+
+The installer copies the framework's files and reports what it found:
+
+- **Files you already have** (`AGENTS.md`, `CLAUDE.md`, `TASKS.md`) are kept. The agent then brings each into the framework's shape: `CLAUDE.md` gets the line `@AGENTS.md` at the top, `AGENTS.md` keeps its content and gains the missing sections and a pointer to the rules, and `TASKS.md` converts to the framework's format with its content intact.
+- **A framework file your project had its own version of** is left alone, and the framework's version is written next to it as `<file>.adir-new`. The agent shows you the difference and asks which to keep, or helps you merge. Each `.adir-new` file is deleted once resolved.
+
+#### 3. The toolchain, a secrets scan and the check
+
+The agent runs `bash tools/setup-clone.sh`, which checks the tool for your stack and the gitleaks version. For an existing app it also scans the whole commit history once, with `gitleaks git --redact .`, and reports every finding: the rule, the file and the commit. Any secret that was ever committed counts as compromised and must be rotated, even if the commit was later removed. Rotating it is yours to do. The agent does not rotate credentials and does not rewrite history.
+
+It then runs `bash tools/check.sh` once and keeps the result. The git pre-commit hook is installed at the very end, so the install commit is not blocked.
+
+#### 4. The scan (read only)
+
+The agent changes nothing while it reads:
+
+- The layout: which folders hold UI, logic, data and tests, with a file count per folder.
+- The entry points: the main file, the router or the manifest.
+- Existing tests: which framework, and where the files live.
+- Existing docs: README, design documents and TODO lists.
+- `TODO`, `FIXME` and `HACK` comments, with file and line.
+- UI files that import from storage or API code directly.
+
+#### 5. What it writes, and what it marks for you
+
+- **Architecture.** One row in `AGENTS.md` per significant system. "Owns" comes from public exports and module boundaries, not from guesses.
+- **The brief.** Each section of `product/brief.md` is filled from your code and any docs. Anything inferred is marked `(inferred, please confirm)`, and anything unknown becomes an open question (`Q1`, `Q2` and so on). This is where you spend the most attention: read the marked lines and correct them.
+- **The queue.** TODOs, known bugs and your priorities become items in `TASKS.md`.
+- **Check failures become the first items.** A crash or a data-loss bug is high severity, so it is built first.
+- **UI files that break the layer rule.** The check requires that screens never import from the data layer. Each file that does gets its own medium-size item, "Decouple: <file>", and the check fails on it until the item is done.
+
+#### 6. The stack, project facts and settings
+
+The agent asks which stack the app uses (TypeScript, Flutter, Python, or none or other) and records it in `tools/check.cfg`. It fills `AGENTS.md` (name, pitch, stack, platforms, storage, API) and the Layout table from your real folders, and lists the UI and data folders in `tools/check.cfg`. It adds third-party and generated folders such as `node_modules` and `build` to the skip list.
+
+#### 7. The questions it asks you
+
+Beyond confirming the inferred lines, onboarding asks the same questions as for a new app, minus the product interview:
+
+- **Your own product brief.** Onboarding offers `product/director-brief.md`, a template for describing the app in your own words, as an addition to the scan. If you fill it, the agent reads it with the code and your existing documents, builds the first assessment from all three, and marks what it took from it and what it inferred. Where they disagree, it says so and you decide. It never edits your brief. See [Where do I start with an app?](start.md#2-the-product-interview).
+- **Ownership.** For each work area (UI code, logic, backend, database schema, visual design, copy, testing, infrastructure), whether you own it. An area you own gets labelled placeholders instead of generated content. See [Where do I start with an app?](start.md#4-who-owns-what).
+- **A protected workspace** (`director/`), as for a new app.
+- **Model sizing and reviews.** Sizing is recommended on, with a mapping you can change.
+- **The acceptance template.** Its sections come from the core flows in the brief. If the flows are not clear from your code, the template keeps its placeholders and an item fills them in later.
+
+#### 8. Approve one commit
+
+The agent runs the check again, walks through the consistency checks of `/align`, and lists every file it created, changed or deleted. Nothing is committed until you say yes. The commit is `chore: install App Director <version>`.
+
+If the check passes, the agent installs the pre-commit hook. If it fails, the hook stays off, and an item "Install the pre-commit hook once the check passes" is added to your queue.
+
+### After the commit
+
+1. **Restart Claude Code,** so the commands, hooks and permissions load.
+2. **Read the marked lines.** Confirm or correct everything marked `(inferred, please confirm)` in the brief, and answer the open questions in a design session. See [How do I decide what gets built, or change how something works?](decide.md)
+3. **Order the queue.** The items from failures and TODOs are in the order the agent found them; the file order is your priority, so move items up or down.
+4. **Say "Do the next task".** If the check failed at install, the first items fix those failures, crashes first. [How do I get things built?](build.md) covers the rest.
+
+### What can go wrong
+
+- **The tree is not clean.** Commit or stash first.
+- **The check fails right away.** That is expected for some apps. The failures are filed as items, and the hook waits until they pass.
+- **Many screens import from the data layer.** Each gets a "Decouple" item. They are cleared one at a time.
+- **A secret in the history.** Rotate it yourself; the agent reports it and does not touch the history.
+- **Features built before the framework** have no acceptance outcomes. A full round of the check by hand covers them: see [How do I check that what was built works?](check.md)
+- **Every new clone** of the app needs `bash tools/setup-clone.sh` once.
 
 ## An existing game (Godot-Director)
 
@@ -12,7 +103,7 @@ A Godot game that already has code, for [Godot-Director](../frameworks/godot-dir
 
 ### Short answer
 
-- **Install it the way you would into a new game.** The paths and the commands are in the [install section](../frameworks/godot-director.md#install), and [Where do I start?](start.md#install-the-framework) compares them.
+- **Install it the way you would into a new game.** The paths and the commands are in the [install section](../frameworks/godot-director.md#install), and [Where do I start with a game?](start-game.md#install-the-framework) compares them.
 - **Onboarding detects the mode.** A `project.godot` with scripts and no Godot-Director means an existing game. You confirm what it found.
 - **It reads, it does not interview.** The agent scans the project, writes the records from what is there, and asks you only about what the code cannot tell.
 - **It overwrites nothing of yours.** A file you already have is kept and brought into the framework's shape; your content stays.
@@ -20,7 +111,7 @@ A Godot game that already has code, for [Godot-Director](../frameworks/godot-dir
 
 ### What to have ready
 
-- Godot 4.3 or newer, git and bash (Git Bash on Windows), as for a new game. The full list is in [Where do I start?](start.md#what-to-have-installed).
+- Godot 4.3 or newer, git and bash (Git Bash on Windows), as for a new game. The full list is in [Where do I start with a game?](start-game.md#what-to-have-installed).
 - **A clean git tree.** Commit or stash your changes first; onboarding stops until the tree is clean. Then the install is one reviewable diff.
 - **The Godot editor closed** for this project during setup, because it rewrites `project.godot`.
 
@@ -75,9 +166,9 @@ The agent fills `AGENTS.md` (name, pitch, Godot version, platforms, rendering) a
 
 Beyond confirming the inferred lines, onboarding asks the same questions as for a new game, minus the design interview:
 
-- **Your own design document.** Onboarding offers `design/director-gdd.md`, a template for describing the game in your own words, as an addition to the scan. If you fill it, the agent reads it with the code and your existing documents, builds the first assessment from all three, and marks what it took from it and what it inferred. Where they disagree, it says so and you decide. It never edits your document. See [Where do I start?](start.md#2-the-design-interview).
-- **Exports and release.** Platforms, where exports run, and the upload commands. An existing `export_presets.cfg` and the platforms in your GDD are used as the answers, so you are asked only for what is missing. You can skip both steps; a skip adds an open question and a setup item. Details are in [Where do I start?](start.md#5-exports-and-release-you-can-skip-both).
-- **Ownership.** For each work area (code, UI, art, audio, scenes, tunable values, text), whether you own it. An area you own gets labelled placeholders instead of generated content. See [Where do I start?](start.md#3-who-owns-what).
+- **Your own design document.** Onboarding offers `design/director-gdd.md`, a template for describing the game in your own words, as an addition to the scan. If you fill it, the agent reads it with the code and your existing documents, builds the first assessment from all three, and marks what it took from it and what it inferred. Where they disagree, it says so and you decide. It never edits your document. See [Where do I start with a game?](start-game.md#2-the-design-interview).
+- **Exports and release.** Platforms, where exports run, and the upload commands. An existing `export_presets.cfg` and the platforms in your GDD are used as the answers, so you are asked only for what is missing. You can skip both steps; a skip adds an open question and a setup item. Details are in [Where do I start with a game?](start-game.md#5-exports-and-release-you-can-skip-both).
+- **Ownership.** For each work area (code, UI, art, audio, scenes, tunable values, text), whether you own it. An area you own gets labelled placeholders instead of generated content. See [Where do I start with a game?](start-game.md#3-who-owns-what).
 - **Screens by drawing, and a protected workspace** (`director/`), as for a new game.
 - **Model sizing and reviews.** Sizing is recommended on, with a mapping you can change.
 - **The playtest template.** Its sections come from the loops in your GDD › Core Loop. If the loops are not clear from your design, the template keeps its placeholders and an item fills them in later.
@@ -104,97 +195,6 @@ If the check passes, the agent installs the pre-commit hook. If it fails, the ho
 - **Many untyped declarations.** The typing warning is lowered for now, with an item to raise it.
 - **Features built before the framework** have no acceptance outcomes. A full round of the check by hand covers them: see [How do I check that what was built works?](check.md)
 - **Every new clone** of the game needs `bash tools/setup-clone.sh` once.
-
-## An existing app (App-Director)
-
-A web, mobile or desktop app that already has code, for [App-Director](../frameworks/app-director.md). Install App-Director into the app you have. Onboarding reads the code, writes the product brief and the architecture table from what it finds, marks every guess for you to confirm, and ends with one commit for you to approve.
-
-### Short answer
-
-- **Install it the way you would into a new app.** The paths and the commands are in the [install section](../frameworks/app-director.md#install), and [Where do I start with an app?](start-app.md#install-the-framework) compares them.
-- **Onboarding detects the mode.** Source code and config files without App-Director mean an existing app. You confirm what it found.
-- **It reads, it does not interview.** The agent scans the code, fills in the records from what is there, and asks you only about what the code cannot tell.
-- **It overwrites nothing of yours.** A file you already have is kept and brought into the framework's shape; your content stays.
-- **A failing check is information.** Existing apps often fail the check at first. The failures become the first items in your queue.
-
-### What to have ready
-
-- git, bash (Git Bash on Windows), gitleaks 8.18.0 or newer except 8.19.0, and the tools of your stack, as for a new app. The full list is in [Where do I start with an app?](start-app.md#what-to-have-installed).
-- **A clean git tree.** Commit or stash your changes first; onboarding stops until the tree is clean. Then the install is one reviewable diff. For a repository with files and no commits, the agent commits them as they are before installing.
-
-### Steps: what onboarding does
-
-#### 1. Confirm the mode
-
-The agent tells you the mode it detected and asks you to confirm. An existing app has source code and config files and no App-Director yet.
-
-#### 2. Files are installed, yours are kept
-
-The installer copies the framework's files and reports what it found:
-
-- **Files you already have** (`AGENTS.md`, `CLAUDE.md`, `TASKS.md`) are kept. The agent then brings each into the framework's shape: `CLAUDE.md` gets the line `@AGENTS.md` at the top, `AGENTS.md` keeps its content and gains the missing sections and a pointer to the rules, and `TASKS.md` converts to the framework's format with its content intact.
-- **A framework file your project had its own version of** is left alone, and the framework's version is written next to it as `<file>.adir-new`. The agent shows you the difference and asks which to keep, or helps you merge. Each `.adir-new` file is deleted once resolved.
-
-#### 3. The toolchain, a secrets scan and the check
-
-The agent runs `bash tools/setup-clone.sh`, which checks the tool for your stack and the gitleaks version. For an existing app it also scans the whole commit history once, with `gitleaks git --redact .`, and reports every finding: the rule, the file and the commit. Any secret that was ever committed counts as compromised and must be rotated, even if the commit was later removed. Rotating it is yours to do. The agent does not rotate credentials and does not rewrite history.
-
-It then runs `bash tools/check.sh` once and keeps the result. The git pre-commit hook is installed at the very end, so the install commit is not blocked.
-
-#### 4. The scan (read only)
-
-The agent changes nothing while it reads:
-
-- The layout: which folders hold UI, logic, data and tests, with a file count per folder.
-- The entry points: the main file, the router or the manifest.
-- Existing tests: which framework, and where the files live.
-- Existing docs: README, design documents and TODO lists.
-- `TODO`, `FIXME` and `HACK` comments, with file and line.
-- UI files that import from storage or API code directly.
-
-#### 5. What it writes, and what it marks for you
-
-- **Architecture.** One row in `AGENTS.md` per significant system. "Owns" comes from public exports and module boundaries, not from guesses.
-- **The brief.** Each section of `product/brief.md` is filled from your code and any docs. Anything inferred is marked `(inferred, please confirm)`, and anything unknown becomes an open question (`Q1`, `Q2` and so on). This is where you spend the most attention: read the marked lines and correct them.
-- **The queue.** TODOs, known bugs and your priorities become items in `TASKS.md`.
-- **Check failures become the first items.** A crash or a data-loss bug is high severity, so it is built first.
-- **UI files that break the layer rule.** The check requires that screens never import from the data layer. Each file that does gets its own medium-size item, "Decouple: <file>", and the check fails on it until the item is done.
-
-#### 6. The stack, project facts and settings
-
-The agent asks which stack the app uses (TypeScript, Flutter, Python, or none or other) and records it in `tools/check.cfg`. It fills `AGENTS.md` (name, pitch, stack, platforms, storage, API) and the Layout table from your real folders, and lists the UI and data folders in `tools/check.cfg`. It adds third-party and generated folders such as `node_modules` and `build` to the skip list.
-
-#### 7. The questions it asks you
-
-Beyond confirming the inferred lines, onboarding asks the same questions as for a new app, minus the product interview:
-
-- **Your own product brief.** Onboarding offers `product/director-brief.md`, a template for describing the app in your own words, as an addition to the scan. If you fill it, the agent reads it with the code and your existing documents, builds the first assessment from all three, and marks what it took from it and what it inferred. Where they disagree, it says so and you decide. It never edits your brief. See [Where do I start with an app?](start-app.md#2-the-product-interview).
-- **Ownership.** For each work area (UI code, logic, backend, database schema, visual design, copy, testing, infrastructure), whether you own it. An area you own gets labelled placeholders instead of generated content. See [Where do I start with an app?](start-app.md#4-who-owns-what).
-- **A protected workspace** (`director/`), as for a new app.
-- **Model sizing and reviews.** Sizing is recommended on, with a mapping you can change.
-- **The acceptance template.** Its sections come from the core flows in the brief. If the flows are not clear from your code, the template keeps its placeholders and an item fills them in later.
-
-#### 8. Approve one commit
-
-The agent runs the check again, walks through the consistency checks of `/align`, and lists every file it created, changed or deleted. Nothing is committed until you say yes. The commit is `chore: install App Director <version>`.
-
-If the check passes, the agent installs the pre-commit hook. If it fails, the hook stays off, and an item "Install the pre-commit hook once the check passes" is added to your queue.
-
-### After the commit
-
-1. **Restart Claude Code,** so the commands, hooks and permissions load.
-2. **Read the marked lines.** Confirm or correct everything marked `(inferred, please confirm)` in the brief, and answer the open questions in a design session. See [How do I decide what gets built, or change how something works?](decide.md)
-3. **Order the queue.** The items from failures and TODOs are in the order the agent found them; the file order is your priority, so move items up or down.
-4. **Say "Do the next task".** If the check failed at install, the first items fix those failures, crashes first. [How do I get things built?](build.md) covers the rest.
-
-### What can go wrong
-
-- **The tree is not clean.** Commit or stash first.
-- **The check fails right away.** That is expected for some apps. The failures are filed as items, and the hook waits until they pass.
-- **Many screens import from the data layer.** Each gets a "Decouple" item. They are cleared one at a time.
-- **A secret in the history.** Rotate it yourself; the agent reports it and does not touch the history.
-- **Features built before the framework** have no acceptance outcomes. A full round of the check by hand covers them: see [How do I check that what was built works?](check.md)
-- **Every new clone** of the app needs `bash tools/setup-clone.sh` once.
 
 ## An existing SaaS or proof of concept (SaaSAllTheThings)
 
@@ -314,8 +314,8 @@ If the check passes, the agent installs the pre-commit hook. If it fails or cann
 
 ## Related
 
-- The framework pages: [Godot-Director](../frameworks/godot-director.md), [App-Director](../frameworks/app-director.md) and [SaaSAllTheThings](../frameworks/saasallthethings.md).
+- The framework pages: [App-Director](../frameworks/app-director.md), [Godot-Director](../frameworks/godot-director.md) and [SaaSAllTheThings](../frameworks/saasallthethings.md).
 - The skill pages [`/align`](../skills/align.md) and [Acceptance check](../skills/acceptance.md), and the concept [Align and drift reset](../concept/drift.md).
-- The onboarding steps in full: [Godot-Director](https://github.com/Freakling/Godot-Director/blob/v3.13.0/ONBOARDING.md), [App-Director](https://github.com/Freakling/App-Director/blob/v1.7.0/ONBOARDING.md) and [SaaSAllTheThings](https://github.com/Freakling/SaaSAllTheThings/blob/v0.9.0/ONBOARDING.md).
+- The onboarding steps in full: [App-Director](https://github.com/Freakling/App-Director/blob/v1.7.0/ONBOARDING.md), [Godot-Director](https://github.com/Freakling/Godot-Director/blob/v3.13.0/ONBOARDING.md) and [SaaSAllTheThings](https://github.com/Freakling/SaaSAllTheThings/blob/v0.9.0/ONBOARDING.md).
 
 <div class="takeaway"><span>Install into what you have. Onboarding reads it first and marks every guess.</span><span class="url"><a href="index.md">All questions</a></span></div>

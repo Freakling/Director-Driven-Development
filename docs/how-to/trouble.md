@@ -18,15 +18,15 @@ Run the command for your framework and your install path, in the project's folde
 
 | Framework | Skill (`npx skills add`) | Claude Code plugin | Manual |
 |---|---|---|---|
-| Godot-Director | `npx skills add Freakling/Godot-Director` again, then ask for it (`/godot-director` in Claude Code) | `/plugin marketplace update godot-director`, then `/plugin update godot-director@godot-director`. Start a new session in the game and run `/godot-director:godot-director` again | Put the new Godot-Director folder in the game, and ask for `ONBOARDING.md` again |
 | App-Director | `npx skills add Freakling/App-Director` again, then ask your assistant to set up App Director | The same two plugin commands with App-Director's names: `/plugin marketplace update app-director`, then `/plugin update app-director@app-director`. Start a new session in the app and run `/app-director:app-director` again | Put the new App-Director folder next to the app, and ask for `ONBOARDING.md` again |
+| Godot-Director | `npx skills add Freakling/Godot-Director` again, then ask for it (`/godot-director` in Claude Code) | `/plugin marketplace update godot-director`, then `/plugin update godot-director@godot-director`. Start a new session in the game and run `/godot-director:godot-director` again | Put the new Godot-Director folder in the game, and ask for `ONBOARDING.md` again |
 | SaaSAllTheThings | `npx skills add Freakling/SaaSAllTheThings` again, then ask for the upgrade | `/plugin marketplace update saasallthethings`, then `/plugin update saasallthethings@saasallthethings`. Start a new session in the app and run `/saasallthethings:saas-all-the-things` again | Put the new SaaSAllTheThings folder in the app, and ask for `ONBOARDING.md` again |
 
 Each of these takes you to the agent, which sees the install already there and runs onboarding in its upgrade mode. It tells you what changes and asks before it touches anything of yours. Only the framework's own files are replaced; the files that are yours are kept.
 
 **Restart Claude Code afterwards.** A new skill, hook or permission loads only when a session starts, so a session that was open during the update still has the old ones.
 
-The install paths themselves are on each framework page: [Godot-Director](../frameworks/godot-director.md#install), [App-Director](../frameworks/app-director.md#install) and [SaaSAllTheThings](../frameworks/saasallthethings.md#install).
+The install paths themselves are on each framework page: [App-Director](../frameworks/app-director.md#install), [Godot-Director](../frameworks/godot-director.md#install) and [SaaSAllTheThings](../frameworks/saasallthethings.md#install).
 
 ## Common causes
 
@@ -34,7 +34,7 @@ The install paths themselves are on each framework page: [Godot-Director](../fra
 
 - **The session was open during the install or update.** Restart Claude Code.
 - **Claude Code is open in another folder.** The commands live in the project's own `.claude/` folder. Open Claude Code in the project's root folder, the one that holds `AGENTS.md`.
-- **The framework isn't installed in this project.** Install it first: [Where do I start with a game?](start.md), [with an app?](start-app.md) or [with a SaaS?](start-saas.md) for a new project, [I already have a project. Can I use this?](existing.md) for an existing one.
+- **The framework isn't installed in this project.** Install it first: [Where do I start with an app?](start.md), [with a game?](start-game.md) or [with a SaaS?](start-saas.md) for a new project, [I already have a project. Can I use this?](existing.md) for an existing one.
 - **It's an older install.** Update as above. A command added in a later release isn't in an older install.
 
 You can always say what you want in plain words, such as "Do the next task". The agent follows the same procedure as the command.
@@ -51,8 +51,8 @@ The check, `bash tools/check.sh`, ends with one of three results.
 
 What can be missing depends on the framework:
 
-- **Godot-Director:** Godot is not found, or is older than 4.3. Give the agent the path to Godot; `setup-clone.sh` records it for this machine.
 - **App-Director:** gitleaks is missing, too old, or a version that can't scan, or the tool for your stack is missing.
+- **Godot-Director:** Godot is not found, or is older than 4.3. Give the agent the path to Godot; `setup-clone.sh` records it for this machine.
 - **SaaSAllTheThings:** the toolchain of your backend stack is missing, such as the .NET SDK for the default stack.
 
 An exit 3 is not a failure of your work. The agent reports the work as unverified rather than done, and says why.
@@ -75,7 +75,7 @@ This is by design too: the agent commits only with your approval. Asking for a r
 
 ## Related
 
-- The install sections of [Godot-Director](../frameworks/godot-director.md#install), [App-Director](../frameworks/app-director.md#install) and [SaaSAllTheThings](../frameworks/saasallthethings.md#install).
-- The procedures: [Godot-Director onboarding](https://github.com/Freakling/Godot-Director/blob/v3.13.0/ONBOARDING.md), [App-Director onboarding](https://github.com/Freakling/App-Director/blob/v1.7.0/ONBOARDING.md) and [SaaSAllTheThings onboarding](https://github.com/Freakling/SaaSAllTheThings/blob/v0.9.0/ONBOARDING.md).
+- The install sections of [App-Director](../frameworks/app-director.md#install), [Godot-Director](../frameworks/godot-director.md#install) and [SaaSAllTheThings](../frameworks/saasallthethings.md#install).
+- The procedures: [App-Director onboarding](https://github.com/Freakling/App-Director/blob/v1.7.0/ONBOARDING.md), [Godot-Director onboarding](https://github.com/Freakling/Godot-Director/blob/v3.13.0/ONBOARDING.md) and [SaaSAllTheThings onboarding](https://github.com/Freakling/SaaSAllTheThings/blob/v0.9.0/ONBOARDING.md).
 
 <div class="takeaway"><span>Update, restart, and the commands you expect are there.</span><span class="url"><a href="index.md">All questions</a></span></div>

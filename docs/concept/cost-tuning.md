@@ -62,6 +62,6 @@ Tune what the numbers point at, not what feels expensive.
 ## Sources
 
 - [Manage costs effectively](https://code.claude.com/docs/en/costs), [How Claude Code uses prompt caching](https://code.claude.com/docs/en/prompt-caching) and [How Claude remembers your project](https://code.claude.com/docs/en/memory), Claude Code documentation
-- [Godot-Director](https://github.com/Freakling/Godot-Director), [App-Director](https://github.com/Freakling/App-Director) and [SaaSAllTheThings](https://github.com/Freakling/SaaSAllTheThings): README, Context and token use, the framework rules, and the next-task, build, review and prune procedures
+- [App-Director](https://github.com/Freakling/App-Director), [Godot-Director](https://github.com/Freakling/Godot-Director) and [SaaSAllTheThings](https://github.com/Freakling/SaaSAllTheThings): README, Context and token use, the framework rules, and the next-task, build, review and prune procedures
 
 <div class="takeaway" markdown><span>Spend tokens on judgement, not on context.</span><span class="url" markdown="span">[Built-in cost savings](cost-built-in.md)</span></div>

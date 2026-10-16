@@ -4,7 +4,7 @@
 
 > Type `/drift-reset`. The agent describes the project as built, you decide again where a principle splits, and the rebuild runs as ordinary tasks. Only you start one.
 
-All three frameworks ship `/drift-reset`: Godot-Director, App-Director and SaaSAllTheThings. Nothing to install: run it in Claude Code, in the project where the framework is installed.
+All three frameworks ship `/drift-reset`: App-Director, Godot-Director and SaaSAllTheThings. Nothing to install: run it in Claude Code, in the project where the framework is installed.
 
 ## Short answer
 
@@ -37,29 +37,29 @@ The reset takes several sessions. Each stage ends with something you approve, an
 
 ## A worked example
 
-This is an illustration, not something that happened. It uses [market-day](https://github.com/Freakling/Godot-Director/tree/v3.13.0/examples/market-day), the small grain-market game in the Godot-Director repository.
+This is an illustration, not something that happened. It uses [todo-web](https://github.com/Freakling/App-Director/tree/v1.7.0/examples/todo-web), the small to-do list in the App-Director repository.
 
-**The situation.** The GDD has the pillar "Readable luck: prices vary, but the player can see enough to make a reasoned bet". Under Systems › Shop screen it says that from day 2 on, yesterday's price is shown next to today's, and `design/decisions.md` records why (the playtester couldn't tell whether the price was high or low). Suppose the game kept growing. The shop status line shows yesterday's price, from `RunState`, as the GDD says. Later, a second item added a trend arrow to the shop that compares today's price with the base price in `data/market_config.tres`, with the comparison written in `scripts/ui/shop_screen.gd`. Now the arrow can point up while yesterday's price, right beside it, is lower than today's. A playtest report in `playtesting/` says the prices felt unreadable. `/align` has reported the conflict twice, and the second report recommends a reset.
+**The situation.** The brief says of the app: "No accounts, no sync; everything lives in the current session", and `product/decisions.md` records the choice: session-only for now. Suppose the app kept growing. `TodoStore` keeps the tasks in memory, as the brief says. Later, a second item made finished tasks survive a reload, with the `localStorage` calls written in `src/ui/TodoList.ts`. Now a reload brings back the finished tasks and loses the open ones. A bug in `TASKS.md` says the list looks broken after a refresh. `/align` has reported the conflict twice, and the second report recommends a reset.
 
-**1. Prepare.** You commit your changes and type `/drift-reset`. The agent suggests the branch `reset-2026-11-03` and you say yes. It lists the areas from the architecture table in `AGENTS.md`: the market rules (`Market` and `MarketConfig`), the run state (`RunState`) and the screens.
+**1. Prepare.** You commit your changes and type `/drift-reset`. The agent suggests the branch `drift-reset-2026-11-03` and you say yes. It lists the areas from the architecture table in `AGENTS.md`: the UI, the services and the store.
 
-**2. Analysis.** Three reviewers read the code and `design/resets/2026-11-03/as-built.md` gets one section per area. The screens section notes that `scripts/ui/shop_screen.gd` compares today's price with `base_price`, which is a rule inside a screen, and that `RunState` already keeps yesterday's price. The check didn't catch it, because `forbidden` in `tools/check.cfg` is empty. You have nothing to decide yet.
+**2. Analysis.** Three reviewers read the code and `product/resets/2026-11-03/as-built.md` gets one section per area. The UI section notes that `src/ui/TodoList.ts` reads and writes `localStorage`, which is a rule about what survives a reload and belongs in a layer below the UI, and that `TodoStore` still holds everything in memory. The check didn't catch it, because it looks for imports from the store, and a `localStorage` call is not an import. You have nothing to decide yet.
 
-**3. Interpretations.** `interpretations.md` classes "One decision a day" and "Two-minute runs" as consistent, and "Readable luck" as divergent. The first reading compares with yesterday and lives in `RunState` and the status line. The second compares with the base price and lives in the shop script. The agent quotes the playtest remark as evidence: the player sees an arrow and a number that disagree, so the bet isn't readable. You read the summary and approve the commit.
+**3. Interpretations.** `interpretations.md` classes "Add a task" and "Remove a task" as consistent, and "everything lives in the current session" as divergent. The first reading keeps all tasks in memory, in `TodoStore`. The second keeps the finished tasks in the browser, in the list's UI code. The agent quotes the bug as evidence: the list after a refresh matches neither reading. You read the summary and approve the commit.
 
-**4. The design call.** The agent asks: "Readable luck is read two ways. Which comparison does the shop show?"
+**4. The design call.** The agent asks: "The brief says everything lives in the current session, and the code keeps finished tasks across reloads. Which is it?"
 
-- **A. Yesterday's price only.** Keeps the 2026-09-28 decision, removes the arrow, and the comparison moves into `Market` with a test. Recommended.
-- **B. The base price only.** Drops yesterday's price, so the decision of 2026-09-28 is replaced, and `RunState` loses its previous price.
-- **C. Both, labelled.** Keeps all the code, and strains "one decision a day" with two numbers to weigh.
+- **A. Session only.** Keeps the decision of 2026-10-07, and the `localStorage` calls are removed from the UI.
+- **B. Every task is kept in the browser.** Replaces the decision of 2026-10-07 with one rule, and the saving moves behind the store. Recommended.
+- **C. Only finished tasks are kept.** Keeps the code as it is, and a reload loses the open tasks.
 
-You pick A. The agent writes the answer into the GDD's Shop screen section, adds a line to `design/decisions.md` that ends with `from: drift reset 2026-11-03`, keeps the old GDD as `gdd-before.md` in the reset folder, and shows you the diff. You approve it.
+You pick B. The agent copies the brief to `brief-before.md` in the reset folder, writes the answer into the brief in place of the text it replaces, adds a line to `product/decisions.md` that names `drift reset 2026-11-03`, and shows you the diff. You approve it.
 
-**5. The plan.** The agent compares the revised GDD with `as-built.md` and adds two tasks to `TASKS.md`. One removes the arrow from `scripts/ui/shop_screen.gd`. The other moves the price comparison into `scripts/systems/market.gd`, with a `(test)` outcome in `tests/test_market.gd`, because the check couldn't catch it. `plan.md` lists both IDs under "Readable luck". You approve the order.
+**5. The plan.** The agent compares the revised brief with `as-built.md` and adds two items to `TASKS.md`. One removes the `localStorage` calls from `src/ui/TodoList.ts`. The other makes `TodoStore` save and load every task, with a `(code)` outcome that names it. `rebuild.md` lists both IDs under "everything lives in the current session". You approve the order.
 
-**6. The rebuild.** You run `/clear` and say "Work through the queue". Both tasks are built and committed like any others.
+**6. The rebuild.** You run `/clear` and say "Work through the queue". Both items are built and committed like any others.
 
-**7. The postmortem.** You type `/drift-reset postmortem`. The reviewer rereads only the files the two tasks touched and marks "Readable luck" resolved. For next time it proposes two checks as design calls: a pattern in `[screens] forbidden` in `tools/check.cfg` that screens must not contain, such as `base_price`, and a test that pins the comparison. You approve the pattern and decline the test, and the pattern becomes a task. `postmortem.md` records both choices.
+**7. The postmortem.** You type `/drift-reset postmortem`. The agent runs the check, rereads the files the two items touched and marks the principle `fixed` in `postmortem.md`. For next time it proposes a check rule as a design call: UI files must not contain `localStorage`. You approve it, and it becomes an item that adds the rule to `tools/check.cfg` or `tools/check.local.sh`.
 
 ## What can go wrong
 
@@ -68,14 +68,14 @@ You pick A. The agent writes the answer into the GDD's Shop screen section, adds
 - **The postmortem waits for the rebuild.** If a rebuild task isn't done, the agent lists it and, in App-Director and SaaSAllTheThings, asks whether to go on. Godot-Director stops.
 - **A check rule needs your yes.** Only the rules you choose are recorded.
 - **Framework differences.**
-    - Godot-Director: art, audio and tunable values are yours and are never rewritten. A tunable value that is part of the drift becomes a design call, and you edit the `.tres` file. The reset folder is `design/resets/`.
     - App-Director: the old brief is kept as `brief-before.md`. If the ownership table makes the brief yours, the draft goes to `brief-proposal.md` for you to apply. The analysis also looks for business rules in your UI folders. The reset folder is `product/resets/`.
+    - Godot-Director: art, audio and tunable values are yours and are never rewritten. A tunable value that is part of the drift becomes a design call, and you edit the `.tres` file. The reset folder is `design/resets/`.
     - SaaSAllTheThings: the scope is the product design, so architecture stays out. A conflict with the reference goes through `/architect` and an ADR, and a reset never drops an accepted ADR without a new one. Tenancy and identity are always an area of their own: drift there is a security finding, the agent tells you at once and files a high-severity bug, and it is never a design call. The reset folder is `resets/`, and the agent makes one commit at the end of the plan, where the other two commit after each approved step.
 
 ## Related
 
 - The [`/drift-reset` skill page](../skills/drift-reset.md), with each framework's scope and where the reset folder goes.
 - The concept [Align and drift reset](../concept/drift.md), and the other ways to keep the records straight: [The records and the code don't agree](align.md).
-- The procedures: [Godot-Director](https://github.com/Freakling/Godot-Director/tree/v3.13.0/framework/.godot-director/procedures/drift-reset.md), [App-Director](https://github.com/Freakling/App-Director/tree/v1.7.0/framework/.app-director/procedures/drift-reset.md) and [SaaSAllTheThings](https://github.com/Freakling/SaaSAllTheThings/tree/v0.9.0/framework/.satt/procedures/drift-reset.md).
+- The procedures: [App-Director](https://github.com/Freakling/App-Director/tree/v1.7.0/framework/.app-director/procedures/drift-reset.md), [Godot-Director](https://github.com/Freakling/Godot-Director/tree/v3.13.0/framework/.godot-director/procedures/drift-reset.md) and [SaaSAllTheThings](https://github.com/Freakling/SaaSAllTheThings/tree/v0.9.0/framework/.satt/procedures/drift-reset.md).
 
 <div class="takeaway"><span>Align often, reset when you have to.</span><span class="url"><a href="index.md">All questions</a></span></div>

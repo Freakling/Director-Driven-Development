@@ -2,14 +2,14 @@
 
 Three frameworks put Director-Driven Development to work. The same loop runs all three; only the rules the check enforces change. Each repository's README and procedures are the source of truth, and these pages link to them.
 
-| | [Godot-Director](godot-director.md) | [App-Director](app-director.md) | [SaaSAllTheThings](saasallthethings.md) |
+| | [App-Director](app-director.md) | [Godot-Director](godot-director.md) | [SaaSAllTheThings](saasallthethings.md) |
 |---|---|---|---|
-| For | Games in Godot 4 | Small web, mobile and desktop apps | Multi-tenant B2B SaaS on Azure |
-| Stacks | GDScript | TypeScript, Flutter, Python | .NET by default; TypeScript and Python |
-| The director owns | Design, balance, art direction | Product vision and design | The product; the framework owns the architecture |
-| The check fails on | Game rules in screen scripts, load errors, failing tests | UI importing the data layer, secrets, failing types, lint or tests | Architecture rules (layers, tenancy, secrets, sizes, cost SKUs), failing build or tests |
-| Human rounds | `/playtest`, `/function-check` | `/acceptance` | `/acceptance`, `/feedback` |
-| In your project | `.godot-director/` | `.app-director/` | `.satt/` |
+| For | Small web, mobile and desktop apps | Games in Godot 4 | Multi-tenant B2B SaaS on Azure |
+| Stacks | TypeScript, Flutter, Python | GDScript | .NET by default; TypeScript and Python |
+| The director owns | Product vision and design | Design, balance, art direction | The product; the framework owns the architecture |
+| The check fails on | UI importing the data layer, secrets, failing types, lint or tests | Game rules in screen scripts, load errors, failing tests | Architecture rules (layers, tenancy, secrets, sizes, cost SKUs), failing build or tests |
+| Human rounds | `/acceptance` | `/playtest`, `/function-check` | `/acceptance`, `/feedback` |
+| In your project | `.app-director/` | `.godot-director/` | `.satt/` |
 
 ## Shared by all three
 

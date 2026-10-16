@@ -4,7 +4,7 @@
 
 > Say "Check the docs are aligned", or type `/align`. The agent checks that the design, the decisions, the queue, the settings and the code still agree, fixes what is mechanical and lists what needs you.
 
-All three frameworks ship `/align`: Godot-Director, App-Director and SaaSAllTheThings. Nothing to install: run it in Claude Code, in the project where the framework is installed.
+All three frameworks ship `/align`: App-Director, Godot-Director and SaaSAllTheThings. Nothing to install: run it in Claude Code, in the project where the framework is installed.
 
 ## Short answer
 
@@ -40,14 +40,14 @@ Saying it and typing the command run the same procedure. The explicit command pa
 - **A missing installer line has a one-step fix.** If the `.gitignore` or `.gitattributes` lines that `install.sh` adds are gone, rerun the installer.
 - **Align reports gaps, it doesn't plan them.** You decide which gaps become items.
 - **Framework differences.**
-    - Godot-Director: it checks the GDD, `design/decisions.md` and `project.godot` against `AGENTS.md`. Every autoload and rule folder needs an architecture row, and every screen in the `[screens] known` list in `tools/check.cfg` needs an open item that removes it. It counts the `## PLACEHOLDER` values and writes the number into the Content & balance milestone. If the game has a UI catalog, it also lists screens with no catalog entry, specs that name something missing, and drawings that changed since they were processed. None of that fails the pass.
     - App-Director: it checks the brief, `product/decisions.md` and the check config. The `[ui] dirs` and `[data] dirs` in `tools/check.cfg` must match your folders, and each item's `Brief:` value must be an existing heading.
+    - Godot-Director: it checks the GDD, `design/decisions.md` and `project.godot` against `AGENTS.md`. Every autoload and rule folder needs an architecture row, and every screen in the `[screens] known` list in `tools/check.cfg` needs an open item that removes it. It counts the `## PLACEHOLDER` values and writes the number into the Content & balance milestone. If the game has a UI catalog, it also lists screens with no catalog entry, specs that name something missing, and drawings that changed since they were processed. None of that fails the pass.
     - SaaSAllTheThings: it checks the PRD, the ADRs and the integration contracts, and runs `bash tools/check.sh --architecture`. It reports stale ADR exceptions, proposed ADRs waiting more than a week and workshop notes with no `Processed:` line, and counts the undecided values. It never changes the product or the architecture.
 
 ## Related
 
 - The [`/align` skill page](../skills/align.md), with what the pass checks in each framework, and the concept [Align and drift reset](../concept/drift.md).
 - When the pass keeps finding the same conflict: [The system was not built as I intended](drift.md).
-- The procedures: [Godot-Director](https://github.com/Freakling/Godot-Director/tree/v3.13.0/framework/.godot-director/procedures/align.md), [App-Director](https://github.com/Freakling/App-Director/tree/v1.7.0/framework/.app-director/procedures/align.md) and [SaaSAllTheThings](https://github.com/Freakling/SaaSAllTheThings/tree/v0.9.0/framework/.satt/procedures/align.md).
+- The procedures: [App-Director](https://github.com/Freakling/App-Director/tree/v1.7.0/framework/.app-director/procedures/align.md), [Godot-Director](https://github.com/Freakling/Godot-Director/tree/v3.13.0/framework/.godot-director/procedures/align.md) and [SaaSAllTheThings](https://github.com/Freakling/SaaSAllTheThings/tree/v0.9.0/framework/.satt/procedures/align.md).
 
 <div class="takeaway"><span>Run it after every big design change and catch the drift while it is small.</span><span class="url"><a href="index.md">All questions</a></span></div>

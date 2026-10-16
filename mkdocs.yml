@@ -1,5 +1,5 @@
 site_name: Director-Driven Development
-site_description: "How-to docs for Director-Driven Development: you direct, AI agents build, one automatic check proves every task. Covers Godot-Director, App-Director and SaaSAllTheThings. Built with App-Director."
+site_description: "How-to docs for Director-Driven Development: you direct, AI agents build, one automatic check proves every task. Covers App-Director, Godot-Director and SaaSAllTheThings. Built with App-Director."
 site_url: https://freakling.github.io/Director-Driven-Development/
 site_author: Vikingur Saemundsson
 repo_url: https://github.com/Freakling/Director-Driven-Development
@@ -79,8 +79,8 @@ nav:
   - How-to:
       - how-to/index.md
       - Start here:
-          - "Where do I start with a game?": how-to/start.md
-          - "Where do I start with an app?": how-to/start-app.md
+          - "Where do I start with an app?": how-to/start.md
+          - "Where do I start with a game?": how-to/start-game.md
           - "Where do I start with a SaaS?": how-to/start-saas.md
           - "I already have a project. Can I use this?": how-to/existing.md
       - Day to day:
@@ -99,6 +99,6 @@ nav:
           - "It's costing more than I'd like": how-to/cost.md
   - Frameworks:
       - frameworks/index.md
-      - Godot-Director: frameworks/godot-director.md
       - App-Director: frameworks/app-director.md
+      - Godot-Director: frameworks/godot-director.md
       - SaaSAllTheThings: frameworks/saasallthethings.md
