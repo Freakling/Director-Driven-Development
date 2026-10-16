@@ -190,12 +190,13 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Brief: Scope › Planned framework changes
 
 ### T82 · Godot-Director: drawings and screen specs · in-progress 2026-10-16 · M · agent
+- Note: built; committed on ddd/ui-design in the clone, published with T81 and T83 as one pull request.
 - Depends on: T81
 - Touches: work/Godot-Director: tools/ui_drawing.gd (new), the starter drawing in capture, procedures/ui-design.md (process), design/ui/README.md seed, tasks.md (`UI:` field), design.md, selftest.sh (one pull request; the director merges)
 - Done when: Godot-Director has a merged pull request where capture writes a starter drawing and `/ui-design process` reads a drawing through `drawing.json`, confirms its reading, settles open points and records the screen spec and items, as the anchor says, with the spec's acceptance criteria 2, 3 and 4 met, following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Planned framework changes
 
-### T83 · Godot-Director: verify and the workflow hooks · todo · M · agent
+### T83 · Godot-Director: verify and the workflow hooks · in-progress 2026-10-16 · M · agent
 - Depends on: T82
 - Touches: work/Godot-Director: procedures/ui-design.md (verify), build.md, review.md, function-check.md, align.md, tools/check.sh and check.gd (optional lint), the AGENTS.md template, install.sh, README.md, ONBOARDING.md, selftest.sh (one pull request; the director merges)
 - Done when: Godot-Director has a merged pull request where `/ui-design verify` writes compare images and lists deviations, and the build, review, function check, align and the optional check lint use the screen spec, as the anchor says, with the spec's acceptance criteria 6 to 9 met, following AGENTS.md › Project rules for framework work (check)
