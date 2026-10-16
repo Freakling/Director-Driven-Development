@@ -133,7 +133,7 @@ The concepts behind these files are in [Records in files](../concept/records.md)
 ## What can go wrong
 
 - **The editor is open during setup.** It rewrites `project.godot`, so keep it closed until onboarding is done.
-- **The commands are missing.** Restart Claude Code. Skills, hooks and permissions load when a session starts.
+- **The commands are missing.** See [Something isn't there, or doesn't work](trouble.md).
 - **Godot is not found.** Give the agent the path to Godot 4.3 or newer. Until it is saved, the check cannot run and exits with 3.
 - **A new clone of the game.** Every new clone needs `bash tools/setup-clone.sh` once; it finds Godot and installs the hook.
 - **Another assistant.** Only the core is the same everywhere: rules, procedures, the check and the pre-commit hook. Fresh-context builds, the reviewer, model sizing and the hooks that block risky commands depend on your assistant supporting subagents and hooks.

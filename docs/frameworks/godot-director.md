@@ -29,7 +29,7 @@ You need git with no uncommitted changes, Godot 4.3 or newer, and bash (on Windo
     npx skills add Freakling/Godot-Director
     ```
 
-    In Claude Code it becomes the `/godot-director` command. The skill fetches the latest release outside your game and runs onboarding; to pick up a newer release later, run `npx skills add` again.
+    In Claude Code it becomes the `/godot-director` command. The skill fetches the latest release outside your game and runs onboarding.
 
 === "Claude Code plugin"
 

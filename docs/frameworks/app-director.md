@@ -29,7 +29,7 @@ You need git with no uncommitted changes, bash (on Windows it comes with Git for
     npx skills add Freakling/App-Director
     ```
 
-    In Claude Code it becomes the `/app-director` command. The skill fetches the latest release outside your app and runs onboarding; to pick up a newer release later, run `npx skills add` again.
+    In Claude Code it becomes the `/app-director` command. The skill fetches the latest release outside your app and runs onboarding.
 
 === "Claude Code plugin"
 

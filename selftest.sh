@@ -13,7 +13,10 @@
 #   6. The brief's own claims (product/brief.md): the page counts in its Screens table match the nav
 #      sections in mkdocs.yml; every Brief: value in TASKS.md, and every brief heading named in
 #      tools/*.sh, is a heading in the brief; no Later or Planned section names a done item.
-#   7. The site builds in strict mode, which fails on broken internal links and anchors.
+#   7. Version numbers: a docs page names no three-part version number in prose, because every page
+#      assumes the latest release. Links to a release tag are left out, and so are lines about
+#      the Godot engine, .NET, Node and gitleaks, which have versions of their own.
+#   8. The site builds in strict mode, which fails on broken internal links and anchors.
 #
 # The framework repos are kept as copies under .app-director/state/frameworks (gitignored), each
 # at its latest release tag (v<version>). Online, each run moves the copies to the latest release.
@@ -362,7 +365,26 @@ else
   [ "$later_fail" -eq 0 ] && echo "ok: Later and Planned brief sections name no done items"
 fi
 
-# 7. Build and links ------------------------------------------------------------------------
+# 7. Version numbers ------------------------------------------------------------------------
+# Every page assumes the latest release, so no page names a framework version number in prose.
+# A three-part number (1.2.3) fails, naming the page and the line. A link to a release tag
+# (/tree/v..., /blob/v..., /releases/tag/v...) is stripped first, and a line that names the Godot
+# engine, .NET, Node or gitleaks is skipped: their versions are not the frameworks'. "Godot Director"
+# (the framework) is not the engine.
+ver_fail=0
+while IFS= read -r hit; do
+  [ -n "$hit" ] || continue
+  where=${hit%%:*}; rest=${hit#*:}; lineno=${rest%%:*}; text=${rest#*:}
+  plain=$(printf '%s' "$text" \
+    | sed -E 's#[^ (]*/(tree|blob)/v[0-9][^ )"]*##g; s#[^ (]*/releases/tag/v[0-9][^ )"]*##g; s#Godot[ -]Director##g')
+  printf '%s' "$plain" | grep -qE '(^|[^0-9.])[0-9]+\.[0-9]+\.[0-9]+([^0-9.]|$)' || continue
+  printf '%s' "$plain" | grep -qE '(^|[^A-Za-z-])(Godot|\.NET|Node|gitleaks)([^-A-Za-z]|$)' && continue
+  err "$where:$lineno names a version number in prose (link a release tag instead, or drop it): $(printf '%s' "$text" | cut -c1-100)"
+  ver_fail=1
+done <<< "$(grep -rnE --include='*.md' '[0-9]+\.[0-9]+\.[0-9]+' docs 2>/dev/null | grep -v '^docs/assets/' || true)"
+[ "$ver_fail" -eq 0 ] && echo "ok: no docs page names a version number in prose"
+
+# 8. Build and links ------------------------------------------------------------------------
 mkdocs=""
 if command -v mkdocs >/dev/null 2>&1; then mkdocs="mkdocs"
 else

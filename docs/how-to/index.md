@@ -22,6 +22,7 @@ The skill pages say what each command does. These pages say what you do. Each de
 
 ## When things go wrong
 
+- [Something isn't there, or doesn't work](trouble.md)
 - [The system was not built as I intended](drift.md)
 - [The records and the code don't agree](align.md)
 - [The task list is getting long](prune.md)

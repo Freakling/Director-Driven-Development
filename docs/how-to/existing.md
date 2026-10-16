@@ -28,7 +28,7 @@ The agent tells you the mode it detected and asks you to confirm. The modes that
 
 - **Existing game:** `project.godot` and scripts, no Godot-Director yet. This page.
 - **Upgrade:** a Godot-Director install already exists. You choose a fast or a full upgrade, and the agent reads the changelog first.
-- **Migrate from 1.x:** a project from the first generation of the framework (it has `.promptx/personas/` or `playtesting/FUNCTION_CHECK.md`). The agent rewrites the old files into the new format, keeping your task and question numbers, and asks before deleting what is obsolete.
+- **Migrate:** a project from the first generation of the framework (it has `.promptx/personas/` or `playtesting/FUNCTION_CHECK.md`). The agent rewrites the old files into the new format, keeping your task and question numbers, and asks before deleting what is obsolete.
 
 It also asks which assistants will work on the game: `claude` (the default) or `none`, if you only use other assistants.
 

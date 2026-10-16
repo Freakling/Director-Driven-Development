@@ -25,9 +25,8 @@ Nothing to install for the drawing. Excalidraw runs in your browser and needs no
 
 **Once per game.**
 
-1. Upgrade the game to the latest Godot-Director (see [Install](../frameworks/godot-director.md#install)), then restart Claude Code so the new skill loads.
-2. Run `/ui-design list`. The agent prints the screens in the catalog, `tools/ui_screens.gd`, which starts with the game's main scene, and any screen scenes it finds that the catalog doesn't cover.
-3. Ask the agent to add the missing screens. Each entry names the scene the screen opens and how to put it in a representative state. Name the overlays a player sees over the screen too.
+1. Run `/ui-design list`. The agent prints the screens in the catalog, `tools/ui_screens.gd`, which starts with the game's main scene, and any screen scenes it finds that the catalog doesn't cover. If the command isn't there, see [Something isn't there, or doesn't work](trouble.md).
+2. Ask the agent to add the missing screens. Each entry names the scene the screen opens and how to put it in a representative state. Name the overlays a player sees over the screen too.
 
 **Capture.** Run `/ui-design capture <screen>`. The agent captures the screen in each state and at each size listed in `tools/ui_capture.cfg`, and gives you:
 
