@@ -422,13 +422,15 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: App-Director has a merged pull request with the director's product brief template (`product/anchors/templates/product_brief_template.md`) shipped into every project as a template for the human to fill in, presented in onboarding as an alternative or addition to the chat interview with a word on why it helps (value and context for later development), and scanned by onboarding for new and existing projects to build the initial assessment and design records, with what it inferred marked, following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Planned framework changes
 
-### T88 · Godot-Director: the human-written GDD · todo · S · agent
+### T88 · Godot-Director: the human-written GDD · in-progress 2026-10-16 · S · agent
+- PRs: Godot-Director #22 (open)
 - Depends on: -
 - Touches: work/Godot-Director: a project seed for the template, ONBOARDING.md, README.md (one pull request; the director merges)
 - Done when: Godot-Director has a merged pull request with the director's GDD template (`product/anchors/templates/godot_gdd_template.md`) shipped into every project as a template for the human to fill in, presented in onboarding as an alternative or addition to the chat interview with a word on why it helps (value and context for later development), and scanned by onboarding for new and existing projects to build the initial assessment and design records, with what it inferred marked, following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Planned framework changes
 
-### T89 · SaaSAllTheThings: the human-written SaaS brief · todo · M · agent
+### T89 · SaaSAllTheThings: the human-written SaaS brief · in-progress 2026-10-16 · M · agent
+- PRs: SaaSAllTheThings #12 (open)
 - Depends on: -
 - Touches: work/SaaSAllTheThings: a project seed for the template, ONBOARDING.md, the assessment procedure, README.md (one pull request; the director merges)
 - Done when: SaaSAllTheThings has a merged pull request with a SaaS variant of the director's product brief template that also asks about enterprise architecture, requirements, security requirements and the control frameworks the customer must meet, worded for the human to answer and anchored in the customer's security framework, shipped into every project as a template for the human to fill in, presented in onboarding as an alternative or addition to the chat interview with a word on why it helps (value and context for later development), and scanned by onboarding for new and existing projects to build the initial assessment and design records, with what it inferred marked, following AGENTS.md › Project rules for framework work (check)
@@ -441,7 +443,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Brief: Scope › Planned framework changes
 
 ## Notes
-- T87 to T90 (the human-written starting document) are low priority, after /ui-design.
+- T88 and T89 (the human-written starting documents) are open; T87 waits on App-Director #18, which holds the README; T90 follows all three.
 - T55, T54 and T56 are released as SaaSAllTheThings v0.7.0, Godot-Director v3.6.0 and App-Director v1.4.0.
 - T34 waits until all three frameworks have released the research assistant.
 - T71 releases T19; T31 follows T19.
