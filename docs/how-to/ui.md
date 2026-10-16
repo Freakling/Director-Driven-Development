@@ -1,10 +1,10 @@
 # How do I work with UI changes?
 
-<div class="kicker">Describe the change in words, or draw it and let the agent check the result</div>
+<div class="kicker">Describe the change, draw it, or edit the screen yourself</div>
 
-> Say what a screen should do and let the agent build it. In Godot-Director you can also draw the screen, and the agent builds to your drawing and checks the built screen against it.
+> Say what a screen should do and let the agent build it, or edit the screen yourself and tell the agent. In Godot-Director you can also draw the screen, and the agent builds to your drawing and checks the built screen against it.
 
-## Two ways to do it
+## Three ways to do it
 
 **By describing it.** Works in all three frameworks. Say what the screen should show and do: "The shop screen needs a filter bar above the item list". Settle what a screen is for, and any flow or behaviour the design doesn't cover, in a design session (see [How do I decide what gets built?](decide.md)). The decision becomes design text and task items, and [`/next-task`](build.md) builds them. You can also hand a small, settled change straight to the agent in a normal session. A direct request the agent can't finish in that session becomes an item in `TASKS.md`.
 
@@ -12,12 +12,21 @@
 
 The drawing pays off when layout is the point and words are slow or vague: positions, sizes, what sticks and what scrolls, the order of keyboard and pad focus. It gives you a spec you can repeat from, and a built screen checked against your drawing. Drawing is optional. Capture and the layout lint work without it.
 
+**By editing it yourself.** Works in all three frameworks, and is always an option. Open the scene in Godot, or the component in your editor for an app, make the change, and commit it through the normal flow. It is often the fastest way for a small change you can see, such as moving a button, changing a label or a colour. Pick it for a small, settled change. Pick a drawing for a redesign, or when you want the layout recorded and checked against your intent. Pick describing it when the change needs a design call. If the ownership table in `AGENTS.md` makes UI layout yours (onboarding asks, in Godot-Director for the UI row and in App-Director for visual design), the agent builds a minimal placeholder screen and the finished layout is your work, which makes this the usual path.
+
 ## Steps for describing a change
 
 1. **Say the change.** Name the screen and what should differ.
 2. **Answer the options.** If the change is a design call, the agent gives two to four options with a recommendation, and records what you choose.
 3. **Let it be built.** Run `/next-task`, or give the task's ID. The check must pass before the commit.
 4. **Look at it running.** Whether a screen looks and feels right is checked by a person. It comes up in the next check by hand (see [How do I check that what was built works?](check.md)).
+
+## Steps for editing a screen yourself
+
+1. **Make the change** in Godot or your editor, and run the game or app to see it.
+2. **Commit through the normal flow.** The pre-commit hook runs the check on a commit that touches code, so a hand edit has to pass it like any other change. In Godot-Director that means no game rules in screen scripts and typed GDScript. In App-Director and SaaSAllTheThings it means the architecture rules of the framework. Never skip the hook.
+3. **Tell the agent what changed.** Say which screen and how, such as "I moved the filter bar above the item list on the shop screen". In Godot-Director the screen spec `design/ui/<screen>.md` is the one place a screen's layout is recorded, and the agent updates it and the screen's catalog entry in `tools/ui_screens.gd` to follow your edit. If you don't tell it, `/ui-design verify` reports the difference as a deviation from the spec, and a later build may undo your edit. In the other two frameworks, tell the agent so the design text and the task list agree with the screen.
+4. **Tell the agent about a decision too.** If the edit settles a question or changes how something works, say so, and it goes into the records as a design call.
 
 ## Steps for drawing a screen (Godot-Director)
 

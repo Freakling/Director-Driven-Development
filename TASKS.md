@@ -290,7 +290,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: a When things go wrong page "Something isn't there, or doesn't work" says to make sure you're on the latest release, with the upgrade command for each install path of each framework and the restart of Claude Code, then the common causes a new director hits (a skill missing, the check failing, a clone without setup-clone.sh, no display for capture), accurate to the latest releases (check) · no How-to or other page tells the reader to upgrade or restart inside a guide, or names a framework version number in prose; pages that need it link the troubleshooting page instead (check) · the selftest fails when a docs page names a framework version number outside a link to a release tag (check) · `bash tools/check.sh` passes (check)
 - Brief: Scope › How-to guides
 
-### T116 · The UI How-to offers editing it yourself · in-progress 2026-10-16 · XS · agent
+### T116 · The UI How-to offers editing it yourself · done · XS · agent
 - Depends on: T115
 - Touches: docs/how-to/ui.md
 - Done when: "How do I work with UI changes?" has a third way, editing the screen yourself in Godot (or your editor for an app): commit through the normal flow so the check runs, tell the agent what changed so the screen spec and catalog follow, and when this path is the right one, accurate to the released rules on ownership and the check (check) · `bash tools/check.sh` passes (check)
@@ -302,13 +302,13 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: a Day to day page "I want to change something. Which file is it in?" has a row per thing a director may want to change, with the file in each framework and whether to edit it yourself or ask (and which question or skill), drawn from each framework's "Each fact lives in one place" table at the latest release, including that the decision log is append-only and changes through a design session (check) · Records in files links it (check) · `bash tools/check.sh` passes (check)
 - Brief: Scope › How-to guides
 
-### T118 · App-Director's README says how to update the plugin · todo · XS · agent
+### T118 · App-Director's README says how to update the plugin · in-progress 2026-10-16 · XS · agent
 - Depends on: -
 - Touches: work/App-Director: README.md (one pull request; the director merges)
 - Done when: App-Director's README gives the plugin update commands (`/plugin marketplace update` and `/plugin update`, and the restart), as Godot-Director's and SaaSAllTheThings' do, following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Framework features
 
-### T119 · The framework repos' own queues carry an R counter · todo · XS · agent
+### T119 · The framework repos' own queues carry an R counter · in-progress 2026-10-16 · XS · agent
 - Depends on: -
 - Touches: work/App-Director: TASKS.md; work/Godot-Director: TASKS.md; work/SaaSAllTheThings: TASKS.md (one pull request per repo; the director merges)
 - Done when: each framework's root TASKS.md `Next IDs` line carries the `R<n>` counter its own align procedure asks for, following AGENTS.md › Project rules for framework work (check)
