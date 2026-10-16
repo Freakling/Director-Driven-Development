@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T78 · B5
+**Next IDs:** T79 · B5
 
 ## Milestones
 | Milestone | Status |
@@ -156,11 +156,17 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: the home page's role cards include the researcher, matching the roles page (it informs, the director decides) and linking to it (check) · `bash tools/check.sh` passes (check)
 - Brief: Pitch
 
-### T31 · Godot-Director: CI export and CD release · in-progress 2026-10-16 · M · agent
-- PRs: Godot-Director #12 (open)
+### T31 · Godot-Director: CI export and CD release · done · M · agent
+- PRs: Godot-Director #12 (merged)
 - Depends on: T19
 - Touches: work/Godot-Director (one pull request; the director merges); docs/frameworks/godot-director.md and a /release skill page once released
 - Done when: Godot-Director has a merged pull request with CI that runs the export on every change, and CD that releases builds to a platform's UAT branch with optional promotion to production, following AGENTS.md › Project rules for framework work (check) · once released there, the Godot-Director page documents them and /release gets its own skill page (check)
+- Brief: Scope › Planned framework changes
+
+### T78 · Release Godot-Director 3.10.0 · in-progress 2026-10-16 · S · agent
+- Depends on: T51, T31
+- Touches: work/Godot-Director: the version files its CLAUDE.md lists, CHANGELOG.md (one pull request; the director merges)
+- Done when: the release pull request, which covers T31 (CI export and /release), is merged, and `tools/work-release.sh` has tagged `v3.10.0` and published the GitHub release, following AGENTS.md › Project rules › Framework work › Releases (check) · an item here moves the docs links to `v3.10.0`, documents /release on the Godot-Director page, and gives /release its own skill page now that all three ship it (check)
 - Brief: Scope › Planned framework changes
 
 ## Notes
