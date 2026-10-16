@@ -19,6 +19,7 @@ The skill pages say what each command does. These pages say what you do. Each de
 - [How do I work with UI changes?](ui.md)
 - [How do I check that what was built works?](check.md)
 - [How do I ship it?](ship.md)
+- [I want to change something. Which file is it in?](where.md)
 
 ## When things go wrong
 

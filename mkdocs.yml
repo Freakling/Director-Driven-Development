@@ -88,6 +88,7 @@ nav:
           - "How do I work with UI changes?": how-to/ui.md
           - "How do I check that what was built works?": how-to/check.md
           - "How do I ship it?": how-to/ship.md
+          - "I want to change something. Which file is it in?": how-to/where.md
       - When things go wrong:
           - "Something isn't there, or doesn't work": how-to/trouble.md
           - "The system was not built as I intended": how-to/drift.md

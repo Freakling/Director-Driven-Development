@@ -296,7 +296,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: "How do I work with UI changes?" has a third way, editing the screen yourself in Godot (or your editor for an app): commit through the normal flow so the check runs, tell the agent what changed so the screen spec and catalog follow, and when this path is the right one, accurate to the released rules on ownership and the check (check) · `bash tools/check.sh` passes (check)
 - Brief: Scope › How-to guides
 
-### T117 · Which file is it in? · in-progress 2026-10-16 · S · agent
+### T117 · Which file is it in? · done · S · agent
 - Depends on: T111
 - Touches: docs/how-to/where.md (new), docs/how-to/index.md, mkdocs.yml, docs/concept/records.md, product/brief.md (Screens page count)
 - Done when: a Day to day page "I want to change something. Which file is it in?" has a row per thing a director may want to change, with the file in each framework and whether to edit it yourself or ask (and which question or skill), drawn from each framework's "Each fact lives in one place" table at the latest release, including that the decision log is append-only and changes through a design session (check) · Records in files links it (check) · `bash tools/check.sh` passes (check)
@@ -314,13 +314,13 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: each framework's root TASKS.md `Next IDs` line carries the `R<n>` counter its own align procedure asks for, following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Framework features
 
-### T112 · Where do I start, for App-Director · todo · S · agent
+### T112 · Where do I start, for App-Director · in-progress 2026-10-16 · S · agent
 - Depends on: T110
 - Touches: docs/how-to/ (the Start here pages), mkdocs.yml, product/brief.md (Screens page count)
 - Done when: the Start here walkthrough has an App-Director version (building an app), accurate to the latest release, reached from the overview and the App-Director page (check) · `bash tools/check.sh` passes (check)
 - Brief: Scope › How-to guides
 
-### T113 · Where do I start, for SaaSAllTheThings · todo · S · agent
+### T113 · Where do I start, for SaaSAllTheThings · in-progress 2026-10-16 · S · agent
 - Depends on: T110
 - Touches: docs/how-to/ (the Start here pages), mkdocs.yml, product/brief.md (Screens page count)
 - Done when: the Start here walkthrough has a SaaSAllTheThings version (building a SaaS, including the assessment of an existing app), accurate to the latest release, reached from the overview and the SaaSAllTheThings page (check) · `bash tools/check.sh` passes (check)

@@ -13,7 +13,7 @@ Nobody holds the project in their head, human or agent. Everything that matters 
 | `AGENTS.md` | The systems that exist, what each one owns, and the project rules | A system is added, moved or re-scoped |
 | Commit messages | Why each change was made | Every commit |
 
-The file names above are the ones App-Director uses. Every framework keeps the same kinds of record under its own names: a task list, a design document, a decision log and an architecture table. See [Frameworks](../frameworks/index.md).
+The file names above are the ones App-Director uses. Every framework keeps the same kinds of record under its own names: a task list, a design document, a decision log and an architecture table. See [Frameworks](../frameworks/index.md). To find the file behind a change you want to make, see [Which file is it in?](../how-to/where.md)
 
 ## One home per fact
 
