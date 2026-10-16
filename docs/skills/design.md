@@ -4,7 +4,7 @@
 
 `/design` runs a design session with the director. It takes one topic, ranks the open questions by what they unblock, or changes how part of the project works. The skill writes down only what the director decides. Its job is to make those decisions fast and well informed, never to make them.
 
-How to use it: [the /design guide](../how-to/design.md).
+How to use it: [How do I decide what gets built, or change how something works?](../how-to/decide.md)
 
 ## What it does
 

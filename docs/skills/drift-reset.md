@@ -4,7 +4,7 @@
 
 `/drift-reset` rebuilds shared understanding when a design principle has been built two or more ways. The director starts it, on a branch of its own. It describes the project as built, maps how each principle was read, has the director rewrite the design where it splits, and plans the rebuild as ordinary tasks. A later `/drift-reset postmortem` checks whether the drift is gone. The concept behind it is on [Align and drift reset](../concept/drift.md).
 
-How to use it: [the /drift-reset guide](../how-to/drift-reset.md).
+How to use it: [The system was not built as I intended](../how-to/drift.md)
 
 ## What it does
 

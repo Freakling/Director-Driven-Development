@@ -6,7 +6,7 @@ Pick the next ready item in `TASKS.md`, have it built in a fresh context, prove 
 
 This is the skill that drives the agent development flow. Each run is self-contained: the context that builds the item is fresh, and after the commit the records hold everything a new session needs to continue.
 
-How to use it: [the /next-task guide](../how-to/next-task.md).
+How to use it: [How do I get things built?](../how-to/build.md)
 
 ## What it does
 

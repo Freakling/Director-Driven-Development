@@ -78,17 +78,21 @@ nav:
       - Acceptance check: skills/acceptance.md
   - How-to:
       - how-to/index.md
-      - /next-task: how-to/next-task.md
-      - /design: how-to/design.md
-      - /research: how-to/research.md
-      - /align: how-to/align.md
-      - /drift-reset: how-to/drift-reset.md
-      - /prune: how-to/prune.md
-      - /refresh-model-sizing: how-to/refresh-model-sizing.md
-      - /release: how-to/release.md
-      - Acceptance check: how-to/acceptance.md
-      - /ui-design: how-to/ui-design.md
-      - Merging framework pull requests: how-to/merging.md
+      - Start here:
+          - "Where do I start?": how-to/start.md
+          - "I already have a project. Can I use this?": how-to/existing.md
+      - Day to day:
+          - "How do I get things built?": how-to/build.md
+          - "How do I decide what gets built, or change how something works?": how-to/decide.md
+          - "I need facts before I decide": how-to/facts.md
+          - "How do I work with UI changes?": how-to/ui.md
+          - "How do I check that what was built works?": how-to/check.md
+          - "How do I ship it?": how-to/ship.md
+      - When things go wrong:
+          - "The system was not built as I intended": how-to/drift.md
+          - "The records and the code don't agree": how-to/align.md
+          - "The task list is getting long": how-to/prune.md
+          - "It's costing more than I'd like": how-to/cost.md
   - Frameworks:
       - frameworks/index.md
       - Godot-Director: frameworks/godot-director.md

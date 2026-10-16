@@ -8,8 +8,8 @@
 #   3. Framework links: a docs link into a framework repo names that repo's latest release tag, not
 #      main or an older release, and the path it names exists at that release.
 #   4. Skills nav: every skill page listed in the nav exists.
-#   5. How-to links: a skill page whose guide is in docs/how-to/ links that guide, so a reader of the
-#      skill page finds the step-by-step guide.
+#   5. How-to links: every skill page links some page under docs/how-to/, so a reader of the skill
+#      page finds the question that answers it; every page the How-to nav lists exists.
 #   6. The brief's own claims (product/brief.md): the page counts in its Screens table match the nav
 #      sections in mkdocs.yml; every Brief: value in TASKS.md, and every brief heading named in
 #      tools/*.sh, is a heading in the brief; no Later or Planned section names a done item.
@@ -228,22 +228,25 @@ done
 [ "$skills_fail" -eq 0 ] && [ -n "$skills_nav" ] && echo "ok: all Skills nav entries have pages on disk"
 
 # 5. How-to links ---------------------------------------------------------------------------
-# Every guide in docs/how-to/ (except the section's index) has a skill page of the same name in
-# docs/skills/. That skill page must link the guide, so a reader of the skill finds the steps.
+# Every skill page links some page under docs/how-to/, so a reader of the skill finds the question
+# that answers it. Every page the How-to nav lists exists on disk.
 howto_fail=0; howto_n=0
-for guide in docs/how-to/*.md; do
-  [ -f "$guide" ] || continue
-  name=$(basename "$guide" .md)
-  [ "$name" = index ] && continue
-  skill="docs/skills/$name.md"
+for skill in docs/skills/*.md; do
   [ -f "$skill" ] || continue
+  [ "$(basename "$skill" .md)" = index ] && continue
   howto_n=$((howto_n + 1))
-  if ! grep -qE "\]\(\.\./how-to/$name\.md[)#]" "$skill"; then
-    err "$skill has a guide, $guide, but doesn't link it (add a link to ../how-to/$name.md)"
+  if ! grep -qE "\]\(\.\./how-to/[a-z0-9-]+\.md[)#]" "$skill"; then
+    err "$skill doesn't link a page under docs/how-to/ (add a link to the question that answers it)"
     howto_fail=1
   fi
 done
-[ "$howto_fail" -eq 0 ] && [ "$howto_n" -gt 0 ] && echo "ok: all $howto_n skill pages with a guide link it"
+[ "$howto_fail" -eq 0 ] && [ "$howto_n" -gt 0 ] && echo "ok: all $howto_n skill pages link a How-to page"
+howto_nav=$(sed -n '/^  - How-to:/,/^  - [A-Z]/p' mkdocs.yml | grep -o 'how-to/[a-z0-9-]*\.md')
+nav_fail=0
+for page in $howto_nav; do
+  if [ ! -f "docs/$page" ]; then err "docs/$page is listed in the How-to nav but does not exist on disk"; nav_fail=1; fi
+done
+[ "$nav_fail" -eq 0 ] && [ -n "$howto_nav" ] && echo "ok: all How-to nav entries have pages on disk"
 
 # 6. The brief's claims ---------------------------------------------------------------------
 # The brief is checked against the rest of the repo. TASKS-archive.md is read only for the done
@@ -266,7 +269,7 @@ else
       if ($0 ~ /^[^ #]/) { if (innav) flush(); innav = 0; next }
       if (!innav) next
       if ($0 ~ /^  - [^ ]/) { flush(); title = $0; sub(/^  - /, "", title); sub(/:.*$/, "", title); count = 0; next }
-      if ($0 ~ /^      - /) count++
+      if ($0 ~ /^ +- .*\.md/) count++
       next
     }
     FNR == 1 { flush() }

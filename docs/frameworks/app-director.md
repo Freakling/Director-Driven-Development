@@ -58,15 +58,15 @@ Onboarding works out whether this is a new app, an existing app or an upgrade, s
 
 | Command | What it does |
 |---|---|
-| `/next-task` | Builds the next ready item in a fresh context, proves it with the check, updates the records and commits. Step by step: [the guide](../how-to/next-task.md) |
-| `/design` | A design session on a topic, or `/design questions` to rank the open questions by what they unblock. Step by step: [the guide](../how-to/design.md) |
-| `/research` | A read-only researcher answers one question in a fresh context and writes a dated note with its sources to `product/research/`. It informs; you decide. Procedure: [`research.md`](https://github.com/Freakling/App-Director/tree/v1.6.0/framework/.app-director/procedures/research.md). Step by step: [the guide](../how-to/research.md) |
-| `/acceptance` | Prepares or processes a checklist of built behaviour for you to tick Works or Broken. Step by step: [the guide](../how-to/acceptance.md) |
-| `/align` | Consistency pass across the brief, decisions, tasks, `AGENTS.md` and check config. Step by step: [the guide](../how-to/align.md) |
-| `/drift-reset` | Design drift reset, started only by you; `/drift-reset postmortem` after the rebuild. Step by step: [the guide](../how-to/drift-reset.md) |
-| `/prune` | Moves done items to `TASKS-archive.md`. Step by step: [the guide](../how-to/prune.md) |
-| `/release` | Runs the check, builds for the target platform and walks you through the deploy. Shared behaviour and this repo's section: [`/release`](../skills/release.md). Step by step: [the guide](../how-to/release.md) |
-| `/refresh-model-sizing` | Sets or updates the model for each task size. Step by step: [the guide](../how-to/refresh-model-sizing.md) |
+| `/next-task` | Builds the next ready item in a fresh context, proves it with the check, updates the records and commits. Step by step: [how do I get things built?](../how-to/build.md) |
+| `/design` | A design session on a topic, or `/design questions` to rank the open questions by what they unblock. Step by step: [how do I decide what gets built?](../how-to/decide.md) |
+| `/research` | A read-only researcher answers one question in a fresh context and writes a dated note with its sources to `product/research/`. It informs; you decide. Procedure: [`research.md`](https://github.com/Freakling/App-Director/tree/v1.6.0/framework/.app-director/procedures/research.md). Step by step: [I need facts before I decide](../how-to/facts.md) |
+| `/acceptance` | Prepares or processes a checklist of built behaviour for you to tick Works or Broken. Step by step: [how do I check that what was built works?](../how-to/check.md) |
+| `/align` | Consistency pass across the brief, decisions, tasks, `AGENTS.md` and check config. Step by step: [the records and the code don't agree](../how-to/align.md) |
+| `/drift-reset` | Design drift reset, started only by you; `/drift-reset postmortem` after the rebuild. Step by step: [the system was not built as I intended](../how-to/drift.md) |
+| `/prune` | Moves done items to `TASKS-archive.md`. Step by step: [the task list is getting long](../how-to/prune.md) |
+| `/release` | Runs the check, builds for the target platform and walks you through the deploy. Shared behaviour and this repo's section: [`/release`](../skills/release.md). Step by step: [how do I ship it?](../how-to/ship.md) |
+| `/refresh-model-sizing` | Sets or updates the model for each task size. Step by step: [it's costing more than I'd like](../how-to/cost.md) |
 
 ## Read more
 

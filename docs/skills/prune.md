@@ -4,7 +4,7 @@
 
 `/prune` moves finished items out of `TASKS.md` and into `TASKS-archive.md`, and removes notes that are no longer true. The queue stays short enough to read, and the history stays in the repository.
 
-How to use it: [the /prune guide](../how-to/prune.md).
+How to use it: [The task list is getting long](../how-to/prune.md)
 
 ## What it does
 

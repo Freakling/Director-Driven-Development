@@ -6,7 +6,7 @@
 
 `/research` answers one question in a fresh context and writes a dated note with its options, trade-offs, sources and a recommendation. The researcher reads and changes nothing; the note is its only output. A design session uses the note as input to a design call. The note records no decision.
 
-How to use it: [the /research guide](../how-to/research.md).
+How to use it: [I need facts before I decide](../how-to/facts.md)
 
 ## What it does
 

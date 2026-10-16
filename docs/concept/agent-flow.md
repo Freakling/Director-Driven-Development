@@ -1,6 +1,6 @@
 # Agent development flow
 
-Once the director has made a decision and tasks are in `TASKS.md`, the work runs through a short, repeating sequence: build, prove, commit. The [/next-task guide](../how-to/next-task.md) walks through one run of it.
+Once the director has made a decision and tasks are in `TASKS.md`, the work runs through a short, repeating sequence: build, prove, commit. [How do I get things built?](../how-to/build.md) walks through one run of it.
 
 ## Build
 

@@ -154,6 +154,25 @@ The proposal is a release pull request that follows the repo's own `CLAUDE.md`: 
 
 After the merge, `bash tools/work-release.sh work/<repo> <pull request number>` tags the merged commit `v<version>` and publishes the GitHub release with that description as its notes. Then an item here moves the docs links to the new tag and updates the pages for what the release ships.
 
+## Reviewing and merging the pull requests
+
+Each item the agent builds becomes one pull request in its framework's repo, on its own branch, and a release is a pull request too. Only the director merges: the agent never does, and the publish script never enables auto-merge.
+
+**What reaches you.** The pull request's description is the item's commit message: its title is the commit's subject, and its body says why the change was made. For a release pull request, the description is the release notes. The builder runs the framework's selftest before the commit, so a pull request that reaches you has passed it. Review three things: the change itself, in the Files changed tab; the records the item adds to that repo (the item, marked done, at the top of its root `TASKS.md` with that repo's next ID, and an entry at the top of its `CHANGELOG.md`); and the notes the agent writes for you, such as anything it asks you to look at and any choice it made while building.
+
+**What you do.**
+
+1. **Review on GitHub.** Open the pull request from the link the agent gives you. Read the description, then the Files changed tab, then the two records. If something needs changing, tell the agent what to change. It makes the change on the same branch and publishes it again, which updates the same pull request.
+2. **Merge with "Squash and merge".** Open the menu next to the merge button and choose "Squash and merge", not "Create a merge commit". A GitHub merge commit has two parents, and the Claude plugin directory's scanner has rejected every such commit, while it has accepted the single-parent ones. A squash merge puts one commit on the default branch. This is being confirmed with a squash-merged commit, so until it is proven, squash is the practice.
+3. **Deal with a blocked merge.**
+    - "Merging is blocked due to failing merge requirements": a requirement that the repo sets for merging isn't met yet, such as a check that has failed or hasn't finished. The checks under the merge box show which one.
+    - "This branch has conflicts that must be resolved": two open pull requests on the same repo each add an entry at the top of `TASKS.md` and `CHANGELOG.md`, so merging one makes the other's entries conflict. This is a conflict in the records, not in the code. Tell the agent, or run `/next-task`: it merges the default branch into the open branch, keeps both entries (a duplicate ID gets the next number), reruns the selftest and publishes.
+4. **Let the next `/next-task` run handle the merge.** It marks the item done, brings each other open branch in that repo up to date, and proposes a release of each framework the item touched, covering everything merged there since its last release.
+5. **Review and merge the release pull request.** It holds the version files, the `CHANGELOG.md` heading and the release notes. Check that the version is right: the agent proposes it, and you can change it in review. Each version file and the `CHANGELOG.md` heading should carry the same version. Merge it with the same squash merge.
+6. **Let the agent publish the release.** Once it is merged, the agent tags the merge commit `v<version>`, publishes the GitHub release with the notes, then moves the docs links to the new tag and updates the pages for what the release ships. That docs change is committed here, and pushed when you ask.
+
+Closing a pull request without merging it takes it out of the flow. The agent brings it to you at the next check of the pull requests, and the item stays in-progress until you decide. A change you hold back, such as one waiting for a user acceptance test, stays on a local branch with no pull request until you ask for one. Merging one pull request makes the others in that repo conflict on the records; each fix is another push and another selftest, so one open pull request per repo at a time keeps the work down.
+
 ## The tools
 
 - `tools/work-clones.sh` clones the three repos into `work/`, or fetches the clones already there. It never resets or switches a clone.

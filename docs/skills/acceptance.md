@@ -4,7 +4,7 @@
 
 An acceptance check is a checklist of built behaviour that a person verifies in the running project, item by item. The person ticks each item Works or Broken. The skill is `/acceptance` in App-Director and SaaSAllTheThings, and `/function-check` in Godot-Director, where the same idea is called a function check. This is one page for both, because they are the same concept under two names.
 
-How to use it: [the acceptance check guide](../how-to/acceptance.md), which covers `/function-check` in Godot-Director too.
+How to use it: [How do I check that what was built works?](../how-to/check.md), which covers `/function-check` in Godot-Director too.
 
 ## What it does
 

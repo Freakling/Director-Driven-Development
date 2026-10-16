@@ -20,6 +20,10 @@ The check exits 0 on pass, 1 on fail and 3 when it cannot run, so "it could not 
 
 The git pre-commit hook runs the check before any commit that touches code. A failing task cannot land.
 
+## What a person proves
+
+Tests and the check prove the rules and the setup. The rest, such as how a built screen behaves in the running project, a person ticks by hand: see [How do I check that what was built works?](../how-to/check.md)
+
 ## Reviews
 
 The check runs for every task, every time. It is fast and mechanical, and it never gets tired. Large changes, and medium ones that cross a risky boundary, also get an independent review before the commit. See [Reviews](reviews.md).

@@ -4,7 +4,7 @@
 
 `/refresh-model-sizing` sets or updates the model that builds each task size. It writes one entry per size, XS through XL, into the project's rules file. The sizes and the reasons behind the map are on [Task and model sizing](../concept/sizing.md).
 
-How to use it: [the /refresh-model-sizing guide](../how-to/refresh-model-sizing.md).
+How to use it: [It's costing more than I'd like](../how-to/cost.md)
 
 ## What it does
 

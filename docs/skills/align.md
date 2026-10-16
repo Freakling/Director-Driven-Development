@@ -4,7 +4,7 @@
 
 `/align` checks that the design, the decision log, the task queue, the assistant's rules file, the settings and the code still agree with each other. It is the routine pass that catches drift while it is still small. The concept behind it is on [Align and drift reset](../concept/drift.md).
 
-How to use it: [the /align guide](../how-to/align.md).
+How to use it: [The records and the code don't agree](../how-to/align.md)
 
 ## What it does
 
