@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T106 · B5
+**Next IDs:** T108 · B5
 
 ## Milestones
 | Milestone | Status |
@@ -223,7 +223,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Brief: Scope › Planned framework changes
 
 ### T103 · /ui-design tells the director how to use Excalidraw · in-progress 2026-10-16 · S · agent
-- PRs: Godot-Director #18 (open); App-Director and SaaSAllTheThings committed on their local /ui-design branches
+- PRs: Godot-Director #18 (open, brought up to date with #16 and #17); App-Director and SaaSAllTheThings committed on their local /ui-design branches
 - Depends on: T83
 - Touches: product/anchors/ui-design.md; work/Godot-Director: framework/.godot-director/procedures/ui-design.md, project/design/ui/README.md, examples/market-day/design/ui/README.md (one pull request; the director squash-merges); work/App-Director and work/SaaSAllTheThings: the same files on the local branches ddd/T84 and ddd/T85 (no push until T98)
 - Done when: whenever /ui-design hands the director a starter drawing, it says plainly that nothing needs installing (excalidraw.com in the browser, no account, Excalidraw+ not needed), how to open the starter (the menu's Open, or drag the file in), how to save it to `director/ui/<screen>.excalidraw` (Save to… or Ctrl+S; Chrome and Edge let you pick the folder, other browsers save to Downloads, so move and rename it), and that the drawing stays on the machine unless Live collaboration or a shareable link is used (check) · the anchor and the drawing guide each project gets say the same (check) · following AGENTS.md › Project rules for framework work (check)
@@ -239,6 +239,18 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Depends on: T104
 - Touches: docs/how-to/*.md (new), docs/how-to/index.md, mkdocs.yml, product/brief.md (Screens page count)
 - Done when: each common skill and the acceptance check has a guide in the same three parts as the /ui-design guide, accurate to the latest releases (check) · the overview lists them (check) · `bash tools/check.sh` passes (check)
+- Brief: Scope › How-to guides
+
+### T106 · Pages link to their How-to guides · todo · S · agent
+- Depends on: T104
+- Touches: docs/skills/*.md, docs/frameworks/*.md, docs/concept/*.md, selftest.sh
+- Done when: every skill page with a guide has a "How to use this skill" link to it near the top, and the framework pages link the guides for their skills (today, the Godot-Director page links the /ui-design guide) (check) · concept pages link a guide where a reader would want the practical steps (check) · the selftest fails when a skill page has a guide in docs/how-to/ but doesn't link it (check) · `bash tools/check.sh` passes (check)
+- Brief: Scope › How-to guides
+
+### T107 · How to review and merge the framework pull requests · todo · S · agent
+- Depends on: T104
+- Touches: docs/how-to/merging.md (new), docs/how-to/index.md, mkdocs.yml, product/brief.md (Screens page count)
+- Done when: a guide for the director covers reviewing a framework pull request, merging with "Squash and merge" (and why: the plugin directory's scanner), what "Merging is blocked" and conflicts mean and that the agent brings an open branch up to date after each merge, what happens after a merge (the item is done, a release is proposed, the release pull request, the docs follow), and that the agent never merges, describing only what's in place (check) · `bash tools/check.sh` passes (check)
 - Brief: Scope › How-to guides
 
 ### T84 · App-Director: /ui-design with Playwright capture · in-progress 2026-10-16 · L · agent
@@ -298,15 +310,15 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Brief: Scope › Common skills
 
 ### T100 · The framework repos ignore OS metadata files · in-progress 2026-10-16 · XS · agent
-- PRs: Godot-Director #16 (open; squash-merge to test the scanner)
+- PRs: Godot-Director #16 (merged with a merge commit, so not the scanner test; Godot-Director #17 was squash-merged as e654e82 and is the test)
 - Depends on: -
 - Touches: work/Godot-Director: .gitignore; work/App-Director: .gitignore; work/SaaSAllTheThings: .gitignore (one pull request per repo; the director squash-merges)
 - Done when: each framework's own `.gitignore` ignores `.DS_Store`, `Thumbs.db`, `desktop.ini` and `__MACOSX/`, as the plugin directory's scanner asks, in a pull request the director squash-merges to test whether single-parent commits pass the scan, following AGENTS.md › Project rules for framework work (check)
 - Note: Godot-Director first, as a test: if the squash-merged commit passes the plugin scanner, the same change goes to App-Director and SaaSAllTheThings once their clones' local /ui-design builds are committed.
 - Brief: Scope › Orchestrator for the three frameworks
 
-### T101 · The protected-space hook blocks absolute paths · in-progress 2026-10-16 · S · agent · high
-- PRs: Godot-Director #17 (open), App-Director #16 (open)
+### T101 · The protected-space hook blocks absolute paths · done · S · agent · high
+- PRs: Godot-Director #17 (merged), App-Director #16 (merged)
 - Depends on: -
 - Touches: work/Godot-Director: framework/.claude/hooks/guard-protected.sh, selftest.sh; work/App-Director: framework/.claude/hooks/guard-protected.sh, selftest.sh (one pull request per repo; the director squash-merges)
 - Done when: in Godot-Director and App-Director, the hook blocks a write to `director/` whether Claude Code sends a relative path or an absolute one (Windows `C:\\...\\director\\x`, forward-slash and POSIX forms), resolved against the project root, and still allows paths that merely contain "director" elsewhere, with selftest cases for each, following AGENTS.md › Project rules for framework work (check)
