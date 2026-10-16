@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T114 · B5
+**Next IDs:** T115 · B5
 
 ## Milestones
 | Milestone | Status |
@@ -235,8 +235,8 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: the nav has a How-to section after Skills with an overview page (check) · the /ui-design guide walks a first-time user through it as Godot-Director ships it: what to know (what it's for, that nothing needs installing, where drawings and specs go), what to do (set up the catalog, capture, draw and save in Excalidraw, process, build, verify, with what the agent asks at each step), and the caveats (sizes, overlays for an autoload's HUD, untested platforms, privacy), linking to the procedure at the latest release (check) · the brief's Screens table gives the section's real page count (check) · `bash tools/check.sh` passes (check)
 - Brief: Scope › How-to guides
 
-### T108 · Release Godot-Director 3.12.0 · in-progress 2026-10-16 · S · agent
-- PRs: Godot-Director #19 (open)
+### T108 · Release Godot-Director 3.12.0 · done · S · agent
+- PRs: Godot-Director #19 (merged); released as v3.12.0
 - Depends on: T51
 - Touches: work/Godot-Director: the version files its CLAUDE.md lists, CHANGELOG.md (one pull request; the director squash-merges)
 - Done when: the release pull request, which covers the .gitignore (T100), the protected-space fix (T101) and the Excalidraw instructions (T103), is merged, and `tools/work-release.sh` has tagged `v3.12.0` and published the GitHub release, following AGENTS.md › Project rules › Framework work › Releases (check) · an item here moves the docs links to `v3.12.0` (check)
@@ -259,6 +259,12 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Touches: docs/how-to/merging.md (new), docs/how-to/index.md, mkdocs.yml, product/brief.md (Screens page count)
 - Done when: a guide for the director covers reviewing a framework pull request, merging with "Squash and merge" (and why: the plugin directory's scanner), what "Merging is blocked" and conflicts mean and that the agent brings an open branch up to date after each merge, what happens after a merge (the item is done, a release is proposed, the release pull request, the docs follow), and that the agent never merges, describing only what's in place (check) · `bash tools/check.sh` passes (check)
 - Brief: Scope › How-to guides
+
+### T114 · Docs follow Godot-Director 3.12.0 · in-progress 2026-10-16 · XS · agent
+- Depends on: T108
+- Touches: docs/frameworks/godot-director.md, docs/skills/*.md, docs/how-to/*.md
+- Done when: every link into Godot-Director points at v3.12.0 (check) · `bash tools/check.sh` passes (check)
+- Brief: Scope › Framework features
 
 ### T109 · The How-to section becomes a FAQ: structure and the day-to-day questions · todo · M · agent
 - Depends on: T107
