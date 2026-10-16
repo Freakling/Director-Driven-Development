@@ -210,7 +210,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: the release pull request, which covers T81 to T83 (/ui-design), is merged, and `tools/work-release.sh` has tagged `v3.11.0` and published the GitHub release, following AGENTS.md › Project rules › Framework work › Releases (check) · an item here moves the docs links to `v3.11.0` and documents /ui-design on the Godot-Director page (check)
 - Brief: Scope › Planned framework changes
 
-### T99 · Docs follow Godot-Director 3.11.0 · todo · S · agent
+### T99 · Docs follow Godot-Director 3.11.0 · done · S · agent
 - Depends on: T97
 - Touches: docs/frameworks/godot-director.md, docs/skills/*.md
 - Done when: every link into Godot-Director points at v3.11.0 (check) · the Godot-Director page lists `/ui-design` and says in a few lines what it lets the director do, accurate to v3.11.0, until T86 gives it a skill page (check) · `bash tools/check.sh` passes (check)
