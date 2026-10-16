@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T126 · B5
+**Next IDs:** T127 · B5
 
 ## Milestones
 | Milestone | Status |
@@ -332,6 +332,12 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Depends on: T113
 - Touches: docs/index.md, docs/frameworks/godot-director.md
 - Done when: the home page's "where do I start?" link leads to the How-to overview or names the three start pages, and the Godot-Director page's Install section links "Where do I start with a game?" as the other two framework pages link theirs (check) · `bash tools/check.sh` passes (check)
+- Brief: Scope › How-to guides
+
+### T126 · App-Director first in the How-to section · in-progress 2026-10-16 · S · agent
+- Depends on: T125
+- Touches: docs/how-to/start.md, docs/how-to/start-app.md, docs/how-to/start-game.md (new name), docs/how-to/index.md, docs/how-to/*.md, docs/index.md, mkdocs.yml, docs/frameworks/*.md, selftest.sh
+- Done when: "Where do I start?" (docs/how-to/start.md, the section's stable address) is the App-Director walkthrough, the game walkthrough moves to its own address, and the nav, the overview, the home page and the framework pages list and link the three in the order app, game, SaaS (check) · How-to pages that use one framework as their example use App-Director unless the skill is only in another, and the existing-project page's sections follow the same order (check) · no link to the old addresses is left, and the selftest's How-to link checks still pass (check) · `bash tools/check.sh` passes (check)
 - Brief: Scope › How-to guides
 
 ### T84 · App-Director: /ui-design with Playwright capture · in-progress 2026-10-16 · L · agent
