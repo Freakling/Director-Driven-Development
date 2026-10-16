@@ -460,6 +460,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Brief: Scope › Framework features
 
 ### T124 · Release App-Director 1.7.0 · in-progress 2026-10-16 · S · agent
+- PRs: App-Director #21 (open)
 - Depends on: T51, T121
 - Touches: work/App-Director: the version files its CLAUDE.md lists, CHANGELOG.md (one pull request; the director squash-merges)
 - Done when: the release pull request, which covers the protected-space fix (T101), the .gitignore (T100), the align reality step (T93), the R counter and plugin update note (T119, T118), the human-written product brief (T87) and the README wording (T121), is merged, and `tools/work-release.sh` has tagged `v1.7.0` and published the GitHub release, following AGENTS.md › Project rules › Framework work › Releases (check) · an item here moves the docs links to `v1.7.0` and updates the pages for what it ships (check)
