@@ -458,7 +458,7 @@ export default {
 };
 ```
 - A screen has a `route` (and optional `auth`: a test account's saved sign-in state in the gitignored `tools/ui/.auth/`). A state is an async `(page, api) => ...` that seeds data through `api` (an HTTP helper bound to the dev or test backend) and prepares the page (open a dialog, fill a field). States are named like the Godot ones.
-- `baseUrl` may also come from `tools/ui_capture.cfg` › `[web] base_url`. Capture refuses any host that is not `localhost`, `127.0.0.1` or listed in `[web] allow_hosts`: it never points at production. `[web] start_command` (optional) starts the app and capture waits for `[web] ready_url`, then stops it. SaaSAllTheThings uses its `dev` environment and test tenants only, never a real tenant's data.
+- `baseUrl` may also come from `tools/ui_capture.cfg` › `[web] base_url`. Capture refuses any host that is not `localhost`, `127.0.0.1` or listed in `[web] allow_hosts`: it never points at production. `[web] start_command` (optional) starts the app and capture waits for `[web] ready_url`, then stops it. Every request, redirect and WebSocket the page makes to another host is blocked and noted. SaaSAllTheThings may also capture its dev environment, named explicitly in `[web] dev_url`: that host is the only one allowed off this machine, with seeded test tenants and saved test sign-ins only; production and every other hosted address are refused, and a real tenant's data is never captured.
 - The seed has one entry: the root route.
 
 ### 12.4 Capture
