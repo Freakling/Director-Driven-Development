@@ -20,6 +20,7 @@ The skill pages say what each command does. The guides say what you do: what to 
 | [Ship a build with /release](release.md) | `/release` | All three |
 | [Check a build by hand with the acceptance check](acceptance.md) | `/acceptance`, `/function-check` | App-Director and SaaSAllTheThings (`/acceptance`), Godot-Director (`/function-check`) |
 | [Design a screen with /ui-design](ui-design.md) | `/ui-design` | Godot-Director |
+| [Review and merge the framework pull requests](merging.md) | None: for you as the director of the frameworks | Not shipped: it covers how this repository's framework changes reach you |
 
 Each guide describes only what is released, names the frameworks that ship its skill, and links to the skill page and the procedure for the details.
 

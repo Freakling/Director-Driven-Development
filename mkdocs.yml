@@ -88,6 +88,7 @@ nav:
       - /release: how-to/release.md
       - Acceptance check: how-to/acceptance.md
       - /ui-design: how-to/ui-design.md
+      - Merging framework pull requests: how-to/merging.md
   - Frameworks:
       - frameworks/index.md
       - Godot-Director: frameworks/godot-director.md
