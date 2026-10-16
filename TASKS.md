@@ -438,6 +438,8 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Brief: Scope › Planned framework changes
 
 ### T121 · App-Director's README says "an agreed placeholder" · in-progress 2026-10-16 · XS · agent
+- PRs: App-Director #20 (open)
+- Note: `framework/.app-director/rules.md` line 27 says "the placeholder policy in AGENTS.md › Ownership" in the same sense, and the example's AGENTS.md has a "Placeholder policy" column header; both are framework files outside this item, left for the director to decide.
 - Depends on: T87
 - Touches: work/App-Director: README.md (one pull request; the director merges)
 - Done when: the README's ownership line says human-owned areas get an agreed placeholder instead of generated content, in place of "a documented placeholder policy", following AGENTS.md › Project rules for framework work (check)
