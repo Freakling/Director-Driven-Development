@@ -272,13 +272,13 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: the nav has the three groups (Start here, Day to day, When things go wrong) with question titles and short stable addresses, the overview lists the questions by group, and the merging guide is moved into `product/framework-workflow.md` and off the site (check) · the six Day to day questions are written to the brief's page model (short answer, two ways with when to use which, steps with what the agent asks, caveats, ties), replacing the skill-named pages, accurate to the latest releases (check) · skill, framework and concept pages link the question that answers them, and the selftest checks that every skill page links a How-to page (check) · placeholders stand in for the Start here and When things go wrong pages until T110 and T111 land, or the groups are added by those items; either way `bash tools/check.sh` passes (check)
 - Brief: Scope › How-to guides
 
-### T110 · Start here: Where do I start, for Godot-Director · in-progress 2026-10-16 · M · agent
+### T110 · Start here: Where do I start, for Godot-Director · done · M · agent
 - Depends on: T109
 - Touches: docs/how-to/ (the Start here pages), docs/how-to/index.md, mkdocs.yml, product/brief.md (Screens page count)
 - Done when: "Where do I start?" walks a new director through building a game with Godot-Director: what to have installed, installing the framework, onboarding and every question it asks with how to answer, the first task, and where to go next, accurate to the latest release (check) · "I already have a project. Can I use this?" covers onboarding an existing game, accurate to the latest release (check) · `bash tools/check.sh` passes (check)
 - Brief: Scope › How-to guides
 
-### T111 · When things go wrong: the four questions · todo · M · agent
+### T111 · When things go wrong: the four questions · in-progress 2026-10-16 · M · agent
 - Depends on: T109
 - Touches: docs/how-to/ (the When things go wrong pages), docs/how-to/index.md, mkdocs.yml, product/brief.md (Screens page count)
 - Done when: "The system was not built as I intended" explains the drift reset step by step with a worked example drawn from a framework's example project, and says when `/align` is enough (check) · the records and the code disagreeing, a long task list, and cost each have their question page to the brief's page model, accurate to the latest releases (check) · `bash tools/check.sh` passes (check)
@@ -322,7 +322,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: the selftest fails when a page count in the brief's Screens table differs from that section in `mkdocs.yml`'s nav (check) · it fails when a `Brief:` value in TASKS.md, or a brief heading named in `tools/`, isn't a heading in the brief (check) · it fails when a brief section whose heading starts with "Later" or "Planned" names an item that is done in TASKS.md or the archive (check) · `bash tools/check.sh` passes (check)
 - Brief: Scope › Built with App-Director
 
-### T92 · The align anchor: brief against reality · todo · S · agent
+### T92 · The align anchor: brief against reality · in-progress 2026-10-16 · S · agent
 - Depends on: -
 - Touches: product/anchors/align.md (new)
 - Done when: the anchor describes a "Brief against reality" step as `product/anchors/align.md` says: read the whole design doc, check every statement of state against the built product, done items and latest releases, and check every decision since the last `docs: align` commit instead of a spot check, with placeholders for each framework's design records (brief; PRD and ADRs; GDD) and where each looks for done items and releases (check) · `bash tools/check.sh` passes (check)
