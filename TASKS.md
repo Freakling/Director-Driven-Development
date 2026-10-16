@@ -241,7 +241,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: the release pull request, which covers the .gitignore (T100), the protected-space fix (T101) and the Excalidraw instructions (T103), is merged, and `tools/work-release.sh` has tagged `v3.12.0` and published the GitHub release, following AGENTS.md › Project rules › Framework work › Releases (check) · an item here moves the docs links to `v3.12.0` (check)
 - Brief: Scope › Framework features
 
-### T105 · How-to guides for the common skills · in-progress 2026-10-16 · M · agent
+### T105 · How-to guides for the common skills · done · M · agent
 - Depends on: T104
 - Touches: docs/how-to/*.md (new), docs/how-to/index.md, mkdocs.yml, product/brief.md (Screens page count)
 - Done when: each common skill and the acceptance check has a guide in the same three parts as the /ui-design guide, accurate to the latest releases (check) · the overview lists them (check) · `bash tools/check.sh` passes (check)

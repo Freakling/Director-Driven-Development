@@ -78,6 +78,15 @@ nav:
       - Acceptance check: skills/acceptance.md
   - How-to:
       - how-to/index.md
+      - /next-task: how-to/next-task.md
+      - /design: how-to/design.md
+      - /research: how-to/research.md
+      - /align: how-to/align.md
+      - /drift-reset: how-to/drift-reset.md
+      - /prune: how-to/prune.md
+      - /refresh-model-sizing: how-to/refresh-model-sizing.md
+      - /release: how-to/release.md
+      - Acceptance check: how-to/acceptance.md
       - /ui-design: how-to/ui-design.md
   - Frameworks:
       - frameworks/index.md
