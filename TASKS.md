@@ -286,7 +286,8 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Note: Godot-Director first, as a test: if the squash-merged commit passes the plugin scanner, the same change goes to App-Director and SaaSAllTheThings once their clones' local /ui-design builds are committed.
 - Brief: Scope › Orchestrator for the three frameworks
 
-### T101 · The protected-space hook blocks absolute paths · todo · S · agent · high
+### T101 · The protected-space hook blocks absolute paths · in-progress 2026-10-16 · S · agent · high
+- PRs: Godot-Director #17 (open), App-Director #16 (open)
 - Depends on: -
 - Touches: work/Godot-Director: framework/.claude/hooks/guard-protected.sh, selftest.sh; work/App-Director: framework/.claude/hooks/guard-protected.sh, selftest.sh (one pull request per repo; the director squash-merges)
 - Done when: in Godot-Director and App-Director, the hook blocks a write to `director/` whether Claude Code sends a relative path or an absolute one (Windows `C:\\...\\director\\x`, forward-slash and POSIX forms), resolved against the project root, and still allows paths that merely contain "director" elsewhere, with selftest cases for each, following AGENTS.md › Project rules for framework work (check)
