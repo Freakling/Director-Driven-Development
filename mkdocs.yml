@@ -74,6 +74,7 @@ nav:
       - /drift-reset: skills/drift-reset.md
       - /prune: skills/prune.md
       - /refresh-model-sizing: skills/refresh-model-sizing.md
+      - /release: skills/release.md
       - Acceptance check: skills/acceptance.md
   - Frameworks:
       - frameworks/index.md

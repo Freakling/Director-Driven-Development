@@ -21,7 +21,7 @@ Run it as `/design <topic>` for a topic, or `/design questions` to rank the open
 
 ### Godot-Director
 
-The procedure is at [`framework/.godot-director/procedures/design.md`](https://github.com/Freakling/Godot-Director/tree/v3.9.0/framework/.godot-director/procedures/design.md) in the Godot-Director repository.
+The procedure is at [`framework/.godot-director/procedures/design.md`](https://github.com/Freakling/Godot-Director/tree/v3.10.0/framework/.godot-director/procedures/design.md) in the Godot-Director repository.
 
 - It reads the Design Pillars and the GDD's Open Questions, and records decisions in `design/gdd.md` and `design/decisions.md`.
 - If an idea contradicts a Design Pillar, the skill stops and asks which gives way, the pillar or the idea.

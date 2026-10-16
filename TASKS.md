@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T79 · B5
+**Next IDs:** T80 · B5
 
 ## Milestones
 | Milestone | Status |
@@ -163,12 +163,18 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: Godot-Director has a merged pull request with CI that runs the export on every change, and CD that releases builds to a platform's UAT branch with optional promotion to production, following AGENTS.md › Project rules for framework work (check) · once released there, the Godot-Director page documents them and /release gets its own skill page (check)
 - Brief: Scope › Planned framework changes
 
-### T78 · Release Godot-Director 3.10.0 · in-progress 2026-10-16 · S · agent
-- PRs: Godot-Director #13 (open)
+### T78 · Release Godot-Director 3.10.0 · done · S · agent
+- PRs: Godot-Director #13 (merged); released as v3.10.0
 - Depends on: T51, T31
 - Touches: work/Godot-Director: the version files its CLAUDE.md lists, CHANGELOG.md (one pull request; the director merges)
 - Done when: the release pull request, which covers T31 (CI export and /release), is merged, and `tools/work-release.sh` has tagged `v3.10.0` and published the GitHub release, following AGENTS.md › Project rules › Framework work › Releases (check) · an item here moves the docs links to `v3.10.0`, documents /release on the Godot-Director page, and gives /release its own skill page now that all three ship it (check)
 - Brief: Scope › Planned framework changes
+
+### T79 · Docs follow Godot-Director 3.10.0, and the /release skill page · done · S · agent
+- Depends on: T78
+- Touches: docs/skills/release.md (new), docs/skills/index.md, mkdocs.yml, docs/frameworks/*.md, docs/skills/*.md, product/brief.md
+- Done when: every link into Godot-Director points at v3.10.0 (check) · /release has its own skill page now that all three ship it: the shared behaviour and what's unique per repo, matching the released procedures, in the skills index and nav, and the framework pages link to it instead of describing it alone (check) · the Godot-Director page documents /release and CI export (check) · `bash tools/check.sh` passes (check)
+- Brief: Scope › Common skills
 
 ## Notes
 - T55, T54 and T56 are released as SaaSAllTheThings v0.7.0, Godot-Director v3.6.0 and App-Director v1.4.0.

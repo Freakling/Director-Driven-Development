@@ -65,7 +65,7 @@ Onboarding works out whether this is a new app, an existing app or an upgrade, s
 | `/align` | Consistency pass across the brief, decisions, tasks, `AGENTS.md` and check config |
 | `/drift-reset` | Design drift reset, started only by you; `/drift-reset postmortem` after the rebuild |
 | `/prune` | Moves done items to `TASKS-archive.md` |
-| `/release` | Runs the check, builds for the target platform and walks you through the deploy |
+| `/release` | Runs the check, builds for the target platform and walks you through the deploy. Shared behaviour and this repo's section: [`/release`](../skills/release.md) |
 | `/refresh-model-sizing` | Sets or updates the model for each task size |
 
 ## Read more

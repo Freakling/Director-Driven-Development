@@ -17,6 +17,7 @@ Every framework ships a core set of skills that work the same way across all thr
 | [/drift-reset](drift-reset.md) | Reset a principle that has been built two different ways back to one |
 | [/prune](prune.md) | Remove dead code, stale items and obsolete records |
 | [/refresh-model-sizing](refresh-model-sizing.md) | Update the per-size model map in AGENTS.md from the current best options |
+| [/release](release.md) | Check the build, prepare the target, and ship it with the human's approval |
 | [Acceptance check](acceptance.md) | Prove every (demo) outcome and pass the check before a release |
 
 ## How skills work

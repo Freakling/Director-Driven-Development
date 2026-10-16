@@ -98,7 +98,7 @@ Onboarding works out whether this is a new app, an existing app or an upgrade, s
 | `/tenant` | Checks readiness for a new customer and hands you the consent and setup steps |
 | `/acceptance` | Prepares or processes a checklist of built behaviour for you to tick Works or Broken |
 | `/feedback` | Turns a customer or pilot session into bugs, score trends and product proposals |
-| `/release` | Check, what-if, deploy and smoke test, each Azure step with your approval. Production is yours to run |
+| `/release` | Check, what-if, deploy and smoke test, each Azure step with your approval. Production is yours to run. Shared behaviour and this repo's section: [`/release`](../skills/release.md) |
 | `/align` | Consistency pass across the PRD, decisions, ADRs, integration contracts, tasks, `AGENTS.md`, settings and code |
 | `/drift-reset` | Product design drift reset, started only by you; `/drift-reset postmortem` after the rebuild |
 | `/prune` | Moves done items to `TASKS-archive.md` |
