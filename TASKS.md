@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T117 · B5
+**Next IDs:** T118 · B5
 
 ## Milestones
 | Milestone | Status |
@@ -294,6 +294,12 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Depends on: T115
 - Touches: docs/how-to/ui.md
 - Done when: "How do I work with UI changes?" has a third way, editing the screen yourself in Godot (or your editor for an app): commit through the normal flow so the check runs, tell the agent what changed so the screen spec and catalog follow, and when this path is the right one, accurate to the released rules on ownership and the check (check) · `bash tools/check.sh` passes (check)
+- Brief: Scope › How-to guides
+
+### T117 · Which file is it in? · todo · S · agent
+- Depends on: T111
+- Touches: docs/how-to/where.md (new), docs/how-to/index.md, mkdocs.yml, docs/concept/records.md, product/brief.md (Screens page count)
+- Done when: a Day to day page "I want to change something. Which file is it in?" has a row per thing a director may want to change, with the file in each framework and whether to edit it yourself or ask (and which question or skill), drawn from each framework's "Each fact lives in one place" table at the latest release, including that the decision log is append-only and changes through a design session (check) · Records in files links it (check) · `bash tools/check.sh` passes (check)
 - Brief: Scope › How-to guides
 
 ### T112 · Where do I start, for App-Director · todo · S · agent
