@@ -23,7 +23,7 @@ cd "$(dirname "$0")/.." || exit 2
 
 REPOS="App-Director Godot-Director SaaSAllTheThings"
 TASKS_FILE="${PUSH_ALIGNMENT_TASKS:-TASKS.md}"
-BRIEF="Scope › Later: orchestrator for the three frameworks"
+BRIEF="Scope › Orchestrator for the three frameworks"
 TMP_ROOT="${TMPDIR:-/tmp}/push-alignment-$$"
 trap 'rm -rf "$TMP_ROOT"' EXIT
 
