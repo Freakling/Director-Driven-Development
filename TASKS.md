@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T97 · B5
+**Next IDs:** T99 · B5
 
 ## Milestones
 | Milestone | Status |
@@ -182,35 +182,47 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: the anchor holds the shared /ui-design core adapted from the director's spec (`init/ui-design-skill-spec.md`) to Godot-Director's current release: the drawing conventions, `drawing.json`, the screen spec, the capture, process and verify workflow, and the hooks into build, review, the acceptance check (function check in Godot-Director) and align, with placeholders per framework as the research anchor has (check) · it defines the capture and lint adapter's contract (what capture must output: PNG, element map, map image, lint file) and describes the two adapters: Godot (from the spec) and Playwright for web apps (check) · it records the spec's settled questions (check) · `bash tools/check.sh` passes (check)
 - Brief: Scope › Planned framework changes
 
-### T81 · Godot-Director: UI capture, catalog and lint · in-progress 2026-10-16 · L · agent
-- PRs: Godot-Director #14 (open; one pull request for T81 to T83, the director's request)
+### T81 · Godot-Director: UI capture, catalog and lint · done · L · agent
+- PRs: Godot-Director #14 (merged; one pull request for T81 to T83, the director's request)
 - Depends on: T80
 - Touches: work/Godot-Director: tools/ui_capture.sh, ui_capture.gd, ui_catalog.gd, ui_lint.gd, ui_overlay.gd (new), project tools/ui_screens.gd and ui_capture.cfg seeds, procedures/ui-design.md (new, list and capture), the /ui-design skill, rules.md, install.sh, selftest.sh (one pull request; the director merges)
 - Done when: Godot-Director has a merged pull request where `/ui-design list` and `capture` work as the anchor's Godot adapter says, with the spec's acceptance criteria 1 and 5 met in its own test project, following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Planned framework changes
 
-### T82 · Godot-Director: drawings and screen specs · in-progress 2026-10-16 · M · agent
-- PRs: Godot-Director #14 (open)
+### T82 · Godot-Director: drawings and screen specs · done · M · agent
+- PRs: Godot-Director #14 (merged)
 - Depends on: T81
 - Touches: work/Godot-Director: tools/ui_drawing.gd (new), the starter drawing in capture, procedures/ui-design.md (process), design/ui/README.md seed, tasks.md (`UI:` field), design.md, selftest.sh (one pull request; the director merges)
 - Done when: Godot-Director has a merged pull request where capture writes a starter drawing and `/ui-design process` reads a drawing through `drawing.json`, confirms its reading, settles open points and records the screen spec and items, as the anchor says, with the spec's acceptance criteria 2, 3 and 4 met, following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Planned framework changes
 
-### T83 · Godot-Director: verify and the workflow hooks · in-progress 2026-10-16 · M · agent
-- PRs: Godot-Director #14 (open)
+### T83 · Godot-Director: verify and the workflow hooks · done · M · agent
+- PRs: Godot-Director #14 (merged)
 - Depends on: T82
 - Touches: work/Godot-Director: procedures/ui-design.md (verify), build.md, review.md, function-check.md, align.md, tools/check.sh and check.gd (optional lint), the AGENTS.md template, install.sh, README.md, ONBOARDING.md, selftest.sh (one pull request; the director merges)
 - Done when: Godot-Director has a merged pull request where `/ui-design verify` writes compare images and lists deviations, and the build, review, function check, align and the optional check lint use the screen spec, as the anchor says, with the spec's acceptance criteria 6 to 9 met, following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Planned framework changes
 
+### T97 · Release Godot-Director 3.11.0 · in-progress 2026-10-16 · S · agent
+- Depends on: T51, T83
+- Touches: work/Godot-Director: the version files its CLAUDE.md lists, CHANGELOG.md (one pull request; the director merges)
+- Done when: the release pull request, which covers T81 to T83 (/ui-design), is merged, and `tools/work-release.sh` has tagged `v3.11.0` and published the GitHub release, following AGENTS.md › Project rules › Framework work › Releases (check) · an item here moves the docs links to `v3.11.0` and documents /ui-design on the Godot-Director page (check)
+- Brief: Scope › Planned framework changes
+
+### T98 · The director tests /ui-design in a game · todo · - · human
+- Depends on: T97
+- Touches: a Godot game of the director's, with Godot-Director 3.11.0
+- Done when: the director has captured, drawn, processed and verified at least one screen with the released /ui-design, and said whether App-Director and SaaSAllTheThings should follow as the anchor says or after changes (demo)
+- Brief: Scope › Planned framework changes
+
 ### T84 · App-Director: /ui-design with Playwright capture · todo · L · agent
-- Depends on: T83
+- Depends on: T98
 - Touches: work/App-Director (one pull request; the director merges)
 - Done when: once Godot-Director has released /ui-design, App-Director has a merged pull request that builds it from the anchor with the Playwright adapter for web apps, following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Planned framework changes
 
 ### T85 · SaaSAllTheThings: /ui-design with Playwright capture · todo · L · agent
-- Depends on: T83
+- Depends on: T98
 - Touches: work/SaaSAllTheThings (one pull request; the director merges)
 - Done when: once Godot-Director has released /ui-design, SaaSAllTheThings has a merged pull request that builds it from the anchor with the Playwright adapter, following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Planned framework changes
