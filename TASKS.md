@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T122 · B5
+**Next IDs:** T125 · B5
 
 ## Milestones
 | Milestone | Status |
@@ -309,8 +309,8 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: App-Director's README gives the plugin update commands (`/plugin marketplace update` and `/plugin update`, and the restart), as Godot-Director's and SaaSAllTheThings' do, following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Framework features
 
-### T119 · The framework repos' own queues carry an R counter · in-progress 2026-10-16 · XS · agent
-- PRs: App-Director #18 (merged), Godot-Director #21 (merged, without the R counter), SaaSAllTheThings #11 (merged, without the R counter); the fix is Godot-Director #23 and SaaSAllTheThings #13 (open)
+### T119 · The framework repos' own queues carry an R counter · done · XS · agent
+- PRs: App-Director #18, Godot-Director #21 and #23, SaaSAllTheThings #11 and #13 (all merged)
 - Depends on: -
 - Touches: work/App-Director: TASKS.md; work/Godot-Director: TASKS.md; work/SaaSAllTheThings: TASKS.md (one pull request per repo; the director merges)
 - Done when: each framework's root TASKS.md `Next IDs` line carries the `R<n>` counter its own align procedure asks for, following AGENTS.md › Project rules for framework work (check)
@@ -416,8 +416,8 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Note: found while building T85. Ships with /ui-design, so it waits for T84 and T85.
 - Brief: Scope › Planned framework changes
 
-### T87 · App-Director: the human-written product brief · in-progress 2026-10-16 · S · agent
-- PRs: App-Director #19 (open)
+### T87 · App-Director: the human-written product brief · done · S · agent
+- PRs: App-Director #19 (merged)
 - Depends on: -
 - Touches: work/App-Director: a project seed for the template, ONBOARDING.md, README.md (one pull request; the director merges)
 - Done when: App-Director has a merged pull request with the director's product brief template (`product/anchors/templates/product_brief_template.md`) shipped into every project as a template for the human to fill in, presented in onboarding as an alternative or addition to the chat interview with a word on why it helps (value and context for later development), and scanned by onboarding for new and existing projects to build the initial assessment and design records, with what it inferred marked, following AGENTS.md › Project rules for framework work (check)
@@ -437,10 +437,28 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: SaaSAllTheThings has a merged pull request with a SaaS variant of the director's product brief template that also asks about enterprise architecture, requirements, security requirements and the control frameworks the customer must meet, worded for the human to answer and anchored in the customer's security framework, shipped into every project as a template for the human to fill in, presented in onboarding as an alternative or addition to the chat interview with a word on why it helps (value and context for later development), and scanned by onboarding for new and existing projects to build the initial assessment and design records, with what it inferred marked, following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Planned framework changes
 
-### T121 · App-Director's README says "an agreed placeholder" · todo · XS · agent
+### T121 · App-Director's README says "an agreed placeholder" · in-progress 2026-10-16 · XS · agent
 - Depends on: T87
 - Touches: work/App-Director: README.md (one pull request; the director merges)
 - Done when: the README's ownership line says human-owned areas get an agreed placeholder instead of generated content, in place of "a documented placeholder policy", following AGENTS.md › Project rules for framework work (check)
+- Brief: Scope › Framework features
+
+### T122 · Release Godot-Director 3.13.0 · in-progress 2026-10-16 · S · agent
+- Depends on: T51
+- Touches: work/Godot-Director: the version files its CLAUDE.md lists, CHANGELOG.md (one pull request; the director squash-merges)
+- Done when: the release pull request, which covers the align reality step (T94), the R counter (T119) and the human-written GDD (T88), is merged, and `tools/work-release.sh` has tagged `v3.13.0` and published the GitHub release, following AGENTS.md › Project rules › Framework work › Releases (check) · an item here moves the docs links to `v3.13.0` and updates the pages for what it ships (check)
+- Brief: Scope › Framework features
+
+### T123 · Release SaaSAllTheThings 0.9.0 · in-progress 2026-10-16 · S · agent
+- Depends on: T51
+- Touches: work/SaaSAllTheThings: the version files its CLAUDE.md lists, CHANGELOG.md (one pull request; the director squash-merges)
+- Done when: the release pull request, which covers the align reality step (T95), the R counter (T119) and the human-written SaaS brief (T89), is merged, and `tools/work-release.sh` has tagged `v0.9.0` and published the GitHub release, following AGENTS.md › Project rules › Framework work › Releases (check) · an item here moves the docs links to `v0.9.0` and updates the pages for what it ships (check)
+- Brief: Scope › Framework features
+
+### T124 · Release App-Director 1.7.0 · todo · S · agent
+- Depends on: T51, T121
+- Touches: work/App-Director: the version files its CLAUDE.md lists, CHANGELOG.md (one pull request; the director squash-merges)
+- Done when: the release pull request, which covers the protected-space fix (T101), the .gitignore (T100), the align reality step (T93), the R counter and plugin update note (T119, T118), the human-written product brief (T87) and the README wording (T121), is merged, and `tools/work-release.sh` has tagged `v1.7.0` and published the GitHub release, following AGENTS.md › Project rules › Framework work › Releases (check) · an item here moves the docs links to `v1.7.0` and updates the pages for what it ships (check)
 - Brief: Scope › Framework features
 
 ### T90 · The docs describe the starting document · todo · XS · agent
@@ -450,7 +468,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Brief: Scope › Planned framework changes
 
 ## Notes
-- T88 and T89 are merged; T87 is being built; T90 follows all three and their releases. Releases of all three come once T87 and the R-counter fixes are merged.
+- T122 and T123 release Godot-Director and SaaSAllTheThings; T124 releases App-Director after T121. T90 and T96 follow the releases.
 - T55, T54 and T56 are released as SaaSAllTheThings v0.7.0, Godot-Director v3.6.0 and App-Director v1.4.0.
 - T34 waits until all three frameworks have released the research assistant.
 - T71 releases T19; T31 follows T19.
