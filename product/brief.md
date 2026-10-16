@@ -18,8 +18,11 @@ The how-to reference for Director-Driven Development, centred on the three frame
 ### Now: framework docs
 The site is technical documentation and project orchestration. Promotional content, such as the LinkedIn material and graphics in `init/`, doesn't belong on it; pages link to the blog for the why.
 
+### How-to guides
+A How-to section after Concepts and Skills, with one guide per skill for a person who has never used it: what you need to know, what you need to do step by step, and the caveats. Guides are practical, not technical reference: they say what to install (or that nothing needs installing), which tool to open, what to type, where files go, what the agent asks you, and what can go wrong. Each guide describes only what is released, names the frameworks that ship the skill, and links to the skill page and the procedure for the details.
+
 ### Later: playbook
-How-to guides and a "Start here" playbook that guide technical users through installing and running a framework.
+A "Start here" playbook that guides technical users through installing and running a framework.
 
 ### Concepts
 Each core concept of DDD gets its own page in a Concepts section, explained once and framework-neutral: Overview, Roles, Design calls, Agent development flow, The check, Reviews, Task and model sizing, Records in files, Code shaped for agents, Ownership, Align and drift reset, Built-in cost savings, and Cost tuning for developers. Concept pages explain the idea; skill pages cover the commands and link to their concept.
@@ -107,6 +110,7 @@ A reader arrives from a saemundsson.se post on the matching docs page, and can g
 |---|---|
 | Home | DDD in one screen: roles, loop, frameworks, links to the posts |
 | Concepts (13 pages) | One page per core concept, from the overview to the two cost pages |
+| How-to (1 page per guide, plus an overview) | One guide per skill for first-time users: what to know, what to do, the caveats |
 | Skills (10 pages) | An overview, and one page per common skill and the acceptance check: what it does, how it works, and what is unique to each repo |
 | Frameworks (4 pages) | Comparison page, and one page per framework: check, install, commands, links |
 

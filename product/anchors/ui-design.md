@@ -129,7 +129,7 @@ Finding the runtime follows the framework's own pattern: Godot-Director as `expo
 1. Run `bash tools/ui_capture.sh <screen|--all>`. Exit 3: say capture couldn't run and why (no display, Godot, Node or Playwright missing); stop.
 2. Outputs land in `<ui folder>/captures/` (section 8.2).
 3. Look at each `.png` and its `.lint.txt` (if the tool can view images; otherwise use `.elements.json`). Report findings in one line each; a finding that is a real bug becomes a `B` item after the director agrees (at once inside a `/next-task` run).
-4. Tell the director where the starter drawing is and what to do: "Open `<ui folder>/captures/hero_room.starter.excalidraw` in Excalidraw (excalidraw.com or the desktop app), draw over it, and save it as `director/ui/hero_room.excalidraw`." Point at `<ui folder>/README.md` the first time.
+4. Tell the director, in these words (the same in all three; each procedure may add its own sentences after it): "Nothing to install. Open excalidraw.com in Chrome, Edge or another browser: no account is needed, and Excalidraw+ isn't. Open `<ui folder>/captures/hero_room.starter.excalidraw` from the menu's Open, or drag it onto the page, and draw over the screenshot. To save, use Save to… (Ctrl+S saves over the file you opened), and save it as `director/ui/hero_room.excalidraw`: Chrome and Edge let you pick that folder; other browsers save to Downloads, so move the file there and rename it. Your drawing stays on this computer unless you use Live collaboration or a shareable link. Tell me when it's saved." Point at `<ui folder>/README.md` the first time.
 
 ### `process <screen>`
 1. **Read** `director/ui/<screen>.excalidraw` through the reader (Part C): it writes `<ui folder>/captures/<screen>.drawing.json`. Never read the raw `.excalidraw` into context: it embeds the screenshot as base64.
@@ -175,6 +175,8 @@ Free, open source, runs in a browser or as a desktop app with no account, and sa
 - **Text outside the frame** is notes for the whole screen. Write `mode: replace` there if the screen should contain only what you drew; by default anything you did not touch stays (`mode: patch`).
 - Exact pixel sizes don't matter; proportions and arrangement do. Say `size: fixed` or `stick:` when a box must keep its size or corner.
 - Another state or size of the same screen: add another frame in the same file, named `<screen>.<state>` or `<screen>@2560x1080`.
+- **Using Excalidraw** (a section of the guide, the same in all three frameworks' READMEs):
+  > Excalidraw is free and open source, and nothing needs installing. Open excalidraw.com in Chrome, Edge or another browser: no account is needed, and Excalidraw+ isn't. To open your starter, use the menu's Open, or drag the file onto the page. To save, use Save to… (Ctrl+S saves over the file you opened) and save it as `director/ui/<screen>.excalidraw`. Chrome and Edge let you pick that folder; other browsers save to Downloads, so move the file there and rename it. Your drawing stays on this computer unless you use Live collaboration or a shareable link. You can install Excalidraw as an app from Chrome's or Edge's address bar if you like; it's the same as the website.
 
 ### 4.3 Starter drawing (written by capture)
 An `.excalidraw` file containing:
