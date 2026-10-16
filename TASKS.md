@@ -236,6 +236,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Brief: Scope › How-to guides
 
 ### T108 · Release Godot-Director 3.12.0 · in-progress 2026-10-16 · S · agent
+- PRs: Godot-Director #19 (open)
 - Depends on: T51
 - Touches: work/Godot-Director: the version files its CLAUDE.md lists, CHANGELOG.md (one pull request; the director squash-merges)
 - Done when: the release pull request, which covers the .gitignore (T100), the protected-space fix (T101) and the Excalidraw instructions (T103), is merged, and `tools/work-release.sh` has tagged `v3.12.0` and published the GitHub release, following AGENTS.md › Project rules › Framework work › Releases (check) · an item here moves the docs links to `v3.12.0` (check)
@@ -247,7 +248,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: each common skill and the acceptance check has a guide in the same three parts as the /ui-design guide, accurate to the latest releases (check) · the overview lists them (check) · `bash tools/check.sh` passes (check)
 - Brief: Scope › How-to guides
 
-### T106 · Pages link to their How-to guides · todo · S · agent
+### T106 · Pages link to their How-to guides · in-progress 2026-10-16 · S · agent
 - Depends on: T104
 - Touches: docs/skills/*.md, docs/frameworks/*.md, docs/concept/*.md, selftest.sh
 - Done when: every skill page with a guide has a "How to use this skill" link to it near the top, and the framework pages link the guides for their skills (today, the Godot-Director page links the /ui-design guide) (check) · concept pages link a guide where a reader would want the practical steps (check) · the selftest fails when a skill page has a guide in docs/how-to/ but doesn't link it (check) · `bash tools/check.sh` passes (check)
