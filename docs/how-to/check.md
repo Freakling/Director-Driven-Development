@@ -38,7 +38,7 @@ Saying it and typing the command run the same procedure.
 ## Related
 
 - The [acceptance check skill page](../skills/acceptance.md), and the concept [The check](../concept/check.md).
-- The procedures: [App-Director](https://github.com/Freakling/App-Director/tree/v1.6.0/framework/.app-director/procedures/acceptance.md), [SaaSAllTheThings](https://github.com/Freakling/SaaSAllTheThings/tree/v0.8.0/framework/.satt/procedures/acceptance.md), and for Godot-Director [`/function-check`](https://github.com/Freakling/Godot-Director/tree/v3.12.0/framework/.godot-director/procedures/function-check.md) and [`/playtest`](https://github.com/Freakling/Godot-Director/tree/v3.12.0/framework/.godot-director/procedures/playtest.md).
+- The procedures: [App-Director](https://github.com/Freakling/App-Director/tree/v1.7.0/framework/.app-director/procedures/acceptance.md), [SaaSAllTheThings](https://github.com/Freakling/SaaSAllTheThings/tree/v0.9.0/framework/.satt/procedures/acceptance.md), and for Godot-Director [`/function-check`](https://github.com/Freakling/Godot-Director/tree/v3.13.0/framework/.godot-director/procedures/function-check.md) and [`/playtest`](https://github.com/Freakling/Godot-Director/tree/v3.13.0/framework/.godot-director/procedures/playtest.md).
 - Once the bugs are fixed: [How do I ship it?](ship.md)
 
 <div class="takeaway"><span>Tests prove the rules, and you prove the rest. Run the check before you close a milestone.</span><span class="url"><a href="index.md">All questions</a></span></div>

@@ -6,7 +6,7 @@ Build a B2B SaaS from scratch, or turn a working proof of concept or an existing
 
 The architecture: an event-driven Azure Functions backend, separate Windows and mobile clients, OIDC sign-in with Entra ID and federated identity, pooled multi-tenancy that can move a customer to its own deployment later, and enterprise integrations starting with Navision (Dynamics NAV and Business Central). The product is anchored in the customer's own security framework: architecture sessions read the security and compliance requirements kept in the app's `compliance/` folder, and weigh every option against them.
 
-[Repository](https://github.com/Freakling/SaaSAllTheThings){ .md-button .md-button--primary } [README](https://github.com/Freakling/SaaSAllTheThings#readme){ .md-button } [Procedures](https://github.com/Freakling/SaaSAllTheThings/tree/v0.8.0/framework/.satt/procedures){ .md-button } [Reference architecture](https://github.com/Freakling/SaaSAllTheThings/tree/v0.8.0/framework/.satt/reference){ .md-button }
+[Repository](https://github.com/Freakling/SaaSAllTheThings){ .md-button .md-button--primary } [README](https://github.com/Freakling/SaaSAllTheThings#readme){ .md-button } [Procedures](https://github.com/Freakling/SaaSAllTheThings/tree/v0.9.0/framework/.satt/procedures){ .md-button } [Reference architecture](https://github.com/Freakling/SaaSAllTheThings/tree/v0.9.0/framework/.satt/reference){ .md-button }
 
 ## What the check enforces
 
@@ -74,7 +74,7 @@ You need git with no uncommitted changes, bash (on Windows it comes with Git for
 
     Then ask your assistant to "SaaS all the things" in the app's folder.
 
-Onboarding works out whether this is a new app, an existing app or an upgrade, settles the backend stack with you, interviews you or reads the app (including its single-tenant habits and secrets), writes the first stages of the roadmap into `TASKS.md`, and ends with one commit for you to approve. Restart Claude Code afterwards so the commands load. Each new clone later needs `bash tools/setup-clone.sh`. Step by step, with what onboarding asks: [where do I start with a SaaS?](../how-to/start-saas.md), or [I already have a project](../how-to/existing.md#an-existing-saas-or-proof-of-concept-saasallthethings) for an existing app or proof of concept, which starts with an assessment.
+Onboarding works out whether this is a new app, an existing app or an upgrade, settles the backend stack with you, interviews you or reads the app (including its single-tenant habits and secrets; it offers a product brief template, `product/director-brief.md`, to fill in first, in your own words, with sections for the customer's enterprise architecture, requirements, security requirements and control frameworks, which anchors the sessions, the assessment and the builds that follow in the customer's security framework), writes the first stages of the roadmap into `TASKS.md`, and ends with one commit for you to approve. Restart Claude Code afterwards so the commands load. Each new clone later needs `bash tools/setup-clone.sh`. Step by step, with what onboarding asks: [where do I start with a SaaS?](../how-to/start-saas.md), or [I already have a project](../how-to/existing.md#an-existing-saas-or-proof-of-concept-saasallthethings) for an existing app or proof of concept, which starts with an assessment.
 
 ## Skills you can use without installing
 
@@ -92,7 +92,7 @@ Onboarding works out whether this is a new app, an existing app or an upgrade, s
 | `/assess` | A read-only assessment report; "process the workshop notes" turns a workshop's decisions into records |
 | `/roadmap` | Plans the next stage of the move to SaaS as small items |
 | `/design` | A product design session on a topic, or `/design questions` to rank the open questions. Step by step: [how do I decide what gets built?](../how-to/decide.md) |
-| `/research` | A read-only researcher answers one question in a fresh context and writes a dated note with its sources to `product/research/`. It informs; you decide. Procedure: [`research.md`](https://github.com/Freakling/SaaSAllTheThings/tree/v0.8.0/framework/.satt/procedures/research.md). Step by step: [I need facts before I decide](../how-to/facts.md) |
+| `/research` | A read-only researcher answers one question in a fresh context and writes a dated note with its sources to `product/research/`. It informs; you decide. Procedure: [`research.md`](https://github.com/Freakling/SaaSAllTheThings/tree/v0.9.0/framework/.satt/procedures/research.md). Step by step: [I need facts before I decide](../how-to/facts.md) |
 | `/architect` | An architecture session that ends in an ADR you accept |
 | `/integrate` | Works out an integration contract with you (direction, system of record, conflicts), then plans it in stages |
 | `/tenant` | Checks readiness for a new customer and hands you the consent and setup steps |

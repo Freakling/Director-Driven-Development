@@ -75,6 +75,7 @@ The agent fills `AGENTS.md` (name, pitch, Godot version, platforms, rendering) a
 
 Beyond confirming the inferred lines, onboarding asks the same questions as for a new game, minus the design interview:
 
+- **Your own design document.** Onboarding offers `design/director-gdd.md`, a template for describing the game in your own words, as an addition to the scan. If you fill it, the agent reads it with the code and your existing documents, builds the first assessment from all three, and marks what it took from it and what it inferred. Where they disagree, it says so and you decide. It never edits your document. See [Where do I start?](start.md#2-the-design-interview).
 - **Exports and release.** Platforms, where exports run, and the upload commands. An existing `export_presets.cfg` and the platforms in your GDD are used as the answers, so you are asked only for what is missing. You can skip both steps; a skip adds an open question and a setup item. Details are in [Where do I start?](start.md#5-exports-and-release-you-can-skip-both).
 - **Ownership.** For each work area (code, UI, art, audio, scenes, tunable values, text), whether you own it. An area you own gets labelled placeholders instead of generated content. See [Where do I start?](start.md#3-who-owns-what).
 - **Screens by drawing, and a protected workspace** (`director/`), as for a new game.
@@ -167,6 +168,7 @@ The agent asks which stack the app uses (TypeScript, Flutter, Python, or none or
 
 Beyond confirming the inferred lines, onboarding asks the same questions as for a new app, minus the product interview:
 
+- **Your own product brief.** Onboarding offers `product/director-brief.md`, a template for describing the app in your own words, as an addition to the scan. If you fill it, the agent reads it with the code and your existing documents, builds the first assessment from all three, and marks what it took from it and what it inferred. Where they disagree, it says so and you decide. It never edits your brief. See [Where do I start with an app?](start-app.md#2-the-product-interview).
 - **Ownership.** For each work area (UI code, logic, backend, database schema, visual design, copy, testing, infrastructure), whether you own it. An area you own gets labelled placeholders instead of generated content. See [Where do I start with an app?](start-app.md#4-who-owns-what).
 - **A protected workspace** (`director/`), as for a new app.
 - **Model sizing and reviews.** Sizing is recommended on, with a mapping you can change.
@@ -217,7 +219,7 @@ A working proof of concept, or an app in use, that should become a multi-tenant 
 
 Ask "what does it take to make this app a SaaS?" in the app's folder. The agent follows the framework's assessment procedure. It is read only: it writes the report and nothing else, and it builds, runs or installs nothing unless you agree.
 
-1. **Framing.** It asks who the report is for (internal planning, or a proposal to a customer), what you already know (the goal, a deadline, the team, the first customer, the systems to integrate, constraints such as budget or the customer's Azure governance), and the report's language and place. What is unknown becomes an open question in the report, never a guess.
+1. **Framing.** It asks who the report is for (internal planning, or a proposal to a customer), what you already know (the goal, a deadline, the team, the first customer, the systems to integrate, constraints such as budget or the customer's Azure governance), and the report's language and place. What is unknown becomes an open question in the report, never a guess. It also asks for your filled product brief (`product/director-brief.md` once installed, or the template you copy and fill in before), reads it first and does not ask again what it answers. The report marks what came from the brief and what the agent inferred. The assessment goes ahead without one.
 2. **The scan.** It collects evidence, not impressions: the shape of the code, entry points, where the business rules live, data and whether anything identifies a customer, single-tenant habits, identity, configuration and secrets, integrations, clients, tests and delivery, and documents. A secret is reported as a file and line, never as a value, with the advice to rotate it.
 3. **The stack.** It tells you the languages it found and asks your preference, as in onboarding. Your answer decides whether the roadmap reuses or converts.
 4. **The verdict.** It scores nine dimensions from 0 (absent, or blocks the move) to 3 (already fits the reference), each with evidence and what it takes: stack, separation of business rules, data and tenant-awareness, identity, configuration and secrets, integrations, clients, tests, and delivery and operations. It maps each existing component onto its target layer as keep, extract, rebuild or retire, and gives a roadmap by stage with rough effort in person-days and a confidence. It recommends a first slice, and lists risks and assumptions. Every choice comes as options with a recommendation.
@@ -269,6 +271,8 @@ If `assessment/` holds a report, the agent starts from it, checks that its findi
 
 If workshop notes are in `assessment/workshops/`, their decisions are your answers: the agent records them, confirms its reading with you and asks only what they leave open.
 
+Onboarding also offers `product/director-brief.md`, a product brief template for you or the customer's architect or product owner to fill in, in your own words. The agent reads a filled one first, together with the code, the assessment report and the workshop notes, marks what it took from it and what it inferred, and drafts ADRs for the architecture constraints it names. It never edits the brief. See [Where do I start with a SaaS?](start-saas.md#3-the-product-interview).
+
 - **The PRD.** Each section of `product/prd.md` is filled from your documents and code. Anything inferred is marked `(inferred, please confirm)`, and anything unknown becomes an open question (`Q1`, `Q2` and so on). This is where you spend the most attention: read the marked lines and correct them.
 - **Architecture.** One row in `AGENTS.md` per existing area (a screen group, a service, a job, a store), marked `(outside the layers: Extract)`.
 - **The queue.** Known bugs and your priorities become items in `TASKS.md`. A secret found in the old code is a high-severity bug: rotate it first, then remove it.
@@ -312,6 +316,6 @@ If the check passes, the agent installs the pre-commit hook. If it fails or cann
 
 - The framework pages: [Godot-Director](../frameworks/godot-director.md), [App-Director](../frameworks/app-director.md) and [SaaSAllTheThings](../frameworks/saasallthethings.md).
 - The skill pages [`/align`](../skills/align.md) and [Acceptance check](../skills/acceptance.md), and the concept [Align and drift reset](../concept/drift.md).
-- The onboarding steps in full: [Godot-Director](https://github.com/Freakling/Godot-Director/blob/v3.12.0/ONBOARDING.md), [App-Director](https://github.com/Freakling/App-Director/blob/v1.6.0/ONBOARDING.md) and [SaaSAllTheThings](https://github.com/Freakling/SaaSAllTheThings/blob/v0.8.0/ONBOARDING.md).
+- The onboarding steps in full: [Godot-Director](https://github.com/Freakling/Godot-Director/blob/v3.13.0/ONBOARDING.md), [App-Director](https://github.com/Freakling/App-Director/blob/v1.7.0/ONBOARDING.md) and [SaaSAllTheThings](https://github.com/Freakling/SaaSAllTheThings/blob/v0.9.0/ONBOARDING.md).
 
 <div class="takeaway"><span>Install into what you have. Onboarding reads it first and marks every guess.</span><span class="url"><a href="index.md">All questions</a></span></div>

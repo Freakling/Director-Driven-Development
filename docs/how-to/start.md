@@ -50,6 +50,8 @@ Onboarding is the agent following the framework's `ONBOARDING.md`. You decide ev
 
 The agent writes a minimal `project.godot` itself, so do not use Godot's project manager. Then it interviews you in short rounds. Each question comes with options and a recommendation. Pick one, or answer in your own words.
 
+**Your own design document comes first.** Before the interview, onboarding offers `design/director-gdd.md`, a Game Design Document template you fill in, in your own words. Use it instead of the interview or as well as it, and fill it before onboarding, now (the agent waits) or later; the interview works without it. A written document gives the agent your intent and the context behind it, which a chat alone doesn't, and every design session and build later starts from it. If you fill it, the agent reads it first, takes the interview's answers from it marked `(from your document)`, and asks only what it leaves open. What it works out itself is marked `(inferred, please confirm)`. It never edits your document or fills it in for you; `design/gdd.md` stays the design record it maintains.
+
 | It asks about | A sensible first answer | What it changes |
 |---|---|---|
 | Pitch, genre, and the feeling the game should give | One or two sentences. The feeling matters more than the feature list | The GDD's Pitch, and the pillars that follow |
@@ -149,6 +151,6 @@ The concepts behind these files are in [Records in files](../concept/records.md)
 
 - The [Godot-Director page](../frameworks/godot-director.md), its [install section](../frameworks/godot-director.md#install), and the skill pages [`/next-task`](../skills/next-task.md) and [`/design`](../skills/design.md).
 - The concepts [Roles](../concept/roles.md) and [Agent development flow](../concept/agent-flow.md).
-- The onboarding steps in full: [`ONBOARDING.md`](https://github.com/Freakling/Godot-Director/blob/v3.12.0/ONBOARDING.md).
+- The onboarding steps in full: [`ONBOARDING.md`](https://github.com/Freakling/Godot-Director/blob/v3.13.0/ONBOARDING.md).
 
 <div class="takeaway"><span>Install, answer the interview, approve one commit, then ask for the next task.</span><span class="url"><a href="index.md">All questions</a></span></div>

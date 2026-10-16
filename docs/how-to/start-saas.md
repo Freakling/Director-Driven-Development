@@ -56,6 +56,8 @@ The agent then runs `bash tools/setup-clone.sh`, which checks the toolchain and 
 
 The agent interviews you in short rounds. Each question comes with options and a recommendation. Pick one, or answer in your own words.
 
+**Your own product brief comes first.** Before the interview, onboarding offers `product/director-brief.md`, a product brief template you fill in, in your own words. Besides the product, it has four sections for your customer's architect or product owner: the enterprise architecture the SaaS must fit into (identity provider, data residency, hosting constraints, integrations), the requirements, the security requirements and the control frameworks the customer must meet. Use it instead of the interview or as well as it, and fill it before onboarding, now (the agent waits) or later, yourself or with the customer; the interview works without it. A written brief gives the agent your intent and the context behind it, which a chat alone doesn't, and every design session, assessment and build later starts from it, anchored in the customer's security framework. If you fill it, the agent reads it first, takes the interview's answers from it marked `(from your document)`, and asks only what it leaves open. What it works out itself is marked `(inferred, please confirm)`. It never edits your brief or fills it in for you, and it never treats a requirement as met because the brief names a framework; `product/prd.md` stays the record of requirements it maintains.
+
 | It asks about | A sensible first answer | What it changes |
 |---|---|---|
 | The pitch, the customers (tenants), the first customer, and how they pay (plans) | One paragraph. Name the first real customer and two plans | The PRD's Pitch, and Customers and Tenants |
@@ -148,6 +150,6 @@ Later, `integrations/` holds one contract per external system, and `assessment/`
 - The [SaaSAllTheThings page](../frameworks/saasallthethings.md), its [install section](../frameworks/saasallthethings.md#install), and the skill pages [`/next-task`](../skills/next-task.md) and [`/design`](../skills/design.md).
 - The concepts [Roles](../concept/roles.md) and [Agent development flow](../concept/agent-flow.md).
 - The step-by-step guide on the blog: [Build a B2B SaaS on Azure with Director-Driven Development](https://saemundsson.se/2026/10/09/build-a-b2b-saas-on-azure-with-director-driven-development/).
-- The onboarding steps in full: [`ONBOARDING.md`](https://github.com/Freakling/SaaSAllTheThings/blob/v0.8.0/ONBOARDING.md).
+- The onboarding steps in full: [`ONBOARDING.md`](https://github.com/Freakling/SaaSAllTheThings/blob/v0.9.0/ONBOARDING.md).
 
 <div class="takeaway"><span>Install, settle the stack, answer the interview, approve one commit, then ask for the next task.</span><span class="url"><a href="index.md">All questions</a></span></div>

@@ -67,7 +67,7 @@ Everything in the project is committed except the per-machine setup. In a new cl
 
 ### A write to `director/` was refused
 
-This is by design, in Godot-Director and App-Director. `director/` is your own workspace for reference art, sketches and notes. The agent reads it for context and never writes there. Put files in it yourself.
+This is by design, in Godot-Director and App-Director. `director/` is your own workspace for reference art, sketches and notes. The agent reads it for context and never writes there, whether the path is relative or absolute. Put files in it yourself.
 
 ### The agent asks before every commit
 
@@ -76,6 +76,6 @@ This is by design too: the agent commits only with your approval. Asking for a r
 ## Related
 
 - The install sections of [Godot-Director](../frameworks/godot-director.md#install), [App-Director](../frameworks/app-director.md#install) and [SaaSAllTheThings](../frameworks/saasallthethings.md#install).
-- The procedures: [Godot-Director onboarding](https://github.com/Freakling/Godot-Director/blob/v3.12.0/ONBOARDING.md), [App-Director onboarding](https://github.com/Freakling/App-Director/blob/v1.6.0/ONBOARDING.md) and [SaaSAllTheThings onboarding](https://github.com/Freakling/SaaSAllTheThings/blob/v0.8.0/ONBOARDING.md).
+- The procedures: [Godot-Director onboarding](https://github.com/Freakling/Godot-Director/blob/v3.13.0/ONBOARDING.md), [App-Director onboarding](https://github.com/Freakling/App-Director/blob/v1.7.0/ONBOARDING.md) and [SaaSAllTheThings onboarding](https://github.com/Freakling/SaaSAllTheThings/blob/v0.9.0/ONBOARDING.md).
 
 <div class="takeaway"><span>Update, restart, and the commands you expect are there.</span><span class="url"><a href="index.md">All questions</a></span></div>

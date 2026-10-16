@@ -26,8 +26,10 @@ Saying it and typing the command run the same procedure. The explicit command pa
     - No unfilled template placeholder is left, and the entry files point to the right place.
     - Item IDs are unique, dependencies exist, and each item for the agent has a size, the files it touches, tagged outcomes and a link to the design text. Claims on items from an earlier day are reported.
     - Every rule in the design is built, planned or reported as a gap, and every row of the architecture table points at something that exists.
-    - Recent decisions are reflected in the design text, the check passes, and the lines the installer added to `.gitignore` and `.gitattributes` are still there.
-2. **Read the report.** It lists what the agent fixed and what needs you. Each item that needs you comes with one recommendation. Decide each one: accept the recommendation, choose differently, or leave it for now.
+    - The whole design document is read, and every statement of state in it (a section marked later or planned, a count, a list of what exists, a line saying work waits on something) is checked against the built product, the done items and the latest releases.
+    - Every decision recorded since the last `docs: align` commit is checked one by one, to see that the design text reflects it and no older text contradicts it.
+    - The check passes, and the lines the installer added to `.gitignore` and `.gitattributes` are still there.
+2. **Read the report.** It lists what the agent fixed and what needs you, and names each stale statement it found in the design text. A statement whose fact is settled, such as a section marked planned for an item that is done, is fixed for you. One whose fix is a design call comes to you. Each item that needs you comes with one recommendation. Decide each one: accept the recommendation, choose differently, or leave it for now.
 3. **Take design gaps to a design session.** A rule in the design that nothing builds is reported, not turned into an item for you. Decide which gaps become tasks, then run [`/design`](decide.md) if a call is needed.
 4. **Approve the commit.** The fixes are committed as `docs: align` once you say yes. During onboarding, the fixes go into the install commit instead.
 5. **Act on a reset recommendation.** If a conflict has come back after it was settled, or one conflict spans several principles, the agent recommends `/drift-reset` instead of another patch. It never starts one itself. Starting it is your decision.
@@ -46,6 +48,6 @@ Saying it and typing the command run the same procedure. The explicit command pa
 
 - The [`/align` skill page](../skills/align.md), with what the pass checks in each framework, and the concept [Align and drift reset](../concept/drift.md).
 - When the pass keeps finding the same conflict: [The system was not built as I intended](drift.md).
-- The procedures: [Godot-Director](https://github.com/Freakling/Godot-Director/tree/v3.12.0/framework/.godot-director/procedures/align.md), [App-Director](https://github.com/Freakling/App-Director/tree/v1.6.0/framework/.app-director/procedures/align.md) and [SaaSAllTheThings](https://github.com/Freakling/SaaSAllTheThings/tree/v0.8.0/framework/.satt/procedures/align.md).
+- The procedures: [Godot-Director](https://github.com/Freakling/Godot-Director/tree/v3.13.0/framework/.godot-director/procedures/align.md), [App-Director](https://github.com/Freakling/App-Director/tree/v1.7.0/framework/.app-director/procedures/align.md) and [SaaSAllTheThings](https://github.com/Freakling/SaaSAllTheThings/tree/v0.9.0/framework/.satt/procedures/align.md).
 
 <div class="takeaway"><span>Run it after every big design change and catch the drift while it is small.</span><span class="url"><a href="index.md">All questions</a></span></div>

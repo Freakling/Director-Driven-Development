@@ -37,7 +37,7 @@ The reset takes several sessions. Each stage ends with something you approve, an
 
 ## A worked example
 
-This is an illustration, not something that happened. It uses [market-day](https://github.com/Freakling/Godot-Director/tree/v3.12.0/examples/market-day), the small grain-market game in the Godot-Director repository.
+This is an illustration, not something that happened. It uses [market-day](https://github.com/Freakling/Godot-Director/tree/v3.13.0/examples/market-day), the small grain-market game in the Godot-Director repository.
 
 **The situation.** The GDD has the pillar "Readable luck: prices vary, but the player can see enough to make a reasoned bet". Under Systems › Shop screen it says that from day 2 on, yesterday's price is shown next to today's, and `design/decisions.md` records why (the playtester couldn't tell whether the price was high or low). Suppose the game kept growing. The shop status line shows yesterday's price, from `RunState`, as the GDD says. Later, a second item added a trend arrow to the shop that compares today's price with the base price in `data/market_config.tres`, with the comparison written in `scripts/ui/shop_screen.gd`. Now the arrow can point up while yesterday's price, right beside it, is lower than today's. A playtest report in `playtesting/` says the prices felt unreadable. `/align` has reported the conflict twice, and the second report recommends a reset.
 
@@ -76,6 +76,6 @@ You pick A. The agent writes the answer into the GDD's Shop screen section, adds
 
 - The [`/drift-reset` skill page](../skills/drift-reset.md), with each framework's scope and where the reset folder goes.
 - The concept [Align and drift reset](../concept/drift.md), and the other ways to keep the records straight: [The records and the code don't agree](align.md).
-- The procedures: [Godot-Director](https://github.com/Freakling/Godot-Director/tree/v3.12.0/framework/.godot-director/procedures/drift-reset.md), [App-Director](https://github.com/Freakling/App-Director/tree/v1.6.0/framework/.app-director/procedures/drift-reset.md) and [SaaSAllTheThings](https://github.com/Freakling/SaaSAllTheThings/tree/v0.8.0/framework/.satt/procedures/drift-reset.md).
+- The procedures: [Godot-Director](https://github.com/Freakling/Godot-Director/tree/v3.13.0/framework/.godot-director/procedures/drift-reset.md), [App-Director](https://github.com/Freakling/App-Director/tree/v1.7.0/framework/.app-director/procedures/drift-reset.md) and [SaaSAllTheThings](https://github.com/Freakling/SaaSAllTheThings/tree/v0.9.0/framework/.satt/procedures/drift-reset.md).
 
 <div class="takeaway"><span>Align often, reset when you have to.</span><span class="url"><a href="index.md">All questions</a></span></div>

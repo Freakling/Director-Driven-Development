@@ -57,6 +57,8 @@ Onboarding is the agent following the framework's `ONBOARDING.md`. You decide ev
 
 The agent interviews you in short rounds. Each question comes with options and a recommendation. Pick one, or answer in your own words.
 
+**Your own product brief comes first.** Before the interview, onboarding offers `product/director-brief.md`, a product brief template you fill in, in your own words. Use it instead of the interview or as well as it, and fill it before onboarding, now (the agent waits) or later; the interview works without it. A written brief gives the agent your intent and the context behind it, which a chat alone doesn't, and every design session and build later starts from it. If you fill it, the agent reads it first, takes the interview's answers from it marked `(from your brief)`, and asks only what it leaves open. What it works out itself is marked `(inferred, please confirm)`. It never edits your brief or fills it in for you; `product/brief.md` stays the design record it maintains.
+
 | It asks about | A sensible first answer | What it changes |
 |---|---|---|
 | The pitch: what the app does, who it is for, and the feeling it should give | One or two sentences. Say who the user is | The brief's Pitch |
@@ -149,6 +151,6 @@ The concepts behind these files are in [Records in files](../concept/records.md)
 
 - The [App-Director page](../frameworks/app-director.md), its [install section](../frameworks/app-director.md#install), and the skill pages [`/next-task`](../skills/next-task.md) and [`/design`](../skills/design.md).
 - The concepts [Roles](../concept/roles.md) and [Agent development flow](../concept/agent-flow.md).
-- The onboarding steps in full: [`ONBOARDING.md`](https://github.com/Freakling/App-Director/blob/v1.6.0/ONBOARDING.md).
+- The onboarding steps in full: [`ONBOARDING.md`](https://github.com/Freakling/App-Director/blob/v1.7.0/ONBOARDING.md).
 
 <div class="takeaway"><span>Install, answer the interview, approve one commit, then ask for the next task.</span><span class="url"><a href="index.md">All questions</a></span></div>

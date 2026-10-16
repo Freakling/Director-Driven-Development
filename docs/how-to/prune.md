@@ -37,6 +37,6 @@ Saying it and typing the command run the same procedure, so use whichever is qui
 ## Related
 
 - The [`/prune` skill page](../skills/prune.md), with what is unique to each framework.
-- The procedures: [Godot-Director](https://github.com/Freakling/Godot-Director/tree/v3.12.0/framework/.godot-director/procedures/prune.md), [App-Director](https://github.com/Freakling/App-Director/tree/v1.6.0/framework/.app-director/procedures/prune.md) and [SaaSAllTheThings](https://github.com/Freakling/SaaSAllTheThings/tree/v0.8.0/framework/.satt/procedures/prune.md).
+- The procedures: [Godot-Director](https://github.com/Freakling/Godot-Director/tree/v3.13.0/framework/.godot-director/procedures/prune.md), [App-Director](https://github.com/Freakling/App-Director/tree/v1.7.0/framework/.app-director/procedures/prune.md) and [SaaSAllTheThings](https://github.com/Freakling/SaaSAllTheThings/tree/v0.9.0/framework/.satt/procedures/prune.md).
 
 <div class="takeaway"><span>Prune when the queue gets hard to read. The history stays in the archive.</span><span class="url"><a href="index.md">All questions</a></span></div>

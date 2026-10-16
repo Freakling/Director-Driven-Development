@@ -77,7 +77,7 @@ Start with one screen and one or two boxes. Add more once the first one builds a
 
 ## Related
 
-- The `/ui-design` entry on the [Godot-Director page](../frameworks/godot-director.md#commands), and the [`ui-design` procedure](https://github.com/Freakling/Godot-Director/tree/v3.12.0/framework/.godot-director/procedures/ui-design.md), which is the source of truth for the drawing steps.
+- The `/ui-design` entry on the [Godot-Director page](../frameworks/godot-director.md#commands), and the [`ui-design` procedure](https://github.com/Freakling/Godot-Director/tree/v3.13.0/framework/.godot-director/procedures/ui-design.md), which is the source of truth for the drawing steps.
 - The skill pages [`/design`](../skills/design.md) and [`/next-task`](../skills/next-task.md), for the two ways that need no drawing.
 
 <div class="takeaway"><span>Describe it, or draw it. The agent builds it and a person checks it.</span><span class="url"><a href="index.md">All questions</a></span></div>

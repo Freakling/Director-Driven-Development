@@ -387,7 +387,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: SaaSAllTheThings has a merged pull request whose align procedure adds a "Brief against reality" step as `product/anchors/align.md` says: read the whole design doc, check every statement of state against the built product, done items and latest releases, and check every decision since the last `docs: align` commit instead of a spot check, adapted to the PRD and the ADRs, following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Common skills
 
-### T96 · The /align page describes the reality step · in-progress 2026-10-16 · XS · agent
+### T96 · The /align page describes the reality step · done · XS · agent
 - Depends on: T93, T94, T95
 - Touches: docs/skills/align.md
 - Done when: once all three have released it, the /align page describes the brief-against-reality step (check) · `bash tools/check.sh` passes (check)
@@ -466,13 +466,13 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: the release pull request, which covers the protected-space fix (T101), the .gitignore (T100), the align reality step (T93), the R counter and plugin update note (T119, T118), the human-written product brief (T87) and the README wording (T121), is merged, and `tools/work-release.sh` has tagged `v1.7.0` and published the GitHub release, following AGENTS.md › Project rules › Framework work › Releases (check) · an item here moves the docs links to `v1.7.0` and updates the pages for what it ships (check)
 - Brief: Scope › Framework features
 
-### T125 · Docs follow App-Director 1.7.0, Godot-Director 3.13.0 and SaaSAllTheThings 0.9.0 · in-progress 2026-10-16 · S · agent
+### T125 · Docs follow App-Director 1.7.0, Godot-Director 3.13.0 and SaaSAllTheThings 0.9.0 · done · S · agent
 - Depends on: T122, T123, T124
 - Touches: docs/frameworks/*.md, docs/skills/*.md, docs/how-to/*.md
 - Done when: every link into the three frameworks points at its latest release (check) · pages that describe onboarding or the protected space say what these releases changed, where they stated the old behaviour (check) · `bash tools/check.sh` passes (check)
 - Brief: Scope › Framework features
 
-### T90 · The docs describe the starting document · in-progress 2026-10-16 · XS · agent
+### T90 · The docs describe the starting document · done · XS · agent
 - Depends on: T87, T88, T89
 - Touches: docs/frameworks/*.md
 - Done when: once all three have released it, each framework page says onboarding offers the human-written starting document and why it helps (check) · `bash tools/check.sh` passes (check)

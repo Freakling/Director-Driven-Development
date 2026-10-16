@@ -42,6 +42,6 @@ Saying it and typing the command run the same procedure. The explicit session pa
 ## Related
 
 - The [`/design` skill page](../skills/design.md), and the concepts [Design calls](../concept/design-calls.md) and [Agent development flow](../concept/agent-flow.md).
-- The procedures: [Godot-Director](https://github.com/Freakling/Godot-Director/tree/v3.12.0/framework/.godot-director/procedures/design.md), [App-Director](https://github.com/Freakling/App-Director/tree/v1.6.0/framework/.app-director/procedures/design.md) and [SaaSAllTheThings](https://github.com/Freakling/SaaSAllTheThings/tree/v0.8.0/framework/.satt/procedures/design.md).
+- The procedures: [Godot-Director](https://github.com/Freakling/Godot-Director/tree/v3.13.0/framework/.godot-director/procedures/design.md), [App-Director](https://github.com/Freakling/App-Director/tree/v1.7.0/framework/.app-director/procedures/design.md) and [SaaSAllTheThings](https://github.com/Freakling/SaaSAllTheThings/tree/v0.9.0/framework/.satt/procedures/design.md).
 
 <div class="takeaway"><span>You make the call. The agent writes down only what you decided.</span><span class="url"><a href="index.md">All questions</a></span></div>

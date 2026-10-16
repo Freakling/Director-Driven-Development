@@ -4,7 +4,7 @@
 
 Make the app you designed, with AI doing the building and you staying the director. App-Director works for new apps and apps already in development, on TypeScript, Flutter or Python. You decide what the app does, how it should feel and what gets built next; the AI builds, tests and keeps the records.
 
-[Repository](https://github.com/Freakling/App-Director){ .md-button .md-button--primary } [README](https://github.com/Freakling/App-Director#readme){ .md-button } [Procedures](https://github.com/Freakling/App-Director/tree/v1.6.0/framework/.app-director/procedures){ .md-button }
+[Repository](https://github.com/Freakling/App-Director){ .md-button .md-button--primary } [README](https://github.com/Freakling/App-Director#readme){ .md-button } [Procedures](https://github.com/Freakling/App-Director/tree/v1.7.0/framework/.app-director/procedures){ .md-button }
 
 ## What the check enforces
 
@@ -52,7 +52,7 @@ You need git with no uncommitted changes, bash (on Windows it comes with Git for
 
     > Read App-Director/ONBOARDING.md and follow it to install App Director into this project.
 
-Onboarding works out whether this is a new app, an existing app or an upgrade, sets up the toolchain, interviews you or reads the code, agrees who owns what, and ends with one commit for you to approve. Restart Claude Code afterwards so the commands load. Each new clone later needs `bash tools/setup-clone.sh`. Step by step, with what onboarding asks: [where do I start with an app?](../how-to/start-app.md), or [I already have a project](../how-to/existing.md#an-existing-app-app-director) for an existing app.
+Onboarding works out whether this is a new app, an existing app or an upgrade, sets up the toolchain, interviews you or reads the code (and offers a product brief template, `product/director-brief.md`, to fill in first, in your own words, which gives the agent your intent and context for the sessions and builds that follow), agrees who owns what, and ends with one commit for you to approve. Restart Claude Code afterwards so the commands load. Each new clone later needs `bash tools/setup-clone.sh`. Step by step, with what onboarding asks: [where do I start with an app?](../how-to/start-app.md), or [I already have a project](../how-to/existing.md#an-existing-app-app-director) for an existing app.
 
 ## Commands
 
@@ -60,7 +60,7 @@ Onboarding works out whether this is a new app, an existing app or an upgrade, s
 |---|---|
 | `/next-task` | Builds the next ready item in a fresh context, proves it with the check, updates the records and commits. Step by step: [how do I get things built?](../how-to/build.md) |
 | `/design` | A design session on a topic, or `/design questions` to rank the open questions by what they unblock. Step by step: [how do I decide what gets built?](../how-to/decide.md) |
-| `/research` | A read-only researcher answers one question in a fresh context and writes a dated note with its sources to `product/research/`. It informs; you decide. Procedure: [`research.md`](https://github.com/Freakling/App-Director/tree/v1.6.0/framework/.app-director/procedures/research.md). Step by step: [I need facts before I decide](../how-to/facts.md) |
+| `/research` | A read-only researcher answers one question in a fresh context and writes a dated note with its sources to `product/research/`. It informs; you decide. Procedure: [`research.md`](https://github.com/Freakling/App-Director/tree/v1.7.0/framework/.app-director/procedures/research.md). Step by step: [I need facts before I decide](../how-to/facts.md) |
 | `/acceptance` | Prepares or processes a checklist of built behaviour for you to tick Works or Broken. Step by step: [how do I check that what was built works?](../how-to/check.md) |
 | `/align` | Consistency pass across the brief, decisions, tasks, `AGENTS.md` and check config. Step by step: [the records and the code don't agree](../how-to/align.md) |
 | `/drift-reset` | Design drift reset, started only by you; `/drift-reset postmortem` after the rebuild. Step by step: [the system was not built as I intended](../how-to/drift.md) |
