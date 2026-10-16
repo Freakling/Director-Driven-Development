@@ -366,22 +366,22 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: the anchor describes a "Brief against reality" step as `product/anchors/align.md` says: read the whole design doc, check every statement of state against the built product, done items and latest releases, and check every decision since the last `docs: align` commit instead of a spot check, with placeholders for each framework's design records (brief; PRD and ADRs; GDD) and where each looks for done items and releases (check) · `bash tools/check.sh` passes (check)
 - Brief: Scope › Common skills
 
-### T93 · App-Director: align checks the brief against reality · in-progress 2026-10-16 · S · agent
-- PRs: App-Director #17 (open)
+### T93 · App-Director: align checks the brief against reality · done · S · agent
+- PRs: App-Director #17 (merged)
 - Depends on: T92
 - Touches: work/App-Director: framework/.app-director/procedures/align.md (one pull request; the director merges)
 - Done when: App-Director has a merged pull request whose align procedure adds a "Brief against reality" step as `product/anchors/align.md` says: read the whole design doc, check every statement of state against the built product, done items and latest releases, and check every decision since the last `docs: align` commit instead of a spot check, adapted to the brief, following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Common skills
 
-### T94 · Godot-Director: align checks the GDD against reality · in-progress 2026-10-16 · S · agent
-- PRs: Godot-Director #20 (open)
+### T94 · Godot-Director: align checks the GDD against reality · done · S · agent
+- PRs: Godot-Director #20 (merged)
 - Depends on: T92
 - Touches: work/Godot-Director: framework/.godot-director/procedures/align.md (one pull request; the director merges)
 - Done when: Godot-Director has a merged pull request whose align procedure adds a "Brief against reality" step as `product/anchors/align.md` says: read the whole design doc, check every statement of state against the built product, done items and latest releases, and check every decision since the last `docs: align` commit instead of a spot check, adapted to the GDD, following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Common skills
 
-### T95 · SaaSAllTheThings: align checks the PRD and ADRs against reality · in-progress 2026-10-16 · S · agent
-- PRs: SaaSAllTheThings #10 (open)
+### T95 · SaaSAllTheThings: align checks the PRD and ADRs against reality · done · S · agent
+- PRs: SaaSAllTheThings #10 (merged)
 - Depends on: T92
 - Touches: work/SaaSAllTheThings: framework/.satt/procedures/align.md (one pull request; the director merges)
 - Done when: SaaSAllTheThings has a merged pull request whose align procedure adds a "Brief against reality" step as `product/anchors/align.md` says: read the whole design doc, check every statement of state against the built product, done items and latest releases, and check every decision since the last `docs: align` commit instead of a spot check, adapted to the PRD and the ADRs, following AGENTS.md › Project rules for framework work (check)
