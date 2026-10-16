@@ -417,6 +417,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Brief: Scope › Planned framework changes
 
 ### T87 · App-Director: the human-written product brief · in-progress 2026-10-16 · S · agent
+- PRs: App-Director #19 (open)
 - Depends on: -
 - Touches: work/App-Director: a project seed for the template, ONBOARDING.md, README.md (one pull request; the director merges)
 - Done when: App-Director has a merged pull request with the director's product brief template (`product/anchors/templates/product_brief_template.md`) shipped into every project as a template for the human to fill in, presented in onboarding as an alternative or addition to the chat interview with a word on why it helps (value and context for later development), and scanned by onboarding for new and existing projects to build the initial assessment and design records, with what it inferred marked, following AGENTS.md › Project rules for framework work (check)
