@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T99 · B5
+**Next IDs:** T100 · B5
 
 ## Milestones
 | Milestone | Status |
@@ -203,11 +203,17 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: Godot-Director has a merged pull request where `/ui-design verify` writes compare images and lists deviations, and the build, review, function check, align and the optional check lint use the screen spec, as the anchor says, with the spec's acceptance criteria 6 to 9 met, following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Planned framework changes
 
-### T97 · Release Godot-Director 3.11.0 · in-progress 2026-10-16 · S · agent
-- PRs: Godot-Director #15 (open)
+### T97 · Release Godot-Director 3.11.0 · done · S · agent
+- PRs: Godot-Director #15 (merged); released as v3.11.0
 - Depends on: T51, T83
 - Touches: work/Godot-Director: the version files its CLAUDE.md lists, CHANGELOG.md (one pull request; the director merges)
 - Done when: the release pull request, which covers T81 to T83 (/ui-design), is merged, and `tools/work-release.sh` has tagged `v3.11.0` and published the GitHub release, following AGENTS.md › Project rules › Framework work › Releases (check) · an item here moves the docs links to `v3.11.0` and documents /ui-design on the Godot-Director page (check)
+- Brief: Scope › Planned framework changes
+
+### T99 · Docs follow Godot-Director 3.11.0 · todo · S · agent
+- Depends on: T97
+- Touches: docs/frameworks/godot-director.md, docs/skills/*.md
+- Done when: every link into Godot-Director points at v3.11.0 (check) · the Godot-Director page lists `/ui-design` and says in a few lines what it lets the director do, accurate to v3.11.0, until T86 gives it a skill page (check) · `bash tools/check.sh` passes (check)
 - Brief: Scope › Planned framework changes
 
 ### T98 · The director tests /ui-design in a game · todo · - · human
@@ -216,7 +222,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: the director has captured, drawn, processed and verified at least one screen with the released /ui-design, and said whether App-Director and SaaSAllTheThings should follow as the anchor says or after changes (demo)
 - Brief: Scope › Planned framework changes
 
-### T84 · App-Director: /ui-design with Playwright capture · todo · L · agent
+### T84 · App-Director: /ui-design with Playwright capture · in-progress 2026-10-16 · L · agent
 - Depends on: T83
 - Touches: work/App-Director (one pull request; the director merges)
 - Note: build now on a local branch; no push and no pull request until T98 (the director's UAT) is done, then update from the anchor and publish.
