@@ -341,12 +341,13 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Brief: Scope › How-to guides
 
 ### T127 · Godot-Director: the play log base and the logging rules · in-progress 2026-10-17 · L · agent
+- Note: built, reviewed (nine findings fixed) and committed on ddd/autoplay; published with the other stages as one pull request (T131).
 - Depends on: -
 - Touches: work/Godot-Director: framework/tools/play_log_base.gd (new), project/tools/play_log.gd (new), framework/.godot-director/rules.md, framework/tools/check.sh, check.gd, setup-clone.sh and ui_capture.sh (the minimum Godot 4.5), framework/.godot-director/procedures/ui-design.md, framework/.godot-director/templates/release-workflow.yml, install.sh, skills/godot-director/SKILL.md, README.md, ONBOARDING.md, PRIVACY.md, CLAUDE.md, examples/market-day/*, selftest.sh
 - Done when: the play log base writes the per-run text log and its JSONL twin with stable event ids, the session header, startup buffering, flush per line, the engine Logger (Godot 4.5), the tail, start_capture() for tests, scrubbing, and nothing under the check, with the project hooks the spec names (spec section 3.1) (check) · rules.md has the logging, drivability, agent-visible state, seeded randomness and privacy rules (spec section 4) (check) · the minimum Godot is 4.5 everywhere it's stated and checked, and the check loads every script and scene under the screen dirs (spec section 3.5, last point) (check) · following AGENTS.md › Project rules for framework work; built on the branch `ddd/autoplay`, published with the other stages as one pull request (check)
 - Brief: Scope › Planned framework changes
 
-### T128 · Godot-Director: autoplay drives the real game · todo · L · agent
+### T128 · Godot-Director: autoplay drives the real game · in-progress 2026-10-17 · L · agent
 - Depends on: T127
 - Touches: work/Godot-Director: tools/autoplay.sh, autoplay.gd, the AutoplayAdapter base and the project's adapter, scenarios and invariants seeds (new), selftest.sh
 - Done when: `bash tools/autoplay.sh <scenario|--all>` launches the real game through the main scene with the autoplay meta, drives it through the adapter by real input and API calls from scripted and policy scenarios, requires a smoke scenario, writes screenshots and element maps at the spec's moments into `playtesting/autoplay/<run>/`, checks the framework invariants and the project's, writes a replayable repro on every failure, replays with `--replay`, and is deterministic from a seed (spec section 3.2); the spec's three planted bugs are found with a signature, step, screenshot and repro (spec section 6) (check) · following AGENTS.md › Project rules for framework work; built on the branch `ddd/autoplay`, published with the other stages as one pull request (check)
