@@ -156,6 +156,6 @@ The concepts behind these files are in [Records in files](../concept/records.md)
 
 - The [Godot-Director page](../frameworks/godot-director.md), its [install section](../frameworks/godot-director.md#install), and the skill pages [`/next-task`](../skills/next-task.md) and [`/design`](../skills/design.md).
 - The concepts [Roles](../concept/roles.md) and [Agent development flow](../concept/agent-flow.md).
-- The onboarding steps in full: [`ONBOARDING.md`](https://github.com/Freakling/Godot-Director/blob/v4.0.0/ONBOARDING.md).
+- The onboarding steps in full: [`ONBOARDING.md`](https://github.com/Freakling/Godot-Director/blob/v4.1.0/ONBOARDING.md).
 
 <div class="takeaway"><span>Install, answer the interview, approve one commit, then ask for the next task.</span><span class="url"><a href="index.md">All questions</a></span></div>

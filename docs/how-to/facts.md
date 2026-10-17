@@ -39,6 +39,6 @@ Notes are named `YYYY-MM-DD-<slug>.md`. They go in `design/research/` in Godot-D
 ## Related
 
 - The [`/research` skill page](../skills/research.md), and the concept [Design calls](../concept/design-calls.md).
-- The procedures: [App-Director](https://github.com/Freakling/App-Director/tree/v1.7.0/framework/.app-director/procedures/research.md), [Godot-Director](https://github.com/Freakling/Godot-Director/tree/v4.0.0/framework/.godot-director/procedures/research.md) and [SaaSAllTheThings](https://github.com/Freakling/SaaSAllTheThings/tree/v0.9.0/framework/.satt/procedures/research.md).
+- The procedures: [App-Director](https://github.com/Freakling/App-Director/tree/v1.7.0/framework/.app-director/procedures/research.md), [Godot-Director](https://github.com/Freakling/Godot-Director/tree/v4.1.0/framework/.godot-director/procedures/research.md) and [SaaSAllTheThings](https://github.com/Freakling/SaaSAllTheThings/tree/v0.9.0/framework/.satt/procedures/research.md).
 
 <div class="takeaway"><span>Ask one question, read the note from the top, then make the call.</span><span class="url"><a href="index.md">All questions</a></span></div>

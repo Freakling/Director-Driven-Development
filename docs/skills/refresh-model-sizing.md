@@ -18,7 +18,7 @@ How to use it: [It's costing more than I'd like](../how-to/cost.md)
 
 ### Godot-Director
 
-The procedure is at [`framework/.godot-director/procedures/refresh-model-sizing.md`](https://github.com/Freakling/Godot-Director/tree/v4.0.0/framework/.godot-director/procedures/refresh-model-sizing.md) in the Godot-Director repository.
+The procedure is at [`framework/.godot-director/procedures/refresh-model-sizing.md`](https://github.com/Freakling/Godot-Director/tree/v4.1.0/framework/.godot-director/procedures/refresh-model-sizing.md) in the Godot-Director repository.
 
 - The capability check is explicit for other tools. The skill states which of the two capabilities the tool has, and if one is missing it suggests a note such as `Model sizing: not supported` in Project rules, so future sessions don't ask again.
 - Before proposing the map, it asks whether the director has access to each model, since Opus needs a plan that includes it and Fable needs Claude platform access or usage credits.

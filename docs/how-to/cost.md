@@ -57,6 +57,6 @@ Saying it and typing the command run the same procedure. The explicit command pa
 
 - The [`/refresh-model-sizing` skill page](../skills/refresh-model-sizing.md), and the concepts [Task and model sizing](../concept/sizing.md), [Built-in cost savings](../concept/cost-built-in.md) and [Cost tuning for developers](../concept/cost-tuning.md).
 - Building in runs or one task at a time: [How do I get things built?](build.md)
-- The procedures: [App-Director](https://github.com/Freakling/App-Director/tree/v1.7.0/framework/.app-director/procedures/refresh-model-sizing.md), [Godot-Director](https://github.com/Freakling/Godot-Director/tree/v4.0.0/framework/.godot-director/procedures/refresh-model-sizing.md) and [SaaSAllTheThings](https://github.com/Freakling/SaaSAllTheThings/tree/v0.9.0/framework/.satt/procedures/refresh-model-sizing.md).
+- The procedures: [App-Director](https://github.com/Freakling/App-Director/tree/v1.7.0/framework/.app-director/procedures/refresh-model-sizing.md), [Godot-Director](https://github.com/Freakling/Godot-Director/tree/v4.1.0/framework/.godot-director/procedures/refresh-model-sizing.md) and [SaaSAllTheThings](https://github.com/Freakling/SaaSAllTheThings/tree/v0.9.0/framework/.satt/procedures/refresh-model-sizing.md).
 
 <div class="takeaway"><span>Refresh the map when the models change, and the cost of each task follows its size.</span><span class="url"><a href="index.md">All questions</a></span></div>
