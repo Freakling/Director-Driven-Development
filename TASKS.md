@@ -342,6 +342,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 
 ### T127 · Godot-Director: the play log base and the logging rules · in-progress 2026-10-17 · L · agent
 - Note: built, reviewed (nine findings fixed) and committed on ddd/autoplay; published with the other stages as one pull request (T131).
+- PRs: Godot-Director #25 (open)
 - Depends on: -
 - Touches: work/Godot-Director: framework/tools/play_log_base.gd (new), project/tools/play_log.gd (new), framework/.godot-director/rules.md, framework/tools/check.sh, check.gd, setup-clone.sh and ui_capture.sh (the minimum Godot 4.5), framework/.godot-director/procedures/ui-design.md, framework/.godot-director/templates/release-workflow.yml, install.sh, skills/godot-director/SKILL.md, README.md, ONBOARDING.md, PRIVACY.md, CLAUDE.md, examples/market-day/*, selftest.sh
 - Done when: the play log base writes the per-run text log and its JSONL twin with stable event ids, the session header, startup buffering, flush per line, the engine Logger (Godot 4.5), the tail, start_capture() for tests, scrubbing, and nothing under the check, with the project hooks the spec names (spec section 3.1) (check) · rules.md has the logging, drivability, agent-visible state, seeded randomness and privacy rules (spec section 4) (check) · the minimum Godot is 4.5 everywhere it's stated and checked, and the check loads every script and scene under the screen dirs (spec section 3.5, last point) (check) · following AGENTS.md › Project rules for framework work; built on the branch `ddd/autoplay`, published with the other stages as one pull request (check)
@@ -349,6 +350,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 
 ### T128 · Godot-Director: autoplay drives the real game · in-progress 2026-10-17 · L · agent
 - Note: built, reviewed (nine findings fixed) and committed on ddd/autoplay; published with the other stages as one pull request (T131).
+- PRs: Godot-Director #25 (open)
 - Depends on: T127
 - Touches: work/Godot-Director: framework/tools/autoplay.sh, autoplay.gd, autoplay_adapter_base.gd, autoplay_catalog.gd (new), framework/tools/ui_lint.gd and ui_capture.gd (the shared element-map writer), project/tools/autoplay_adapter.gd, autoplay_scenarios.gd, autoplay_invariants.gd (new seeds), install.sh (.gitignore and .gitattributes lines), examples/market-day/*, selftest.sh, CHANGELOG.md
 - Done when: `bash tools/autoplay.sh <scenario|--all>` launches the real game through the main scene with the autoplay meta, drives it through the adapter by real input and API calls from scripted and strategy (random, greedy, end-the-turn) scenarios, requires a smoke scenario, writes screenshots and element maps at the spec's moments into `playtesting/autoplay/<run>/`, checks the framework invariants and the project's, writes a replayable repro on every failure, replays with `--replay`, and is deterministic from a seed (spec section 3.2); the spec's three planted bugs are found with a signature-ready finding line, step, screenshot and repro (spec section 6; signatures come with T129) (check) · following AGENTS.md › Project rules for framework work; built on the branch `ddd/autoplay`, published with the other stages as one pull request (check)
@@ -356,6 +358,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 
 ### T129 · Godot-Director: log review with stable signatures · in-progress 2026-10-17 · M · agent
 - Note: built and committed on ddd/autoplay; published with the other stages as one pull request (T131).
+- PRs: Godot-Director #25 (open)
 - Depends on: T128
 - Touches: work/Godot-Director: tools/log_review.sh and log_review.gd (new), the playtesting/signatures.tsv seed, selftest.sh
 - Done when: `bash tools/log_review.sh [<run>|--latest|--player]` writes review.md and findings.json with the timeline, the findings by signature (the normalisation from the spec, with a fixture carrying signatures.py's cases), coverage and the delta against the previous run, and `--check sig-xxxx` confirms a fix from signatures.tsv (spec section 3.3) (check) · following AGENTS.md › Project rules for framework work; built on the branch `ddd/autoplay`, published with the other stages as one pull request (check)
@@ -363,12 +366,15 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 
 ### T130 · Godot-Director: the dev menu base and its onboarding step · in-progress 2026-10-17 · M · agent
 - Note: built and committed on ddd/autoplay; published with the other stages as one pull request (T131). The flag enables the F12 key in any build; a game that answers setting or flag keeps the two dev menu files in release exports.
+- PRs: Godot-Director #25 (open)
 - Depends on: T127
 - Touches: work/Godot-Director: the dev menu base (new), the project seed, ONBOARDING.md, rules.md, selftest.sh
 - Done when: a framework-owned dev menu base (one tab per system through public APIs and debug hooks, an inspector for hidden values, a Log tab from the play log's tail, debug builds only) ships with a project seed, and onboarding asks whether the director wants a dev menu in the game and how to enable it (a setting, in game, or a command-line flag at start), recording the answer in the project's rules (check) · following AGENTS.md › Project rules for framework work; built on the branch `ddd/autoplay`, published with the other stages as one pull request (check)
 - Brief: Scope › Planned framework changes
 
 ### T131 · Godot-Director: /autoplay and the workflow hooks · in-progress 2026-10-17 · M · agent
+- PRs: Godot-Director #25 (open)
+- Note: the fifth stage on ddd/autoplay; #25 carries all five, each a commit. Its title and body describe the whole feature, set after work-publish.sh opened it from the first commit.
 - Depends on: T128, T129, T130
 - Touches: work/Godot-Director: procedures/autoplay.md and the /autoplay skill (new), rules.md (the request table: "check the logs"), next-task.md and build.md (the (autoplay) tag, smoke before reporting), review.md, function-check.md, playtest.md, align.md, tools/check.cfg ([autoplay]), check.sh, install.sh and the manifest (the .gitignore lines are T128's), the hooks' allowed commands, README.md, CHANGELOG.md, selftest.sh
 - Done when: the procedure and skill run, review and replay as spec section 3.4 says, every named procedure uses autoplay as the spec says, the check runs smoke headless under `[autoplay] check_in_check` with `enforce` (on for new projects, off on upgrade, missing keys read as off), a new project gets everything wired so that `bash tools/autoplay.sh smoke` exits 0 in a fresh project made by the skill (a seed that drives the main scene, or a clean skip that names the adapter to wire; the PLACEHOLDER seeds alone exit 1 today) and an upgrade gets the seeds plus a TASKS item (spec section 5), and the docs say what is framework-owned and what is project-owned and how an assistant without image viewing reviews from element maps (spec section 6) (check) · the play log names the current view when a run starts without a view change, so a run's log and review always carry its first view (found by T128 and T129) (check) · the whole feature is one open pull request, each stage one commit, with the selftest passing (check) · following AGENTS.md › Project rules for framework work; built on the branch `ddd/autoplay`, published with the other stages as one pull request (check)

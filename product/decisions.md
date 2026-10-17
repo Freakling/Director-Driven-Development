@@ -81,3 +81,4 @@ Examples:
 2026-10-17 · auto-playtesting is Godot-Director only for now, delivered as one pull request built in stages · director's choice
 2026-10-17 · Godot-Director's minimum Godot rises to 4.5, for the engine Logger that captures errors inside the game · simpler than a fallback on 4.3 and 4.4
 2026-10-17 · the framework ships a dev-menu base, and onboarding asks whether the director wants a dev menu in the game and how to enable it (a setting, in game, or a command-line flag at start) · the agent can't see the editor's Remote tree, so the dev menu is its inspection path
+2026-10-17 · a feature built in stages on one branch is published as one pull request whose title and body describe the whole feature, set with gh pr edit after work-publish.sh opens it from the first commit · the director reviews the feature, not its first stage
