@@ -386,13 +386,13 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: the release pull request bumps the version files, turns Unreleased into the 4.0.0 heading, passes the selftest and carries the release notes (How to install with Godot 4.5 or newer, What's changed, the upgrade steps) as its description (check) · once merged, `bash tools/work-release.sh work/Godot-Director <pr>` tags v4.0.0 and publishes the release (check) · following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Planned framework changes
 
-### T134 · App-Director: an install from a non-release source marks itself unreleased · todo · S · agent
+### T134 · App-Director: an install from a non-release source marks itself unreleased · in-progress 2026-10-17 · S · agent
 - Depends on: -
 - Touches: work/App-Director: install.sh (the manifest's version line and the closing message), selftest.sh
 - Done when: the manifest records the source commit, and when the source CHANGELOG.md has an Unreleased section with entries the version reads `<version> + unreleased (<commit>)` and the install's closing lines say so; an install from a release records the plain version (test) · following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Planned framework changes
 
-### T135 · SaaSAllTheThings: an install from a non-release source marks itself unreleased · todo · S · agent
+### T135 · SaaSAllTheThings: an install from a non-release source marks itself unreleased · in-progress 2026-10-17 · S · agent
 - Depends on: -
 - Touches: work/SaaSAllTheThings: install.sh (the manifest's version line and the closing message), selftest.sh
 - Done when: the manifest records the source commit, and when the source CHANGELOG.md has an Unreleased section with entries the version reads `<version> + unreleased (<commit>)` and the install's closing lines say so; an install from a release records the plain version (test) · following AGENTS.md › Project rules for framework work (check)
