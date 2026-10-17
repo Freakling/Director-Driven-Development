@@ -122,6 +122,11 @@ code, kbd, pre { font-family: "IBM Plex Mono", ui-monospace, monospace; }
 .ddd-card--highlight { background: var(--card-highlight); border: 2px solid var(--accent); }
 .ddd-card h3, .md-typeset .ddd-card h3 { margin: 0.2rem 0 0.4rem; font-size: 0.95rem; }
 .ddd-card p { margin: 0; color: var(--text-muted); }
+.ddd-card p + p { margin-top: 0.6rem; }
+
+/* An embedded itch.io widget: fits a phone width */
+.ddd-embed { max-width: 100%; margin: 1.2rem 0; overflow: hidden; }
+.ddd-embed iframe { max-width: 100%; border: 0; }
 .ddd-card .step {
   font-family: "IBM Plex Mono", monospace;
   color: var(--accent);

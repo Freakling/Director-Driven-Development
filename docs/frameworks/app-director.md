@@ -70,6 +70,7 @@ Onboarding works out whether this is a new app, an existing app or an upgrade, s
 
 ## Read more
 
+- In use: [this site](../examples/index.md), built with App-Director
 - [The concept](../concept/index.md) and [agent development flow](../concept/agent-flow.md)
 - [Director-Driven Development](https://saemundsson.se/2026/10/07/director-driven-development/) on saemundsson.se
 

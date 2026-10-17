@@ -106,14 +106,13 @@ Multi-tenant B2B SaaS on Azure, with an architecture the check enforces.
 
 All three are MIT licensed, run locally, and work with any AI coding assistant that reads `AGENTS.md`. They are built and tested on Claude Code.
 
-## Built with App-Director
+## Built with the frameworks
 
-This site is built with [App-Director](frameworks/app-director.md). Every change is a task in its [`TASKS.md`](https://github.com/Freakling/Director-Driven-Development/blob/main/TASKS.md), design decisions are recorded in [`product/`](https://github.com/Freakling/Director-Driven-Development/tree/main/product), and one check passes before every commit. The repository is a public example of the framework in use, and a running test that it works. The same repository also develops the three frameworks: see [how framework work runs](https://github.com/Freakling/Director-Driven-Development/blob/main/product/framework-workflow.md) on GitHub.
+Each framework has an [example](examples/index.md). [PKSEI](examples/pksei.md), a rage game you can play in the browser, was built with Godot-Director. This site is built with App-Director: every change is a task in its [`TASKS.md`](https://github.com/Freakling/Director-Driven-Development/blob/main/TASKS.md), design decisions are recorded in [`product/`](https://github.com/Freakling/Director-Driven-Development/tree/main/product), and one check passes before every commit. [Build a B2B SaaS on Azure](https://saemundsson.se/2026/10/09/build-a-b2b-saas-on-azure-with-director-driven-development/) is the worked example for SaaSAllTheThings. The repository that holds this site also develops the three frameworks: see [how framework work runs](https://github.com/Freakling/Director-Driven-Development/blob/main/product/framework-workflow.md) on GitHub.
 
 ## Read more
 
 - The idea behind it: [Director-Driven Development](https://saemundsson.se/2026/10/07/director-driven-development/) on saemundsson.se.
-- A worked example: [Build a B2B SaaS on Azure with Director-Driven Development](https://saemundsson.se/2026/10/09/build-a-b2b-saas-on-azure-with-director-driven-development/).
 - Answers to the questions a director asks, in the order they come up, such as where do I start with an [app](how-to/start.md), a [game](how-to/start-game.md) or a [SaaS](how-to/start-saas.md): the [How-to](how-to/index.md) section.
 - Where the tokens go, and how the frameworks keep the bill down: [Built-in cost savings](concept/cost-built-in.md) and [Cost tuning for developers](concept/cost-tuning.md).
 

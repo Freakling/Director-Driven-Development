@@ -146,6 +146,7 @@ The concepts behind these files are in [Records in files](../concept/records.md)
 - **Need facts first:** [I need facts before I decide](facts.md).
 - **Try it and check it:** [How do I check that what was built works?](check.md)
 - **Ship it:** [How do I ship it?](ship.md)
+- **See it in use:** [this site](../examples/index.md) is built with App-Director.
 
 ## Related
 

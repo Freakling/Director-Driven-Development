@@ -79,6 +79,7 @@ Exports can run in CI on every change. If you use GitHub Actions, the workflow t
 
 ## Read more
 
+- In use: [PKSEI](../examples/pksei.md), a game built with Godot-Director, with its loop, numbers and recipe
 - [The concept](../concept/index.md) and [agent development flow](../concept/agent-flow.md)
 - [Director-Driven Development](https://saemundsson.se/2026/10/07/director-driven-development/) on saemundsson.se
 

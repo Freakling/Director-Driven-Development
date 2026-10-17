@@ -144,6 +144,7 @@ Later, `integrations/` holds one contract per external system, and `assessment/`
 - **Need facts first:** [I need facts before I decide](facts.md), for example which Azure service fits, or what your customer's security framework requires.
 - **Check it:** [How do I check that what was built works?](check.md)
 - **Ship it:** [How do I ship it?](ship.md)
+- **See it in use:** the [Azure SaaS worked example](../examples/index.md).
 
 ## Related
 

@@ -386,7 +386,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: once released, the Godot-Director page lists /autoplay and the play log, the How-to question on checking what was built covers autoplay as a way, and the pages state the new minimum Godot (check) · `bash tools/check.sh` passes (check)
 - Brief: Scope › Planned framework changes
 
-### T133 · The Examples section, with PKSEI as the Godot-Director example · in-progress 2026-10-17 · M · agent
+### T133 · The Examples section, with PKSEI as the Godot-Director example · done 2026-10-17 · M · agent
 - Depends on: -
 - Touches: docs/examples/index.md (new), docs/examples/pksei.md (new), mkdocs.yml (nav), docs/index.md (the Built with section), docs/frameworks/godot-director.md, docs/frameworks/app-director.md, docs/frameworks/saasallthethings.md, docs/how-to/start-game.md, docs/how-to/start.md, docs/how-to/start-saas.md, docs/assets/stylesheets/ddd.css (if the widget needs a rule), selftest.sh (Examples in the Screens check if needed)
 - Done when: the nav has Examples after Frameworks with an overview whose cards name PKSEI (Godot-Director), this site (App-Director) and the Azure SaaS post (SaaSAllTheThings), each with where to play or see it and where its records are (check) · the PKSEI page follows the brief's example page model, with the itch.io widget, every statement checked against Freakling/PKSEI and its devlog, and the numbers attributed to the devlog (check) · the home page's Built with section names the three examples and links the overview and the framework workflow page, and each framework page and Start here walkthrough links its example (check) · `bash tools/check.sh` passes, including the Screens page counts (check)
@@ -416,7 +416,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Depends on: -
 - Touches: selftest.sh
 - Done when: the selftest fails when a page count in the brief's Screens table differs from that section in `mkdocs.yml`'s nav (check) · it fails when a `Brief:` value in TASKS.md, or a brief heading named in `tools/`, isn't a heading in the brief (check) · it fails when a brief section whose heading starts with "Later" or "Planned" names an item that is done in TASKS.md or the archive (check) · `bash tools/check.sh` passes (check)
-- Brief: Scope › Built with App-Director
+- Brief: Scope › Examples
 
 ### T92 · The align anchor: brief against reality · done · S · agent
 - Depends on: -

@@ -102,3 +102,6 @@ nav:
       - App-Director: frameworks/app-director.md
       - Godot-Director: frameworks/godot-director.md
       - SaaSAllTheThings: frameworks/saasallthethings.md
+  - Examples:
+      - examples/index.md
+      - PKSEI: examples/pksei.md
