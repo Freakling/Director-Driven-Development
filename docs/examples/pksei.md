@@ -66,7 +66,7 @@ Source: [Devlog 1](https://freakling.itch.io/pksei/devlog/1712142/devlog-1-how-p
 6. **Follow-ups are items.** Every follow-up from a builder's report goes in the queue, never into silent work.
 7. **Generate the placeholders.** The sprites, the sounds and the itch.io cover are made by committed scripts, so the art is reproducible. Telegraphs come first.
 8. **Ship after every stage.**
-9. **Upgrade the workflow like any other change.** The framework was upgraded mid-project as one commit, with the decisions recorded and the follow-ups as items. What the new release needed wired into the game went into the queue as items instead of being done silently in the upgrade commit.
+9. **Upgrade the workflow like any other change.** The framework was upgraded mid-project as one commit, with the decisions recorded and the follow-ups as items: what the upgrade needed wired into the game went into the queue instead of being done silently in the upgrade commit.
 
 ## The records as the diary
 
