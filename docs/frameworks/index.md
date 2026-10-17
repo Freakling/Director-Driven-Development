@@ -7,7 +7,7 @@ Three frameworks put Director-Driven Development to work. The same loop runs all
 | For | Small web, mobile and desktop apps | Games in Godot 4 | Multi-tenant B2B SaaS on Azure |
 | Stacks | TypeScript, Flutter, Python | GDScript | .NET by default; TypeScript and Python |
 | The director owns | Product vision and design | Design, balance, art direction | The product; the framework owns the architecture |
-| The check fails on | UI importing the data layer, secrets, failing types, lint or tests | Game rules in screen scripts, load errors, failing tests | Architecture rules (layers, tenancy, secrets, sizes, cost SKUs), failing build or tests |
+| The check fails on | UI importing the data layer, secrets, failing types, lint or tests | Game rules in screen scripts, load errors, failing tests, smoke autoplay findings once the game's adapter is wired | Architecture rules (layers, tenancy, secrets, sizes, cost SKUs), failing build or tests |
 | Human rounds | `/acceptance` | `/playtest`, `/function-check` | `/acceptance`, `/feedback` |
 | In your project | `.app-director/` | `.godot-director/` | `.satt/` |
 

@@ -111,7 +111,7 @@ A Godot game that already has code, for [Godot-Director](../frameworks/godot-dir
 
 ### What to have ready
 
-- Godot 4.3 or newer, git and bash (Git Bash on Windows), as for a new game. The full list is in [Where do I start with a game?](start-game.md#what-to-have-installed).
+- Godot 4.5 or newer, git and bash (Git Bash on Windows), as for a new game. The full list is in [Where do I start with a game?](start-game.md#what-to-have-installed).
 - **A clean git tree.** Commit or stash your changes first; onboarding stops until the tree is clean. Then the install is one reviewable diff.
 - **The Godot editor closed** for this project during setup, because it rewrites `project.godot`.
 
@@ -136,7 +136,7 @@ The installer copies the framework's files and reports what it found:
 
 #### 3. Godot is found and the check runs once
 
-The agent finds Godot 4.3 or newer, saves the path in `tools/godot_bin.local` (gitignored, never committed), and asks you only if it cannot find it. On Windows, give the `*_console.exe` build. It then runs `bash tools/check.sh` once and keeps the result. The git pre-commit hook is installed at the very end, so the install commit is not blocked.
+The agent finds Godot 4.5 or newer, saves the path in `tools/godot_bin.local` (gitignored, never committed), and asks you only if it cannot find it. On Windows, give the `*_console.exe` build. It then runs `bash tools/check.sh` once and keeps the result. The git pre-commit hook is installed at the very end, so the install commit is not blocked.
 
 #### 4. The scan (read only)
 
@@ -316,6 +316,6 @@ If the check passes, the agent installs the pre-commit hook. If it fails or cann
 
 - The framework pages: [App-Director](../frameworks/app-director.md), [Godot-Director](../frameworks/godot-director.md) and [SaaSAllTheThings](../frameworks/saasallthethings.md).
 - The skill pages [`/align`](../skills/align.md) and [Acceptance check](../skills/acceptance.md), and the concept [Align and drift reset](../concept/drift.md).
-- The onboarding steps in full: [App-Director](https://github.com/Freakling/App-Director/blob/v1.7.0/ONBOARDING.md), [Godot-Director](https://github.com/Freakling/Godot-Director/blob/v3.13.0/ONBOARDING.md) and [SaaSAllTheThings](https://github.com/Freakling/SaaSAllTheThings/blob/v0.9.0/ONBOARDING.md).
+- The onboarding steps in full: [App-Director](https://github.com/Freakling/App-Director/blob/v1.7.0/ONBOARDING.md), [Godot-Director](https://github.com/Freakling/Godot-Director/blob/v4.0.0/ONBOARDING.md) and [SaaSAllTheThings](https://github.com/Freakling/SaaSAllTheThings/blob/v0.9.0/ONBOARDING.md).
 
 <div class="takeaway"><span>Install into what you have. Onboarding reads it first and marks every guess.</span><span class="url"><a href="index.md">All questions</a></span></div>

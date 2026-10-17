@@ -1,14 +1,16 @@
 # How do I check that what was built works?
 
-<div class="kicker">You tick what works in the running project, the agent turns the rest into bugs</div>
+<div class="kicker">The game plays itself, you tick what works in the running project, and the agent turns the rest into bugs</div>
 
-> Say "Prepare an acceptance check". The agent writes a checklist of built behaviour, you run the project and tick each item Works or Broken, and the agent turns the Broken ones into bug items.
+> Say "Prepare an acceptance check". The agent writes a checklist of built behaviour, you run the project and tick each item Works or Broken, and the agent turns the Broken ones into bug items. In Godot-Director, say "run autoplay" and the game plays itself, then the agent reports what it found.
 
-Tests prove the rules and the check proves the setup. A person proves the rest: the `(demo)` outcomes in App-Director and SaaSAllTheThings, the `(play)` outcomes in Godot-Director, and bug fixes that have no regression test. App-Director and SaaSAllTheThings ship the acceptance check as `/acceptance`, and Godot-Director ships it as `/function-check`. They are the same idea, so this page covers both.
+Tests prove the rules and the check proves the setup. Autoplay proves the `(autoplay)` outcomes in Godot-Director, and a person proves the rest: the `(demo)` outcomes in App-Director and SaaSAllTheThings, the `(play)` outcomes in Godot-Director, and bug fixes that have no regression test. App-Director and SaaSAllTheThings ship the acceptance check as `/acceptance`, and Godot-Director ships it as `/function-check`. They are the same idea, so this page covers both.
 
-## Two ways to do it
+## Ways to do it
 
 **Does each rule work? The acceptance check.** Say "Prepare an acceptance check" and later "Process the acceptance check", or type `/acceptance` (`/function-check` in Godot-Director, with "Prepare a function check" and "Process the function check"). The checklist is a record you keep: a dated file in the repository, so the same round can be repeated and an unticked item comes back next time. Use it before you close a milestone, and add `all` for a full regression round, which also covers each rule in the design that no finished item covers.
+
+**Does it play without you? Autoplay.** Godot-Director only. Say "run autoplay", or type `/autoplay [<scenario>|--all|--replay <folder>|--player]`. The agent launches the game through its main scene, clicks and presses keys as a player would, and reads the play log into a review. The review lists findings by signature, worst first, and each one has a step, a screenshot and its element map (the names and positions of the controls on screen), and a command that replays it. Plain `/autoplay` plays the smoke scenario, which opens every view and plays a few turns. Say "check the logs" after you have played yourself, and the agent reviews your newest session in the same format, without screenshots. `--replay` plays a failed run again from its recording.
 
 **How does it feel? `/playtest`.** Godot-Director ships `/playtest` for how the game feels, with scores and free comments. Say "New playtest", or "Process my playtest". It turns a filled-in report into bugs, score trends and design proposals. In SaaSAllTheThings, `/feedback` plays the same part for a customer or pilot session.
 
@@ -34,11 +36,14 @@ Saying it and typing the command run the same procedure.
 - **A failing check stops the preparation.** Fix `bash tools/check.sh` first.
 - **An unticked item waits.** Nothing is lost by leaving it blank, because it is collected again next time.
 - **A function check is not a playtest.** `/playtest` asks how the game feels, and `/function-check` asks whether each rule works.
+- **Autoplay judges what a machine can judge.** It finds errors, softlocks and input that doesn't reach the game. Whether the game looks and feels right is still yours: look at the screenshot at each finding, and use `/playtest` for the feel. On a machine with no display, a run can't take screenshots: the agent can play it headless, with element maps and no screenshots, and says so.
+- **Autoplay skips a game it can't play yet.** Until the game's autoplay adapter is filled in, `bash tools/autoplay.sh` names what to wire and plays nothing.
 
 ## Related
 
 - The [acceptance check skill page](../skills/acceptance.md), and the concept [The check](../concept/check.md).
-- The procedures: [App-Director](https://github.com/Freakling/App-Director/tree/v1.7.0/framework/.app-director/procedures/acceptance.md), [SaaSAllTheThings](https://github.com/Freakling/SaaSAllTheThings/tree/v0.9.0/framework/.satt/procedures/acceptance.md), and for Godot-Director [`/function-check`](https://github.com/Freakling/Godot-Director/tree/v3.13.0/framework/.godot-director/procedures/function-check.md) and [`/playtest`](https://github.com/Freakling/Godot-Director/tree/v3.13.0/framework/.godot-director/procedures/playtest.md).
+- The procedures: [App-Director](https://github.com/Freakling/App-Director/tree/v1.7.0/framework/.app-director/procedures/acceptance.md), [SaaSAllTheThings](https://github.com/Freakling/SaaSAllTheThings/tree/v0.9.0/framework/.satt/procedures/acceptance.md), and for Godot-Director [`/function-check`](https://github.com/Freakling/Godot-Director/tree/v4.0.0/framework/.godot-director/procedures/function-check.md), [`/playtest`](https://github.com/Freakling/Godot-Director/tree/v4.0.0/framework/.godot-director/procedures/playtest.md) and [`autoplay`](https://github.com/Freakling/Godot-Director/tree/v4.0.0/framework/.godot-director/procedures/autoplay.md).
+- The [Godot-Director page](../frameworks/godot-director.md#the-play-log-and-autoplay) on the play log and autoplay.
 - Once the bugs are fixed: [How do I ship it?](ship.md)
 
 <div class="takeaway"><span>Tests prove the rules, and you prove the rest. Run the check before you close a milestone.</span><span class="url"><a href="index.md">All questions</a></span></div>

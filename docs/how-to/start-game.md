@@ -8,7 +8,7 @@ This page is for someone with a game idea and no project yet. [Godot-Director](.
 
 ## Short answer
 
-1. **Have three things installed:** Godot 4.3 or newer, git, and bash.
+1. **Have three things installed:** Godot 4.5 or newer, git, and bash.
 2. **Install the framework** in your game's folder with one command.
 3. **Answer onboarding.** It asks about the game, who owns what, and how you want to work, and writes the answers into your project.
 4. **Approve the install commit,** restart Claude Code, and ask for the first task.
@@ -16,7 +16,7 @@ This page is for someone with a game idea and no project yet. [Godot-Director](.
 ## What to have installed
 
 - **Claude Code,** in which you run everything. Other AI assistants that read `AGENTS.md` can use the framework's core, but Godot-Director is built and tested on Claude Code and the others are untested.
-- **Godot 4.3 or newer.** Onboarding finds it and records the path for this machine. You do not need to create the project in Godot first.
+- **Godot 4.5 or newer.** Onboarding finds it and records the path for this machine. You do not need to create the project in Godot first.
 - **git.** Your game lives in its own git repository.
 - **bash.** On Windows it comes with Git for Windows, and every command runs in Git Bash.
 - **Node.js,** if you install with the skill, because that command uses `npx`.
@@ -44,7 +44,7 @@ Onboarding is the agent following the framework's `ONBOARDING.md`. You decide ev
 - **Close the Godot editor** for this project if it is open. The editor rewrites `project.godot`, so keep it closed until onboarding is done.
 - **Confirm the mode.** The agent tells you what it detected and asks you to confirm. With no `project.godot` and no code, that is a fresh start.
 - **Which assistants will work on the game?** The default is Claude Code (`claude`). Answer `none` if you will only use other assistants; you then get the tool-neutral core, which works through `AGENTS.md`. For a first game in Claude Code, take the default.
-- **Where is Godot?** The agent finds Godot 4.3 or newer on its own. If it cannot, it asks for the path. On Windows, give the `*_console.exe` build, so the agent can read Godot's output. The path is saved in `tools/godot_bin.local`, which stays on your machine and is never committed.
+- **Where is Godot?** The agent finds Godot 4.5 or newer on its own. If it cannot, it asks for the path. On Windows, give the `*_console.exe` build, so the agent can read Godot's output. The path is saved in `tools/godot_bin.local`, which stays on your machine and is never committed.
 
 ### 2. The design interview
 
@@ -120,7 +120,11 @@ The files below are yours and are never overwritten. The framework's own files (
 | `design/gdd.md` | The current design, and the open questions |
 | `design/decisions.md` | Why: one line per decision |
 | `playtesting/TEMPLATE.md` | The playtest template, one section per core loop |
-| `tools/check.cfg` | Settings for the check |
+| `tools/check.cfg` | Settings for the check, including whether it plays smoke autoplay (`[autoplay]`) |
+| `tools/play_log.gd` | The game's play log hooks: what it records for this game |
+| `tools/autoplay_adapter.gd`, `tools/autoplay_scenarios.gd`, `tools/autoplay_invariants.gd` | How autoplay starts a run and performs each action, the scenarios it plays, and the game's own always-true checks |
+
+Onboarding also asks whether the game should have a dev menu, an overlay with a tab per system and an inspector for values only the code can see, and how it opens: F12 in debug builds (recommended), a setting, a command-line flag, or none. Your answer goes in AGENTS.md › Project rules as `Dev menu:`.
 
 The concepts behind these files are in [Records in files](../concept/records.md).
 
@@ -136,7 +140,7 @@ The concepts behind these files are in [Records in files](../concept/records.md)
 
 - **The editor is open during setup.** It rewrites `project.godot`, so keep it closed until onboarding is done.
 - **The commands are missing.** See [Something isn't there, or doesn't work](trouble.md).
-- **Godot is not found.** Give the agent the path to Godot 4.3 or newer. Until it is saved, the check cannot run and exits with 3.
+- **Godot is not found.** Give the agent the path to Godot 4.5 or newer. Until it is saved, the check cannot run and exits with 3.
 - **A new clone of the game.** Every new clone needs `bash tools/setup-clone.sh` once; it finds Godot and installs the hook.
 - **Another assistant.** Only the core is the same everywhere: rules, procedures, the check and the pre-commit hook. Fresh-context builds, the reviewer, model sizing and the hooks that block risky commands depend on your assistant supporting subagents and hooks.
 
@@ -152,6 +156,6 @@ The concepts behind these files are in [Records in files](../concept/records.md)
 
 - The [Godot-Director page](../frameworks/godot-director.md), its [install section](../frameworks/godot-director.md#install), and the skill pages [`/next-task`](../skills/next-task.md) and [`/design`](../skills/design.md).
 - The concepts [Roles](../concept/roles.md) and [Agent development flow](../concept/agent-flow.md).
-- The onboarding steps in full: [`ONBOARDING.md`](https://github.com/Freakling/Godot-Director/blob/v3.13.0/ONBOARDING.md).
+- The onboarding steps in full: [`ONBOARDING.md`](https://github.com/Freakling/Godot-Director/blob/v4.0.0/ONBOARDING.md).
 
 <div class="takeaway"><span>Install, answer the interview, approve one commit, then ask for the next task.</span><span class="url"><a href="index.md">All questions</a></span></div>

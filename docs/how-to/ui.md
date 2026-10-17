@@ -30,7 +30,7 @@ The drawing pays off when layout is the point and words are slow or vague: posit
 
 ## Steps for drawing a screen (Godot-Director)
 
-Nothing to install for the drawing. Excalidraw runs in your browser and needs no account. The capture uses the Godot engine your game already runs on, which must be Godot 4.3 or newer. The agent writes captures to `design/ui/captures/` and the screen spec to `design/ui/<screen>.md`. Your drawings go in `director/ui/`, which the agent reads and never writes to. Captures are gitignored; the spec and your drawing are part of your project.
+Nothing to install for the drawing. Excalidraw runs in your browser and needs no account. The capture uses the Godot engine your game already runs on, which must be Godot 4.5 or newer. The agent writes captures to `design/ui/captures/` and the screen spec to `design/ui/<screen>.md`. Your drawings go in `director/ui/`, which the agent reads and never writes to. Captures are gitignored; the spec and your drawing are part of your project.
 
 **Once per game.**
 
@@ -77,7 +77,7 @@ Start with one screen and one or two boxes. Add more once the first one builds a
 
 ## Related
 
-- The `/ui-design` entry on the [Godot-Director page](../frameworks/godot-director.md#commands), and the [`ui-design` procedure](https://github.com/Freakling/Godot-Director/tree/v3.13.0/framework/.godot-director/procedures/ui-design.md), which is the source of truth for the drawing steps.
+- The `/ui-design` entry on the [Godot-Director page](../frameworks/godot-director.md#commands), and the [`ui-design` procedure](https://github.com/Freakling/Godot-Director/tree/v4.0.0/framework/.godot-director/procedures/ui-design.md), which is the source of truth for the drawing steps.
 - The skill pages [`/design`](../skills/design.md) and [`/next-task`](../skills/next-task.md), for the two ways that need no drawing.
 
 <div class="takeaway"><span>Describe it, or draw it. The agent builds it and a person checks it.</span><span class="url"><a href="index.md">All questions</a></span></div>

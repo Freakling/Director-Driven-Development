@@ -39,7 +39,7 @@ Saying it and typing the command run the same procedure.
 ## Related
 
 - The [`/next-task` skill page](../skills/next-task.md), and the concept [Agent development flow](../concept/agent-flow.md).
-- The procedures: [App-Director](https://github.com/Freakling/App-Director/tree/v1.7.0/framework/.app-director/procedures/next-task.md), [Godot-Director](https://github.com/Freakling/Godot-Director/tree/v3.13.0/framework/.godot-director/procedures/next-task.md) and [SaaSAllTheThings](https://github.com/Freakling/SaaSAllTheThings/tree/v0.9.0/framework/.satt/procedures/next-task.md).
+- The procedures: [App-Director](https://github.com/Freakling/App-Director/tree/v1.7.0/framework/.app-director/procedures/next-task.md), [Godot-Director](https://github.com/Freakling/Godot-Director/tree/v4.0.0/framework/.godot-director/procedures/next-task.md) and [SaaSAllTheThings](https://github.com/Freakling/SaaSAllTheThings/tree/v0.9.0/framework/.satt/procedures/next-task.md).
 - When the queue has no items yet: [How do I decide what gets built, or change how something works?](decide.md)
 
 <div class="takeaway"><span>One task, one check, one commit. Ask for a run when you trust the queue.</span><span class="url"><a href="index.md">All questions</a></span></div>

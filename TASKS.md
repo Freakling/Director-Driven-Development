@@ -415,7 +415,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: `focus_roots()` on the adapter base returns the view node by default, the no-focus invariant accepts a focus owner under any root, counts a SubViewport root's own focus owner, finds focusable controls under any root, skips the check on an empty list, and names the roots in its finding; `_pick` with every weight 0 picks nothing and smoke carries on to the progress action; the seeds and the example carry the hook and the weight-0 note; the procedure, rules.md and README describe it; the selftest covers the five cases in the spec (`init/godot-director-focus-root-prompt.md`) with the existing no-focus case still passing (check) · following AGENTS.md › Project rules for framework work; VERSION untouched, since versions move only in release pull requests (check)
 - Brief: Scope › Planned framework changes
 
-### T132 · Docs follow Godot-Director's auto-playtesting · in-progress 2026-10-17 · S · agent
+### T132 · Docs follow Godot-Director's auto-playtesting · done 2026-10-17 · S · agent
 - Depends on: T131, T137
 - Touches: docs/frameworks/godot-director.md, docs/how-to/*.md, docs/skills/*.md
 - Done when: once released, the Godot-Director page lists /autoplay and the play log, the How-to question on checking what was built covers autoplay as a way, and the pages state the new minimum Godot (check) · `bash tools/check.sh` passes (check)

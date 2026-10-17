@@ -52,7 +52,7 @@ The check, `bash tools/check.sh`, ends with one of three results.
 What can be missing depends on the framework:
 
 - **App-Director:** gitleaks is missing, too old, or a version that can't scan, or the tool for your stack is missing.
-- **Godot-Director:** Godot is not found, or is older than 4.3. Give the agent the path to Godot; `setup-clone.sh` records it for this machine.
+- **Godot-Director:** Godot is not found, or is older than 4.5. Give the agent the path to Godot; `setup-clone.sh` records it for this machine.
 - **SaaSAllTheThings:** the toolchain of your backend stack is missing, such as the .NET SDK for the default stack.
 
 An exit 3 is not a failure of your work. The agent reports the work as unverified rather than done, and says why.
@@ -63,7 +63,7 @@ Everything in the project is committed except the per-machine setup. In a new cl
 
 ### Capture can't run (Godot-Director)
 
-`/ui-design capture` renders the screens in Godot, which needs a display. It exits with 3 and says why: no Godot, a Godot older than 4.3, no display, or Godot couldn't open a window or start its renderer. Fix what the message names. On Linux it needs a display or `xvfb-run`. Where the display is the reason, the agent can still write the element maps and the layout lint without images, and tells you they come from a headless run. More in [How do I work with UI changes?](ui.md)
+`/ui-design capture` renders the screens in Godot, which needs a display. It exits with 3 and says why: no Godot, a Godot older than 4.5, no display, or Godot couldn't open a window or start its renderer. Fix what the message names. On Linux it needs a display or `xvfb-run`. Where the display is the reason, the agent can still write the element maps and the layout lint without images, and tells you they come from a headless run. More in [How do I work with UI changes?](ui.md)
 
 ### A write to `director/` was refused
 
@@ -76,6 +76,6 @@ This is by design too: the agent commits only with your approval. Asking for a r
 ## Related
 
 - The install sections of [App-Director](../frameworks/app-director.md#install), [Godot-Director](../frameworks/godot-director.md#install) and [SaaSAllTheThings](../frameworks/saasallthethings.md#install).
-- The procedures: [App-Director onboarding](https://github.com/Freakling/App-Director/blob/v1.7.0/ONBOARDING.md), [Godot-Director onboarding](https://github.com/Freakling/Godot-Director/blob/v3.13.0/ONBOARDING.md) and [SaaSAllTheThings onboarding](https://github.com/Freakling/SaaSAllTheThings/blob/v0.9.0/ONBOARDING.md).
+- The procedures: [App-Director onboarding](https://github.com/Freakling/App-Director/blob/v1.7.0/ONBOARDING.md), [Godot-Director onboarding](https://github.com/Freakling/Godot-Director/blob/v4.0.0/ONBOARDING.md) and [SaaSAllTheThings onboarding](https://github.com/Freakling/SaaSAllTheThings/blob/v0.9.0/ONBOARDING.md).
 
 <div class="takeaway"><span>Update, restart, and the commands you expect are there.</span><span class="url"><a href="index.md">All questions</a></span></div>
