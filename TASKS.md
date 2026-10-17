@@ -348,12 +348,13 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Brief: Scope › Planned framework changes
 
 ### T128 · Godot-Director: autoplay drives the real game · in-progress 2026-10-17 · L · agent
+- Note: built, reviewed (nine findings fixed) and committed on ddd/autoplay; published with the other stages as one pull request (T131).
 - Depends on: T127
 - Touches: work/Godot-Director: framework/tools/autoplay.sh, autoplay.gd, autoplay_adapter_base.gd, autoplay_catalog.gd (new), framework/tools/ui_lint.gd and ui_capture.gd (the shared element-map writer), project/tools/autoplay_adapter.gd, autoplay_scenarios.gd, autoplay_invariants.gd (new seeds), install.sh (.gitignore and .gitattributes lines), examples/market-day/*, selftest.sh, CHANGELOG.md
 - Done when: `bash tools/autoplay.sh <scenario|--all>` launches the real game through the main scene with the autoplay meta, drives it through the adapter by real input and API calls from scripted and strategy (random, greedy, end-the-turn) scenarios, requires a smoke scenario, writes screenshots and element maps at the spec's moments into `playtesting/autoplay/<run>/`, checks the framework invariants and the project's, writes a replayable repro on every failure, replays with `--replay`, and is deterministic from a seed (spec section 3.2); the spec's three planted bugs are found with a signature-ready finding line, step, screenshot and repro (spec section 6; signatures come with T129) (check) · following AGENTS.md › Project rules for framework work; built on the branch `ddd/autoplay`, published with the other stages as one pull request (check)
 - Brief: Scope › Planned framework changes
 
-### T129 · Godot-Director: log review with stable signatures · todo · M · agent
+### T129 · Godot-Director: log review with stable signatures · in-progress 2026-10-17 · M · agent
 - Depends on: T128
 - Touches: work/Godot-Director: tools/log_review.sh and log_review.gd (new), the playtesting/signatures.tsv seed, selftest.sh
 - Done when: `bash tools/log_review.sh [<run>|--latest|--player]` writes review.md and findings.json with the timeline, the findings by signature (the normalisation from the spec, with a fixture carrying signatures.py's cases), coverage and the delta against the previous run, and `--check sig-xxxx` confirms a fix from signatures.tsv (spec section 3.3) (check) · following AGENTS.md › Project rules for framework work; built on the branch `ddd/autoplay`, published with the other stages as one pull request (check)
