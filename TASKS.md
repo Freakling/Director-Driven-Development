@@ -388,6 +388,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Brief: Scope › Planned framework changes
 
 ### T139 · Release Godot-Director 4.1.0 · in-progress 2026-10-17 · S · agent
+- PRs: Godot-Director #28 (open)
 - Depends on: T138
 - Touches: work/Godot-Director: VERSION, .claude-plugin/plugin.json, .claude-plugin/marketplace.json, skills/godot-director/SKILL.md, CHANGELOG.md
 - Done when: the release pull request bumps the version files, turns Unreleased into the 4.1.0 heading, passes the selftest and carries the release notes (How to install, What's changed, the upgrade steps) as its description (check) · once merged, `bash tools/work-release.sh work/Godot-Director <pr>` tags v4.1.0 and publishes the release (check) · following AGENTS.md › Project rules for framework work (check)
