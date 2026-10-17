@@ -380,8 +380,8 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: the procedure and skill run, review and replay as spec section 3.4 says, every named procedure uses autoplay as the spec says, the check runs smoke headless under `[autoplay] check_in_check` with `enforce` (on for new projects, off on upgrade, missing keys read as off), a new project gets everything wired so that `bash tools/autoplay.sh smoke` exits 0 in a fresh project made by the skill (a seed that drives the main scene, or a clean skip that names the adapter to wire; the PLACEHOLDER seeds alone exit 1 today) and an upgrade gets the seeds plus a TASKS item (spec section 5), and the docs say what is framework-owned and what is project-owned and how an assistant without image viewing reviews from element maps (spec section 6) (check) · the play log names the current view when a run starts without a view change, so a run's log and review always carry its first view (found by T128 and T129) (check) · the whole feature is one open pull request, each stage one commit, with the selftest passing (check) · following AGENTS.md › Project rules for framework work; built on the branch `ddd/autoplay`, published with the other stages as one pull request (check)
 - Brief: Scope › Planned framework changes
 
-### T137 · Release Godot-Director 4.0.0 · in-progress 2026-10-17 · S · agent
-- PRs: Godot-Director #26 (open)
+### T137 · Release Godot-Director 4.0.0 · done 2026-10-17 · S · agent
+- PRs: Godot-Director #26 (merged); v4.0.0 tagged and published
 - Depends on: -
 - Touches: work/Godot-Director: VERSION, .claude-plugin/plugin.json, CHANGELOG.md
 - Done when: the release pull request bumps the version files, turns Unreleased into the 4.0.0 heading, passes the selftest and carries the release notes (How to install with Godot 4.5 or newer, What's changed, the upgrade steps) as its description (check) · once merged, `bash tools/work-release.sh work/Godot-Director <pr>` tags v4.0.0 and publishes the release (check) · following AGENTS.md › Project rules for framework work (check)
@@ -403,17 +403,19 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 
 ### T136 · Godot-Director: an install from a non-release source marks itself unreleased · todo · S · agent
 - Depends on: T137
+- Note: waits for Godot-Director #27 (T138), which touches selftest.sh too.
 - Touches: work/Godot-Director: install.sh (the manifest's version line and the closing message), selftest.sh
 - Done when: the manifest records the source commit, and when the source CHANGELOG.md has an Unreleased section with entries the version reads `<version> + unreleased (<commit>)` and the install's closing lines say so; an install from a release records the plain version (test) · following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Planned framework changes
 
 ### T138 · Godot-Director: autoplay's no-focus invariant looks under the adapter's focus roots · in-progress 2026-10-17 · M · agent
+- PRs: Godot-Director #27 (open)
 - Depends on: -
 - Touches: work/Godot-Director: framework/tools/autoplay_adapter_base.gd, framework/tools/autoplay.gd, project/tools/autoplay_adapter.gd, project/tools/autoplay_scenarios.gd, examples/market-day/tools/autoplay_adapter.gd, framework/.godot-director/procedures/autoplay.md, framework/.godot-director/rules.md, README.md, selftest.sh
 - Done when: `focus_roots()` on the adapter base returns the view node by default, the no-focus invariant accepts a focus owner under any root, counts a SubViewport root's own focus owner, finds focusable controls under any root, skips the check on an empty list, and names the roots in its finding; `_pick` with every weight 0 picks nothing and smoke carries on to the progress action; the seeds and the example carry the hook and the weight-0 note; the procedure, rules.md and README describe it; the selftest covers the five cases in the spec (`init/godot-director-focus-root-prompt.md`) with the existing no-focus case still passing (check) · following AGENTS.md › Project rules for framework work; VERSION untouched, since versions move only in release pull requests (check)
 - Brief: Scope › Planned framework changes
 
-### T132 · Docs follow Godot-Director's auto-playtesting · todo · S · agent
+### T132 · Docs follow Godot-Director's auto-playtesting · in-progress 2026-10-17 · S · agent
 - Depends on: T131, T137
 - Touches: docs/frameworks/godot-director.md, docs/how-to/*.md, docs/skills/*.md
 - Done when: once released, the Godot-Director page lists /autoplay and the play log, the How-to question on checking what was built covers autoplay as a way, and the pages state the new minimum Godot (check) · `bash tools/check.sh` passes (check)
