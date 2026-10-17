@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T141 · B5
+**Next IDs:** T142 · B5
 
 ## Milestones
 | Milestone | Status |
@@ -399,6 +399,12 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Touches: work/Godot-Director: VERSION, .claude-plugin/plugin.json, .claude-plugin/marketplace.json, skills/godot-director/SKILL.md, CHANGELOG.md
 - Done when: the release pull request moves T136's changelog bullet out of the 4.1.0 section (where the merge of #29 after #28 put it; v4.1.0 doesn't ship it) under a 4.1.1 heading, bumps the version files, passes the selftest and carries the release notes as its description (check) · once merged, `bash tools/work-release.sh work/Godot-Director <pr>` tags v4.1.1 and publishes the release (check) · following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Planned framework changes
+
+### T141 · Docs links follow Godot-Director 4.1.0 · in-progress 2026-10-17 · XS · agent
+- Depends on: T139
+- Touches: docs/**/*.md (links into Freakling/Godot-Director)
+- Done when: every link into Godot-Director points at v4.1.0, and no page text changes, since the release adds an adapter hook the pages don't describe (check) · `bash tools/check.sh` passes (check)
+- Brief: Scope › Framework features
 
 ### T134 · App-Director: an install from a non-release source marks itself unreleased · in-progress 2026-10-17 · S · agent
 - PRs: App-Director #22 (open)
