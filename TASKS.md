@@ -461,6 +461,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 
 ### T144 · Release SaaSAllTheThings 0.9.1 · in-progress 2026-10-18 · S · agent
 - Depends on: T135
+- PRs: SaaSAllTheThings #16 (open)
 - Touches: work/SaaSAllTheThings: VERSION, .claude-plugin/plugin.json, every skill's version and `--branch` line, CHANGELOG.md
 - Done when: the release pull request bumps the version files, turns Unreleased into the 0.9.1 heading, passes the selftest and carries the release notes (How to install, What's new, How to upgrade) as its description (check) · once merged, `bash tools/work-release.sh work/SaaSAllTheThings <pr>` tags v0.9.1 and publishes the release (check) · following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Planned framework changes
