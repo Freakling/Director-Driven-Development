@@ -151,6 +151,6 @@ Later, `integrations/` holds one contract per external system, and `assessment/`
 - The [SaaSAllTheThings page](../frameworks/saasallthethings.md), its [install section](../frameworks/saasallthethings.md#install), and the skill pages [`/next-task`](../skills/next-task.md) and [`/design`](../skills/design.md).
 - The concepts [Roles](../concept/roles.md) and [Agent development flow](../concept/agent-flow.md).
 - The step-by-step guide on the blog: [Build a B2B SaaS on Azure with Director-Driven Development](https://saemundsson.se/2026/10/09/build-a-b2b-saas-on-azure-with-director-driven-development/).
-- The onboarding steps in full: [`ONBOARDING.md`](https://github.com/Freakling/SaaSAllTheThings/blob/v0.9.0/ONBOARDING.md).
+- The onboarding steps in full: [`ONBOARDING.md`](https://github.com/Freakling/SaaSAllTheThings/blob/v0.9.1/ONBOARDING.md).
 
 <div class="takeaway"><span>Install, settle the stack, answer the interview, approve one commit, then ask for the next task.</span><span class="url"><a href="index.md">All questions</a></span></div>

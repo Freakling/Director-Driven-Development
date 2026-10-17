@@ -33,7 +33,7 @@ The procedure is at [`framework/.godot-director/procedures/drift-reset.md`](http
 
 ### App-Director
 
-The procedure is at [`framework/.app-director/procedures/drift-reset.md`](https://github.com/Freakling/App-Director/tree/v1.7.0/framework/.app-director/procedures/drift-reset.md) in the App-Director repository.
+The procedure is at [`framework/.app-director/procedures/drift-reset.md`](https://github.com/Freakling/App-Director/tree/v1.7.1/framework/.app-director/procedures/drift-reset.md) in the App-Director repository.
 
 - The branch is `drift-reset-YYYY-MM-DD`, and the reset folder is `product/resets/YYYY-MM-DD/`. The working tree must be clean before it starts. If it isn't, the director decides what happens to the changes first.
 - No destructive git commands are used. The reset never discards work or rewrites history, and the git rules are in `rules.md`.
@@ -44,7 +44,7 @@ The procedure is at [`framework/.app-director/procedures/drift-reset.md`](https:
 
 ### SaaSAllTheThings
 
-The procedure is at [`framework/.satt/procedures/drift-reset.md`](https://github.com/Freakling/SaaSAllTheThings/tree/v0.9.0/framework/.satt/procedures/drift-reset.md) in the SaaSAllTheThings repository.
+The procedure is at [`framework/.satt/procedures/drift-reset.md`](https://github.com/Freakling/SaaSAllTheThings/tree/v0.9.1/framework/.satt/procedures/drift-reset.md) in the SaaSAllTheThings repository.
 
 - The scope is the product design the director owns: the Product Pillars, the PRD, the decision log and the business rules in integration contracts. The architecture is out of scope. A framework rule that conflicts with the product goes through `architect.md` and an ADR, and an accepted ADR is never dropped without a new one.
 - "Contradictory" means the build contradicts the text, or two texts contradict each other, such as the PRD and `product/decisions.md`, or the PRD and a contract. "Divergent" means the principle is built two or more ways, each defensible from the text.

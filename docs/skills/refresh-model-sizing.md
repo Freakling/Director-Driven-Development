@@ -26,14 +26,14 @@ The procedure is at [`framework/.godot-director/procedures/refresh-model-sizing.
 
 ### App-Director
 
-The procedure is at [`framework/.app-director/procedures/refresh-model-sizing.md`](https://github.com/Freakling/App-Director/tree/v1.7.0/framework/.app-director/procedures/refresh-model-sizing.md) in the App-Director repository.
+The procedure is at [`framework/.app-director/procedures/refresh-model-sizing.md`](https://github.com/Freakling/App-Director/tree/v1.7.1/framework/.app-director/procedures/refresh-model-sizing.md) in the App-Director repository.
 
 - The capability check looks for the `builder` agent definition in `.claude/agents/`, and for a way to pass a different model to each subagent call. If either is missing, the skill stops.
 - The new block replaces any existing `Model sizing` lines in Project rules. If sizing was off, it is switched on.
 
 ### SaaSAllTheThings
 
-The procedure is at [`framework/.satt/procedures/refresh-model-sizing.md`](https://github.com/Freakling/SaaSAllTheThings/tree/v0.9.0/framework/.satt/procedures/refresh-model-sizing.md) in the SaaSAllTheThings repository.
+The procedure is at [`framework/.satt/procedures/refresh-model-sizing.md`](https://github.com/Freakling/SaaSAllTheThings/tree/v0.9.1/framework/.satt/procedures/refresh-model-sizing.md) in the SaaSAllTheThings repository.
 
 - If a sizing block with five entries already exists, the skill shows the current values and asks whether to update them or leave them.
 - To turn sizing off, the skill writes `Model sizing: off` and removes the size entries.

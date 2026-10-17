@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T145 · B5
+**Next IDs:** T146 · B5
 
 ## Milestones
 | Milestone | Status |
@@ -453,19 +453,25 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: the nav has Examples after Frameworks with an overview whose cards name PKSEI (Godot-Director), this site (App-Director) and the Azure SaaS post (SaaSAllTheThings), each with where to play or see it and where its records are (check) · the PKSEI page follows the brief's example page model, with the itch.io widget, every statement checked against Freakling/PKSEI and its devlog, and the numbers attributed to the devlog (check) · the home page's Built with section names the three examples and links the overview and the framework workflow page, and each framework page and Start here walkthrough links its example (check) · `bash tools/check.sh` passes, including the Screens page counts (check)
 - Brief: Scope › Examples
 
-### T143 · Release App-Director 1.7.1 · in-progress 2026-10-18 · S · agent
+### T143 · Release App-Director 1.7.1 · done 2026-10-18 · S · agent
 - Depends on: T134
-- PRs: App-Director #23 (open)
+- PRs: App-Director #23 (merged); v1.7.1 tagged and published
 - Touches: work/App-Director: VERSION, .claude-plugin/plugin.json, CHANGELOG.md, the other version files its CLAUDE.md lists
 - Done when: the release pull request bumps the version files, turns Unreleased into the 1.7.1 heading, passes the selftest and carries the release notes as its description (check) · once merged, `bash tools/work-release.sh work/App-Director <pr>` tags v1.7.1 and publishes the release (check) · following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Planned framework changes
 
-### T144 · Release SaaSAllTheThings 0.9.1 · in-progress 2026-10-18 · S · agent
+### T144 · Release SaaSAllTheThings 0.9.1 · done 2026-10-18 · S · agent
 - Depends on: T135
-- PRs: SaaSAllTheThings #16 (open)
+- PRs: SaaSAllTheThings #16 (merged); v0.9.1 tagged and published
 - Touches: work/SaaSAllTheThings: VERSION, .claude-plugin/plugin.json, every skill's version and `--branch` line, CHANGELOG.md
 - Done when: the release pull request bumps the version files, turns Unreleased into the 0.9.1 heading, passes the selftest and carries the release notes (How to install, What's new, How to upgrade) as its description (check) · once merged, `bash tools/work-release.sh work/SaaSAllTheThings <pr>` tags v0.9.1 and publishes the release (check) · following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Planned framework changes
+
+### T145 · Docs links follow App-Director 1.7.1 and SaaSAllTheThings 0.9.1 · done 2026-10-18 · XS · agent
+- Depends on: T143, T144
+- Touches: docs/**/*.md (links into Freakling/App-Director and Freakling/SaaSAllTheThings)
+- Done when: every link into App-Director points at v1.7.1 and every link into SaaSAllTheThings at v0.9.1, and no page text changes, since both releases change the installer's manifest, which the pages don't describe (check) · `bash tools/check.sh` passes (check)
+- Brief: Scope › Framework features
 
 ### T84 · App-Director: /ui-design with Playwright capture · in-progress 2026-10-16 · L · agent
 - Depends on: T83
