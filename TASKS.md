@@ -455,6 +455,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 
 ### T143 · Release App-Director 1.7.1 · in-progress 2026-10-18 · S · agent
 - Depends on: T134
+- PRs: App-Director #23 (open)
 - Touches: work/App-Director: VERSION, .claude-plugin/plugin.json, CHANGELOG.md, the other version files its CLAUDE.md lists
 - Done when: the release pull request bumps the version files, turns Unreleased into the 1.7.1 heading, passes the selftest and carries the release notes as its description (check) · once merged, `bash tools/work-release.sh work/App-Director <pr>` tags v1.7.1 and publishes the release (check) · following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Planned framework changes
