@@ -410,6 +410,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 
 ### T136 · Godot-Director: an install from a non-release source marks itself unreleased · in-progress 2026-10-17 · S · agent
 - Depends on: T137
+- PRs: Godot-Director #29 (open)
 - Touches: work/Godot-Director: install.sh (the manifest's version line and the closing message), selftest.sh
 - Done when: the manifest records the source commit, and when the source CHANGELOG.md has an Unreleased section with entries the version reads `<version> + unreleased (<commit>)` and the install's closing lines say so; an install from a release records the plain version (test) · following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Planned framework changes
