@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T133 · B5
+**Next IDs:** T134 · B5
 
 ## Milestones
 | Milestone | Status |
@@ -385,6 +385,12 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Touches: docs/frameworks/godot-director.md, docs/how-to/*.md, docs/skills/*.md
 - Done when: once released, the Godot-Director page lists /autoplay and the play log, the How-to question on checking what was built covers autoplay as a way, and the pages state the new minimum Godot (check) · `bash tools/check.sh` passes (check)
 - Brief: Scope › Planned framework changes
+
+### T133 · The Examples section, with PKSEI as the Godot-Director example · in-progress 2026-10-17 · M · agent
+- Depends on: -
+- Touches: docs/examples/index.md (new), docs/examples/pksei.md (new), mkdocs.yml (nav), docs/index.md (the Built with section), docs/frameworks/godot-director.md, docs/frameworks/app-director.md, docs/frameworks/saasallthethings.md, docs/how-to/start-game.md, docs/how-to/start.md, docs/how-to/start-saas.md, docs/assets/stylesheets/ddd.css (if the widget needs a rule), selftest.sh (Examples in the Screens check if needed)
+- Done when: the nav has Examples after Frameworks with an overview whose cards name PKSEI (Godot-Director), this site (App-Director) and the Azure SaaS post (SaaSAllTheThings), each with where to play or see it and where its records are (check) · the PKSEI page follows the brief's example page model, with the itch.io widget, every statement checked against Freakling/PKSEI and its devlog, and the numbers attributed to the devlog (check) · the home page's Built with section names the three examples and links the overview and the framework workflow page, and each framework page and Start here walkthrough links its example (check) · `bash tools/check.sh` passes, including the Screens page counts (check)
+- Brief: Scope › Examples
 
 ### T84 · App-Director: /ui-design with Playwright capture · in-progress 2026-10-16 · L · agent
 - Depends on: T83
