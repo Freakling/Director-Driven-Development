@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T140 · B5
+**Next IDs:** T141 · B5
 
 ## Milestones
 | Milestone | Status |
@@ -387,11 +387,17 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: the release pull request bumps the version files, turns Unreleased into the 4.0.0 heading, passes the selftest and carries the release notes (How to install with Godot 4.5 or newer, What's changed, the upgrade steps) as its description (check) · once merged, `bash tools/work-release.sh work/Godot-Director <pr>` tags v4.0.0 and publishes the release (check) · following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Planned framework changes
 
-### T139 · Release Godot-Director 4.1.0 · in-progress 2026-10-17 · S · agent
-- PRs: Godot-Director #28 (open)
+### T139 · Release Godot-Director 4.1.0 · done 2026-10-17 · S · agent
+- PRs: Godot-Director #28 (merged); v4.1.0 tagged and published
 - Depends on: T138
 - Touches: work/Godot-Director: VERSION, .claude-plugin/plugin.json, .claude-plugin/marketplace.json, skills/godot-director/SKILL.md, CHANGELOG.md
 - Done when: the release pull request bumps the version files, turns Unreleased into the 4.1.0 heading, passes the selftest and carries the release notes (How to install, What's changed, the upgrade steps) as its description (check) · once merged, `bash tools/work-release.sh work/Godot-Director <pr>` tags v4.1.0 and publishes the release (check) · following AGENTS.md › Project rules for framework work (check)
+- Brief: Scope › Planned framework changes
+
+### T140 · Release Godot-Director 4.1.1 · in-progress 2026-10-17 · S · agent
+- Depends on: T136
+- Touches: work/Godot-Director: VERSION, .claude-plugin/plugin.json, .claude-plugin/marketplace.json, skills/godot-director/SKILL.md, CHANGELOG.md
+- Done when: the release pull request moves T136's changelog bullet out of the 4.1.0 section (where the merge of #29 after #28 put it; v4.1.0 doesn't ship it) under a 4.1.1 heading, bumps the version files, passes the selftest and carries the release notes as its description (check) · once merged, `bash tools/work-release.sh work/Godot-Director <pr>` tags v4.1.1 and publishes the release (check) · following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Planned framework changes
 
 ### T134 · App-Director: an install from a non-release source marks itself unreleased · in-progress 2026-10-17 · S · agent
@@ -408,9 +414,9 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: the manifest records the source commit, and when the source CHANGELOG.md has an Unreleased section with entries the version reads `<version> + unreleased (<commit>)` and the install's closing lines say so; an install from a release records the plain version (test) · following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Planned framework changes
 
-### T136 · Godot-Director: an install from a non-release source marks itself unreleased · in-progress 2026-10-17 · S · agent
+### T136 · Godot-Director: an install from a non-release source marks itself unreleased · done 2026-10-17 · S · agent
 - Depends on: T137
-- PRs: Godot-Director #29 (open)
+- PRs: Godot-Director #29 (merged)
 - Touches: work/Godot-Director: install.sh (the manifest's version line and the closing message), selftest.sh
 - Done when: the manifest records the source commit, and when the source CHANGELOG.md has an Unreleased section with entries the version reads `<version> + unreleased (<commit>)` and the install's closing lines say so; an install from a release records the plain version (test) · following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Planned framework changes
