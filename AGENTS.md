@@ -37,6 +37,7 @@ One row per significant system: what it owns and where its boundary is.
 | Audit | Compares each framework's latest release with the skill pages and reports undocumented differences; refuses a cache that isn't at a release | `tools/audit.sh` | The release copies in `.app-director/state/frameworks/`, kept there by the selftest |
 | Orchestrator | Framework items built in the clones under `work/` and published as one pull request each (never merges); releases tagged and published once the director merges the release pull request; audit of the framework releases against the skill pages; alignment items filed in TASKS.md, to be built in `work/` (dry run unless `--add`) | `tools/work-clones.sh`, `tools/work-publish.sh`, `tools/work-release.sh`, `tools/audit.sh`, `tools/push-alignment.sh` | The framework clones in `work/`, the release cache, the framework repos on GitHub (`gh`), Pages (skill pages), TASKS.md |
 | Delivery | Build and deploy to GitHub Pages | `.github/workflows/docs.yml`, `requirements.txt` | Selftest, GitHub Pages |
+| Usage | What a project's Claude Code sessions cost: the transcripts priced at dated API rates, by token kind and session, with the director's keyboard hours and the no-cache and single-model counterfactuals | `tools/usage.py` | The transcripts under `~/.claude/projects` |
 
 ## Ownership
 | Area | Owner | Placeholder |

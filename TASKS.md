@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T148 · B5 · R4
+**Next IDs:** T152 · B5 · R4
 
 ## Milestones
 | Milestone | Status |
@@ -50,6 +50,30 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Note: product/research/2026-10-19-ai-coding-cost-per-unit-of-work.md
 - Question: For enterprises and teams using AI coding agents freeform (Claude Code, Cursor, Copilot agent mode, Codex and the like, with no structured workflow), what published figures join spend (dollars or tokens) to output (merged changes, tasks, features, pull requests) per developer or per unit of work, from case studies, vendor customer stories, engineering blogs, FinOps reports, telemetry vendors' full reports and academic work, 2024 to 2026; and does any source separate structured workflows from freeform use? Scope: real projects, not benchmarks; R2 already covers the productivity trials, the benchmark cost tables, Anthropic's $13 per active day and the Insight single-feature experiment, so build on those rather than repeat them.
 - Informs: -
+- Brief: -
+
+### T148 · tools/usage.py measures what a project's Claude Code sessions cost · done 2026-10-19 · S · agent
+- Depends on: -
+- Touches: tools/usage.py (new), AGENTS.md (Architecture)
+- Done when: `python tools/usage.py [<project>]` prints, per project under ~/.claude/projects, the API-equivalent total at the dated prices, the cost share by token kind, the orchestrating session's share, the director's keyboard hours and the agent's own hours, and the no-cache, all-Opus and all-Sonnet counterfactuals, taking one usage entry per message (the largest value per field); `--weekly` prints the per-week total across projects (check) · its PKSEI total matches the research note R1 (check)
+- Brief: -
+
+### T149 · App-Director: a builder always gets its model passed explicitly · todo · S · agent
+- Depends on: -
+- Touches: work/App-Director: framework/.app-director/procedures/next-task.md, framework/.app-director/rules.md, selftest.sh
+- Done when: next-task.md says the orchestrator passes the builder's, reviewer's and researcher's model explicitly from the sizing table on every launch and never lets a subagent inherit the session's model, with the session model only when the table has no entry for the size; the selftest checks the wording (check) · following AGENTS.md › Project rules for framework work (check)
+- Brief: -
+
+### T150 · Godot-Director: a builder always gets its model passed explicitly · todo · S · agent
+- Depends on: -
+- Touches: work/Godot-Director: framework/.godot-director/procedures/next-task.md, framework/.godot-director/rules.md, selftest.sh
+- Done when: the same rule as T149 in Godot-Director's next-task procedure and rules, checked by its selftest; PKSEI's build ran 48 of 89 subagents on the session's Fable model, nearly 40 percent of its cost, because the model wasn't passed (check) · following AGENTS.md › Project rules for framework work (check)
+- Brief: -
+
+### T151 · SaaSAllTheThings: a builder always gets its model passed explicitly · todo · S · agent
+- Depends on: -
+- Touches: work/SaaSAllTheThings: framework/.satt/procedures/next-task.md, framework/.satt/rules.md, selftest.sh
+- Done when: the same rule as T149 in SaaSAllTheThings' next-task procedure and rules, checked by its selftest (check) · following AGENTS.md › Project rules for framework work (check)
 - Brief: -
 
 ### T98 · The director tests /ui-design in a game · todo · - · human
