@@ -7,7 +7,7 @@ Three projects show Director-Driven Development in use, one for each framework. 
 <span class="tag tag--primary">Godot-Director</span>
 
 ### Game: [PKSEI](pksei.md)
-A rage game about four drunk guys paddling a canoe catamaran across a lake, built as a tech demo for [Godot-Director](../frameworks/godot-director.md).
+A comedy rage game: four friends paddle a canoe catamaran across a lake, built as a tech demo for [Godot-Director](../frameworks/godot-director.md).
 
 **Play it:** [freakling.itch.io/pksei](https://freakling.itch.io/pksei), in the browser and free.
 

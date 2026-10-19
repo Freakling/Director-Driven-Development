@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T147 · B5 · R3
+**Next IDs:** T148 · B5 · R3
 
 ## Milestones
 | Milestone | Status |
@@ -38,6 +38,12 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Question: What do the large studies of AI-assisted software development (randomised trials, industry surveys, vendor telemetry, benchmark cost tables) measure as output and productivity, in what units (per developer-hour, per task, per pull request, per million tokens, per dollar), and what do they find, so that R1's figures ($2 to $3 API-equivalent per completed task, $10 to $20 per attended hour, 96 percent cache reads) can be put beside external numbers without over-claiming? Scope: public studies and datasets from 2023 to 2026; exclude vendor marketing without method.
 - Informs: -
 - Brief: -
+
+### T147 · The PKSEI pages call it a comedy rage game · done 2026-10-19 · XS · agent
+- Depends on: T133
+- Touches: docs/examples/index.md, docs/examples/pksei.md
+- Done when: the overview card and the page describe PKSEI as a comedy rage game about four friends, with no "drunk guys" wording, as the director asked (check) · `bash tools/check.sh` passes (check)
+- Brief: Scope › Examples
 
 ### T98 · The director tests /ui-design in a game · todo · - · human
 - Depends on: T97
