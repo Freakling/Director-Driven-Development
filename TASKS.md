@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T148 · B5 · R3
+**Next IDs:** T148 · B5 · R4
 
 ## Milestones
 | Milestone | Status |
@@ -44,6 +44,13 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Touches: docs/examples/index.md, docs/examples/pksei.md
 - Done when: the overview card and the page describe PKSEI as a comedy rage game about four friends, with no "drunk guys" wording, as the director asked (check) · `bash tools/check.sh` passes (check)
 - Brief: Scope › Examples
+
+### R3 · What AI coding agents cost per unit of work in enterprises without a workflow · done 2026-10-19 · M · agent
+- Depends on: -
+- Note: product/research/2026-10-19-ai-coding-cost-per-unit-of-work.md
+- Question: For enterprises and teams using AI coding agents freeform (Claude Code, Cursor, Copilot agent mode, Codex and the like, with no structured workflow), what published figures join spend (dollars or tokens) to output (merged changes, tasks, features, pull requests) per developer or per unit of work, from case studies, vendor customer stories, engineering blogs, FinOps reports, telemetry vendors' full reports and academic work, 2024 to 2026; and does any source separate structured workflows from freeform use? Scope: real projects, not benchmarks; R2 already covers the productivity trials, the benchmark cost tables, Anthropic's $13 per active day and the Insight single-feature experiment, so build on those rather than repeat them.
+- Informs: -
+- Brief: -
 
 ### T98 · The director tests /ui-design in a game · todo · - · human
 - Depends on: T97
