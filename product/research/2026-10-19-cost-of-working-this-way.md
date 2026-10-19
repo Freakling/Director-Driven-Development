@@ -1,8 +1,9 @@
 # What this way of working costs: three projects measured
+R1 · Informs: - · Verified as of 2026-10-19 · Size: M
 
-Date: 2026-10-19. Prices checked the same day. Question: what does Director-Driven Development cost in tokens and money, measured rather than claimed, and what can be said about it without over-claiming.
+Question: what does Director-Driven Development cost in tokens and money, measured rather than claimed, and what can be said about it without over-claiming.
 
-## Method
+## Question and assumptions
 
 - **Source of truth:** the Claude Code transcripts on the director's machine (`~/.claude/projects/<project>/**/*.jsonl`), main sessions and subagents, every assistant message's `usage` (fresh input, output, cache writes, cache reads) and `model`, de-duplicated by message id. The devlog's numbers for PKSEI come from Claude Code's own session report and differ (see Caveats); this note uses the transcripts for all three projects so they compare.
 - **Prices:** pay-as-you-go API prices from [claude.com/pricing](https://claude.com/pricing) on 2026-10-19, per million tokens: Fable 5.1 $10 in, $50 out, $0.25 cache read, $12.50 cache write; Opus 5.5 $4, $20, $0.20, $5; Sonnet 5.5 $2, $10, $0.10, $2.50; Haiku 5.5 $0.10, $0.50, $0.01, $0.125 (prompts over 100K at $0.50, $2.50, $0.05, $0.625). Cache writes priced at the 5-minute rate; the 1-hour rate adds about 20 percent (second-hand tables, [growthcab](https://www.growthcab.com/claude-opus-api-pricing)).
@@ -63,7 +64,7 @@ Do not claim:
 - **That model sizing is what makes it cheap.** It saves 10 to 15 percent where it is applied; caching and the orchestrator's model choice dominate.
 - **Quality or completeness.** Not measured: rework, bugs found after the fact, the 116 placeholders PKSEI still has, the `/ui-design` UAT still open here. A low cost per item says nothing about whether the items were the right ones.
 
-## Caveats
+## Open gaps
 
 - **Two sources disagree for PKSEI.** The devlog's table (Claude Code's session report) says 1.67 million output tokens and $258; the transcripts say 0.82 million and $211 (with 125 commits at the report, 127 now). The cache figures agree within 4 percent, so the difference is in how output is counted; the report may include streamed partials. Pick one source per claim and name it.
 - **Prices move.** Sonnet 5.5's cache read price halved on 2026-10-07 according to one aggregator; date every figure.

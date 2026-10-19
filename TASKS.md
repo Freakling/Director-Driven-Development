@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T147 · B5
+**Next IDs:** T147 · B5 · R2
 
 ## Milestones
 | Milestone | Status |
@@ -24,6 +24,13 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Touches: mkdocs.yml (nav), docs/examples/index.md, docs/examples/pksei.md
 - Done when: the nav and the overview read "Game: PKSEI", and the other two cards name their kind the same way (check) · `bash tools/check.sh` passes (check)
 - Brief: Scope › Examples
+
+### R1 · What this way of working costs, measured across three projects · done 2026-10-19 · M · agent
+- Depends on: -
+- Question: What does Director-Driven Development cost in tokens and money across three real projects, measured from the Claude Code transcripts and priced at API rates, what do the subscriptions turn that into, and which claims hold without over-claiming?
+- Informs: -
+- Brief: -
+- Note: product/research/2026-10-19-cost-of-working-this-way.md
 
 ### T98 · The director tests /ui-design in a game · todo · - · human
 - Depends on: T97

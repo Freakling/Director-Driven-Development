@@ -3,14 +3,15 @@
 #
 # The single definition of "it works":
 #   bash tools/check.sh                    run the check
-#   bash tools/check.sh --if-changed       repeat the last result at once if these exact files were checked
+#   bash tools/check.sh --if-changed       repeat the last result at once if these exact files were checked with this gitleaks
 #   bash tools/check.sh --fingerprint      print the fingerprint of the current files (for hooks)
 #   bash tools/check.sh --architecture     run only the UI purity and secrets checks (fast, no build)
-# Exit codes: 0 = pass · 1 = fail · 3 = couldn't run (gitleaks missing/old, or stack tool missing)
+# Exit codes: 0 = pass · 1 = fail · 3 = couldn't run (gitleaks missing, old or unable to scan, or stack tool missing)
 #
 # Steps:
 #   1. UI purity: scan UI-layer files for imports from data-layer folders.
-#   2. Secrets: run gitleaks dir --redact on the working tree.
+#   2. Secrets: run gitleaks dir --redact on the working tree (detect --no-git before 8.19.1;
+#      8.19.0 can't scan at all, so the check exits 3).
 #   3. Stack check: source tools/stacks/<stack>.sh and run it.
 #   4. Custom: run tools/check.local.sh, if the project has one.
 #
@@ -73,13 +74,26 @@ if [ "$mode" = "--fingerprint" ]; then fingerprint; exit 0; fi
 mkdir -p "$state_dir" || exit 3
 before="$(fingerprint)"
 
+# gitleaks's version, or "missing". Read once: the cached result depends on it (cache_key), and the
+# secrets step uses it, so a run calls `gitleaks version` at most once.
+gl_ver="missing"
+if command -v gitleaks >/dev/null 2>&1; then
+  gl_ver="$(gitleaks version 2>/dev/null | tr -d 'v \r\n')"
+fi
+
+# What a cached result stands for: the files' fingerprint and gitleaks's version. A removed or changed
+# gitleaks makes the cache miss, so --if-changed runs the secrets step again.
+cache_key() { printf '%s gitleaks=%s' "$1" "$gl_ver"; }
+
 reuse_last() {
   [ "$mode" = "--if-changed" ] && [ -n "$before" ] || return 0
-  if [ "$(cat "$state_dir/last-pass" 2>/dev/null)" = "$before" ]; then
+  local key
+  key="$(cache_key "$before")"
+  if [ "$(cat "$state_dir/last-pass" 2>/dev/null)" = "$key" ]; then
     echo "check: PASS (nothing changed since the last passing run)"
     exit 0
   fi
-  if [ "$(cat "$state_dir/last-fail" 2>/dev/null)" = "$before" ]; then
+  if [ "$(cat "$state_dir/last-fail" 2>/dev/null)" = "$key" ]; then
     echo "check: FAIL (nothing changed since the last failing run; run 'bash tools/check.sh' to see why)"
     exit 1
   fi
@@ -129,7 +143,7 @@ echo "check: secrets"
 gl_min="$(cfg_get gitleaks min-version)"
 gl_min="${gl_min:-$GITLEAKS_MIN_DEFAULT}"
 
-if ! command -v gitleaks >/dev/null 2>&1; then
+if [ "$gl_ver" = "missing" ]; then
   echo "check: secrets FAIL: gitleaks not found (need >= $gl_min)."
   echo "       Install: https://github.com/gitleaks/gitleaks#installing"
   echo "       macOS:   brew install gitleaks"
@@ -139,8 +153,6 @@ if ! command -v gitleaks >/dev/null 2>&1; then
   exit 3
 fi
 
-gl_raw="$(gitleaks version 2>/dev/null)"
-gl_ver="$(printf '%s' "$gl_raw" | tr -d 'v \r\n')"
 if ! version_gte "$gl_ver" "$gl_min"; then
   echo "check: secrets FAIL: gitleaks $gl_ver is below minimum $gl_min."
   echo "       Upgrade: https://github.com/gitleaks/gitleaks#installing"
@@ -148,14 +160,42 @@ if ! version_gte "$gl_ver" "$gl_min"; then
 fi
 
 gl_report="$state_dir/gitleaks.json"
-if ! gitleaks dir --redact --report-path="$gl_report" . 2>/dev/null; then
+# gitleaks 8.19.1 is the first release whose `dir` command works; 8.18 scans the folder with
+# `detect --no-git`. Both write the same JSON report (a File and a Fingerprint per finding).
+# gitleaks 8.19.0 can't scan at all: every command fails with "flag accessed but not defined: source"
+# and writes no report. So a failed scan that left no finding in the report is "couldn't scan"
+# (exit 3), never "credentials found". The scan's output is kept for that message.
+gl_scan() {
+  rm -f "$gl_report"
+  if version_gte "$gl_ver" 8.19.1; then
+    gitleaks dir --redact --report-path="$gl_report" . 2>&1
+  else
+    gitleaks detect --no-git --redact --report-path="$gl_report" --source . 2>&1
+  fi
+}
+gl_out="$(gl_scan)"; gl_rc=$?
+if [ "$gl_rc" -eq 0 ]; then
+  rm -f "$gl_report"
+elif grep -qs '"File"' "$gl_report"; then
   echo "check: secrets FAIL: gitleaks found credentials in the working tree."
+  # Name each file with a finding. Only paths are printed; the values stay redacted in the report.
+  # awk keeps the first of repeated paths, so a file with several findings is listed once.
+  sed -n 's/.*"File"[[:space:]]*:[[:space:]]*"\(.*\)".*/\1/p' "$gl_report" 2>/dev/null \
+    | sed 's/\\\\/\\/g' | awk '!seen[$0]++' | sed 's/^/       found in: /'
   echo "       Report (secrets redacted): $gl_report"
   echo "       To allowlist a finding: add its Fingerprint to .gitleaksignore and document"
   echo "       the reason in product/decisions.md. Ask the human to approve both changes."
   failed=1
 else
-  rm -f "$gl_report"
+  echo "check: secrets FAIL: gitleaks couldn't scan the working tree."
+  last_line="$(printf '%s\n' "$gl_out" | tr -d '\r' | tail -n 1)"
+  [ -n "$last_line" ] && echo "       gitleaks: $last_line"
+  if [ "$gl_ver" = "8.19.0" ]; then
+    echo "       gitleaks 8.19.0 can't scan (every command fails). Upgrade to 8.19.1 or later."
+  else
+    echo "       Check the error above. Upgrading gitleaks may help."
+  fi
+  exit 3
 fi
 
 if [ "$arch_only" -eq 1 ]; then
@@ -199,7 +239,7 @@ fi
 if [ "$failed" -eq 0 ]; then
   after="$(fingerprint)"
   if [ -n "$before" ] && [ "$before" = "$after" ]; then
-    printf '%s' "$before" > "$state_dir/last-pass"
+    cache_key "$before" > "$state_dir/last-pass"
   elif [ -n "$before" ]; then
     echo "check: note: files changed while the check ran; run it again to cover the changes."
   fi
@@ -208,6 +248,6 @@ if [ "$failed" -eq 0 ]; then
   exit 0
 fi
 rm -f "$state_dir/last-pass"
-if [ -n "$before" ] && [ "$before" = "$(fingerprint)" ]; then printf '%s' "$before" > "$state_dir/last-fail"; fi
+if [ -n "$before" ] && [ "$before" = "$(fingerprint)" ]; then cache_key "$before" > "$state_dir/last-fail"; fi
 echo "check: FAIL (logs above)"
 exit 1
