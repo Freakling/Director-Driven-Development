@@ -45,12 +45,12 @@ No source reports cost or output for a named structured workflow against freefor
 ## Placing R1's figures
 | R1 figure | External | Comparable? |
 |---|---|---|
-| $2.30 to $3.04 per done item; $1.31 to $2.66 per commit | Peng: $35.71 per commit (one developer, SDD). Jellyfish: $0.28 to $89.32 per merged PR. Zest: $43 per PR | Peng's commit is the only like unit: R1 is 13 to 27 times lower; its output per commit is 82K tokens against R1's 6.5K to 12.5K (division), so the commits differ in size. PR figures cannot be compared: R1's items are one-commit by design. Say "inside Jellyfish's range" and no more. |
-| $48 to $84 per calendar day | LinearB p90 $35.20 per coding day; Anthropic $13 average per active day (R2); Peng $314 per day | R1 is above the p90 values and well under Peng. Calendar days (R1) differ from "coding days" (LinearB), so R1 per active day is higher still. |
-| About $1,440 (DDD) and $1,790 (Lantern) per 30 days, extrapolated | Jellyfish p90 $691, p99 $2,452; Gartner $200 to $500 typical, 6 percent above $2,000; Zest $26,072 | Between Jellyfish's p90 and p99. R1 is API-equivalent on a Max plan, as Zest's anecdote is; the others are list estimates of API or seat spend. |
-| $0.31 to $0.64 per million tokens | Peng $0.573 | Yes, same range, caching dominant in both. |
-| 93 to 96 percent of tokens as cache reads | Jellyfish 96 percent; Peng hit rate 99.3 percent | Yes. Peng's cache reads are 87 percent of dollars against R1's 32 to 52 percent, a pricing and session-length difference not explained here. |
-| $25 to $75 per hour at the keyboard | None | No. Nothing uses attended hours. |
+| $2.08 to $2.65 per done item; $1.10 to $1.99 per commit (R1 corrected 2026-10-19) | Peng: $35.71 per commit (one developer, SDD). Jellyfish: $0.28 to $89.32 per merged PR. Zest: $43 per PR | Peng's commit is the only like unit: R1 is 18 to 32 times lower per commit; his output per commit is 82K tokens against R1's 6.3K to 13.6K and his total tokens per commit 62M against R1's 2.7M to 5.6M (division), so his commits are six to thirteen times larger and the cost per output token is of the same order. PR figures cannot be compared: R1's items are one-commit by design. Say "inside Jellyfish's range" and no more. |
+| $40 to $100 per calendar day | LinearB p90 $35.20 per coding day; Anthropic $13 average per active day (R2); Peng $314 per day | R1 is above the p90 values and well under Peng. Calendar days (R1) differ from "coding days" (LinearB), so R1 per active day is higher still. |
+| About $1,210 (DDD) and $1,330 (Lantern) per 30 days, extrapolated | Jellyfish p90 $691, p99 $2,452; Gartner $200 to $500 typical, 6 percent above $2,000; Zest $26,072 | Between Jellyfish's p90 and p99. R1 is API-equivalent on a Max plan, as Zest's anecdote is; the others are list estimates of API or seat spend. |
+| $0.34 to $0.72 per million tokens | Peng $0.573 | Yes, same range, caching dominant in both. |
+| 96 to 97 percent of tokens as cache reads | Jellyfish 96 percent; Peng hit rate 99.3 percent | Yes. Peng's cache reads are 87 percent of dollars against R1's 29 to 51 percent, a pricing and session-length difference not explained here. |
+| $20 to $85 per hour at the keyboard | None | No. Nothing uses attended hours. |
 | 142 items in 9 days; 330 commits | Jellyfish at most 2.15 PRs per week; Microsoft plus 24 percent | No. Different units, no baseline in R1. |
 
 ## Options and trade-offs
