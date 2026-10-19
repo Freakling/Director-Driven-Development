@@ -8,14 +8,15 @@ Question: what does Director-Driven Development cost in tokens and money, measur
 - **Source of truth:** the Claude Code transcripts on the director's machine (`~/.claude/projects/<project>/**/*.jsonl`), main sessions and subagents, every assistant message's `usage` (fresh input, output, cache writes, cache reads) and `model`, de-duplicated by message id. The devlog's numbers for PKSEI come from Claude Code's own session report and differ (see Caveats); this note uses the transcripts for all three projects so they compare.
 - **Prices:** pay-as-you-go API prices from [claude.com/pricing](https://claude.com/pricing) on 2026-10-19, per million tokens: Fable 5.1 $10 in, $50 out, $0.25 cache read, $12.50 cache write; Opus 5.5 $4, $20, $0.20, $5; Sonnet 5.5 $2, $10, $0.10, $2.50; Haiku 5.5 $0.10, $0.50, $0.01, $0.125 (prompts over 100K at $0.50, $2.50, $0.05, $0.625). Cache writes priced at the 5-minute rate; the 1-hour rate adds about 20 percent (second-hand tables, [growthcab](https://www.growthcab.com/claude-opus-api-pricing)).
 - **Nothing here was billed per token.** All three projects ran on a Claude Max subscription. Every dollar figure is what the same tokens would cost at API prices: a measure of the work's size, not money spent.
-- **Active hours:** time between consecutive transcript events in the main sessions, with gaps over 30 minutes dropped. It approximates the director's attended time, including waiting for builders.
+- **Hours:** events in the main sessions sorted by time (user and assistant entries only; the queue entries share the director's timestamps). "At the keyboard" is every gap of 30 minutes or less that ends with a message from the director; "on its own" is every other gap of 30 minutes or less. Permission approvals aren't distinguishable from tools finishing and are left out (the PKSEI devlog counts them and gets 4.7 h against 2.9 here). Time away from the keyboard (testing, thinking, reviewing on GitHub) isn't measured, so the per-hour figures are upper bounds.
 
 ## The three projects
 
-| | Director-Driven Development (this repo and the three frameworks) | PKSEI (a game) | Lantern (a codename: a larger indie game, about half done functionally) |
+| | Director-Driven Development (this repo and the three frameworks) | PKSEI (a game) | Lantern (a codename: a larger indie game, about half done in technical functionality; assets, playtesting and tuning later) |
 |---|---|---|---|
 | Span | 2026-10-10 to 10-19 (9 days) | 2026-10-16 to 10-19 (2.5 days) | 2026-09-25 to 10-19 (24 days) |
-| Active hours (main sessions) | 42 | 16 | 70 |
+| Director at the keyboard (hours) | 17 | 3 | 30 |
+| Agent working on its own (hours) | 24 | 14 | 96 |
 | Director turns (main sessions) | 293 | 67 | about 1,900 incl. subagents |
 | Commits | 200 here + 130 in the frameworks = 330 | 127 | 537 |
 | Done items | 142 | 92 | 514 |
@@ -24,7 +25,7 @@ Question: what does Director-Driven Development cost in tokens and money, measur
 | API-equivalent cost | $431 | $211 | $1,428 |
 | Per commit | $1.31 (330) or $2.16 (this repo's 200) | $1.66 | $2.66 |
 | Per done item | $3.04 | $2.30 | $2.78 |
-| Per active hour | $10 | $13 | $20 |
+| Per hour at the keyboard | $25 | $73 | $48 |
 
 What those commits are: here, the docs site (44,000 words of pages) plus everything the frameworks shipped since 2026-10-12 (20 releases across the three repos; Godot-Director alone gained 14,000 lines, including auto-playtesting). PKSEI: 22,000 lines of GDScript with its tests, generated art and sound, about twenty itch.io builds.
 
@@ -53,7 +54,7 @@ Cache reads are 93 to 96 percent of the tokens and a third to a half of the cost
 Defensible, with the numbers beside the claim and "API-equivalent, on a Max subscription" stated:
 
 1. **Cost per done item was $2 to $3 in all three projects** ($2.30, $2.78, $3.04), across a docs site, a small game and a large one, over 24 days. This is the most consistent finding. It is a property of how the work is cut (small items, one commit each), so say that too: the items are small by design.
-2. **Per attended hour, $10 to $20 equivalent.** The director's attention is the scarce input, and that is the rate it was spent at.
+2. **Per hour at the keyboard, $25 to $75 equivalent**, with the agent working one and a half to five hours on its own per hour of the director's. The director's attention is the scarce input. Time away from the keyboard isn't measured, so these are upper bounds.
 3. **A playable game, 22,000 lines with tests, in two and a half days for about $210 to $260 equivalent** (the two figures are the two sources; see Caveats).
 4. **Caching turned a four-figure bill into a three-figure one.** True, and worth saying with the counterfactual stated as a counterfactual.
 
@@ -69,7 +70,7 @@ Do not claim:
 - **Two sources disagree for PKSEI.** The devlog's table (Claude Code's session report) says 1.67 million output tokens and $258; the transcripts say 0.82 million and $211 (with 125 commits at the report, 127 now). The cache figures agree within 4 percent, so the difference is in how output is counted; the report may include streamed partials. Pick one source per claim and name it.
 - **Prices move.** Sonnet 5.5's cache read price halved on 2026-10-07 according to one aggregator; date every figure.
 - **Cache write TTL.** At 1-hour write prices the totals are about 20 percent higher ($519, $274, $1,745).
-- **Active hours** count waiting time and miss anything done outside Claude Code (playing the game on a phone, reviewing pull requests on GitHub).
+- **Keyboard hours** miss anything done outside Claude Code (playing the game on a phone, thinking, reviewing pull requests on GitHub) and permission approvals.
 - **Lantern** is a codename; the game is not yet announced and appears here only as the larger data point, without its name or details.
 
 ## What the subscriptions turn that into
@@ -89,8 +90,8 @@ The Max 5x week is unmeasured. Third-party derivations put a 20x week at 1.7 to 
 
 What this means for the figures above, if the weekly limit is always met:
 
-- **A fully used plan costs about 3 cents per API-equivalent dollar**, on Pro and on Max 20x alike; Max 5x is in the same range but unmeasured. The $2 to $3 per done item becomes 6 to 10 cents, and the $10 to $20 per attended hour becomes 30 to 60 cents. State the measured basis every time: the caps are unpublished, third-party measured, and have changed at least three times in 2026.
-- **Which plan the week fits.** At this workflow's $10 to $20 per attended hour, a Pro week ($170) covers 8 to 17 attended hours, a Max 20x week more hours than a week has. The weekly cap is not the binding constraint for one director running one session; the director's hours are. What binds on Pro is the five-hour window: about $14 of API value, which this workflow spends in roughly an hour (the busiest day here ran $535). Max 20x's window ($205) is not reached at single-session pace, and was approached only on the day three sessions ran in parallel.
+- **A fully used plan costs about 3 cents per API-equivalent dollar**, on Pro and on Max 20x alike; Max 5x is in the same range but unmeasured. The $2 to $3 per done item becomes 6 to 10 cents, and the $25 to $75 per hour at the keyboard becomes about $1 to $2. State the measured basis every time: the caps are unpublished, third-party measured, and have changed at least three times in 2026.
+- **Which plan the week fits.** At this workflow's $25 to $75 per hour at the keyboard, a Pro week ($170) covers 2 to 7 hours of directing, a Max 5x week roughly 6 to 35, a Max 20x week 20 to 65. The weekly cap is not the binding constraint for one director running one session; the director's hours are. What binds on Pro is the five-hour window: about $14 of API value, which this workflow spends in roughly an hour (the busiest day here ran $535). Max 20x's window ($205) is not reached at single-session pace, and was approached only on the day three sessions ran in parallel.
 - **Fable costs limit, not money.** On Max, Fable may use up to half the weekly cap at no extra charge, and one measurement has it moving the meter about twice as fast as Opus for the same API value. Choosing Fable for the orchestrator, as PKSEI did deliberately, trades weekly headroom, not dollars, until the cap is hit.
 - **Past the cap, the API price returns.** Extra usage is billed at standard API rates, prepaid. The $100 and $200 of monthly API credits that Max includes since 2026-10-07 apply to the API and the Agent SDK, not to Claude Code or extra usage.
 - **The honest comparison** is therefore: the API-equivalent figures measure the work; the subscription price measures the money; the ratio between them is about 30 to 37 to 1 for a fully used plan, and smaller for any week the plan isn't driven to its cap. Nothing in these numbers says the subscription is cheaper than another way of working, only that it is far cheaper than paying for the same tokens by the token.
