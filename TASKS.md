@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T147 · B5 · R2
+**Next IDs:** T147 · B5 · R3
 
 ## Milestones
 | Milestone | Status |
@@ -31,6 +31,13 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Informs: -
 - Brief: -
 - Note: product/research/2026-10-19-cost-of-working-this-way.md
+
+### R2 · What large studies say AI-assisted coding produces, and per what unit · done 2026-10-19 · M · agent
+- Depends on: -
+- Note: product/research/2026-10-19-external-numbers-ai-coding-output.md
+- Question: What do the large studies of AI-assisted software development (randomised trials, industry surveys, vendor telemetry, benchmark cost tables) measure as output and productivity, in what units (per developer-hour, per task, per pull request, per million tokens, per dollar), and what do they find, so that R1's figures ($2 to $3 API-equivalent per completed task, $10 to $20 per attended hour, 96 percent cache reads) can be put beside external numbers without over-claiming? Scope: public studies and datasets from 2023 to 2026; exclude vendor marketing without method.
+- Informs: -
+- Brief: -
 
 ### T98 · The director tests /ui-design in a game · todo · - · human
 - Depends on: T97
