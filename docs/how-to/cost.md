@@ -9,6 +9,7 @@ All three frameworks ship `/refresh-model-sizing`: App-Director, Godot-Director 
 ## Short answer
 
 - **Where the tokens go.** An AI coding agent is billed by the token, and most tokens are spent re-reading context, not writing code. Keeping the context small is what keeps the bill down: see [Built-in cost savings](../concept/cost-built-in.md).
+- **Measured.** The cost of this way of working is measured on three projects in [What directing AI agents costs](https://saemundsson.se/2026/10/19/what-directing-ai-agents-costs/) on saemundsson.se.
 - **Most of the savings need nothing from you.** A fresh context for each task, lean instructions, records in files and a short task list work out of the box.
 - **What you can turn is a short list.** The model for each task size, the size of the tasks, how you batch them, `/prune`, and clearing the session. The rest of the habits are in [Cost tuning for developers](../concept/cost-tuning.md).
 
@@ -56,6 +57,7 @@ Saying it and typing the command run the same procedure. The explicit command pa
 ## Related
 
 - The [`/refresh-model-sizing` skill page](../skills/refresh-model-sizing.md), and the concepts [Task and model sizing](../concept/sizing.md), [Built-in cost savings](../concept/cost-built-in.md) and [Cost tuning for developers](../concept/cost-tuning.md).
+- [What directing AI agents costs: three projects, measured](https://saemundsson.se/2026/10/19/what-directing-ai-agents-costs/) on saemundsson.se, the measurement behind these answers.
 - Building in runs or one task at a time: [How do I get things built?](build.md)
 - The procedures: [App-Director](https://github.com/Freakling/App-Director/tree/v1.7.1/framework/.app-director/procedures/refresh-model-sizing.md), [Godot-Director](https://github.com/Freakling/Godot-Director/tree/v4.1.1/framework/.godot-director/procedures/refresh-model-sizing.md) and [SaaSAllTheThings](https://github.com/Freakling/SaaSAllTheThings/tree/v0.9.1/framework/.satt/procedures/refresh-model-sizing.md).
 

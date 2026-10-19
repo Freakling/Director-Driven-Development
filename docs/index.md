@@ -115,5 +115,6 @@ Each framework has an [example](examples/index.md). [PKSEI](examples/pksei.md), 
 - The idea behind it: [Director-Driven Development](https://saemundsson.se/2026/10/07/director-driven-development/) on saemundsson.se.
 - Answers to the questions a director asks, in the order they come up, such as where do I start with an [app](how-to/start.md), a [game](how-to/start-game.md) or a [SaaS](how-to/start-saas.md): the [How-to](how-to/index.md) section.
 - Where the tokens go, and how the frameworks keep the bill down: [Built-in cost savings](concept/cost-built-in.md) and [Cost tuning for developers](concept/cost-tuning.md).
+- What it costs, measured on three projects: [What directing AI agents costs](https://saemundsson.se/2026/10/19/what-directing-ai-agents-costs/) on saemundsson.se.
 
 <div class="takeaway"><span>The agent proposes. The director decides.</span><span class="url">saemundsson.se</span></div>

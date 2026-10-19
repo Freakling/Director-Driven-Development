@@ -44,4 +44,8 @@ The check runs before commits and, in Claude Code, before the agent ends its tur
 
 The frameworks shape code as many small, single-purpose files. A task names exactly the files it touches, and the builder reads a few hundred lines instead of a few thousand. SaaSAllTheThings also enforces it: the check fails source files over 300 lines and Azure Function hosts over 80 lines by default, both set in `tools/check.cfg`.
 
+## Measured
+
+[What directing AI agents costs: three projects, measured](https://saemundsson.se/2026/10/19/what-directing-ai-agents-costs/) on saemundsson.se measured three projects from their Claude Code transcripts at API prices. A completed task came to $2 to $3 of API-equivalent in all three. Cache reads were 96 to 97 percent of the tokens and a third to a half of the cost, and the orchestrating session, the one the director talks to, was 60 to 72 percent of it. The orchestrator is the cost centre, which is where the choices in [Cost tuning for developers](cost-tuning.md) count most.
+
 <div class="takeaway" markdown><span>Spend tokens on judgement, not on context.</span><span class="url" markdown="span">[Cost tuning for developers](cost-tuning.md)</span></div>

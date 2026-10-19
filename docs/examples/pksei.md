@@ -56,6 +56,8 @@ The devlog gives these figures for the build it describes. They are a snapshot, 
 
 Source: [Devlog 1](https://freakling.itch.io/pksei/devlog/1712142/devlog-1-how-pksei-was-made-in-two-evenings-a-recipe).
 
+Measured from the transcripts at API prices, the build came to $244 of API-equivalent over two and a half days, as [What directing AI agents costs](https://saemundsson.se/2026/10/19/what-directing-ai-agents-costs/) on saemundsson.se reports.
+
 ## The recipe in short
 
 1. **Install and interview.** Install Godot-Director, answer the design interview and write the design pillars. Everything later is checked against them.

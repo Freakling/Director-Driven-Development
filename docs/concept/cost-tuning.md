@@ -21,6 +21,8 @@ Prefer clearing to compacting. `/compact` sends the whole conversation to be sum
 
 Run `/refresh-model-sizing` and adjust the map to your budget. Moving L to Sonnet is an easy saving; a failed build still escalates one size up. Without access to Opus, map L and XL to Sonnet. Keep the main session on Sonnet unless you're in a hard design or architecture session: a session switched to Opus also passes Opus to any subagent that inherits the session's model, such as a size with no entry.
 
+The orchestrator's model is the biggest single lever: in the [measured projects](https://saemundsson.se/2026/10/19/what-directing-ai-agents-costs/) on saemundsson.se, sizing the builders saved about 9 percent against all-Opus, while running everything on Sonnet, orchestrator included, would have cost a third to a half of what the projects actually did.
+
 ## Size tasks smaller and name fewer files
 
 When in doubt, pick the smaller size; escalation catches the tasks that turn out harder. Split L and XL tasks so most work runs on the cheaper tiers. Keep `Touches` narrow: a task that names three files costs less than one that names a folder.
@@ -56,6 +58,7 @@ If an agent heads in the wrong direction, press Escape at once instead of lettin
 - `/usage` shows what the session has cost and how much of the input came from the cache. On a subscription plan it also shows how much of your recent usage went to skills, subagents and MCP servers.
 - `/context` shows what is filling the context window right now.
 - `/insights` analyses your recent sessions and points out friction, such as misunderstood requests.
+- [`tools/usage.py`](https://github.com/Freakling/Director-Driven-Development/blob/main/tools/usage.py) in the Director-Driven Development repository prices a project's Claude Code transcripts at dated API rates, by token kind and by session.
 
 Tune what the numbers point at, not what feels expensive.
 
@@ -63,5 +66,6 @@ Tune what the numbers point at, not what feels expensive.
 
 - [Manage costs effectively](https://code.claude.com/docs/en/costs), [How Claude Code uses prompt caching](https://code.claude.com/docs/en/prompt-caching) and [How Claude remembers your project](https://code.claude.com/docs/en/memory), Claude Code documentation
 - [App-Director](https://github.com/Freakling/App-Director), [Godot-Director](https://github.com/Freakling/Godot-Director) and [SaaSAllTheThings](https://github.com/Freakling/SaaSAllTheThings): README, Context and token use, the framework rules, and the next-task, build, review and prune procedures
+- [What directing AI agents costs: three projects, measured](https://saemundsson.se/2026/10/19/what-directing-ai-agents-costs/) on saemundsson.se: the measurement behind the figures on this page and on [Built-in cost savings](cost-built-in.md)
 
 <div class="takeaway" markdown><span>Spend tokens on judgement, not on context.</span><span class="url" markdown="span">[Built-in cost savings](cost-built-in.md)</span></div>
