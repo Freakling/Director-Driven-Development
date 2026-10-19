@@ -6,7 +6,7 @@ Three projects show Director-Driven Development in use, one for each framework. 
 <div class="ddd-card" markdown>
 <span class="tag tag--primary">Godot-Director</span>
 
-### [PKSEI](pksei.md)
+### Game: [PKSEI](pksei.md)
 A rage game about four drunk guys paddling a canoe catamaran across a lake, built as a tech demo for [Godot-Director](../frameworks/godot-director.md).
 
 **Play it:** [freakling.itch.io/pksei](https://freakling.itch.io/pksei), in the browser and free.
@@ -16,7 +16,7 @@ A rage game about four drunk guys paddling a canoe catamaran across a lake, buil
 <div class="ddd-card" markdown>
 <span class="tag tag--primary">App-Director</span>
 
-### This site
+### Site: this one
 The site you are reading is built with [App-Director](../frameworks/app-director.md): every change is a task, and one check passes before every commit. The same repository also develops the three frameworks.
 
 **See it:** you are on it. The source is [Freakling/Director-Driven-Development](https://github.com/Freakling/Director-Driven-Development).
@@ -26,7 +26,7 @@ The site you are reading is built with [App-Director](../frameworks/app-director
 <div class="ddd-card" markdown>
 <span class="tag tag--primary">SaaSAllTheThings</span>
 
-### The Azure SaaS guide
+### Guide: a B2B SaaS on Azure
 A step-by-step worked example of building a multi-tenant B2B SaaS on Azure with [SaaSAllTheThings](../frameworks/saasallthethings.md), from an empty repository, an existing app or a proof of concept to a released dev stage.
 
 **Read it:** [Build a B2B SaaS on Azure with Director-Driven Development](https://saemundsson.se/2026/10/09/build-a-b2b-saas-on-azure-with-director-driven-development/) on saemundsson.se.

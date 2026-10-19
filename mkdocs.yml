@@ -104,4 +104,4 @@ nav:
       - SaaSAllTheThings: frameworks/saasallthethings.md
   - Examples:
       - examples/index.md
-      - PKSEI: examples/pksei.md
+      - "Game: PKSEI": examples/pksei.md

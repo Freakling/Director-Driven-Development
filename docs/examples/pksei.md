@@ -1,4 +1,4 @@
-# PKSEI: a game built with Godot-Director
+# Game: PKSEI, built with Godot-Director
 
 PKSEI (*Paddla Kanot Som En Idiot*, Swedish for "paddle a canoe like an idiot") is a rage game. Four drunk guys have lashed two canoes into a catamaran and need to reach an island in the middle of a lake. You control all four at once, the lake throws hazards at them, and they keep drinking, so the boat gets harder to control the longer the crossing takes. Nobody dies: a bad stretch drifts the boat back into water already crossed.
 

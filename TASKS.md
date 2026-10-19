@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T146 · B5
+**Next IDs:** T147 · B5
 
 ## Milestones
 | Milestone | Status |
@@ -18,6 +18,12 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 ✅ done · 🟨 in progress · ⬜ not started
 
 ## Queue
+
+### T146 · The Examples entries say what kind of thing each is · done 2026-10-19 · XS · agent
+- Depends on: T133
+- Touches: mkdocs.yml (nav), docs/examples/index.md, docs/examples/pksei.md
+- Done when: the nav and the overview read "Game: PKSEI", and the other two cards name their kind the same way (check) · `bash tools/check.sh` passes (check)
+- Brief: Scope › Examples
 
 ### T98 · The director tests /ui-design in a game · todo · - · human
 - Depends on: T97
