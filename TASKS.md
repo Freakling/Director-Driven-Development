@@ -73,6 +73,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Brief: -
 
 ### T151 · SaaSAllTheThings: a builder always gets its model passed explicitly · in-progress 2026-10-21 · S · agent
+- PRs: SaaSAllTheThings #20 (open)
 - Depends on: -
 - Touches: work/SaaSAllTheThings: framework/.satt/procedures/next-task.md, framework/.satt/rules.md, selftest.sh
 - Done when: the same rule as T149 in SaaSAllTheThings' next-task procedure and rules, checked by its selftest (check) · following AGENTS.md › Project rules for framework work (check)
