@@ -58,7 +58,8 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: `python tools/usage.py [<project>]` prints, per project under ~/.claude/projects, the API-equivalent total at the dated prices, the cost share by token kind, the orchestrating session's share, the director's keyboard hours and the agent's own hours, and the no-cache, all-Opus and all-Sonnet counterfactuals, taking one usage entry per message (the largest value per field); `--weekly` prints the per-week total across projects (check) · its PKSEI total matches the research note R1 (check)
 - Brief: -
 
-### T149 · App-Director: a builder always gets its model passed explicitly · todo · S · agent
+### T149 · App-Director: a builder always gets its model passed explicitly · in-progress 2026-10-21 · S · agent
+- PRs: App-Director #27 (open)
 - Depends on: -
 - Touches: work/App-Director: framework/.app-director/procedures/next-task.md, framework/.app-director/rules.md, selftest.sh
 - Done when: next-task.md says the orchestrator passes the builder's, reviewer's and researcher's model explicitly from the sizing table on every launch and never lets a subagent inherit the session's model, with the session model only when the table has no entry for the size; the selftest checks the wording (check) · following AGENTS.md › Project rules for framework work (check)
