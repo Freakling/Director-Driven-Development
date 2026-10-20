@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T166 · B5 · R7
+**Next IDs:** T167 · B5 · R7
 
 ## Milestones
 | Milestone | Status |
@@ -163,7 +163,8 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Informs: -
 - Brief: -
 
-### T162 · Release Godot-Director 4.2.0 · in-progress 2026-10-21 · S · agent
+### T162 · Release Godot-Director 4.2.0 · done 2026-10-21 · S · agent
+- PRs: Godot-Director #33 (merged); v4.2.0 tagged and published
 - Depends on: T157
 - Touches: work/Godot-Director: VERSION, .claude-plugin/plugin.json, .claude-plugin/marketplace.json, skills/godot-director/SKILL.md, README.md and project/design/director-gdd.md (the template links), CHANGELOG.md
 - Done when: the release pull request bumps every version file and the template links together, turns Unreleased into the 4.2.0 heading, passes the selftest and carries the release notes as its description (check) · once merged, `bash tools/work-release.sh work/Godot-Director <pr>` tags v4.2.0 and publishes the release (check) · following AGENTS.md › Project rules for framework work (check)
@@ -185,6 +186,12 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Depends on: -
 - Touches: work/SaaSAllTheThings: framework/.claude/hooks/guard-commands.sh, framework/.claude/settings.json, selftest.sh
 - Done when: the same guard as T163 in SaaSAllTheThings' Bash guard, checked by its selftest (check) · the guard still starts no other processes (check) · following AGENTS.md › Project rules for framework work (check)
+- Brief: Scope › Framework features
+
+### T166 · Docs follow Godot-Director 4.2.0 · todo · S · agent
+- Depends on: T162
+- Touches: docs/frameworks/godot-director.md, docs/how-to/*.md, docs/skills/*.md, docs/concept/check.md
+- Done when: every link into Godot-Director points at v4.2.0; the Godot-Director page and the How-to pages that describe the check say it times every test file, ends with the slowest files, runs the suite in parallel with `--jobs` (auto from the CPU count, settable in check.cfg) with a per-process timeout that reads as "couldn't run", and that test files must isolate their autoload and user:// state; the game walkthrough says to write the design document first from the template at the new tag (check) · `bash tools/check.sh` passes (check)
 - Brief: Scope › Framework features
 
 ### T98 · The director tests /ui-design in a game · todo · - · human
