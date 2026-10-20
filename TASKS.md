@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T160 · B5 · R6
+**Next IDs:** T162 · B5 · R6
 
 ## Milestones
 | Milestone | Status |
@@ -139,6 +139,18 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Depends on: T158
 - Touches: work/Godot-Director: framework/tools/check.sh, framework/.godot-director/rules.md, procedures/*.md, framework/.claude/hooks/*, framework/.githooks/pre-commit, selftest.sh
 - Done when: only if T158's quick mode is still too slow as a gate: a check.cfg opt-in, off by default, makes the quick mode the per-item gate with the item's autoplay scenarios, a full run every N commits and before a function check from a state file under .godot/godot-director/, and a full-run failure filed as a bug naming the commits since the last green run, with rules.md saying what Done means under the opt-in (the director's original spec, `init/godot-director-check-tiers-prompt.md`) (check) · following AGENTS.md › Project rules for framework work; built on the branch `ddd/check-tiers`, one pull request (check)
+- Brief: Scope › Framework features
+
+### T160 · App-Director: one git worktree per parallel building session · in-progress 2026-10-20 · XS · agent
+- Depends on: -
+- Touches: work/App-Director: framework/.app-director/rules.md, README.md, selftest.sh
+- Done when: rules.md says that sessions building at the same time each use their own git worktree, since a shared checkout lets one session's unfinished files fail another's check and hook, with the command to make one and run tools/setup-clone.sh in it; the README's day-to-day section points to it; the selftest checks the rule exists (check) · following AGENTS.md › Project rules for framework work (check)
+- Brief: Scope › Framework features
+
+### T161 · SaaSAllTheThings: one git worktree per parallel building session · in-progress 2026-10-20 · XS · agent
+- Depends on: -
+- Touches: work/SaaSAllTheThings: framework/.satt/rules.md, README.md, selftest.sh
+- Done when: the same rule as T160 in SaaSAllTheThings' rules and README, checked by its selftest (check) · following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Framework features
 
 ### T98 · The director tests /ui-design in a game · todo · - · human
