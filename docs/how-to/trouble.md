@@ -47,15 +47,19 @@ The check, `bash tools/check.sh`, ends with one of three results.
 |---|---|---|
 | 0 | It passed | Nothing |
 | 1 | It ran and found something | Read the output: the agent shows it and fixes what it points at. The pre-commit hook blocks the commit until the check passes |
-| 3 | It couldn't run | A tool it needs is missing. Run `bash tools/setup-clone.sh`, which checks the toolchain and says what is missing |
+| 3 | It couldn't run | Fix what the output names. For a missing tool, run `bash tools/setup-clone.sh`, which checks the toolchain and says what is missing. For a timeout, see Godot-Director below |
 
 What can be missing depends on the framework:
 
 - **App-Director:** gitleaks is missing, too old, or a version that can't scan, or the tool for your stack is missing.
-- **Godot-Director:** Godot is not found, or is older than 4.5. Give the agent the path to Godot; `setup-clone.sh` records it for this machine.
+- **Godot-Director:** Godot is not found, or is older than 4.5. Give the agent the path to Godot; `setup-clone.sh` records it for this machine. Where GNU `timeout` is installed, a Godot run that passes its timeout also exits 3, and the report names the test file it was in. A hung test needs fixing; a suite that is only slow can have a longer `[tests] timeout` in `tools/check.cfg` (600 seconds by default). The check ends each run with its ten slowest test files, which show where the time goes. More in [what the check enforces](../frameworks/godot-director.md#what-the-check-enforces).
 - **SaaSAllTheThings:** the toolchain of your backend stack is missing, such as the .NET SDK for the default stack.
 
 An exit 3 is not a failure of your work. The agent reports the work as unverified rather than done, and says why.
+
+### A Godot test fails only in the check
+
+In Godot-Director the test files run side by side. A test that reads autoload or `user://` state another file left behind can pass alone and fail in the check. Make the test set up what it reads, and give each test file its own `user://` file name. Until the test is fixed, set `[tests] jobs` to `1` in `tools/check.cfg`, or pass `--jobs 1` for one run; either runs the tests in one process, as before. More in [what the check enforces](../frameworks/godot-director.md#what-the-check-enforces).
 
 ### A fresh clone of the project
 
@@ -76,6 +80,6 @@ This is by design too: the agent commits only with your approval. Asking for a r
 ## Related
 
 - The install sections of [App-Director](../frameworks/app-director.md#install), [Godot-Director](../frameworks/godot-director.md#install) and [SaaSAllTheThings](../frameworks/saasallthethings.md#install).
-- The procedures: [App-Director onboarding](https://github.com/Freakling/App-Director/blob/v1.7.1/ONBOARDING.md), [Godot-Director onboarding](https://github.com/Freakling/Godot-Director/blob/v4.1.1/ONBOARDING.md) and [SaaSAllTheThings onboarding](https://github.com/Freakling/SaaSAllTheThings/blob/v0.9.1/ONBOARDING.md).
+- The procedures: [App-Director onboarding](https://github.com/Freakling/App-Director/blob/v1.7.1/ONBOARDING.md), [Godot-Director onboarding](https://github.com/Freakling/Godot-Director/blob/v4.2.0/ONBOARDING.md) and [SaaSAllTheThings onboarding](https://github.com/Freakling/SaaSAllTheThings/blob/v0.9.1/ONBOARDING.md).
 
 <div class="takeaway"><span>Update, restart, and the commands you expect are there.</span><span class="url"><a href="index.md">All questions</a></span></div>

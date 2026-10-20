@@ -6,7 +6,7 @@ One check defines done. Each framework ships it as `bash tools/check.sh`, and ea
 
 | Framework | The check |
 |---|---|
-| Godot-Director | Godot's import pass; loads every script, scene and resource; fails screen scripts that hold game rules; runs the tests; scans Godot's output for errors |
+| Godot-Director | Godot's import pass; loads every script, scene and resource; fails screen scripts that hold game rules; runs the tests in parallel and times each file; scans Godot's output for errors |
 | App-Director | UI purity (UI files may not import the data layer); secrets with gitleaks; the stack's type check, lint and tests |
 | SaaSAllTheThings | The architecture rules (layers, tenant source, secrets, file sizes, cost SKUs and more); the backend build and tests; the Bicep files |
 

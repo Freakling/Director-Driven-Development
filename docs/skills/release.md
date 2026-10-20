@@ -31,7 +31,7 @@ The procedure is at [`framework/.app-director/procedures/release.md`](https://gi
 
 ### Godot-Director
 
-The procedure is at [`framework/.godot-director/procedures/release.md`](https://github.com/Freakling/Godot-Director/tree/v4.1.1/framework/.godot-director/procedures/release.md) in the Godot-Director repository.
+The procedure is at [`framework/.godot-director/procedures/release.md`](https://github.com/Freakling/Godot-Director/tree/v4.2.0/framework/.godot-director/procedures/release.md) in the Godot-Director repository.
 
 - Godot Director knows no store. `release.cfg` in the project root has one section per export preset, with a `uat` command, an optional `production` command and the names of the secrets the commands read. Only names are in the file, never values.
 - The request names the stage, `uat` (the default) or `production`, and optionally one preset. The skill exports with [`/export`](../frameworks/godot-director.md), shows a dry run, then runs `tools/release.sh uat`.

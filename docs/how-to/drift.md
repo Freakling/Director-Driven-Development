@@ -76,6 +76,6 @@ You pick B. The agent copies the brief to `brief-before.md` in the reset folder,
 
 - The [`/drift-reset` skill page](../skills/drift-reset.md), with each framework's scope and where the reset folder goes.
 - The concept [Align and drift reset](../concept/drift.md), and the other ways to keep the records straight: [The records and the code don't agree](align.md).
-- The procedures: [App-Director](https://github.com/Freakling/App-Director/tree/v1.7.1/framework/.app-director/procedures/drift-reset.md), [Godot-Director](https://github.com/Freakling/Godot-Director/tree/v4.1.1/framework/.godot-director/procedures/drift-reset.md) and [SaaSAllTheThings](https://github.com/Freakling/SaaSAllTheThings/tree/v0.9.1/framework/.satt/procedures/drift-reset.md).
+- The procedures: [App-Director](https://github.com/Freakling/App-Director/tree/v1.7.1/framework/.app-director/procedures/drift-reset.md), [Godot-Director](https://github.com/Freakling/Godot-Director/tree/v4.2.0/framework/.godot-director/procedures/drift-reset.md) and [SaaSAllTheThings](https://github.com/Freakling/SaaSAllTheThings/tree/v0.9.1/framework/.satt/procedures/drift-reset.md).
 
 <div class="takeaway"><span>Align often, reset when you have to.</span><span class="url"><a href="index.md">All questions</a></span></div>

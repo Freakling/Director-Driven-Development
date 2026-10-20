@@ -150,8 +150,8 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: rules.md says that sessions building at the same time each use their own git worktree, since a shared checkout lets one session's unfinished files fail another's check and hook, with the command to make one and run tools/setup-clone.sh in it; the README's day-to-day section points to it; the selftest checks the rule exists (check) · following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Framework features
 
-### T161 · SaaSAllTheThings: one git worktree per parallel building session · in-progress 2026-10-20 · XS · agent
-- PRs: SaaSAllTheThings #19 (open)
+### T161 · SaaSAllTheThings: one git worktree per parallel building session · done 2026-10-20 · XS · agent
+- PRs: SaaSAllTheThings #19 (merged)
 - Depends on: -
 - Touches: work/SaaSAllTheThings: framework/.satt/rules.md, README.md, selftest.sh
 - Done when: the same rule as T160 in SaaSAllTheThings' rules and README, checked by its selftest (check) · following AGENTS.md › Project rules for framework work (check)
@@ -188,7 +188,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: the same guard as T163 in SaaSAllTheThings' Bash guard, checked by its selftest (check) · the guard still starts no other processes (check) · following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Framework features
 
-### T166 · Docs follow Godot-Director 4.2.0 · todo · S · agent
+### T166 · Docs follow Godot-Director 4.2.0 · done 2026-10-21 · S · agent
 - Depends on: T162
 - Touches: docs/frameworks/godot-director.md, docs/how-to/*.md, docs/skills/*.md, docs/concept/check.md
 - Done when: every link into Godot-Director points at v4.2.0; the Godot-Director page and the How-to pages that describe the check say it times every test file, ends with the slowest files, runs the suite in parallel with `--jobs` (auto from the CPU count, settable in check.cfg) with a per-process timeout that reads as "couldn't run", and that test files must isolate their autoload and user:// state; the game walkthrough says to write the design document first from the template at the new tag (check) · `bash tools/check.sh` passes (check)

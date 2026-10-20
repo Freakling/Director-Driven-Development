@@ -26,7 +26,7 @@
 
 Edit a file yourself when the change is small and you can see the result in it. Ask the agent when the change should land with the code it touches, as a build does. Go through a design session when the change is a decision, because the decision and its reason are written down together, and the decision log never changes by hand.
 
-The rows come from each framework's "Each fact lives in one place" table at its latest release: [App-Director](https://github.com/Freakling/App-Director/blob/v1.7.1/framework/.app-director/rules.md), [Godot-Director](https://github.com/Freakling/Godot-Director/blob/v4.1.1/framework/.godot-director/rules.md) and [SaaSAllTheThings](https://github.com/Freakling/SaaSAllTheThings/blob/v0.9.1/framework/.satt/rules.md). Not sure where a fact lives? Ask the agent. It reads the same table at the start of every session.
+The rows come from each framework's "Each fact lives in one place" table at its latest release: [App-Director](https://github.com/Freakling/App-Director/blob/v1.7.1/framework/.app-director/rules.md), [Godot-Director](https://github.com/Freakling/Godot-Director/blob/v4.2.0/framework/.godot-director/rules.md) and [SaaSAllTheThings](https://github.com/Freakling/SaaSAllTheThings/blob/v0.9.1/framework/.satt/rules.md). Not sure where a fact lives? Ask the agent. It reads the same table at the start of every session.
 
 ## Related
 

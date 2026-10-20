@@ -46,6 +46,6 @@ The stricter path is to let CI run the same steps, which pays off once you relea
 ## Related
 
 - The [`/release` skill page](../skills/release.md), and the [Godot-Director page](../frameworks/godot-director.md#commands) for `/export`.
-- The procedures: [Godot-Director `/release`](https://github.com/Freakling/Godot-Director/tree/v4.1.1/framework/.godot-director/procedures/release.md) and [`/export`](https://github.com/Freakling/Godot-Director/tree/v4.1.1/framework/.godot-director/procedures/export.md), [App-Director](https://github.com/Freakling/App-Director/tree/v1.7.1/framework/.app-director/procedures/release.md) and [SaaSAllTheThings](https://github.com/Freakling/SaaSAllTheThings/tree/v0.9.1/framework/.satt/procedures/release.md).
+- The procedures: [Godot-Director `/release`](https://github.com/Freakling/Godot-Director/tree/v4.2.0/framework/.godot-director/procedures/release.md) and [`/export`](https://github.com/Freakling/Godot-Director/tree/v4.2.0/framework/.godot-director/procedures/export.md), [App-Director](https://github.com/Freakling/App-Director/tree/v1.7.1/framework/.app-director/procedures/release.md) and [SaaSAllTheThings](https://github.com/Freakling/SaaSAllTheThings/tree/v0.9.1/framework/.satt/procedures/release.md).
 
 <div class="takeaway"><span>The check gates the build, and you gate the release.</span><span class="url"><a href="index.md">All questions</a></span></div>
