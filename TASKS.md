@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T167 · B5 · R7
+**Next IDs:** T168 · B5 · R7
 
 ## Milestones
 | Milestone | Status |
@@ -197,6 +197,12 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: every link into Godot-Director points at v4.2.0; the Godot-Director page and the How-to pages that describe the check say it times every test file, ends with the slowest files, runs the suite in parallel with `--jobs` (auto from the CPU count, settable in check.cfg) with a per-process timeout that reads as "couldn't run", and that test files must isolate their autoload and user:// state; the game walkthrough says to write the design document first from the template at the new tag (check) · `bash tools/check.sh` passes (check)
 - Brief: Scope › Framework features
 
+### T167 · SaaSAllTheThings: its TASKS.md has one queue and unique IDs · todo · XS · agent
+- Depends on: T151, T100
+- Touches: work/SaaSAllTheThings: TASKS.md
+- Done when: the root TASKS.md has one `## Queue` heading (today three, at about lines 9, 35 and 49), the two items numbered T9 ("The README starts with writing your own product brief" and "/ui-design with Playwright capture") have distinct IDs with references to them updated, and T10's Done when names its own repo's item rather than the docs repo's T160 (check) · following AGENTS.md › Project rules for framework work (check)
+- Brief: Scope › Orchestrator for the three frameworks
+
 ### T98 · The director tests /ui-design in a game · todo · - · human
 - Depends on: T97
 - Touches: a Godot game of the director's, with Godot-Director 3.11.0
@@ -233,12 +239,12 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Brief: Scope › Common skills
 
 ### T100 · The framework repos ignore OS metadata files · in-progress 2026-10-16 · XS · agent
-- PRs: Godot-Director #16 (merged). App-Director: ba91b84 on main (a one-off test push). SaaSAllTheThings: the .gitignore wasn't the cause, so its copy is optional (see the note).
+- PRs: Godot-Director #16 (merged). App-Director: ba91b84 on main (a one-off test push). SaaSAllTheThings #21 (open)
 - Note: the plugin directory's scanner accepts a commit it detects as a tagged release (v1.2.3, v1.3.0, v1.3.1 and, on 2026-10-16, Godot-Director v3.13.0, a GitHub squash merge) and reports every bare commit as "files the scanner won't accept", including release commits tagged after the scheduled check first saw them. Neither the files nor GitHub-made commits were the cause. The rule that follows: tag a release right after its merge, which tools/work-release.sh does.
 - Depends on: -
 - Touches: work/Godot-Director: .gitignore; work/App-Director: .gitignore; work/SaaSAllTheThings: .gitignore (one pull request per repo; the director squash-merges)
 - Done when: each framework's own `.gitignore` ignores `.DS_Store`, `Thumbs.db`, `desktop.ini` and `__MACOSX/`, as the plugin directory's scanner asks, in a pull request the director squash-merges to test whether single-parent commits pass the scan, following AGENTS.md › Project rules for framework work (check)
-- Note: Godot-Director first, as a test: if the squash-merged commit passes the plugin scanner, the same change goes to App-Director and SaaSAllTheThings once their clones' local /ui-design builds are committed.
+- Note: Godot-Director and App-Director carry it; SaaSAllTheThings' copy is #21, and the item is done when it merges.
 - Brief: Scope › Orchestrator for the three frameworks
 
 ### T102 · The secrets scan doesn't flag drawings · todo · S · agent
