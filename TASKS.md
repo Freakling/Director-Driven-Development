@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T153 · B5 · R4
+**Next IDs:** T157 · B5 · R4
 
 ## Milestones
 | Milestone | Status |
@@ -81,6 +81,30 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Touches: docs/concept/cost-built-in.md, docs/concept/cost-tuning.md, docs/how-to/cost.md, docs/index.md, docs/examples/pksei.md
 - Done when: the two cost concept pages, the How-to cost question, the home page's Read more and the PKSEI example link the blog post "What directing AI agents costs: three projects, measured" as the measured reference, quoting only its headline figures with the post as the source (check) · `bash tools/check.sh` passes (check)
 - Brief: Scope › Concepts
+
+### T153 · Where do I start begins with writing it down · in-progress 2026-10-20 · S · agent
+- Depends on: -
+- Touches: docs/how-to/start.md, docs/how-to/start-game.md, docs/how-to/start-saas.md, docs/how-to/index.md
+- Done when: each Start here walkthrough has a step before Install: write what you want in your own words, with the framework's template linked at its latest release and what onboarding does with it; the How-to overview's first answer says the same in one line (check) · `bash tools/check.sh` passes (check)
+- Brief: Scope › How-to guides
+
+### T154 · Godot-Director: the README starts with writing your own game design document · in-progress 2026-10-20 · S · agent
+- Depends on: -
+- Touches: work/Godot-Director: README.md, project/design/director-gdd.md, selftest.sh
+- Done when: the README's how-to-use section opens with a Start here step before the install: write your game design document in your own words first, with a link to the template at the latest release tag, fill in what you know and leave the rest, then install and onboarding reads it and asks only what you left open; the template's header carries the same link so a copied file explains itself; the selftest checks both (check) · following AGENTS.md › Project rules for framework work (check)
+- Brief: Scope › Framework features
+
+### T155 · App-Director: the README starts with writing your own product brief · in-progress 2026-10-20 · S · agent
+- Depends on: -
+- Touches: work/App-Director: README.md, project/product/director-brief.md, selftest.sh
+- Done when: the README's how-to-use section opens with a Start here step before the install: write your product brief in your own words first, with a link to the template at the latest release tag, fill in what you know and leave the rest, then install and onboarding reads it and asks only what you left open; the template's header carries the same link so a copied file explains itself; the selftest checks both (check) · following AGENTS.md › Project rules for framework work (check)
+- Brief: Scope › Framework features
+
+### T156 · SaaSAllTheThings: the README starts with writing your own product brief · in-progress 2026-10-20 · S · agent
+- Depends on: -
+- Touches: work/SaaSAllTheThings: README.md, project/product/director-brief.md, selftest.sh
+- Done when: the README's how-to-use section opens with a Start here step before the install: write your product brief in your own words first, with a link to the template at the latest release tag, fill in what you know and leave the rest, then install and onboarding reads it and asks only what you left open; the template's header carries the same link so a copied file explains itself; the selftest checks both (check) · following AGENTS.md › Project rules for framework work (check)
+- Brief: Scope › Framework features
 
 ### T98 · The director tests /ui-design in a game · todo · - · human
 - Depends on: T97
