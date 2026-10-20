@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T162 · B5 · R7
+**Next IDs:** T163 · B5 · R7
 
 ## Milestones
 | Milestone | Status |
@@ -123,8 +123,8 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Informs: -
 - Brief: -
 
-### T157 · Godot-Director: the check times every test file and runs the suite in parallel · in-progress 2026-10-20 · L · agent
-- PRs: Godot-Director #32 (open)
+### T157 · Godot-Director: the check times every test file and runs the suite in parallel · done 2026-10-21 · L · agent
+- PRs: Godot-Director #32 (merged)
 - Note: measured on The Guildkeeper: serial 955 s and 1,016 s, 12 jobs 341 s, identical counts, no parallel-only failures; the two 200 s map test files set the floor. Reviewed; three findings fixed.
 - Depends on: -
 - Touches: work/Godot-Director: framework/tools/check.gd, framework/tools/check.sh, project/tools/check.cfg, README.md, framework/.godot-director/rules.md, selftest.sh
@@ -162,6 +162,12 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Question: What does production readiness mean for a business-critical system in an enterprise, beyond the code: infrastructure, monitoring and operations, compliance audits and the evidence they need, PII handling, access control to sensitive data and production environments, business continuity and disaster recovery, and cloud networking that can't exfiltrate through public endpoints; what do the main breach and incident reports (Verizon DBIR, IBM Cost of a Data Breach, Microsoft Digital Defense Report, Mandiant M-Trends, CSA top threats) say about how people, process and infrastructure hygiene fail, as against code vulnerabilities, with samples and editions; what the AI coding tools' security features cover at those layers (from R5, extended: CodeQL, secret scanning, Bugbot, Devin Review, Codex Security) and what enterprises use instead (Azure Policy, Defender for Cloud, IaC scanners) and where in the pipeline; and what SaaSAllTheThings does with an uploaded control framework such as the ISF Standard of Good Practice, from its own repository at the latest release: the assessment, the workshops (vision, tenancy and identity, integrations, operations, planning), the requirements and control framework in the repository, the architecture rules enforced in the check, the ADR exception path, and the records a compliance reviewer can read; which of "a full supply-chain view, more security and easier compliance proof than others" holds on those records, and which needs a deployment or an audit?
 - Informs: -
 - Brief: -
+
+### T162 · Release Godot-Director 4.2.0 · in-progress 2026-10-21 · S · agent
+- Depends on: T157
+- Touches: work/Godot-Director: VERSION, .claude-plugin/plugin.json, .claude-plugin/marketplace.json, skills/godot-director/SKILL.md, README.md and project/design/director-gdd.md (the template links), CHANGELOG.md
+- Done when: the release pull request bumps every version file and the template links together, turns Unreleased into the 4.2.0 heading, passes the selftest and carries the release notes as its description (check) · once merged, `bash tools/work-release.sh work/Godot-Director <pr>` tags v4.2.0 and publishes the release (check) · following AGENTS.md › Project rules for framework work (check)
+- Brief: Scope › Framework features
 
 ### T98 · The director tests /ui-design in a game · todo · - · human
 - Depends on: T97
