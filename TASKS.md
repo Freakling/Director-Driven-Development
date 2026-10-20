@@ -65,13 +65,14 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: next-task.md says the orchestrator passes the builder's, reviewer's and researcher's model explicitly from the sizing table on every launch and never lets a subagent inherit the session's model, with the session model only when the table has no entry for the size; the selftest checks the wording (check) · following AGENTS.md › Project rules for framework work (check)
 - Brief: -
 
-### T150 · Godot-Director: a builder always gets its model passed explicitly · todo · S · agent
+### T150 · Godot-Director: a builder always gets its model passed explicitly · in-progress 2026-10-21 · S · agent
+- PRs: Godot-Director #34 (open)
 - Depends on: -
 - Touches: work/Godot-Director: framework/.godot-director/procedures/next-task.md, framework/.godot-director/rules.md, selftest.sh
 - Done when: the same rule as T149 in Godot-Director's next-task procedure and rules, checked by its selftest; PKSEI's build ran 48 of 89 subagents on the session's Fable model, nearly 40 percent of its cost, because the model wasn't passed (check) · following AGENTS.md › Project rules for framework work (check)
 - Brief: -
 
-### T151 · SaaSAllTheThings: a builder always gets its model passed explicitly · todo · S · agent
+### T151 · SaaSAllTheThings: a builder always gets its model passed explicitly · in-progress 2026-10-21 · S · agent
 - Depends on: -
 - Touches: work/SaaSAllTheThings: framework/.satt/procedures/next-task.md, framework/.satt/rules.md, selftest.sh
 - Done when: the same rule as T149 in SaaSAllTheThings' next-task procedure and rules, checked by its selftest (check) · following AGENTS.md › Project rules for framework work (check)
