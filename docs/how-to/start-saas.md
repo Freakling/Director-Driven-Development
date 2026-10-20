@@ -9,9 +9,10 @@ This page is for someone with a B2B SaaS idea and no code yet. [SaaSAllTheThings
 ## Short answer
 
 1. **Have three things installed:** git, bash, and the toolchain of your backend stack (the .NET SDK 8 or newer by default).
-2. **Install the framework** in your app's repository with one command.
-3. **Answer onboarding.** It settles the backend stack, interviews you about the product, agrees who owns what, and plans the first stages.
-4. **Approve the install commit,** restart Claude Code, and ask for the first task.
+2. **Write it down first,** in your own words, in the product brief template.
+3. **Install the framework** in your app's repository with one command.
+4. **Answer onboarding.** It settles the backend stack, interviews you about the product, agrees who owns what, and plans the first stages.
+5. **Approve the install commit,** restart Claude Code, and ask for the first task.
 
 ## What to have installed
 
@@ -23,6 +24,12 @@ This page is for someone with a B2B SaaS idea and no code yet. [SaaSAllTheThings
 - **Node.js,** if you install with the skill, because that command uses `npx`.
 
 Make a folder for the app and open Claude Code in it. An empty folder, or one with only documents, is a fresh start.
+
+## Write it down first
+
+Before you install, describe the product in your own words in the product brief template. Open the [template](https://github.com/Freakling/SaaSAllTheThings/blob/v0.9.1/project/product/director-brief.md) at the latest release and choose Raw to download it. Fill in the product, and the four sections for your customer's architect or product owner if you have one: the enterprise architecture, the requirements, the security requirements and the control frameworks. Leave out what you have not decided. Keep it in the app's repository at `product/director-brief.md`, the path onboarding offers.
+
+Why first: a written brief gives the agent your intent and the context behind it, which a chat interview doesn't, and the customer's own requirements anchor every later session in their security framework. When you install, the agent reads it before it asks anything. You can also fill it during onboarding (the agent waits), after it, or with the customer.
 
 ## Install the framework
 
@@ -56,7 +63,7 @@ The agent then runs `bash tools/setup-clone.sh`, which checks the toolchain and 
 
 The agent interviews you in short rounds. Each question comes with options and a recommendation. Pick one, or answer in your own words.
 
-**Your own product brief comes first.** Before the interview, onboarding offers `product/director-brief.md`, a product brief template you fill in, in your own words. Besides the product, it has four sections for your customer's architect or product owner: the enterprise architecture the SaaS must fit into (identity provider, data residency, hosting constraints, integrations), the requirements, the security requirements and the control frameworks the customer must meet. Use it instead of the interview or as well as it, and fill it before onboarding, now (the agent waits) or later, yourself or with the customer; the interview works without it. A written brief gives the agent your intent and the context behind it, which a chat alone doesn't, and every design session, assessment and build later starts from it, anchored in the customer's security framework. If you fill it, the agent reads it first, takes the interview's answers from it marked `(from your document)`, and asks only what it leaves open. What it works out itself is marked `(inferred, please confirm)`. It never edits your brief or fills it in for you, and it never treats a requirement as met because the brief names a framework; `product/prd.md` stays the record of requirements it maintains.
+**Your product brief comes first.** If you wrote it (see [Write it down first](#write-it-down-first)), the agent reads it before the interview, takes the interview's answers from it marked `(from your document)`, and asks only what it leaves open. What it works out itself is marked `(inferred, please confirm)`. If you did not, onboarding offers `product/director-brief.md` before the interview, and the interview works without it. The agent never edits your brief or fills it in for you, and it never treats a requirement as met because the brief names a framework; `product/prd.md` stays the record of requirements it maintains.
 
 | It asks about | A sensible first answer | What it changes |
 |---|---|---|

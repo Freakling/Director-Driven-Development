@@ -9,9 +9,10 @@ This page is for someone with a web, mobile or desktop app idea and no project y
 ## Short answer
 
 1. **Have four things installed:** git, bash, gitleaks, and the tools for your stack (Node.js for TypeScript, Flutter, or Python).
-2. **Install the framework** in your app's folder with one command.
-3. **Answer onboarding.** It asks about the app, the stack, who owns what, and how you want to work, and writes the answers into your project.
-4. **Approve the install commit,** restart Claude Code, and ask for the first task.
+2. **Write it down first,** in your own words, in the product brief template.
+3. **Install the framework** in your app's folder with one command.
+4. **Answer onboarding.** It asks about the app, the stack, who owns what, and how you want to work, and writes the answers into your project.
+5. **Approve the install commit,** restart Claude Code, and ask for the first task.
 
 ## What to have installed
 
@@ -31,6 +32,12 @@ This page is for someone with a web, mobile or desktop app idea and no project y
 - **Node.js,** if you install with the skill, because that command uses `npx`.
 
 Make a folder for the app and open Claude Code in it. The tree has to be clean: an empty folder, or one with only an initial commit, is a fresh start.
+
+## Write it down first
+
+Before you install, describe the app in your own words in the product brief template. Open the [template](https://github.com/Freakling/App-Director/blob/v1.7.1/project/product/director-brief.md) at the latest release and choose Raw to download it, fill in what you know (the pitch, the core flows, the platforms and the stack), and leave out what you have not decided. Keep it in the app's folder at `product/director-brief.md`, the path onboarding offers.
+
+Why first: a written brief gives the agent your intent and the context behind it, which a chat interview doesn't. When you install, the agent reads it before it asks anything. You can also fill it during onboarding (the agent waits) or after it.
 
 ## Install the framework
 
@@ -57,7 +64,7 @@ Onboarding is the agent following the framework's `ONBOARDING.md`. You decide ev
 
 The agent interviews you in short rounds. Each question comes with options and a recommendation. Pick one, or answer in your own words.
 
-**Your own product brief comes first.** Before the interview, onboarding offers `product/director-brief.md`, a product brief template you fill in, in your own words. Use it instead of the interview or as well as it, and fill it before onboarding, now (the agent waits) or later; the interview works without it. A written brief gives the agent your intent and the context behind it, which a chat alone doesn't, and every design session and build later starts from it. If you fill it, the agent reads it first, takes the interview's answers from it marked `(from your brief)`, and asks only what it leaves open. What it works out itself is marked `(inferred, please confirm)`. It never edits your brief or fills it in for you; `product/brief.md` stays the design record it maintains.
+**Your product brief comes first.** If you wrote it (see [Write it down first](#write-it-down-first)), the agent reads it before the interview, takes the interview's answers from it marked `(from your brief)`, and asks only what it leaves open. What it works out itself is marked `(inferred, please confirm)`. If you did not, onboarding offers `product/director-brief.md` before the interview, and the interview works without it. The agent never edits your brief or fills it in for you; `product/brief.md` stays the design record it maintains.
 
 | It asks about | A sensible first answer | What it changes |
 |---|---|---|

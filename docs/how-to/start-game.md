@@ -9,9 +9,10 @@ This page is for someone with a game idea and no project yet. [Godot-Director](.
 ## Short answer
 
 1. **Have three things installed:** Godot 4.5 or newer, git, and bash.
-2. **Install the framework** in your game's folder with one command.
-3. **Answer onboarding.** It asks about the game, who owns what, and how you want to work, and writes the answers into your project.
-4. **Approve the install commit,** restart Claude Code, and ask for the first task.
+2. **Write it down first,** in your own words, in the design document template.
+3. **Install the framework** in your game's folder with one command.
+4. **Answer onboarding.** It asks about the game, who owns what, and how you want to work, and writes the answers into your project.
+5. **Approve the install commit,** restart Claude Code, and ask for the first task.
 
 ## What to have installed
 
@@ -22,6 +23,12 @@ This page is for someone with a game idea and no project yet. [Godot-Director](.
 - **Node.js,** if you install with the skill, because that command uses `npx`.
 
 Make an empty folder for the game and open Claude Code in it. If the folder is not a git repository yet, onboarding offers to run `git init`.
+
+## Write it down first
+
+Before you install, describe the game in your own words in the Game Design Document template. Open the [template](https://github.com/Freakling/Godot-Director/blob/v4.1.1/project/design/director-gdd.md) at the latest release and choose Raw to download it, fill in what you know (the pitch, the feeling, the pillars, the loop), and leave out what you have not decided. Keep it in the game's folder at `design/director-gdd.md`, the path onboarding offers.
+
+Why first: a written document gives the agent your intent and the context behind it, which a chat interview doesn't. When you install, the agent reads it before it asks anything. You can also fill it during onboarding (the agent waits) or after it.
 
 ## Install the framework
 
@@ -50,7 +57,7 @@ Onboarding is the agent following the framework's `ONBOARDING.md`. You decide ev
 
 The agent writes a minimal `project.godot` itself, so do not use Godot's project manager. Then it interviews you in short rounds. Each question comes with options and a recommendation. Pick one, or answer in your own words.
 
-**Your own design document comes first.** Before the interview, onboarding offers `design/director-gdd.md`, a Game Design Document template you fill in, in your own words. Use it instead of the interview or as well as it, and fill it before onboarding, now (the agent waits) or later; the interview works without it. A written document gives the agent your intent and the context behind it, which a chat alone doesn't, and every design session and build later starts from it. If you fill it, the agent reads it first, takes the interview's answers from it marked `(from your document)`, and asks only what it leaves open. What it works out itself is marked `(inferred, please confirm)`. It never edits your document or fills it in for you; `design/gdd.md` stays the design record it maintains.
+**Your design document comes first.** If you wrote it (see [Write it down first](#write-it-down-first)), the agent reads it before the interview, takes the interview's answers from it marked `(from your document)`, and asks only what it leaves open. What it works out itself is marked `(inferred, please confirm)`. If you did not, onboarding offers `design/director-gdd.md` before the interview, and the interview works without it. The agent never edits your document or fills it in for you; `design/gdd.md` stays the design record it maintains.
 
 | It asks about | A sensible first answer | What it changes |
 |---|---|---|

@@ -82,7 +82,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: the two cost concept pages, the How-to cost question, the home page's Read more and the PKSEI example link the blog post "What directing AI agents costs: three projects, measured" as the measured reference, quoting only its headline figures with the post as the source (check) · `bash tools/check.sh` passes (check)
 - Brief: Scope › Concepts
 
-### T153 · Where do I start begins with writing it down · in-progress 2026-10-20 · S · agent
+### T153 · Where do I start begins with writing it down · done 2026-10-20 · S · agent
 - Depends on: -
 - Touches: docs/how-to/start.md, docs/how-to/start-game.md, docs/how-to/start-saas.md, docs/how-to/index.md
 - Done when: each Start here walkthrough has a step before Install: write what you want in your own words, with the framework's template linked at its latest release and what onboarding does with it; the How-to overview's first answer says the same in one line (check) · `bash tools/check.sh` passes (check)

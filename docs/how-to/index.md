@@ -8,6 +8,8 @@ The skill pages say what each command does. These pages say what you do. Each de
 
 ## Start here
 
+Start by writing down what you want, in your own words, in the framework's template: onboarding reads it before it asks you anything.
+
 - [Where do I start with an app?](start.md)
 - [Where do I start with a game?](start-game.md)
 - [Where do I start with a SaaS?](start-saas.md)
