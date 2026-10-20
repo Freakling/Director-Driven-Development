@@ -102,6 +102,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 
 ### T156 · SaaSAllTheThings: the README starts with writing your own product brief · in-progress 2026-10-20 · S · agent
 - Depends on: -
+- PRs: SaaSAllTheThings #17 (open)
 - Touches: work/SaaSAllTheThings: README.md, project/product/director-brief.md, selftest.sh
 - Done when: the README's how-to-use section opens with a Start here step before the install: write your product brief in your own words first, with a link to the template at the latest release tag, fill in what you know and leave the rest, then install and onboarding reads it and asks only what you left open; the template's header carries the same link so a copied file explains itself; the selftest checks both (check) · following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Framework features
