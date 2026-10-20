@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T157 · B5 · R6
+**Next IDs:** T160 · B5 · R6
 
 ## Milestones
 | Milestone | Status |
@@ -122,6 +122,24 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Question: The director's framing: others help you make something that works; DDD aims at enterprise-ready, structured, automatically tested software you can prove is stable, testable and compliant. Is that distinction real? For the alternatives in R4, what do they ship or prescribe for production readiness: tests that gate (not just suggested), security and compliance checks, architecture rules, audit trails of decisions, operations and release, and evidence a reviewer or auditor can use; what do their vendors claim about enterprise use; and what independent evidence exists on AI-built code reaching production (defect, security and rework findings)? Where does DDD hold up, and where is the claim too strong?
 - Informs: -
 - Brief: -
+
+### T157 · Godot-Director: relevant-test selection, check modes and per-file timing · in-progress 2026-10-20 · L · agent
+- Depends on: -
+- Touches: work/Godot-Director: framework/tools/check.gd, framework/tools/check.sh, project/tools/check.cfg, selftest.sh
+- Done when: check.gd selects the tests relevant to the changed set (working tree against HEAD, or the staged files from the hook) one step out through class_name, autoload name or res:// path, widening to everything when shared plumbing changes, and prints which tests it chose and why; check.sh has `--scoped` (default) and `--full`, keeps `--if-changed` and `--fingerprint`, exit codes 0/1/3; every run logs each test file's time and ends with a slowest-files summary; the scoped check keeps the import pass, loading every script, scene and resource, and the screen rules; new check.cfg keys have defaults and an upgrade keeps existing settings (spec items 1, 2, 4, 8) (check) · following AGENTS.md › Project rules for framework work; built on the branch `ddd/check-tiers`, one commit per stage, one pull request for the whole feature, committed and published only with the director's approval (check)
+- Brief: Scope › Framework features
+
+### T158 · Godot-Director: the parallel full run and the full-run cadence · todo · L · agent
+- Depends on: T157
+- Touches: work/Godot-Director: framework/tools/check.sh, framework/tools/check.gd, project/tools/check.cfg, selftest.sh
+- Done when: `--full --jobs N` splits the test files across N headless Godot processes (default from the CPU count, set in check.cfg), each in file order with its own log, and merges the results; a state file under .godot/godot-director/ counts commits since the last green full run and the check says, visibly, when a full run is due; the docs say tests must isolate their autoload state (spec items 3, 5) (check) · following AGENTS.md › Project rules for framework work; built on the branch `ddd/check-tiers`, one commit per stage, one pull request for the whole feature, committed and published only with the director's approval (check)
+- Brief: Scope › Framework features
+
+### T159 · Godot-Director: autoplay in the scoped check, the rules, procedures and hooks · todo · L · agent
+- Depends on: T158
+- Touches: work/Godot-Director: framework/tools/check.sh, framework/.godot-director/rules.md, procedures/build.md, next-task.md, function-check.md, framework/.claude/hooks/*, framework/.githooks/pre-commit, README.md, CHANGELOG.md, selftest.sh
+- Done when: the scoped check runs the scenarios the item names (command line or read from the item) plus the enforced ones from [autoplay]; rules.md says what Done means, when the full run happens and how a full-run failure is filed as a bug naming the commits since the last green run; build.md, next-task.md and function-check.md use the tiers as the spec says and a function check starts with a full run; the Stop and pre-commit hooks use the scoped check; the docs recommend one git worktree per parallel building session; CHANGELOG carries the upgrade notes (spec items 6, 7, 8) (check) · the proof on a scratch copy of The Guildkeeper is recorded: the scoped check's chosen tests and time for a change to scripts/game/quest_combat.gd, the full run with --jobs against the serial run, the slowest-files summary (check) · following AGENTS.md › Project rules for framework work; built on the branch `ddd/check-tiers`, one commit per stage, one pull request for the whole feature, committed and published only with the director's approval (check)
+- Brief: Scope › Framework features
 
 ### T98 · The director tests /ui-design in a game · todo · - · human
 - Depends on: T97
