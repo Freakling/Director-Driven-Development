@@ -116,8 +116,9 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Informs: -
 - Brief: -
 
-### R5 · Do other AI coding tools and workflows address production readiness, or stop at working · in-progress 2026-10-20 · M · agent
+### R5 · Do other AI coding tools and workflows address production readiness, or stop at working · done 2026-10-20 · M · agent
 - Depends on: R4
+- Note: product/research/2026-10-20-production-readiness-of-ai-coding-tools.md
 - Question: The director's framing: others help you make something that works; DDD aims at enterprise-ready, structured, automatically tested software you can prove is stable, testable and compliant. Is that distinction real? For the alternatives in R4, what do they ship or prescribe for production readiness: tests that gate (not just suggested), security and compliance checks, architecture rules, audit trails of decisions, operations and release, and evidence a reviewer or auditor can use; what do their vendors claim about enterprise use; and what independent evidence exists on AI-built code reaching production (defect, security and rework findings)? Where does DDD hold up, and where is the claim too strong?
 - Informs: -
 - Brief: -
