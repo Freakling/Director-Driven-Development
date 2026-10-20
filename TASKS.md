@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T163 · B5 · R7
+**Next IDs:** T166 · B5 · R7
 
 ## Milestones
 | Milestone | Status |
@@ -167,6 +167,24 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Depends on: T157
 - Touches: work/Godot-Director: VERSION, .claude-plugin/plugin.json, .claude-plugin/marketplace.json, skills/godot-director/SKILL.md, README.md and project/design/director-gdd.md (the template links), CHANGELOG.md
 - Done when: the release pull request bumps every version file and the template links together, turns Unreleased into the 4.2.0 heading, passes the selftest and carries the release notes as its description (check) · once merged, `bash tools/work-release.sh work/Godot-Director <pr>` tags v4.2.0 and publishes the release (check) · following AGENTS.md › Project rules for framework work (check)
+- Brief: Scope › Framework features
+
+### T163 · Godot-Director: the Bash guard blocks guessed waits on a background command · todo · S · agent
+- Depends on: -
+- Touches: work/Godot-Director: framework/.claude/hooks/guard-git.sh, framework/.claude/settings.json, selftest.sh
+- Done when: the Bash guard, also run for Monitor, blocks an `until` or `while` loop with `sleep` that reads a background command's `tasks/<id>.output` without waiting for the `[exited with code N]` or `[killed]` line Claude Code appends when the command ends, and its message gives the loop that waits for that line; the selftest checks that it blocks a guessed-pattern loop and passes the marker loop and a loop on a file the command writes itself (check) · the guard still starts no other processes (check) · following AGENTS.md › Project rules for framework work (check)
+- Brief: Scope › Framework features
+
+### T164 · App-Director: the Bash guard blocks guessed waits on a background command · todo · S · agent
+- Depends on: -
+- Touches: work/App-Director: framework/.claude/hooks/guard-commands.sh, framework/.claude/settings.json, selftest.sh
+- Done when: the same guard as T163 in App-Director's Bash guard, checked by its selftest (check) · the guard still starts no other processes (check) · following AGENTS.md › Project rules for framework work (check)
+- Brief: Scope › Framework features
+
+### T165 · SaaSAllTheThings: the Bash guard blocks guessed waits on a background command · todo · S · agent
+- Depends on: -
+- Touches: work/SaaSAllTheThings: framework/.claude/hooks/guard-commands.sh, framework/.claude/settings.json, selftest.sh
+- Done when: the same guard as T163 in SaaSAllTheThings' Bash guard, checked by its selftest (check) · the guard still starts no other processes (check) · following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Framework features
 
 ### T98 · The director tests /ui-design in a game · todo · - · human
