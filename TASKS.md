@@ -124,6 +124,8 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Brief: -
 
 ### T157 · Godot-Director: the check times every test file and runs the suite in parallel · in-progress 2026-10-20 · L · agent
+- PRs: Godot-Director #32 (open)
+- Note: measured on The Guildkeeper: serial 955 s and 1,016 s, 12 jobs 341 s, identical counts, no parallel-only failures; the two 200 s map test files set the floor. Reviewed; three findings fixed.
 - Depends on: -
 - Touches: work/Godot-Director: framework/tools/check.gd, framework/tools/check.sh, project/tools/check.cfg, README.md, framework/.godot-director/rules.md, selftest.sh
 - Done when: every run logs each test file's time and ends with a slowest-files summary; `--jobs N` (default from the CPU count, settable in check.cfg) splits the test files across N headless Godot processes, each in file order with its own log and its own timeout, and merges the results into one report with exit codes 0/1/3 unchanged; `--if-changed` and `--fingerprint` keep working; a run that hits the timeout says so instead of reading as a test failure; new check.cfg keys have defaults and an upgrade keeps existing settings; the docs say tests must isolate their autoload and user:// state and recommend one git worktree per parallel building session; CHANGELOG carries the upgrade notes (check) · measured on a scratch copy of The Guildkeeper (git archive of HEAD into a temp folder): the serial time, the parallel time, and the slowest-files summary, recorded in the item (check) · following AGENTS.md › Project rules for framework work; built on the branch `ddd/check-tiers`, one pull request (check)
