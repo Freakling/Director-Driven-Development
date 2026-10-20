@@ -148,13 +148,14 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Brief: Scope › Planned framework changes
 
 ### T103 · /ui-design tells the director how to use Excalidraw · in-progress 2026-10-16 · S · agent
-- PRs: Godot-Director #18 (merged); App-Director and SaaSAllTheThings committed on their local /ui-design branches, published after T98
+- PRs: Godot-Director #18 (merged), App-Director #25 (open), SaaSAllTheThings #18 (open)
 - Depends on: T83
 - Touches: product/anchors/ui-design.md; work/Godot-Director: framework/.godot-director/procedures/ui-design.md, project/design/ui/README.md, examples/market-day/design/ui/README.md (one pull request; the director squash-merges); work/App-Director and work/SaaSAllTheThings: the same files on the local branches ddd/T84 and ddd/T85 (no push until T98)
 - Done when: whenever /ui-design hands the director a starter drawing, it says plainly that nothing needs installing (excalidraw.com in the browser, no account, Excalidraw+ not needed), how to open the starter (the menu's Open, or drag the file in), how to save it to `director/ui/<screen>.excalidraw` (Save to… or Ctrl+S; Chrome and Edge let you pick the folder, other browsers save to Downloads, so move and rename it), and that the drawing stays on the machine unless Live collaboration or a shareable link is used (check) · the anchor and the drawing guide each project gets say the same (check) · following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Planned framework changes
 
 ### T84 · App-Director: /ui-design with Playwright capture · in-progress 2026-10-16 · L · agent
+- PRs: App-Director #25 (open); the UAT hold lifted by the director on 2026-10-20
 - Depends on: T83
 - Touches: work/App-Director (one pull request; the director merges)
 - Note: built, reviewed (nine findings fixed) and committed locally on ddd/T84 (a637da3); no push and no pull request until T98 (the director's UAT) is done, then update from the anchor and publish. Before publishing, fix the selftest's two off-machine note checks, whose `^` anchors match only when that note comes first (found in T85).
@@ -162,6 +163,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Brief: Scope › Planned framework changes
 
 ### T85 · SaaSAllTheThings: /ui-design with Playwright capture · in-progress 2026-10-16 · L · agent
+- PRs: SaaSAllTheThings #18 (open); the UAT hold lifted by the director on 2026-10-20
 - Depends on: T83
 - Touches: work/SaaSAllTheThings (one pull request; the director merges)
 - Note: built, reviewed (findings fixed, dev environment added) and committed locally on ddd/T85; no push and no pull request until T98 (the director's UAT) is done, then update from the anchor and publish.
