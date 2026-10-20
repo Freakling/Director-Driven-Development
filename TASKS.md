@@ -95,16 +95,16 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: the README's how-to-use section opens with a Start here step before the install: write your game design document in your own words first, with a link to the template at the latest release tag, fill in what you know and leave the rest, then install and onboarding reads it and asks only what you left open; the template's header carries the same link so a copied file explains itself; the selftest checks both (check) · following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Framework features
 
-### T155 · App-Director: the README starts with writing your own product brief · in-progress 2026-10-20 · S · agent
+### T155 · App-Director: the README starts with writing your own product brief · done 2026-10-20 · S · agent
 - Depends on: -
-- PRs: App-Director #24 (open)
+- PRs: App-Director #24 (merged)
 - Touches: work/App-Director: README.md, project/product/director-brief.md, selftest.sh
 - Done when: the README's how-to-use section opens with a Start here step before the install: write your product brief in your own words first, with a link to the template at the latest release tag, fill in what you know and leave the rest, then install and onboarding reads it and asks only what you left open; the template's header carries the same link so a copied file explains itself; the selftest checks both (check) · following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Framework features
 
-### T156 · SaaSAllTheThings: the README starts with writing your own product brief · in-progress 2026-10-20 · S · agent
+### T156 · SaaSAllTheThings: the README starts with writing your own product brief · done 2026-10-20 · S · agent
 - Depends on: -
-- PRs: SaaSAllTheThings #17 (open)
+- PRs: SaaSAllTheThings #17 (merged)
 - Touches: work/SaaSAllTheThings: README.md, project/product/director-brief.md, selftest.sh
 - Done when: the README's how-to-use section opens with a Start here step before the install: write your product brief in your own words first, with a link to the template at the latest release tag, fill in what you know and leave the rest, then install and onboarding reads it and asks only what you left open; the template's header carries the same link so a copied file explains itself; the selftest checks both (check) · following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Framework features
@@ -142,12 +142,14 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Brief: Scope › Framework features
 
 ### T160 · App-Director: one git worktree per parallel building session · in-progress 2026-10-20 · XS · agent
+- PRs: App-Director #26 (open)
 - Depends on: -
 - Touches: work/App-Director: framework/.app-director/rules.md, README.md, selftest.sh
 - Done when: rules.md says that sessions building at the same time each use their own git worktree, since a shared checkout lets one session's unfinished files fail another's check and hook, with the command to make one and run tools/setup-clone.sh in it; the README's day-to-day section points to it; the selftest checks the rule exists (check) · following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Framework features
 
 ### T161 · SaaSAllTheThings: one git worktree per parallel building session · in-progress 2026-10-20 · XS · agent
+- PRs: SaaSAllTheThings #19 (open)
 - Depends on: -
 - Touches: work/SaaSAllTheThings: framework/.satt/rules.md, README.md, selftest.sh
 - Done when: the same rule as T160 in SaaSAllTheThings' rules and README, checked by its selftest (check) · following AGENTS.md › Project rules for framework work (check)
@@ -159,23 +161,23 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: the director has captured, drawn, processed and verified at least one screen with the released /ui-design, and said whether App-Director and SaaSAllTheThings should follow as the anchor says or after changes (demo)
 - Brief: Scope › Planned framework changes
 
-### T103 · /ui-design tells the director how to use Excalidraw · in-progress 2026-10-16 · S · agent
-- PRs: Godot-Director #18 (merged), App-Director #25 (open), SaaSAllTheThings #18 (open)
+### T103 · /ui-design tells the director how to use Excalidraw · done 2026-10-20 · S · agent
+- PRs: Godot-Director #18 (merged), App-Director #25 (merged), SaaSAllTheThings #18 (merged)
 - Depends on: T83
 - Touches: product/anchors/ui-design.md; work/Godot-Director: framework/.godot-director/procedures/ui-design.md, project/design/ui/README.md, examples/market-day/design/ui/README.md (one pull request; the director squash-merges); work/App-Director and work/SaaSAllTheThings: the same files on the local branches ddd/T84 and ddd/T85 (no push until T98)
 - Done when: whenever /ui-design hands the director a starter drawing, it says plainly that nothing needs installing (excalidraw.com in the browser, no account, Excalidraw+ not needed), how to open the starter (the menu's Open, or drag the file in), how to save it to `director/ui/<screen>.excalidraw` (Save to… or Ctrl+S; Chrome and Edge let you pick the folder, other browsers save to Downloads, so move and rename it), and that the drawing stays on the machine unless Live collaboration or a shareable link is used (check) · the anchor and the drawing guide each project gets say the same (check) · following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Planned framework changes
 
-### T84 · App-Director: /ui-design with Playwright capture · in-progress 2026-10-16 · L · agent
-- PRs: App-Director #25 (open); the UAT hold lifted by the director on 2026-10-20
+### T84 · App-Director: /ui-design with Playwright capture · done 2026-10-20 · L · agent
+- PRs: App-Director #25 (merged); the UAT hold lifted by the director on 2026-10-20
 - Depends on: T83
 - Touches: work/App-Director (one pull request; the director merges)
 - Note: built, reviewed (nine findings fixed) and committed locally on ddd/T84 (a637da3); no push and no pull request until T98 (the director's UAT) is done, then update from the anchor and publish. Before publishing, fix the selftest's two off-machine note checks, whose `^` anchors match only when that note comes first (found in T85).
 - Done when: once Godot-Director has released /ui-design, App-Director has a merged pull request that builds it from the anchor with the Playwright adapter for web apps, following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Planned framework changes
 
-### T85 · SaaSAllTheThings: /ui-design with Playwright capture · in-progress 2026-10-16 · L · agent
-- PRs: SaaSAllTheThings #18 (open); the UAT hold lifted by the director on 2026-10-20
+### T85 · SaaSAllTheThings: /ui-design with Playwright capture · done 2026-10-20 · L · agent
+- PRs: SaaSAllTheThings #18 (merged); the UAT hold lifted by the director on 2026-10-20
 - Depends on: T83
 - Touches: work/SaaSAllTheThings (one pull request; the director merges)
 - Note: built, reviewed (findings fixed, dev environment added) and committed locally on ddd/T85; no push and no pull request until T98 (the director's UAT) is done, then update from the anchor and publish.
