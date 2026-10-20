@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T162 · B5 · R6
+**Next IDs:** T162 · B5 · R7
 
 ## Milestones
 | Milestone | Status |
@@ -141,8 +141,8 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: only if T158's quick mode is still too slow as a gate: a check.cfg opt-in, off by default, makes the quick mode the per-item gate with the item's autoplay scenarios, a full run every N commits and before a function check from a state file under .godot/godot-director/, and a full-run failure filed as a bug naming the commits since the last green run, with rules.md saying what Done means under the opt-in (the director's original spec, `init/godot-director-check-tiers-prompt.md`) (check) · following AGENTS.md › Project rules for framework work; built on the branch `ddd/check-tiers`, one pull request (check)
 - Brief: Scope › Framework features
 
-### T160 · App-Director: one git worktree per parallel building session · in-progress 2026-10-20 · XS · agent
-- PRs: App-Director #26 (open)
+### T160 · App-Director: one git worktree per parallel building session · done 2026-10-20 · XS · agent
+- PRs: App-Director #26 (merged)
 - Depends on: -
 - Touches: work/App-Director: framework/.app-director/rules.md, README.md, selftest.sh
 - Done when: rules.md says that sessions building at the same time each use their own git worktree, since a shared checkout lets one session's unfinished files fail another's check and hook, with the command to make one and run tools/setup-clone.sh in it; the README's day-to-day section points to it; the selftest checks the rule exists (check) · following AGENTS.md › Project rules for framework work (check)
@@ -154,6 +154,12 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Touches: work/SaaSAllTheThings: framework/.satt/rules.md, README.md, selftest.sh
 - Done when: the same rule as T160 in SaaSAllTheThings' rules and README, checked by its selftest (check) · following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Framework features
+
+### R6 · Where intrusions enter, and what AI coding tools and SaaSAllTheThings enforce at the infrastructure layer · in-progress 2026-10-20 · S · agent
+- Depends on: R5
+- Question: What do the main breach and incident reports (Verizon DBIR, IBM Cost of a Data Breach, Microsoft Digital Defense Report, Mandiant M-Trends, Cloud Security Alliance's top threats) say about the share of intrusions that enter through credentials, misconfiguration, exposed services and identity rather than code vulnerabilities, with their samples and latest editions; what the AI coding tools' security features (CodeQL, Copilot secret scanning, Cursor Bugbot, Devin Review, Codex Security) cover and don't at the infrastructure and identity layer; what enterprises use instead (Azure Policy, Defender for Cloud, Checkov, tfsec, KICS, Terrascan) and where in the pipeline; and which infrastructure and tenancy rules SaaSAllTheThings enforces in its check, from its own repository?
+- Informs: -
+- Brief: -
 
 ### T98 · The director tests /ui-design in a game · todo · - · human
 - Depends on: T97
