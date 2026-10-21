@@ -169,6 +169,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 
 ### T162 · Release Godot-Director 4.2.0 · done 2026-10-21 · S · agent
 - PRs: Godot-Director #33 (merged); v4.2.0 tagged and published
+- Note: the release commit's gate, the selftest without Godot, was run by the director's other session after the merge: 152 passed, 0 failed.
 - Depends on: T157
 - Touches: work/Godot-Director: VERSION, .claude-plugin/plugin.json, .claude-plugin/marketplace.json, skills/godot-director/SKILL.md, README.md and project/design/director-gdd.md (the template links), CHANGELOG.md
 - Done when: the release pull request bumps every version file and the template links together, turns Unreleased into the 4.2.0 heading, passes the selftest and carries the release notes as its description (check) · once merged, `bash tools/work-release.sh work/Godot-Director <pr>` tags v4.2.0 and publishes the release (check) · following AGENTS.md › Project rules for framework work (check)
