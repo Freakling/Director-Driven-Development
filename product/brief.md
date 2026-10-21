@@ -48,6 +48,9 @@ The site uses the same licence as the three frameworks: MIT, with the copyright 
 ### Blog posts stay on the blog
 Posts about the why, such as the anchoring post and the factories post, get no docs pages. Docs pages link to a post where it explains the why behind them.
 
+### What the site claims for production and compliance
+The site describes SaaSAllTheThings' production and compliance value only as its records show it: the check fails the build when architecture and security requirements are broken, with exceptions only through a decision record the director accepts; the requirements and the customer's control framework live in the repository, and every architecture session reads them; every decision and change leaves a record a reviewer can read; and the running system, not the repository, provides the operating evidence. "Production-ready", "compliant", "more secure than others", "a full supply-chain view" and "cannot exfiltrate" stay off the site; a pilot deployment, and then an audit, is the route to anything stronger.
+
 ### Orchestrator for the three frameworks
 The repository is the orchestrator for the three frameworks:
 - **Anchors:** `product/anchors/` holds the agreed behaviour of a shared feature before it's built in the frameworks. Once released, its skill page records the behaviour and the differences per repo.
@@ -98,6 +101,12 @@ Changes the director has decided that aren't released in all three frameworks ye
   - **Godot-Director first:** it pilots the feature. App-Director and SaaSAllTheThings are built from the anchor meanwhile, on local branches with no pull request until the director's UAT of the Godot version is done; the UAT's feedback updates the anchor and those branches first.
   - **The web adapter:** capture runs Node and Playwright against the app on this machine only (never a deployed site), with a catalog of routes and states seeded through public APIs, never real user data. The web lint runs in capture, verify and the build's Screens step, not in the check, since it needs a browser and a running app. Screen specs and captures live in `product/ui/`. SaaSAllTheThings gains the protected `director/` space, so drawings live in `director/ui/` in all three. SaaSAllTheThings may also capture its dev environment, named explicitly in its capture config, with seeded test tenants and saved test sign-ins only; production and every other hosted address stay refused.
   - **Settled from the spec:** the skill is `/ui-design`; captures stay gitignored; the layout lint in the check is on for new projects and off on upgrade; a UI item's `(check)` outcome may stay unverified when capture can't run on the machine, said plainly in the report.
+- **SaaSAllTheThings closes the largest gaps between its records and the operating envelope,** one item each:
+  - **Network posture:** a reference topic and a check rule on the Bicep files that fail a resource left with public network access or local authentication on. Private-only needs Service Bus Premium, so it goes through an ADR with a `cost-sku` exception, and the cost reference says so. The rule is on for new apps; on upgrade it stays off until the app turns it on.
+  - **Evidence off the developer's machine:** a shipped CI workflow runs the check on every pull request and keeps its output as an artifact; how long it's kept is the app's setting.
+  - **A compliance mapping table:** a seeded table in `compliance/` traces each control to its requirement, the rule, ADR or test that meets it, a label (direct, partial, interpretive or unverified) and where the evidence is; review and align read it. It records how a control is met and never marks one met from a framework's name.
+  - **Dependencies and an SBOM:** the shipped workflow reviews dependency changes on pull requests and exports an SPDX SBOM from GitHub's dependency graph.
+  - **A pilot:** the director deploys the example app to an Azure sandbox with Azure Policy Deny assignments and Defender for Cloud, tests it from outside and records the results.
 
 ## Core Flows
 

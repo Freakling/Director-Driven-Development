@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T168 · B5 · R7
+**Next IDs:** T174 · B5 · R7
 
 ## Milestones
 | Milestone | Status |
@@ -204,6 +204,42 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Touches: work/SaaSAllTheThings: TASKS.md
 - Done when: the root TASKS.md has one `## Queue` heading (today three, at about lines 9, 35 and 49), the two items numbered T9 ("The README starts with writing your own product brief" and "/ui-design with Playwright capture") have distinct IDs with references to them updated, and T10's Done when names its own repo's item rather than the docs repo's T160 (check) · following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Orchestrator for the three frameworks
+
+### T168 · The SaaSAllTheThings page says what its records show for production and compliance · todo · S · agent
+- Depends on: -
+- Touches: docs/frameworks/saasallthethings.md
+- Done when: a short section in the brief's wording: the check fails the build on broken architecture and security requirements, with exceptions only through an ADR the director accepts; the requirements and the customer's control framework live in the repository and every architecture session reads them; every decision and change leaves a record a reviewer can read; the running system provides the operating evidence; each statement checked against SaaSAllTheThings' latest release (check) · no page says production-ready, compliant, more secure than others, a full supply-chain view or cannot exfiltrate (check) · `bash tools/check.sh` passes (check)
+- Brief: Scope › What the site claims for production and compliance
+
+### T169 · SaaSAllTheThings: the check fails public network access and local authentication in Bicep · todo · M · agent
+- Depends on: -
+- Touches: work/SaaSAllTheThings: framework/.satt/reference/network.md (new), framework/.satt/reference/README.md, framework/.satt/reference/cost.md, framework/tools/archcheck.awk, project/tools/check.cfg, ONBOARDING.md, skills/saas-design-session/references/ (bundle), selftest.sh
+- Done when: a new rule, named in reference/README.md › What the check enforces, archcheck.awk and selftest.sh, fails a Bicep resource that leaves public network access enabled or local authentication on, for the resource types the reference architecture uses where Azure offers the setting, and an accepted ADR with an exception for the rule and path excuses it (check) · the network topic gives the default posture, and cost.md says private-only needs Service Bus Premium, so an ADR with a `cost-sku` exception (check) · the rule is on for new apps and off on upgrade until the app turns it on in check.cfg, as the CHANGELOG's upgrade steps say (check) · following AGENTS.md › Project rules for framework work (check)
+- Brief: Scope › Planned framework changes
+
+### T170 · SaaSAllTheThings: a shipped CI workflow keeps the check's output as evidence · todo · M · agent
+- Depends on: -
+- Touches: work/SaaSAllTheThings: framework/.satt/templates/check-workflow.yml (new), ONBOARDING.md, framework/.satt/procedures/release.md, selftest.sh
+- Done when: a GitHub Actions workflow template runs `bash tools/check.sh` on every pull request and push to main and uploads its output and logs as an artifact, with how long it's kept left to the app's setting; onboarding offers to install it for new and existing apps; the selftest checks the template's steps (check) · following AGENTS.md › Project rules for framework work (check)
+- Brief: Scope › Planned framework changes
+
+### T171 · SaaSAllTheThings: a compliance mapping table that review and align read · todo · M · agent
+- Depends on: -
+- Touches: work/SaaSAllTheThings: project/compliance/mapping.md (new), framework/.satt/procedures/architect.md, framework/.satt/procedures/review.md, framework/.satt/procedures/align.md, ONBOARDING.md, skills/saas-design-session/references/ (bundle), selftest.sh
+- Done when: a seeded table with control id, requirement, met by (rule, ADR or test), label (direct, partial, interpretive or unverified) and evidence location; architecture sessions add or update rows as ADRs are accepted, review flags a change to a mapped rule, ADR or test that leaves its row stale, and align reports rows whose rule, ADR or test no longer exists; nothing marks a control met from a framework's name (check) · following AGENTS.md › Project rules for framework work (check)
+- Brief: Scope › Planned framework changes
+
+### T172 · SaaSAllTheThings: dependency review and an SBOM in the shipped workflow · todo · S · agent
+- Depends on: T170
+- Touches: work/SaaSAllTheThings: framework/.satt/templates/check-workflow.yml, framework/.satt/reference/infra.md, selftest.sh
+- Done when: the shipped workflow reviews dependency changes on pull requests and exports an SPDX SBOM from GitHub's dependency graph as an artifact, and the reference says what that covers and that vulnerability response stays the customer's process (check) · following AGENTS.md › Project rules for framework work (check)
+- Brief: Scope › Planned framework changes
+
+### T173 · The director pilots SaaSAllTheThings' example app in an Azure sandbox · todo · - · human
+- Depends on: T169
+- Touches: -
+- Done when: the example app runs in an Azure sandbox subscription with Azure Policy Deny assignments for public network access and local authentication and Defender for Cloud on, it is tested from outside, and the results are written down in `product/research/` for a later claims decision (demo)
+- Brief: Scope › What the site claims for production and compliance
 
 ### T98 · The director tests /ui-design in a game · todo · - · human
 - Depends on: T97
