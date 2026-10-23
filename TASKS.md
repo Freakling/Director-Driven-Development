@@ -200,20 +200,23 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Brief: Scope › Framework features
 
 ### T174 · Release App-Director 1.8.0 · in-progress 2026-10-23 · S · agent
+- PRs: App-Director #28 (open)
 - Depends on: T149
-- Touches: work/App-Director: VERSION, .claude-plugin/plugin.json, package.json, .claude-plugin/marketplace.json, SKILL.md, skills/app-director/SKILL.md, scripts/fetch-app-director.sh, README.md, project/product/director-brief.md and the example's copy (the template links), CHANGELOG.md
+- Touches: work/App-Director: VERSION, .claude-plugin/plugin.json, package.json, .claude-plugin/marketplace.json, SKILL.md, skills/app-director/SKILL.md, scripts/fetch-app-director.sh, README.md, project/product/director-brief.md and the example's copy (the template links), CHANGELOG.md, selftest.sh (the snapshot tests' versions)
 - Done when: the release pull request bumps every version file and the template links together, turns Unreleased into the 1.8.0 heading, passes the selftest and carries the release notes as its description (check) · once merged, `bash tools/work-release.sh work/App-Director <pr>` tags v1.8.0 and publishes the release (check) · following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Framework features
 
 ### T175 · Release SaaSAllTheThings 0.10.0 · in-progress 2026-10-23 · S · agent
+- PRs: SaaSAllTheThings #22 (open)
 - Depends on: T151, T100
 - Touches: work/SaaSAllTheThings: VERSION, .claude-plugin/plugin.json, .claude-plugin/marketplace.json, every skill's SKILL.md (version and `--branch`), README.md and the brief template links, CHANGELOG.md
 - Done when: the release pull request bumps every version file and the template links together, turns Unreleased into the 0.10.0 heading, passes the selftest and carries the release notes as its description (check) · once merged, `bash tools/work-release.sh work/SaaSAllTheThings <pr>` tags v0.10.0 and publishes the release (check) · following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Framework features
 
 ### T176 · Release Godot-Director 4.2.1 · in-progress 2026-10-23 · S · agent
+- PRs: Godot-Director #35 (open)
 - Depends on: T150
-- Touches: work/Godot-Director: VERSION, .claude-plugin/plugin.json, .claude-plugin/marketplace.json, skills/godot-director/SKILL.md, README.md and project/design/director-gdd.md (the template links), CHANGELOG.md
+- Touches: work/Godot-Director: VERSION, .claude-plugin/plugin.json, .claude-plugin/marketplace.json, skills/godot-director/SKILL.md, README.md, project/design/director-gdd.md and examples/market-day/design/director-gdd.md (the template links), CHANGELOG.md
 - Done when: the release pull request bumps every version file and the template links together, turns Unreleased into the 4.2.1 heading, passes the selftest and carries the release notes as its description (check) · once merged, `bash tools/work-release.sh work/Godot-Director <pr>` tags v4.2.1 and publishes the release (check) · following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Framework features
 
