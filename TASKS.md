@@ -268,6 +268,12 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: the shipped workflow reviews dependency changes on pull requests and exports an SPDX SBOM from GitHub's dependency graph as an artifact, and the reference says what that covers and that vulnerability response stays the customer's process (check) · following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Planned framework changes
 
+### T177 · Godot-Director: the screen-design README is organised by feature · in-progress 2026-10-24 · M · agent
+- Depends on: -
+- Touches: work/Godot-Director: project/design/ui/README.md, examples/market-day/design/ui/README.md
+- Done when: `project/design/ui/README.md` (installed as `design/ui/README.md`; the market-day copy identical) is rewritten with one section per feature, each saying what it is for and how to use it: what the folder holds; the workflow in four short steps (capture, draw, save, process); what a capture gives you (the starter file, the map image, the numbered grey reference boxes, the legend); boxes and their keys; the colour code; containment, arrows and notes; patch and replace modes; other states and sizes; re-arranging a screen (a blue box named after the element where it should now sit; the grey boxes are a locked reference the agent does not read); verify; Excalidraw itself (open, save, where the file lives, privacy) as a reference section near the end; a closing table of the files and who owns each · nothing the current README says is lost and nothing is added that the tools don't do, checked against `framework/tools/ui_drawing.gd` and `procedures/ui-design.md` · the selftest passes (check) · following AGENTS.md › Project rules for framework work
+- Brief: Scope › Framework features
+
 ### T173 · The director pilots SaaSAllTheThings' example app in an Azure sandbox · todo · - · human
 - Depends on: T169
 - Touches: -
