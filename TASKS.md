@@ -277,6 +277,8 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 
 ### T180 · Godot-Director: re-arrange a screen by dragging its existing boxes · in-progress 2026-10-24 · M · agent
 - Depends on: T177
+- PRs: Godot-Director #37 (open)
+- Review: stale starters would have read as moves (fixed: the box is compared with the rectangle the starter stored on it); the fixture had a moved box and a red X on one element (fixed, and a note per element claimed twice); out-of-frame, missing map entry and hidden or deleted boxes covered.
 - Touches: work/Godot-Director: framework/tools/ui_drawing.gd, project/design/ui/README.md, examples/market-day/design/ui/README.md, tests/ui-drawing/*, selftest.sh
 - Done when: the starter drawing's grey numbered boxes of the current elements are no longer locked, and the reader treats one that the human moved or resized as a blue "keep, move or resize" of that element (its name from the map, the new rectangle, any keys typed into it), while an untouched one is still skipped; a deleted or hidden one changes nothing; the fixture drawing and its expected output cover a moved, a resized and an untouched box; `design/ui/README.md` › Re-arranging a screen says you can drag the grey box to where the element should sit, and the Colours section says blue is still how you draw a move with a new box; the starter in `tests/ui-drawing/starter.expected.excalidraw` matches (check) · following AGENTS.md › Project rules for framework work
 - Brief: Scope › Framework features
