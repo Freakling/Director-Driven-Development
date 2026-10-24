@@ -65,13 +65,15 @@ In Godot-Director the test files run side by side. A test that reads autoload or
 
 Everything in the project is committed except the per-machine setup. In a new clone, or on a second machine, run `bash tools/setup-clone.sh` once. It finds or checks the tools and installs the pre-commit hook. Without it, commits aren't checked, and the check prints a note that the clone has no pre-commit hook. For two sessions at once, give the second its own worktree and run it there too.
 
-### Capture can't run (Godot-Director)
+### Capture can't run
 
-`/ui-design capture` renders the screens in Godot, which needs a display. It exits with 3 and says why: no Godot, a Godot older than 4.5, no display, or Godot couldn't open a window or start its renderer. Fix what the message names. On Linux it needs a display or `xvfb-run`. Where the display is the reason, the agent can still write the element maps and the layout lint without images, and tells you they come from a headless run. More in [How do I work with UI changes?](ui.md)
+**Godot-Director.** `/ui-design capture` renders the screens in Godot, which needs a display. It exits with 3 and says why: no Godot, a Godot older than 4.5, no display, or Godot couldn't open a window or start its renderer. Fix what the message names. On Linux it needs a display or `xvfb-run`. Where the display is the reason, the agent can still write the element maps and the layout lint without images, and tells you they come from a headless run. More in [How do I work with UI changes?](ui.md)
+
+**App-Director and SaaSAllTheThings.** `/ui-design capture` opens your web app in headless Chromium, which needs no display. It exits with 3, writes nothing and says why: Node 18 or newer is missing, Playwright or Chromium isn't installed in `tools/ui` (the message prints the command: `cd tools/ui && npm install && npx playwright install chromium`), `[web] base_url` in `tools/ui_capture.cfg` is empty because the app has no web UI, the address isn't this machine, or the app didn't start. In SaaSAllTheThings it also stops when a test user's sign-in isn't saved, and names the file, the test tenant and the command that saves it. A screen that fails alone, with the run going on, is usually a page error, a route that answers with an error, or, in SaaSAllTheThings, a screen sent to sign in because its test user's saved sign-in has expired. Fix what the message names and capture again. More in [How do I work with UI changes?](ui.md)
 
 ### A write to `director/` was refused
 
-This is by design, in Godot-Director and App-Director. `director/` is your own workspace for reference art, sketches and notes. The agent reads it for context and never writes there, whether the path is relative or absolute. Put files in it yourself.
+This is by design, in all three frameworks. `director/` is your own workspace for reference art, drawings, sketches and notes. The agent reads it for context and never writes there, whether the path is relative or absolute. Put files in it yourself.
 
 ### The agent asks before every commit
 
@@ -80,6 +82,6 @@ This is by design too: the agent commits only with your approval. Asking for a r
 ## Related
 
 - The install sections of [App-Director](../frameworks/app-director.md#install), [Godot-Director](../frameworks/godot-director.md#install) and [SaaSAllTheThings](../frameworks/saasallthethings.md#install).
-- The procedures: [App-Director onboarding](https://github.com/Freakling/App-Director/blob/v1.7.1/ONBOARDING.md), [Godot-Director onboarding](https://github.com/Freakling/Godot-Director/blob/v4.2.0/ONBOARDING.md) and [SaaSAllTheThings onboarding](https://github.com/Freakling/SaaSAllTheThings/blob/v0.9.1/ONBOARDING.md).
+- The procedures: [App-Director onboarding](https://github.com/Freakling/App-Director/blob/v1.8.0/ONBOARDING.md), [Godot-Director onboarding](https://github.com/Freakling/Godot-Director/blob/v4.2.1/ONBOARDING.md) and [SaaSAllTheThings onboarding](https://github.com/Freakling/SaaSAllTheThings/blob/v0.10.0/ONBOARDING.md).
 
 <div class="takeaway"><span>Update, restart, and the commands you expect are there.</span><span class="url"><a href="index.md">All questions</a></span></div>

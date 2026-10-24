@@ -48,6 +48,7 @@ Saying it and typing the command run the same procedure. The explicit command pa
 - **It affects the builds after it.** Items built earlier are not rebuilt.
 - **Access decides the map.** If you have no access to a model, name it, and the agent maps the size to one you have. With no Opus plan, L and XL can use Sonnet.
 - **Not every assistant qualifies.** Without subagents or per-call models, sizing is skipped and the agent writes nothing. Builds simply use the session's model. A size without an entry also uses the session's model, so keep the main session on a model you are happy to pay for.
+- **Every launch names its model.** The builder, the reviewer, the researcher and a retry each get the model for the item's size in the launch itself, or the session's model where the size has no entry. No subagent inherits a model by default, so switching the session's model changes only the sizes without an entry. See [Task and model sizing](../concept/sizing.md#the-model-map).
 - **A run keeps reports.** A session that works through a queue holds one short report per task, which is small but not zero. Clear after a batch, not only after a task.
 - **Framework differences.**
     - App-Director: the new block replaces any existing `Model sizing` lines, and turns sizing on if it was off.
@@ -59,6 +60,6 @@ Saying it and typing the command run the same procedure. The explicit command pa
 - The [`/refresh-model-sizing` skill page](../skills/refresh-model-sizing.md), and the concepts [Task and model sizing](../concept/sizing.md), [Built-in cost savings](../concept/cost-built-in.md) and [Cost tuning for developers](../concept/cost-tuning.md).
 - [What directing AI agents costs: three projects, measured](https://saemundsson.se/2026/10/19/what-directing-ai-agents-costs/) on saemundsson.se, the measurement behind these answers.
 - Building in runs or one task at a time: [How do I get things built?](build.md)
-- The procedures: [App-Director](https://github.com/Freakling/App-Director/tree/v1.7.1/framework/.app-director/procedures/refresh-model-sizing.md), [Godot-Director](https://github.com/Freakling/Godot-Director/tree/v4.2.0/framework/.godot-director/procedures/refresh-model-sizing.md) and [SaaSAllTheThings](https://github.com/Freakling/SaaSAllTheThings/tree/v0.9.1/framework/.satt/procedures/refresh-model-sizing.md).
+- The procedures: [App-Director](https://github.com/Freakling/App-Director/tree/v1.8.0/framework/.app-director/procedures/refresh-model-sizing.md), [Godot-Director](https://github.com/Freakling/Godot-Director/tree/v4.2.1/framework/.godot-director/procedures/refresh-model-sizing.md) and [SaaSAllTheThings](https://github.com/Freakling/SaaSAllTheThings/tree/v0.10.0/framework/.satt/procedures/refresh-model-sizing.md).
 
 <div class="takeaway"><span>Refresh the map when the models change, and the cost of each task follows its size.</span><span class="url"><a href="index.md">All questions</a></span></div>

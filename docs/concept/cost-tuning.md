@@ -12,14 +12,14 @@ Prefer clearing to compacting. `/compact` sends the whole conversation to be sum
 
 ## Segment your sessions
 
-- **One session per role.** Run design and building in separate sessions, in separate git worktrees (`git worktree add`, then `bash tools/setup-clone.sh` there). The `in-progress` claim in `TASKS.md` keeps them off the same task.
+- **One session per role.** Run design and building in separate sessions. Any two sessions that build at once each get their own git worktree, and only one session per project picks items from the queue ([how](../how-to/build.md#two-sessions-that-build-at-once)).
 - **One design topic per session.** Clear after each design session's commit.
 - **Work through the queue in batches.** The orchestrator stays lean, but it still grows a little with every report. Clear after a batch, for example at the end of a milestone.
 - **Plan by stage.** Plan one stage at a time, and run `/prune` when a stage is done.
 
 ## Tune the model map
 
-Run `/refresh-model-sizing` and adjust the map to your budget. Moving L to Sonnet is an easy saving; a failed build still escalates one size up. Without access to Opus, map L and XL to Sonnet. Keep the main session on Sonnet unless you're in a hard design or architecture session: a session switched to Opus also passes Opus to any subagent that inherits the session's model, such as a size with no entry.
+Run `/refresh-model-sizing` and adjust the map to your budget. Moving L to Sonnet is an easy saving; a failed build still escalates one size up. Without access to Opus, map L and XL to Sonnet. Keep the main session on Sonnet unless you're in a hard design or architecture session: a session switched to Opus also builds the sizes with no entry on Opus, because their launches pass the session's model explicitly.
 
 The orchestrator's model is the biggest single lever: in the [measured projects](https://saemundsson.se/2026/10/19/what-directing-ai-agents-costs/) on saemundsson.se, sizing the builders saved about 9 percent against all-Opus, while running everything on Sonnet, orchestrator included, would have cost a third to a half of what the projects actually did.
 

@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T179 · B5 · R7
+**Next IDs:** T180 · B5 · R7
 
 ## Milestones
 | Milestone | Status |
@@ -220,10 +220,16 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: the release pull request bumps every version file and the template links together, turns Unreleased into the 4.2.1 heading, passes the selftest and carries the release notes as its description (check) · once merged, `bash tools/work-release.sh work/Godot-Director <pr>` tags v4.2.1 and publishes the release (check) · following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Framework features
 
-### T178 · Docs follow App-Director 1.8.0, SaaSAllTheThings 0.10.0 and Godot-Director 4.2.1 · todo · M · agent
+### T178 · Docs follow App-Director 1.8.0, SaaSAllTheThings 0.10.0 and Godot-Director 4.2.1 · done 2026-10-24 · M · agent
 - Depends on: T174, T175, T176
 - Touches: docs/frameworks/*.md, docs/how-to/*.md, docs/skills/*.md, docs/concept/*.md, product/brief.md
 - Done when: every link into the three repos points at its latest release (check) · the App-Director and SaaSAllTheThings pages and the How-to pages describe what their releases ship: `/ui-design` for web clients (with SaaSAllTheThings' dev-environment capture), the README's start-here step with the brief template, one git worktree per building session, and every subagent launch passing its model explicitly; the Godot-Director page says the same of the model rule; each statement checked against the release (check) · the brief moves `/ui-design` from Planned framework changes to Framework features, now that all three ship it (check) · `bash tools/check.sh` passes (check)
+- Brief: Scope › Framework features
+
+### T179 · SaaSAllTheThings: the README says a claim protects only its own worktree · todo · XS · agent
+- Depends on: -
+- Touches: work/SaaSAllTheThings: README.md
+- Done when: the README's sentence that an `in-progress` claim stops two sessions touching the same item says what `rules.md` says instead: a claim protects only its own worktree, and sessions that build at the same time each take a git worktree (check) · following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Framework features
 
 ### T167 · SaaSAllTheThings: its TASKS.md has one queue and unique IDs · todo · XS · agent

@@ -71,7 +71,7 @@ Beyond confirming the inferred lines, onboarding asks the same questions as for 
 
 - **Your own product brief.** Onboarding offers `product/director-brief.md`, a template for describing the app in your own words, as an addition to the scan. If you fill it, the agent reads it with the code and your existing documents, builds the first assessment from all three, and marks what it took from it and what it inferred. Where they disagree, it says so and you decide. It never edits your brief. See [Where do I start with an app?](start.md#2-the-product-interview).
 - **Ownership.** For each work area (UI code, logic, backend, database schema, visual design, copy, testing, infrastructure), whether you own it. An area you own gets labelled placeholders instead of generated content. See [Where do I start with an app?](start.md#4-who-owns-what).
-- **A protected workspace** (`director/`), as for a new app.
+- **Screens by drawing, and a protected workspace** (`director/`), as for a new app.
 - **Model sizing and reviews.** Sizing is recommended on, with a mapping you can change.
 - **The acceptance template.** Its sections come from the core flows in the brief. If the flows are not clear from your code, the template keeps its placeholders and an item fills them in later.
 
@@ -283,7 +283,7 @@ Onboarding also offers `product/director-brief.md`, a product brief template for
 
 The agent fills `AGENTS.md` (name, pitch, stack, clients, Azure region, integrations) and the Layout table from your real folders. A client's UI technology stays a "Decide" item until an ADR settles it, and an unknown region becomes an open question.
 
-Then it walks you through the same defaults as for a new SaaS. You own the product, the priorities, the customers and the business rules of the integrations, and you accept ADRs. The agent owns code, tests, infrastructure as code and the records. Commits are yours to approve, and so is every deploy: dev with your approval each time, production by you. Model sizing and reviews are as in [Where do I start with a SaaS?](start-saas.md#5-who-decides-what). The architecture is not a project rule: it changes only through an ADR.
+Then it walks you through the same defaults as for a new SaaS. You own the product, the priorities, the customers and the business rules of the integrations, and you accept ADRs. The agent owns code, tests, infrastructure as code and the records. Commits are yours to approve, and so is every deploy: dev with your approval each time, production by you. Model sizing, reviews, screens by drawing and the protected workspace (`director/`) are as in [Where do I start with a SaaS?](start-saas.md#5-who-decides-what). The architecture is not a project rule: it changes only through an ADR.
 
 #### 8. The feedback template
 
@@ -316,6 +316,6 @@ If the check passes, the agent installs the pre-commit hook. If it fails or cann
 
 - The framework pages: [App-Director](../frameworks/app-director.md), [Godot-Director](../frameworks/godot-director.md) and [SaaSAllTheThings](../frameworks/saasallthethings.md).
 - The skill pages [`/align`](../skills/align.md) and [Acceptance check](../skills/acceptance.md), and the concept [Align and drift reset](../concept/drift.md).
-- The onboarding steps in full: [App-Director](https://github.com/Freakling/App-Director/blob/v1.7.1/ONBOARDING.md), [Godot-Director](https://github.com/Freakling/Godot-Director/blob/v4.2.0/ONBOARDING.md) and [SaaSAllTheThings](https://github.com/Freakling/SaaSAllTheThings/blob/v0.9.1/ONBOARDING.md).
+- The onboarding steps in full: [App-Director](https://github.com/Freakling/App-Director/blob/v1.8.0/ONBOARDING.md), [Godot-Director](https://github.com/Freakling/Godot-Director/blob/v4.2.1/ONBOARDING.md) and [SaaSAllTheThings](https://github.com/Freakling/SaaSAllTheThings/blob/v0.10.0/ONBOARDING.md).
 
 <div class="takeaway"><span>Install into what you have. Onboarding reads it first and marks every guess.</span><span class="url"><a href="index.md">All questions</a></span></div>

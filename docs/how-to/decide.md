@@ -36,12 +36,13 @@ Saying it and typing the command run the same procedure. The explicit session pa
 - **A decision changes a finished item through a new one.** Items already `done` are not reopened.
 - **The session never edits source code.** The tasks it creates are built through [`/next-task`](build.md).
 - **Framework differences.**
-    - Godot-Director: an idea that contradicts a Design Pillar stops the session until you say which gives way. Where things sit on a screen goes to [the UI question](ui.md).
+    - Godot-Director: an idea that contradicts a Design Pillar stops the session until you say which gives way.
     - SaaSAllTheThings: a question about how the system is built, such as a data store or a deviation from the reference, goes to `/architect`.
+    - All three: where things sit on a screen goes to [the UI question](ui.md).
 
 ## Related
 
 - The [`/design` skill page](../skills/design.md), and the concepts [Design calls](../concept/design-calls.md) and [Agent development flow](../concept/agent-flow.md).
-- The procedures: [App-Director](https://github.com/Freakling/App-Director/tree/v1.7.1/framework/.app-director/procedures/design.md), [Godot-Director](https://github.com/Freakling/Godot-Director/tree/v4.2.0/framework/.godot-director/procedures/design.md) and [SaaSAllTheThings](https://github.com/Freakling/SaaSAllTheThings/tree/v0.9.1/framework/.satt/procedures/design.md).
+- The procedures: [App-Director](https://github.com/Freakling/App-Director/tree/v1.8.0/framework/.app-director/procedures/design.md), [Godot-Director](https://github.com/Freakling/Godot-Director/tree/v4.2.1/framework/.godot-director/procedures/design.md) and [SaaSAllTheThings](https://github.com/Freakling/SaaSAllTheThings/tree/v0.10.0/framework/.satt/procedures/design.md).
 
 <div class="takeaway"><span>You make the call. The agent writes down only what you decided.</span><span class="url"><a href="index.md">All questions</a></span></div>

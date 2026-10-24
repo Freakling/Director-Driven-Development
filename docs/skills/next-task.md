@@ -12,7 +12,7 @@ How to use it: [How do I get things built?](../how-to/build.md)
 
 1. **Pick** the next ready item: a `todo` `agent` item whose dependencies are all `done`, in file order (which is the director's priority order). High-severity bugs come first. If nothing is ready, the skill reports what is blocking and stops.
 2. **Claim** the item by setting it to `in-progress YYYY-MM-DD`.
-3. **Build** in a fresh context, using a builder subagent in Claude Code. The orchestrator session keeps only the item, the report and the bookkeeping, so its context stays small across many items.
+3. **Build** in a fresh context, using a builder subagent in Claude Code. The orchestrator session keeps only the item, the report and the bookkeeping, so its context stays small across many items. Every subagent launch passes its model explicitly: the one for the item's size, or the session's model where the size has no entry ([Task and model sizing](../concept/sizing.md#the-model-map)).
 4. **Verify** by running `bash tools/check.sh --if-changed`. A passing check is the definition of done for this item.
 5. **Update the records**: set the item to `done`, update `AGENTS.md` from the report's `Systems:` line, log any new items from `Found:`, and update milestones.
 6. **Review** when the framework's rules call for one, based on item size and whether the build changed a public contract.
@@ -34,7 +34,7 @@ A run covers commits only, not pushes, deploys or cloud changes. Each framework'
 
 ### App-Director
 
-The procedure is at [`framework/.app-director/procedures/next-task.md`](https://github.com/Freakling/App-Director/tree/v1.7.1/framework/.app-director/procedures/next-task.md) in the App-Director repository.
+The procedure is at [`framework/.app-director/procedures/next-task.md`](https://github.com/Freakling/App-Director/tree/v1.8.0/framework/.app-director/procedures/next-task.md) in the App-Director repository.
 
 - The building state file is `.app-director/state/building`. The Stop hook checks for it and leaves half-built files alone while it exists.
 - The review diff is written to `.app-director/state/review.diff`.
@@ -44,7 +44,7 @@ The procedure is at [`framework/.app-director/procedures/next-task.md`](https://
 
 ### Godot-Director
 
-The procedure is at [`framework/.godot-director/procedures/next-task.md`](https://github.com/Freakling/Godot-Director/tree/v4.2.0/framework/.godot-director/procedures/next-task.md) in the Godot-Director repository.
+The procedure is at [`framework/.godot-director/procedures/next-task.md`](https://github.com/Freakling/Godot-Director/tree/v4.2.1/framework/.godot-director/procedures/next-task.md) in the Godot-Director repository.
 
 - The building state file is `.godot/godot-director/building`. The Stop hook checks for it and leaves half-built files alone while it exists.
 - The review diff is written to `.godot/godot-director/review.diff`.
@@ -57,7 +57,7 @@ The procedure is at [`framework/.godot-director/procedures/next-task.md`](https:
 
 ### SaaSAllTheThings
 
-The procedure is at [`framework/.satt/procedures/next-task.md`](https://github.com/Freakling/SaaSAllTheThings/tree/v0.9.1/framework/.satt/procedures/next-task.md) in the SaaSAllTheThings repository.
+The procedure is at [`framework/.satt/procedures/next-task.md`](https://github.com/Freakling/SaaSAllTheThings/tree/v0.10.0/framework/.satt/procedures/next-task.md) in the SaaSAllTheThings repository.
 
 - The building state file is `.satt/state/building`. The Stop hook checks for it and leaves half-built files alone while it exists.
 - The review diff is written to `.satt/state/review.diff`.

@@ -35,7 +35,7 @@ Make a folder for the app and open Claude Code in it. The tree has to be clean: 
 
 ## Write it down first
 
-Before you install, describe the app in your own words in the product brief template. Open the [template](https://github.com/Freakling/App-Director/blob/v1.7.1/project/product/director-brief.md) at the latest release and choose Raw to download it, fill in what you know (the pitch, the core flows, the platforms and the stack), and leave out what you have not decided. Keep it in the app's folder at `product/director-brief.md`, the path onboarding offers.
+Before you install, describe the app in your own words in the product brief template. Open the [template](https://github.com/Freakling/App-Director/blob/v1.8.0/project/product/director-brief.md) at the latest release and choose Raw to download it, fill in what you know (the pitch, the core flows, the platforms and the stack), and leave out what you have not decided. Keep it in the app's folder at `product/director-brief.md`, the path onboarding offers. The App-Director README opens its install with this same "Start here" step.
 
 Why first: a written brief gives the agent your intent and the context behind it, which a chat interview doesn't. When you install, the agent reads it before it asks anything. You can also fill it during onboarding (the agent waits) or after it.
 
@@ -98,6 +98,8 @@ For a first app the defaults work: the agent writes the code and the tests, and 
 
 If you own any area, or want a folder the agent never touches, onboarding offers `director/`. The agent reads it for context (mockups, brand assets, reference images, notes, third-party API specs) and never creates, changes or deletes anything in it. You choose whether to gitignore it (large binary assets) or commit it (design notes).
 
+Onboarding also asks once whether you want to design screens by drawing over screenshots of the running app (free Excalidraw, no account). Say yes and the ownership table gets a `UI / screen layout` row, `director designs (director/ui/), agent builds`, and `director/ui/` is offered for your drawings. Say no and nothing changes; drawing is never required. For a web app it also asks for the address of the app running on this machine, which capture opens, and offers the one-time Playwright install. See [How do I work with UI changes?](ui.md)
+
 ### 5. How you want to work
 
 - **Commits and pushes** need no answer. The agent proposes each commit and you approve it. It pushes only when you ask.
@@ -159,6 +161,6 @@ The concepts behind these files are in [Records in files](../concept/records.md)
 
 - The [App-Director page](../frameworks/app-director.md), its [install section](../frameworks/app-director.md#install), and the skill pages [`/next-task`](../skills/next-task.md) and [`/design`](../skills/design.md).
 - The concepts [Roles](../concept/roles.md) and [Agent development flow](../concept/agent-flow.md).
-- The onboarding steps in full: [`ONBOARDING.md`](https://github.com/Freakling/App-Director/blob/v1.7.1/ONBOARDING.md).
+- The onboarding steps in full: [`ONBOARDING.md`](https://github.com/Freakling/App-Director/blob/v1.8.0/ONBOARDING.md).
 
 <div class="takeaway"><span>Install, answer the interview, approve one commit, then ask for the next task.</span><span class="url"><a href="index.md">All questions</a></span></div>

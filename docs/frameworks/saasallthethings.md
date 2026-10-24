@@ -6,7 +6,7 @@ Build a B2B SaaS from scratch, or turn a working proof of concept or an existing
 
 The architecture: an event-driven Azure Functions backend, separate Windows and mobile clients, OIDC sign-in with Entra ID and federated identity, pooled multi-tenancy that can move a customer to its own deployment later, and enterprise integrations starting with Navision (Dynamics NAV and Business Central). The product is anchored in the customer's own security framework: architecture sessions read the security and compliance requirements kept in the app's `compliance/` folder, and weigh every option against them.
 
-[Repository](https://github.com/Freakling/SaaSAllTheThings){ .md-button .md-button--primary } [README](https://github.com/Freakling/SaaSAllTheThings#readme){ .md-button } [Procedures](https://github.com/Freakling/SaaSAllTheThings/tree/v0.9.1/framework/.satt/procedures){ .md-button } [Reference architecture](https://github.com/Freakling/SaaSAllTheThings/tree/v0.9.1/framework/.satt/reference){ .md-button }
+[Repository](https://github.com/Freakling/SaaSAllTheThings){ .md-button .md-button--primary } [README](https://github.com/Freakling/SaaSAllTheThings#readme){ .md-button } [Procedures](https://github.com/Freakling/SaaSAllTheThings/tree/v0.10.0/framework/.satt/procedures){ .md-button } [Reference architecture](https://github.com/Freakling/SaaSAllTheThings/tree/v0.10.0/framework/.satt/reference){ .md-button }
 
 ## What the check enforces
 
@@ -43,6 +43,8 @@ The only way past a rule is an architecture decision record that you accept. An 
 
 ## Install
 
+**Start here: write your product brief.** The README opens its how-to-use section with this step. Before you install, describe the product in your own words in a copy of the [product brief template](https://github.com/Freakling/SaaSAllTheThings/blob/v0.10.0/project/product/director-brief.md), saved as `product/director-brief.md` in your app, and fill in what you know. It also carries your enterprise architecture, requirements, security requirements and control frameworks. Then install: onboarding reads your brief and asks only what you left open. More in [write it down first](../how-to/start-saas.md#write-it-down-first).
+
 You need git with no uncommitted changes, bash (on Windows it comes with Git for Windows), and the toolchain of your backend stack: the .NET SDK 8 or newer for the default. Every option installs the latest release, tagged `v` followed by its version, not `main`.
 
 === "Claude Code plugin"
@@ -74,7 +76,7 @@ You need git with no uncommitted changes, bash (on Windows it comes with Git for
 
     Then ask your assistant to "SaaS all the things" in the app's folder.
 
-Onboarding works out whether this is a new app, an existing app or an upgrade, settles the backend stack with you, interviews you or reads the app (including its single-tenant habits and secrets; it offers a product brief template, `product/director-brief.md`, to fill in first, in your own words, with sections for the customer's enterprise architecture, requirements, security requirements and control frameworks, which anchors the sessions, the assessment and the builds that follow in the customer's security framework), writes the first stages of the roadmap into `TASKS.md`, and ends with one commit for you to approve. Restart Claude Code afterwards so the commands load. Each new clone later needs `bash tools/setup-clone.sh`. Step by step, with what onboarding asks: [where do I start with a SaaS?](../how-to/start-saas.md), or [I already have a project](../how-to/existing.md#an-existing-saas-or-proof-of-concept-saasallthethings) for an existing app or proof of concept, which starts with an assessment.
+Onboarding works out whether this is a new app, an existing app or an upgrade, settles the backend stack with you, interviews you or reads the app (including its single-tenant habits and secrets; it reads your product brief first, if you wrote one, and offers the template if you didn't, so that the sessions, the assessment and the builds that follow are anchored in the customer's security framework), writes the first stages of the roadmap into `TASKS.md`, and ends with one commit for you to approve. Restart Claude Code afterwards so the commands load. Each new clone later needs `bash tools/setup-clone.sh`. Step by step, with what onboarding asks: [where do I start with a SaaS?](../how-to/start-saas.md), or [I already have a project](../how-to/existing.md#an-existing-saas-or-proof-of-concept-saasallthethings) for an existing app or proof of concept, which starts with an assessment.
 
 ## Skills you can use without installing
 
@@ -88,11 +90,12 @@ Onboarding works out whether this is a new app, an existing app or an upgrade, s
 
 | Command | What it does |
 |---|---|
-| `/next-task` | Builds the next ready item in a fresh context within the reference architecture, proves it with the check, updates the records and commits it once you approve. A run you ask for, such as "grab tasks until you're blocked", commits each item without pausing. Step by step: [how do I get things built?](../how-to/build.md) |
+| `/next-task` | Builds the next ready item in a fresh context within the reference architecture, proves it with the check, updates the records and commits it once you approve. A run you ask for, such as "grab tasks until you're blocked", commits each item without pausing. Two sessions that build at once each get [their own git worktree](../how-to/build.md#two-sessions-that-build-at-once). Step by step: [how do I get things built?](../how-to/build.md) |
 | `/assess` | A read-only assessment report; "process the workshop notes" turns a workshop's decisions into records |
 | `/roadmap` | Plans the next stage of the move to SaaS as small items |
 | `/design` | A product design session on a topic, or `/design questions` to rank the open questions. Step by step: [how do I decide what gets built?](../how-to/decide.md) |
-| `/research` | A read-only researcher answers one question in a fresh context and writes a dated note with its sources to `product/research/`. It informs; you decide. Procedure: [`research.md`](https://github.com/Freakling/SaaSAllTheThings/tree/v0.9.1/framework/.satt/procedures/research.md). Step by step: [I need facts before I decide](../how-to/facts.md) |
+| `/research` | A read-only researcher answers one question in a fresh context and writes a dated note with its sources to `product/research/`. It informs; you decide. Procedure: [`research.md`](https://github.com/Freakling/SaaSAllTheThings/tree/v0.10.0/framework/.satt/procedures/research.md). Step by step: [I need facts before I decide](../how-to/facts.md) |
+| `/ui-design` | Captures your web client's screens, as a test user of a seeded test tenant, for you to draw over, turns your drawing into a screen spec, and checks the built screen against that spec. Capture opens this machine, or the dev environment you name, never production; it uses Node and Playwright, installed once in `tools/ui/`. Your drawings go in `director/ui/`, the protected workspace the agent never writes to. Procedure: [`ui-design.md`](https://github.com/Freakling/SaaSAllTheThings/tree/v0.10.0/framework/.satt/procedures/ui-design.md). Step by step: [how do I work with UI changes?](../how-to/ui.md) |
 | `/architect` | An architecture session that ends in an ADR you accept |
 | `/integrate` | Works out an integration contract with you (direction, system of record, conflicts), then plans it in stages |
 | `/tenant` | Checks readiness for a new customer and hands you the consent and setup steps |
@@ -102,7 +105,7 @@ Onboarding works out whether this is a new app, an existing app or an upgrade, s
 | `/align` | Consistency pass across the PRD, decisions, ADRs, integration contracts, tasks, `AGENTS.md`, settings and code. Step by step: [the records and the code don't agree](../how-to/align.md) |
 | `/drift-reset` | Product design drift reset, started only by you; `/drift-reset postmortem` after the rebuild. Step by step: [the system was not built as I intended](../how-to/drift.md) |
 | `/prune` | Moves done items to `TASKS-archive.md`. Step by step: [the task list is getting long](../how-to/prune.md) |
-| `/refresh-model-sizing` | Sets or updates the model for each task size. Step by step: [it's costing more than I'd like](../how-to/cost.md) |
+| `/refresh-model-sizing` | Sets or updates the model for each task size. Every subagent launch passes that model explicitly ([how sizing works](../concept/sizing.md#the-model-map)). Step by step: [it's costing more than I'd like](../how-to/cost.md) |
 
 ## Read more
 

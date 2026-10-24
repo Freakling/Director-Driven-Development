@@ -15,8 +15,8 @@
 | The rules the agent follows | `AGENTS.md` › Project rules | `AGENTS.md` › Project rules | `AGENTS.md` › Project rules | Edit it yourself. The agent reads it at the start of every session, and [the records check](align.md) compares it with the rest |
 | Which systems exist, and what each owns | `AGENTS.md` › Architecture | `AGENTS.md` › Architecture | `AGENTS.md` › Architecture | Ask the agent in the [build](build.md) that adds or moves a system. The row changes in the same commit |
 | What the check enforces | `tools/check.cfg` | `tools/check.cfg` | `tools/check.cfg`, and the reference in `.satt/reference/layers.md` | Edit `check.cfg` yourself, since it is yours to change. The reference belongs to the framework, and a project exception needs an accepted ADR ([the check](check.md)) |
-| A screen's layout | None: the screen's own code | `design/ui/<screen>.md` | None: the client code in `clients/` | Through the [UI question](ui.md) |
-| Your own assets and notes | `director/` | `director/` | None: there is no `director/` folder | Edit it yourself. The agent reads it for context and never writes there. Drawings go in `director/ui/` ([UI changes](ui.md)) |
+| A screen's layout | `product/ui/<screen>.md` | `design/ui/<screen>.md` | `product/ui/<screen>.md` | Through the [UI question](ui.md) |
+| Your own assets and notes | `director/` | `director/` | `director/` | Edit it yourself. The agent reads it for context and never writes there. Drawings go in `director/ui/` ([UI changes](ui.md)) |
 | What the agent may do without asking | `.claude/settings.json` | `.claude/settings.json` | `.claude/settings.json` | Edit it yourself. Put machine-only changes in `.claude/settings.local.json`, which is gitignored. A new permission loads when a session starts ([Something isn't there](trouble.md)) |
 | The model for each task size | `AGENTS.md` › Project rules, Model sizing | `AGENTS.md` › Project rules, Model sizing | `AGENTS.md` › Project rules, Model sizing | Ask for "Refresh the model sizing", or run `/refresh-model-sizing` ([cost](cost.md)) |
 | Where research notes live | `product/research/` | `design/research/` | `product/research/` | Ask a question ([I need facts before I decide](facts.md)). The researcher writes the notes, and later sessions reuse or update them |
@@ -26,7 +26,7 @@
 
 Edit a file yourself when the change is small and you can see the result in it. Ask the agent when the change should land with the code it touches, as a build does. Go through a design session when the change is a decision, because the decision and its reason are written down together, and the decision log never changes by hand.
 
-The rows come from each framework's "Each fact lives in one place" table at its latest release: [App-Director](https://github.com/Freakling/App-Director/blob/v1.7.1/framework/.app-director/rules.md), [Godot-Director](https://github.com/Freakling/Godot-Director/blob/v4.2.0/framework/.godot-director/rules.md) and [SaaSAllTheThings](https://github.com/Freakling/SaaSAllTheThings/blob/v0.9.1/framework/.satt/rules.md). Not sure where a fact lives? Ask the agent. It reads the same table at the start of every session.
+The rows come from each framework's "Each fact lives in one place" table at its latest release: [App-Director](https://github.com/Freakling/App-Director/blob/v1.8.0/framework/.app-director/rules.md), [Godot-Director](https://github.com/Freakling/Godot-Director/blob/v4.2.1/framework/.godot-director/rules.md) and [SaaSAllTheThings](https://github.com/Freakling/SaaSAllTheThings/blob/v0.10.0/framework/.satt/rules.md). Not sure where a fact lives? Ask the agent. It reads the same table at the start of every session.
 
 ## Related
 

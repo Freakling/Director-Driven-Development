@@ -27,7 +27,7 @@ Make a folder for the app and open Claude Code in it. An empty folder, or one wi
 
 ## Write it down first
 
-Before you install, describe the product in your own words in the product brief template. Open the [template](https://github.com/Freakling/SaaSAllTheThings/blob/v0.9.1/project/product/director-brief.md) at the latest release and choose Raw to download it. Fill in the product, and the four sections for your customer's architect or product owner if you have one: the enterprise architecture, the requirements, the security requirements and the control frameworks. Leave out what you have not decided. Keep it in the app's repository at `product/director-brief.md`, the path onboarding offers.
+Before you install, describe the product in your own words in the product brief template. Open the [template](https://github.com/Freakling/SaaSAllTheThings/blob/v0.10.0/project/product/director-brief.md) at the latest release and choose Raw to download it. Fill in the product, and the four sections for your customer's architect or product owner if you have one: the enterprise architecture, the requirements, the security requirements and the control frameworks. Leave out what you have not decided. Keep it in the app's repository at `product/director-brief.md`, the path onboarding offers. The SaaSAllTheThings README opens its how-to-use section with this same "Start here" step.
 
 Why first: a written brief gives the agent your intent and the context behind it, which a chat interview doesn't, and the customer's own requirements anchor every later session in their security framework. When you install, the agent reads it before it asks anything. You can also fill it during onboarding (the agent waits), after it, or with the customer.
 
@@ -89,6 +89,8 @@ The agent walks you through the defaults and records only the differences in `AG
 - **The agent owns** code, tests, infrastructure as code and the records.
 - **Commits and pushes.** The agent proposes each commit and you approve it. It pushes only when you ask.
 - **Deploys.** Dev needs your approval each time, and production is yours to run. Onboarding asks whether dev deploys may run without asking each time.
+- **Screens by drawing.** Onboarding asks once whether you want to design screens by drawing over screenshots of the running product (free Excalidraw, no account). Say yes and Project rules gain `UI / screen layout: director designs (director/ui/), agent builds`, and `director/ui/` is offered for your drawings. Say no and nothing changes; drawing is never required. For a web client it also asks for the client's address on this machine and the seeded test tenants, and offers the one-time Playwright install. See [How do I work with UI changes?](ui.md)
+- **A protected workspace.** If you want a folder the agent never touches (screen drawings, mockups, brand assets, notes, third-party API specs), onboarding offers `director/`. The agent reads it for context and never creates, changes or deletes anything in it. You choose whether to gitignore it (large binary assets) or commit it (drawings and notes).
 - **Model sizing.** The agent recommends it on and shows the mapping. In Claude Code the defaults are Haiku for XS and S, Sonnet for M, Opus for L and XL. Say whether any size should differ. Take the recommendation if unsure; the cost effects are in [It's costing more than I'd like](cost.md).
 - **Reviews** are stated rather than asked: an independent review after L items, and after M items that change contracts, tenant isolation, identity or a stored schema. See [Reviews](../concept/reviews.md).
 
@@ -158,6 +160,6 @@ Later, `integrations/` holds one contract per external system, and `assessment/`
 - The [SaaSAllTheThings page](../frameworks/saasallthethings.md), its [install section](../frameworks/saasallthethings.md#install), and the skill pages [`/next-task`](../skills/next-task.md) and [`/design`](../skills/design.md).
 - The concepts [Roles](../concept/roles.md) and [Agent development flow](../concept/agent-flow.md).
 - The step-by-step guide on the blog: [Build a B2B SaaS on Azure with Director-Driven Development](https://saemundsson.se/2026/10/09/build-a-b2b-saas-on-azure-with-director-driven-development/).
-- The onboarding steps in full: [`ONBOARDING.md`](https://github.com/Freakling/SaaSAllTheThings/blob/v0.9.1/ONBOARDING.md).
+- The onboarding steps in full: [`ONBOARDING.md`](https://github.com/Freakling/SaaSAllTheThings/blob/v0.10.0/ONBOARDING.md).
 
 <div class="takeaway"><span>Install, settle the stack, answer the interview, approve one commit, then ask for the next task.</span><span class="url"><a href="index.md">All questions</a></span></div>

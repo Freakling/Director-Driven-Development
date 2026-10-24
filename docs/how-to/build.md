@@ -21,15 +21,19 @@ Saying it and typing the command run the same procedure.
 3. **Answer if the check fails before anything is built.** The agent says so and offers the items that would fix it. Pick one, or tell it to build another item anyway.
 4. **Answer if the item is already claimed.** An item claimed today may have another session working on it, so the agent asks before touching it. An older claim means a session probably ended partway: the agent reads the item's note and the working tree, then resumes it or sets it back to `todo`, and tells you which.
 5. **Answer if the builder is blocked.** The agent brings you the question with two to four options and a recommendation. A decision you make here is recorded and committed with the item, and the build continues.
-6. **Read the report.** It says what changed, the check result, any placeholder values added and what waits on you. A failed build is retried once on the next larger model, unless it already ran on the largest. If the retry fails too, you get the check output.
+6. **Read the report.** It says what changed, the check result, any placeholder values added and what waits on you. Each launch names its model, the one for the item's size ([Task and model sizing](../concept/sizing.md#the-model-map)). A failed build is retried once on the next larger model, unless it already ran on the largest. If the retry fails too, you get the check output.
 7. **Approve the commit.** The agent commits the item and its records once you say yes. Then run `/clear`, or start a fresh session, before the next item. The records hold everything the next session needs.
+
+## Two sessions that build at once
+
+Give each its own git worktree, whether they are design and coding or two coding sessions: `git worktree add ../<folder>`, then `bash tools/setup-clone.sh` in the new worktree. In one working tree, one session's half-written files fail the other's check, and the two share the same build state: in App-Director and SaaSAllTheThings the Stop hook and the build artefacts, in Godot-Director `.godot/` and the check's lock. A claim in `TASKS.md` protects only its own worktree, so only one session per project picks items, and the others name the item they work on. The rule and its reason are in each framework's `rules.md`: [App-Director](https://github.com/Freakling/App-Director/blob/v1.8.0/framework/.app-director/rules.md), [Godot-Director](https://github.com/Freakling/Godot-Director/blob/v4.2.1/framework/.godot-director/rules.md) and [SaaSAllTheThings](https://github.com/Freakling/SaaSAllTheThings/blob/v0.10.0/framework/.satt/rules.md).
 
 ## What can go wrong
 
 - **A run stops.** It stops when an item is blocked on you, a build fails, or you decline a commit. A run commits only: pushes ask every time.
 - **Nothing is ready.** The agent reports what is blocked and on what: dependencies, items assigned to you, or open questions. That is a result, not a failure.
 - **A failed check blocks the commit.** The pre-commit hook runs the check, so a task that fails it cannot land.
-- **Two sessions on one tree.** Run one builder at a time.
+- **Two sessions on one tree.** Give each its own worktree, as [above](#two-sessions-that-build-at-once).
 - **Manual outcomes wait for you.** Outcomes tagged `(demo)` or `(play)`, and bug fixes without a regression test, show up in the next check by hand. See [How do I check that what was built works?](check.md)
 - **Framework differences.**
     - Godot-Director: an item that depends on an open question (`Q<n>`) is ready once the question has been answered in `/design`.
@@ -39,7 +43,7 @@ Saying it and typing the command run the same procedure.
 ## Related
 
 - The [`/next-task` skill page](../skills/next-task.md), and the concept [Agent development flow](../concept/agent-flow.md).
-- The procedures: [App-Director](https://github.com/Freakling/App-Director/tree/v1.7.1/framework/.app-director/procedures/next-task.md), [Godot-Director](https://github.com/Freakling/Godot-Director/tree/v4.2.0/framework/.godot-director/procedures/next-task.md) and [SaaSAllTheThings](https://github.com/Freakling/SaaSAllTheThings/tree/v0.9.1/framework/.satt/procedures/next-task.md).
+- The procedures: [App-Director](https://github.com/Freakling/App-Director/tree/v1.8.0/framework/.app-director/procedures/next-task.md), [Godot-Director](https://github.com/Freakling/Godot-Director/tree/v4.2.1/framework/.godot-director/procedures/next-task.md) and [SaaSAllTheThings](https://github.com/Freakling/SaaSAllTheThings/tree/v0.10.0/framework/.satt/procedures/next-task.md).
 - When the queue has no items yet: [How do I decide what gets built, or change how something works?](decide.md)
 
 <div class="takeaway"><span>One task, one check, one commit. Ask for a run when you trust the queue.</span><span class="url"><a href="index.md">All questions</a></span></div>
