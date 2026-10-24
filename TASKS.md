@@ -268,14 +268,14 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: the shipped workflow reviews dependency changes on pull requests and exports an SPDX SBOM from GitHub's dependency graph as an artifact, and the reference says what that covers and that vulnerability response stays the customer's process (check) · following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Planned framework changes
 
-### T177 · Godot-Director: the screen-design README is organised by feature · in-progress 2026-10-24 · M · agent
+### T177 · Godot-Director: the screen-design README is organised by feature · done 2026-10-24 · M · agent
 - Depends on: -
-- PRs: Godot-Director #36 (open)
+- PRs: Godot-Director #36 (merged)
 - Touches: work/Godot-Director: project/design/ui/README.md, examples/market-day/design/ui/README.md
 - Done when: `project/design/ui/README.md` (installed as `design/ui/README.md`; the market-day copy identical) is rewritten with one section per feature, each saying what it is for and how to use it: what the folder holds; the workflow in four short steps (capture, draw, save, process); what a capture gives you (the starter file, the map image, the numbered grey reference boxes, the legend); boxes and their keys; the colour code; containment, arrows and notes; patch and replace modes; other states and sizes; re-arranging a screen (a blue box named after the element where it should now sit; the grey boxes are a locked reference the agent does not read); verify; Excalidraw itself (open, save, where the file lives, privacy) as a reference section near the end; a closing table of the files and who owns each · nothing the current README says is lost and nothing is added that the tools don't do, checked against `framework/tools/ui_drawing.gd` and `procedures/ui-design.md` · the selftest passes (check) · following AGENTS.md › Project rules for framework work
 - Brief: Scope › Framework features
 
-### T180 · Godot-Director: re-arrange a screen by dragging its existing boxes · todo · M · agent
+### T180 · Godot-Director: re-arrange a screen by dragging its existing boxes · in-progress 2026-10-24 · M · agent
 - Depends on: T177
 - Touches: work/Godot-Director: framework/tools/ui_drawing.gd, project/design/ui/README.md, examples/market-day/design/ui/README.md, tests/ui-drawing/*, selftest.sh
 - Done when: the starter drawing's grey numbered boxes of the current elements are no longer locked, and the reader treats one that the human moved or resized as a blue "keep, move or resize" of that element (its name from the map, the new rectangle, any keys typed into it), while an untouched one is still skipped; a deleted or hidden one changes nothing; the fixture drawing and its expected output cover a moved, a resized and an untouched box; `design/ui/README.md` › Re-arranging a screen says you can drag the grey box to where the element should sit, and the Colours section says blue is still how you draw a move with a new box; the starter in `tests/ui-drawing/starter.expected.excalidraw` matches (check) · following AGENTS.md › Project rules for framework work
