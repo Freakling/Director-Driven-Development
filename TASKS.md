@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T177 · B5 · R7
+**Next IDs:** T179 · B5 · R7
 
 ## Milestones
 | Milestone | Status |
@@ -199,25 +199,31 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: every link into Godot-Director points at v4.2.0; the Godot-Director page and the How-to pages that describe the check say it times every test file, ends with the slowest files, runs the suite in parallel with `--jobs` (auto from the CPU count, settable in check.cfg) with a per-process timeout that reads as "couldn't run", and that test files must isolate their autoload and user:// state; the game walkthrough says to write the design document first from the template at the new tag (check) · `bash tools/check.sh` passes (check)
 - Brief: Scope › Framework features
 
-### T174 · Release App-Director 1.8.0 · in-progress 2026-10-23 · S · agent
-- PRs: App-Director #28 (open)
+### T174 · Release App-Director 1.8.0 · done 2026-10-24 · S · agent
+- PRs: App-Director #28 (merged); v1.8.0 tagged and published
 - Depends on: T149
 - Touches: work/App-Director: VERSION, .claude-plugin/plugin.json, package.json, .claude-plugin/marketplace.json, SKILL.md, skills/app-director/SKILL.md, scripts/fetch-app-director.sh, README.md, project/product/director-brief.md and the example's copy (the template links), CHANGELOG.md, selftest.sh (the snapshot tests' versions)
 - Done when: the release pull request bumps every version file and the template links together, turns Unreleased into the 1.8.0 heading, passes the selftest and carries the release notes as its description (check) · once merged, `bash tools/work-release.sh work/App-Director <pr>` tags v1.8.0 and publishes the release (check) · following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Framework features
 
-### T175 · Release SaaSAllTheThings 0.10.0 · in-progress 2026-10-23 · S · agent
-- PRs: SaaSAllTheThings #22 (open)
+### T175 · Release SaaSAllTheThings 0.10.0 · done 2026-10-24 · S · agent
+- PRs: SaaSAllTheThings #22 (merged); v0.10.0 tagged and published
 - Depends on: T151, T100
 - Touches: work/SaaSAllTheThings: VERSION, .claude-plugin/plugin.json, .claude-plugin/marketplace.json, every skill's SKILL.md (version and `--branch`), README.md and the brief template links, CHANGELOG.md
 - Done when: the release pull request bumps every version file and the template links together, turns Unreleased into the 0.10.0 heading, passes the selftest and carries the release notes as its description (check) · once merged, `bash tools/work-release.sh work/SaaSAllTheThings <pr>` tags v0.10.0 and publishes the release (check) · following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Framework features
 
-### T176 · Release Godot-Director 4.2.1 · in-progress 2026-10-23 · S · agent
-- PRs: Godot-Director #35 (open)
+### T176 · Release Godot-Director 4.2.1 · done 2026-10-24 · S · agent
+- PRs: Godot-Director #35 (merged); v4.2.1 tagged and published
 - Depends on: T150
 - Touches: work/Godot-Director: VERSION, .claude-plugin/plugin.json, .claude-plugin/marketplace.json, skills/godot-director/SKILL.md, README.md, project/design/director-gdd.md and examples/market-day/design/director-gdd.md (the template links), CHANGELOG.md
 - Done when: the release pull request bumps every version file and the template links together, turns Unreleased into the 4.2.1 heading, passes the selftest and carries the release notes as its description (check) · once merged, `bash tools/work-release.sh work/Godot-Director <pr>` tags v4.2.1 and publishes the release (check) · following AGENTS.md › Project rules for framework work (check)
+- Brief: Scope › Framework features
+
+### T178 · Docs follow App-Director 1.8.0, SaaSAllTheThings 0.10.0 and Godot-Director 4.2.1 · todo · M · agent
+- Depends on: T174, T175, T176
+- Touches: docs/frameworks/*.md, docs/how-to/*.md, docs/skills/*.md, docs/concept/*.md, product/brief.md
+- Done when: every link into the three repos points at its latest release (check) · the App-Director and SaaSAllTheThings pages and the How-to pages describe what their releases ship: `/ui-design` for web clients (with SaaSAllTheThings' dev-environment capture), the README's start-here step with the brief template, one git worktree per building session, and every subagent launch passing its model explicitly; the Godot-Director page says the same of the model rule; each statement checked against the release (check) · the brief moves `/ui-design` from Planned framework changes to Framework features, now that all three ship it (check) · `bash tools/check.sh` passes (check)
 - Brief: Scope › Framework features
 
 ### T167 · SaaSAllTheThings: its TASKS.md has one queue and unique IDs · todo · XS · agent
