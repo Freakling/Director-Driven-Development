@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T184 · B5 · R7
+**Next IDs:** T186 · B5 · R7
 
 ## Milestones
 | Milestone | Status |
@@ -285,12 +285,14 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 
 ### T181 · App-Director: the screen-design README is organised by feature · in-progress 2026-10-25 · S · agent
 - Depends on: T177
+- PRs: App-Director #29 (open)
 - Touches: work/App-Director: project/product/ui/README.md
 - Done when: `project/product/ui/README.md` (installed as `product/ui/README.md`) has the section order and wording of Godot-Director #36's `design/ui/README.md`, with the app framework's paths, commands and setup (Node, Playwright, the catalog in `tools/ui/screens.mjs`, `product/ui/<screen>.md`) in place of the game's, checked against `framework/tools/ui/drawing.mjs` and `procedures/ui-design.md` so nothing is claimed that the tools don't do; the selftest passes (check) · following AGENTS.md › Project rules for framework work
 - Brief: Scope › Framework features
 
 ### T182 · SaaSAllTheThings: the screen-design README is organised by feature · in-progress 2026-10-25 · S · agent
 - Depends on: T177
+- PRs: SaaSAllTheThings #23 (open)
 - Touches: work/SaaSAllTheThings: project/product/ui/README.md, examples/order-desk/product/ui/README.md
 - Done when: as T181, for SaaSAllTheThings, with the order-desk copy identical; the selftest passes (check) · following AGENTS.md › Project rules for framework work
 - Brief: Scope › Framework features
@@ -300,6 +302,19 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Touches: work/App-Director, work/SaaSAllTheThings: framework/tools/ui/drawing.mjs, project/product/ui/README.md (and examples/order-desk/product/ui/README.md in SaaSAllTheThings), the drawing fixtures under tests/, selftest.sh
 - Done when: the starter drawing's grey numbered boxes of the current elements are no longer locked, and the reader treats one that the human moved or resized as a blue "keep, move or resize" of that element (its name from the map, the new rectangle, any keys typed into it), while an untouched one is still skipped; a deleted or hidden one changes nothing; the fixture drawing and its expected output cover a moved, a resized and an untouched box; `design/ui/README.md` › Re-arranging a screen says you can drag the grey box to where the element should sit, and the Colours section says blue is still how you draw a move with a new box in both repos, one pull request each (check) · following AGENTS.md › Project rules for framework work
 - Brief: Scope › Framework features
+
+### T184 · Release Godot-Director 4.3.0 · in-progress 2026-10-25 · S · agent
+- Depends on: T180
+- PRs: Godot-Director #38 (open)
+- Touches: work/Godot-Director: VERSION, .claude-plugin/plugin.json, .claude-plugin/marketplace.json, skills/godot-director/SKILL.md, README.md, project/design/director-gdd.md, examples/market-day/design/director-gdd.md, CHANGELOG.md, selftest.sh
+- Done when: the release pull request bumps every version file and the template links together, turns Unreleased into the 4.3.0 heading (the README by feature and drag-to-rearrange), passes the selftest without Godot, and carries the release notes in its commit body; once merged, `tools/work-release.sh` tags v4.3.0 and publishes the release (check) · the selftest's stale-Godot check no longer mistakes a Godot Director 4.3.x version for Godot 4.3 (check) · following AGENTS.md › Project rules for framework work
+- Brief: Scope › Framework features
+
+### T185 · Docs follow Godot-Director 4.3.0 · todo · S · agent
+- Depends on: T184
+- Touches: docs/frameworks/godot-director.md, docs/skills/ui-design.md, docs/how-to/*.md, selftest.sh
+- Done when: every link into Godot-Director points at v4.3.0 and the release cache follows; the /ui-design skill page says a screen is re-arranged by dragging the grey boxes in the starter drawing (Godot-Director), while App-Director and SaaSAllTheThings still take a blue box, until T183 ships; the selftest passes (check)
+- Brief: Screens › Frameworks
 
 ### T173 · The director pilots SaaSAllTheThings' example app in an Azure sandbox · todo · - · human
 - Depends on: T169
