@@ -35,7 +35,7 @@ The procedure is at [`framework/.godot-director/procedures/align.md`](https://gi
 
 ### App-Director
 
-The procedure is at [`framework/.app-director/procedures/align.md`](https://github.com/Freakling/App-Director/tree/v1.8.0/framework/.app-director/procedures/align.md) in the App-Director repository.
+The procedure is at [`framework/.app-director/procedures/align.md`](https://github.com/Freakling/App-Director/tree/v1.9.0/framework/.app-director/procedures/align.md) in the App-Director repository.
 
 - It checks the brief, `product/decisions.md`, `validation/TEMPLATE.md` and the check config. The whole-document read is of `product/brief.md`, and the latest releases are the app's deploys. The `[ui] dirs` and `[data] dirs` in `tools/check.cfg` must match the folder layout.
 - Every item's `Brief:` value must be an existing heading, or `-` for items that aren't about the product design.
@@ -48,7 +48,7 @@ The procedure is at [`framework/.app-director/procedures/align.md`](https://gith
 
 ### SaaSAllTheThings
 
-The procedure is at [`framework/.satt/procedures/align.md`](https://github.com/Freakling/SaaSAllTheThings/tree/v0.10.0/framework/.satt/procedures/align.md) in the SaaSAllTheThings repository.
+The procedure is at [`framework/.satt/procedures/align.md`](https://github.com/Freakling/SaaSAllTheThings/tree/v0.11.0/framework/.satt/procedures/align.md) in the SaaSAllTheThings repository.
 
 - It checks the PRD, `product/decisions.md`, the ADRs and the integration contracts. The whole-document read covers the PRD and every ADR, and an ADR's status is a statement of state too: an accepted ADR's decision is in the code or infrastructure or has an open item, and a proposed ADR that the code already follows is stale. The latest releases are the deploys to `dev` and `prod`. Every `ADR:` an item names must exist, and every accepted ADR with a temporary deviation needs its removal item.
 - It runs `bash tools/check.sh --architecture` and reports any stale ADR exceptions, any proposed ADR waiting longer than a week and the count of source files outside any layer.

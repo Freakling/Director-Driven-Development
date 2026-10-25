@@ -37,7 +37,7 @@ The reset takes several sessions. Each stage ends with something you approve, an
 
 ## A worked example
 
-This is an illustration, not something that happened. It uses [todo-web](https://github.com/Freakling/App-Director/tree/v1.8.0/examples/todo-web), the small to-do list in the App-Director repository.
+This is an illustration, not something that happened. It uses [todo-web](https://github.com/Freakling/App-Director/tree/v1.9.0/examples/todo-web), the small to-do list in the App-Director repository.
 
 **The situation.** The brief says of the app: "No accounts, no sync; everything lives in the current session", and `product/decisions.md` records the choice: session-only for now. Suppose the app kept growing. `TodoStore` keeps the tasks in memory, as the brief says. Later, a second item made finished tasks survive a reload, with the `localStorage` calls written in `src/ui/TodoList.ts`. Now a reload brings back the finished tasks and loses the open ones. A bug in `TASKS.md` says the list looks broken after a refresh. `/align` has reported the conflict twice, and the second report recommends a reset.
 
@@ -76,6 +76,6 @@ You pick B. The agent copies the brief to `brief-before.md` in the reset folder,
 
 - The [`/drift-reset` skill page](../skills/drift-reset.md), with each framework's scope and where the reset folder goes.
 - The concept [Align and drift reset](../concept/drift.md), and the other ways to keep the records straight: [The records and the code don't agree](align.md).
-- The procedures: [App-Director](https://github.com/Freakling/App-Director/tree/v1.8.0/framework/.app-director/procedures/drift-reset.md), [Godot-Director](https://github.com/Freakling/Godot-Director/tree/v4.3.0/framework/.godot-director/procedures/drift-reset.md) and [SaaSAllTheThings](https://github.com/Freakling/SaaSAllTheThings/tree/v0.10.0/framework/.satt/procedures/drift-reset.md).
+- The procedures: [App-Director](https://github.com/Freakling/App-Director/tree/v1.9.0/framework/.app-director/procedures/drift-reset.md), [Godot-Director](https://github.com/Freakling/Godot-Director/tree/v4.3.0/framework/.godot-director/procedures/drift-reset.md) and [SaaSAllTheThings](https://github.com/Freakling/SaaSAllTheThings/tree/v0.11.0/framework/.satt/procedures/drift-reset.md).
 
 <div class="takeaway"><span>Align often, reset when you have to.</span><span class="url"><a href="index.md">All questions</a></span></div>

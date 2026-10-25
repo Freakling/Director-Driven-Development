@@ -4,7 +4,7 @@
 
 Make the app you designed, with AI doing the building and you staying the director. App-Director works for new apps and apps already in development, on TypeScript, Flutter or Python. You decide what the app does, how it should feel and what gets built next; the AI builds, tests and keeps the records.
 
-[Repository](https://github.com/Freakling/App-Director){ .md-button .md-button--primary } [README](https://github.com/Freakling/App-Director#readme){ .md-button } [Procedures](https://github.com/Freakling/App-Director/tree/v1.8.0/framework/.app-director/procedures){ .md-button }
+[Repository](https://github.com/Freakling/App-Director){ .md-button .md-button--primary } [README](https://github.com/Freakling/App-Director#readme){ .md-button } [Procedures](https://github.com/Freakling/App-Director/tree/v1.9.0/framework/.app-director/procedures){ .md-button }
 
 ## What the check enforces
 
@@ -19,7 +19,7 @@ The UI and data folders are set in `tools/check.cfg`. If gitleaks is missing, to
 
 ## Install
 
-**Start here: write your product brief.** The README opens its install with this step. Before you install, describe the app in your own words in a copy of the [product brief template](https://github.com/Freakling/App-Director/blob/v1.8.0/project/product/director-brief.md), saved as `product/director-brief.md` in your app, and fill in what you know. Then install: onboarding reads your brief and asks only what you left open. More in [write it down first](../how-to/start.md#write-it-down-first).
+**Start here: write your product brief.** The README opens its install with this step. Before you install, describe the app in your own words in a copy of the [product brief template](https://github.com/Freakling/App-Director/blob/v1.9.0/project/product/director-brief.md), saved as `product/director-brief.md` in your app, and fill in what you know. Then install: onboarding reads your brief and asks only what you left open. More in [write it down first](../how-to/start.md#write-it-down-first).
 
 You need git with no uncommitted changes, bash (on Windows it comes with Git for Windows) and [gitleaks](https://github.com/gitleaks/gitleaks#installing) 8.18.0 or newer, except 8.19.0, which can't scan. Every option installs the latest release, tagged `v` followed by its version, not `main`.
 
@@ -62,8 +62,8 @@ Onboarding works out whether this is a new app, an existing app or an upgrade, s
 |---|---|
 | `/next-task` | Builds the next ready item in a fresh context, proves it with the check, updates the records and commits. Two sessions that build at once each get [their own git worktree](../how-to/build.md#two-sessions-that-build-at-once). Step by step: [how do I get things built?](../how-to/build.md) |
 | `/design` | A design session on a topic, or `/design questions` to rank the open questions by what they unblock. Step by step: [how do I decide what gets built?](../how-to/decide.md) |
-| `/research` | A read-only researcher answers one question in a fresh context and writes a dated note with its sources to `product/research/`. It informs; you decide. Procedure: [`research.md`](https://github.com/Freakling/App-Director/tree/v1.8.0/framework/.app-director/procedures/research.md). Step by step: [I need facts before I decide](../how-to/facts.md) |
-| `/ui-design` | Captures your web app's screens for you to draw over, turns your drawing into a screen spec, and checks the built screen against that spec. Capture opens the app on this machine only, with Node and Playwright installed once in `tools/ui/`. Procedure: [`ui-design.md`](https://github.com/Freakling/App-Director/tree/v1.8.0/framework/.app-director/procedures/ui-design.md). Step by step: [how do I work with UI changes?](../how-to/ui.md) |
+| `/research` | A read-only researcher answers one question in a fresh context and writes a dated note with its sources to `product/research/`. It informs; you decide. Procedure: [`research.md`](https://github.com/Freakling/App-Director/tree/v1.9.0/framework/.app-director/procedures/research.md). Step by step: [I need facts before I decide](../how-to/facts.md) |
+| `/ui-design` | Captures your web app's screens for you to draw over, turns your drawing into a screen spec, and checks the built screen against that spec. Capture opens the app on this machine only, with Node and Playwright installed once in `tools/ui/`. Procedure: [`ui-design.md`](https://github.com/Freakling/App-Director/tree/v1.9.0/framework/.app-director/procedures/ui-design.md). Step by step: [how do I work with UI changes?](../how-to/ui.md) |
 | `/acceptance` | Prepares or processes a checklist of built behaviour for you to tick Works or Broken. Step by step: [how do I check that what was built works?](../how-to/check.md) |
 | `/align` | Consistency pass across the brief, decisions, tasks, `AGENTS.md` and check config. Step by step: [the records and the code don't agree](../how-to/align.md) |
 | `/drift-reset` | Design drift reset, started only by you; `/drift-reset postmortem` after the rebuild. Step by step: [the system was not built as I intended](../how-to/drift.md) |

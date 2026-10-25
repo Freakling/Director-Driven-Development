@@ -318,21 +318,21 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: every link into Godot-Director points at v4.3.0 and the release cache follows; the /ui-design skill page says a screen is re-arranged by dragging the grey boxes in the starter drawing (Godot-Director), while App-Director and SaaSAllTheThings still take a blue box, until T183 ships; the selftest passes (check)
 - Brief: Scope › Framework features
 
-### T186 · Release App-Director 1.9.0 · in-progress 2026-10-25 · S · agent
+### T186 · Release App-Director 1.9.0 · done 2026-10-25 · S · agent
 - Depends on: T183
-- PRs: App-Director #31 (open)
+- PRs: App-Director #31 (merged); v1.9.0 tagged and published
 - Touches: work/App-Director: VERSION, package.json, .claude-plugin/plugin.json, .claude-plugin/marketplace.json, SKILL.md, skills/app-director/SKILL.md, scripts/fetch-app-director.sh, README.md, project/product/director-brief.md, examples/todo-web/product/director-brief.md, CHANGELOG.md
 - Done when: the release pull request bumps every version carrier and the template links together, adds the drag-to-rearrange entry that #30 left out of CHANGELOG.md and turns Unreleased into the 1.9.0 heading, passes the selftest and carries the release notes in its commit body; once merged, `tools/work-release.sh` tags v1.9.0 and publishes the release (check) · following AGENTS.md › Project rules for framework work
 - Brief: Scope › Framework features
 
-### T187 · Release SaaSAllTheThings 0.11.0 · in-progress 2026-10-25 · S · agent
+### T187 · Release SaaSAllTheThings 0.11.0 · done 2026-10-25 · S · agent
 - Depends on: T183
-- PRs: SaaSAllTheThings #25 (open)
+- PRs: SaaSAllTheThings #25 (merged); v0.11.0 tagged and published
 - Touches: work/SaaSAllTheThings: VERSION, .claude-plugin/plugin.json, .claude-plugin/marketplace.json, skills/*/SKILL.md, README.md, project/product/director-brief.md, examples/order-desk/product/director-brief.md, CHANGELOG.md
 - Done when: the release pull request bumps every version carrier, every skill's version and clone branch, and the template links together, turns Unreleased into the 0.11.0 heading, passes the selftest and carries the release notes in its commit body; once merged, `tools/work-release.sh` tags v0.11.0 and publishes the release (check) · following AGENTS.md › Project rules for framework work
 - Brief: Scope › Framework features
 
-### T188 · Docs follow App-Director 1.9.0 and SaaSAllTheThings 0.11.0 · todo · S · agent
+### T188 · Docs follow App-Director 1.9.0 and SaaSAllTheThings 0.11.0 · done 2026-10-25 · S · agent
 - Depends on: T186, T187
 - Touches: docs/how-to/ui.md, docs/**/*.md (the App-Director and SaaSAllTheThings links)
 - Done when: every link into App-Director points at v1.9.0 and into SaaSAllTheThings at v0.11.0, and the release cache follows; the ui how-to says a screen is re-arranged by dragging the grey boxes in all three frameworks, with the blue box as the other way; the selftest passes (check)
