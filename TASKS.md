@@ -442,6 +442,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 
 ### T102 · The secrets scan doesn't flag drawings · in-progress 2026-10-25 · S · agent
 - Depends on: T84, T85
+- PRs: App-Director #33 (open); the SaaSAllTheThings half follows when its clone is free
 - Touches: work/App-Director and work/SaaSAllTheThings: the secrets step of framework/tools/check.sh or the gitleaks config seed (one pull request per repo; the director squash-merges)
 - Done when: a committed drawing in `director/ui/*.excalidraw`, whose embedded base64 screenshot can match a key pattern, doesn't fail the check, while a real key in any other file still does, following AGENTS.md › Project rules for framework work (check)
 - Note: found while building T85. Ships with /ui-design, so it waits for T84 and T85.
