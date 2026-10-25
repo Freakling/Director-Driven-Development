@@ -476,6 +476,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 
 ### T207 · Release SaaSAllTheThings 0.14.0 · in-progress 2026-10-25 · S · agent
 - Depends on: T203
+- PRs: SaaSAllTheThings #39 (open)
 - Touches: work/SaaSAllTheThings: the version carriers its CLAUDE.md lists, CHANGELOG.md
 - Done when: the release pull request bumps every version carrier, every skill's version and clone branch, and the template links together, turns Unreleased into the 0.14.0 heading (the OWASP Top 10 (2025)), passes the selftest and carries the release notes in its commit body; once merged, `tools/work-release.sh` tags v0.14.0 and publishes the release (check) · following AGENTS.md › Project rules for framework work
 - Brief: Scope › Framework features
