@@ -134,7 +134,7 @@ A reader arrives from a saemundsson.se post on the matching docs page, and can g
 | Home | DDD in one screen: roles, loop, frameworks, links to the posts |
 | Concepts (13 pages) | One page per core concept, from the overview to the two cost pages |
 | How-to (17 pages) | An overview and one page per question, in three groups (Start here, Day to day, When things go wrong): the short answer, the ways to do it, the steps, the caveats |
-| Skills (10 pages) | An overview, and one page per common skill and the acceptance check: what it does, how it works, and what is unique to each repo |
+| Skills (11 pages) | An overview, and one page per common skill and the acceptance check: what it does, how it works, and what is unique to each repo |
 | Frameworks (4 pages) | Comparison page, and one page per framework: check, install, commands, links |
 | Examples (2 pages) | An overview with a card per framework's example, and one page per example: the loop as it ran, what the check caught, the numbers from its devlog, the recipe, the records as the diary |
 

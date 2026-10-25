@@ -14,7 +14,7 @@ Three frameworks put Director-Driven Development to work. The same loop runs all
 ## Shared by all three
 
 - The loop through `/next-task`, design sessions through `/design`, and the records: `AGENTS.md`, `TASKS.md`, a design document and a decision log.
-- `/align`, `/drift-reset`, `/prune`, `/refresh-model-sizing` and [`/research`](../skills/research.md).
+- `/align`, `/drift-reset`, `/prune`, `/refresh-model-sizing`, [`/research`](../skills/research.md) and [`/ui-design`](../skills/ui-design.md).
 - A builder, a read-only reviewer and a read-only researcher as Claude Code subagents.
 - `bash tools/check.sh` with result caching (`--if-changed`), and a git pre-commit hook that runs it when a commit touches code.
 - Hooks in Claude Code that run the check before the agent ends its turn and block work-destroying git commands.

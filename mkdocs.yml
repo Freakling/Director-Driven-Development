@@ -69,6 +69,7 @@ nav:
       - skills/index.md
       - /next-task: skills/next-task.md
       - /design: skills/design.md
+      - /ui-design: skills/ui-design.md
       - /research: skills/research.md
       - /align: skills/align.md
       - /drift-reset: skills/drift-reset.md

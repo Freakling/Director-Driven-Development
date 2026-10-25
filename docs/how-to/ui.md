@@ -101,6 +101,6 @@ If capture won't run, [Capture can't run](trouble.md#capture-cant-run) lists the
 ## Related
 
 - The `/ui-design` entry on each framework page ([Godot-Director](../frameworks/godot-director.md#commands), [App-Director](../frameworks/app-director.md#commands) and [SaaSAllTheThings](../frameworks/saasallthethings.md#commands)), and the `ui-design` procedures, which are the source of truth for the drawing steps: [Godot-Director](https://github.com/Freakling/Godot-Director/tree/v4.3.0/framework/.godot-director/procedures/ui-design.md), [App-Director](https://github.com/Freakling/App-Director/tree/v1.9.0/framework/.app-director/procedures/ui-design.md) and [SaaSAllTheThings](https://github.com/Freakling/SaaSAllTheThings/tree/v0.11.0/framework/.satt/procedures/ui-design.md).
-- The skill pages [`/design`](../skills/design.md) and [`/next-task`](../skills/next-task.md), for the two ways that need no drawing.
+- The skill pages [`/design`](../skills/design.md) and [`/next-task`](../skills/next-task.md), for the two ways that need no drawing, and the [`/ui-design`](../skills/ui-design.md) page, which describes the four requests and what differs per framework.
 
 <div class="takeaway"><span>Describe it, or draw it. The agent builds it and a person checks it.</span><span class="url"><a href="index.md">All questions</a></span></div>
