@@ -380,6 +380,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 
 ### T194 · Release App-Director 1.10.0 · in-progress 2026-10-25 · S · agent
 - Depends on: T164, T102 (its App-Director half)
+- PRs: App-Director #34 (open)
 - Touches: work/App-Director: the version carriers its CLAUDE.md lists, CHANGELOG.md
 - Done when: the release pull request bumps every version carrier and template link together, turns Unreleased into the 1.10.0 heading (the Bash guard against hangs and the check's time limit), passes the selftest and carries the release notes in its commit body; once merged, `tools/work-release.sh` tags v1.10.0 and publishes the release (check) · following AGENTS.md › Project rules for framework work
 - Brief: Scope › Framework features
