@@ -498,6 +498,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 
 ### T210 · Release Godot-Director 4.5.0 · in-progress 2026-10-25 · S · agent
 - Depends on: T189, T197
+- PRs: Godot-Director #44 (open)
 - Touches: work/Godot-Director: the version carriers its CLAUDE.md lists, CHANGELOG.md
 - Done when: the release pull request bumps every version carrier and template link together, turns Unreleased into the 4.5.0 heading (opt-in balanced test jobs, side-by-side autoplay sweeps), passes the selftest without Godot and carries the release notes in its commit body; once merged, `tools/work-release.sh` tags v4.5.0 and publishes the release (check) · following AGENTS.md › Project rules for framework work
 - Brief: Scope › Framework features
