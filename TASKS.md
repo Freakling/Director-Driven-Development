@@ -411,14 +411,16 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 
 ### T198 · SaaSAllTheThings: OWASP is a non-negotiable baseline · in-progress 2026-10-25 · M · agent
 - Depends on: -
+- PRs: SaaSAllTheThings #34 (open)
 - Touches: work/SaaSAllTheThings: framework/.satt/rules.md, framework/.satt/procedures/architect.md, framework/.satt/procedures/review.md, project/compliance/mapping.md, ONBOARDING.md, skills/ (bundle), selftest.sh
 - Done when: OWASP Top 10, and the OWASP API Security Top 10 for anything that serves an API, is a baseline every app meets: `rules.md` states it as framework-owned, so no project setting turns it off; every design option states its effect on it; review checks each change that handles input, authentication, authorization, sessions, secrets, data access, file or network access, or dependencies against it and reports the item it falls under; a deviation is only ever an accepted ADR that names the OWASP item and why (check) · the seeded `compliance/mapping.md` carries the ten OWASP Top 10 categories as rows that are always there (marked as the baseline, not deletable like the example), each with what in the framework meets it today and an honest label (for example the tenant rules as partial for broken access control, the secrets rule as partial for cryptographic failures), and `none yet` where nothing does; align reports a removed baseline row (check) · following AGENTS.md › Project rules for framework work
 - Brief: Scope › Framework features
 
 ### T199 · App-Director: OWASP is a non-negotiable baseline · in-progress 2026-10-25 · M · agent
 - Depends on: -
+- PRs: App-Director #35 (open)
 - Touches: work/App-Director: framework/.app-director/rules.md, framework/.app-director/procedures/design.md, framework/.app-director/procedures/review.md, ONBOARDING.md, selftest.sh
-- Done when: OWASP Top 10, and the OWASP API Security Top 10 for anything that serves an API, is a baseline every app meets: `rules.md` states it as framework-owned, so no project setting turns it off; every design option states its effect on it; review checks each change that handles input, authentication, authorization, sessions, secrets, data access, file or network access, or dependencies against it and reports the item it falls under; a deviation is only ever an accepted ADR that names the OWASP item and why; the check's existing rules that serve an OWASP category (secrets, UI purity) say which one in their messages or docs (check) · following AGENTS.md › Project rules for framework work
+- Done when: OWASP Top 10, and the OWASP API Security Top 10 for anything that serves an API, is a baseline every app meets: `rules.md` states it as framework-owned, so no project setting turns it off; every design option states its effect on it; review checks each change that handles input, authentication, authorization, sessions, secrets, data access, file or network access, or dependencies against it and reports the item it falls under; a deviation is only ever an accepted decision (in App-Director a `product/decisions.md` line, since it has no ADRs) that names the OWASP item and why; the check's existing rules that serve an OWASP category (secrets, UI purity) say which one in their messages or docs (check) · following AGENTS.md › Project rules for framework work
 - Brief: Scope › Framework features
 
 ### T200 · SaaSAllTheThings: onboarding and the assessment ask which compliance frameworks apply · todo · M · agent
