@@ -41,6 +41,10 @@ The only way past a rule is an architecture decision record that you accept. An 
 
 `/architect` runs the session that produces the ADR, with "comply" always as the first option. A hook asks you before an ADR is marked accepted or a framework file changes.
 
+## What the records show
+
+The check fails the build when an architecture or security rule breaks, and the exceptions are the ADRs above. Your requirements and your customer's control framework live in the repository, and every architecture session reads them. Every decision and change leaves a record a reviewer can read: a line in `product/decisions.md`, an ADR, a TASKS.md item or a commit message, as the [records table](https://github.com/Freakling/SaaSAllTheThings/blob/v0.11.0/framework/.satt/rules.md) sets out. The running system, not the repository, provides the operating evidence, through the logs, traces and alerts that the [observability reference](https://github.com/Freakling/SaaSAllTheThings/blob/v0.11.0/framework/.satt/reference/observability.md) sets up.
+
 ## Install
 
 **Start here: write your product brief.** The README opens its how-to-use section with this step. Before you install, describe the product in your own words in a copy of the [product brief template](https://github.com/Freakling/SaaSAllTheThings/blob/v0.11.0/project/product/director-brief.md), saved as `product/director-brief.md` in your app, and fill in what you know. It also carries your enterprise architecture, requirements, security requirements and control frameworks. Then install: onboarding reads your brief and asks only what you left open. More in [write it down first](../how-to/start-saas.md#write-it-down-first).

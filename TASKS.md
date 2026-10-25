@@ -242,7 +242,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: the root TASKS.md has one `## Queue` heading (today three, at about lines 9, 35 and 49), the two items numbered T9 ("The README starts with writing your own product brief" and "/ui-design with Playwright capture") have distinct IDs with references to them updated, and T10's Done when names its own repo's item rather than the docs repo's T160 (check) · following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Orchestrator for the three frameworks
 
-### T168 · The SaaSAllTheThings page says what its records show for production and compliance · in-progress 2026-10-25 · S · agent
+### T168 · The SaaSAllTheThings page says what its records show for production and compliance · done 2026-10-25 · S · agent
 - Depends on: -
 - Touches: docs/frameworks/saasallthethings.md
 - Done when: a short section in the brief's wording: the check fails the build on broken architecture and security requirements, with exceptions only through an ADR the director accepts; the requirements and the customer's control framework live in the repository and every architecture session reads them; every decision and change leaves a record a reviewer can read; the running system provides the operating evidence; each statement checked against SaaSAllTheThings' latest release (check) · no page says production-ready, compliant, more secure than others, a full supply-chain view or cannot exfiltrate (check) · `bash tools/check.sh` passes (check)
