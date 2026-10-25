@@ -351,7 +351,8 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 
 ### T189 · Godot-Director: the check balances its jobs by last run's timings and splits a slow test file by test method · in-progress 2026-10-25 · L · agent
 - Depends on: T163
-- Note: the director chose opt-in (balance and split_over off by default); the builder is making that change. T190 stays parked while the heavy files compete for the CPU.
+- PRs: Godot-Director #42 (open)
+- Note: opt-in by the director's choice; measured 376 s file order, 411 s and 284 s balanced on The Guildkeeper.
 - Touches: work/Godot-Director: framework/tools/check.sh, framework/tools/check.gd, project/tools/check.cfg, selftest.sh
 - Done when: the parallel run hands out test files longest first, using each file's time from the last run (kept under .godot/godot-director/, unknown files first), instead of file order; a file whose last time is over `[tests] split_over` seconds (default 60) is run as several shards of its test methods across the jobs, each shard in its own process, the file's results merged as one; a file that can't be split (its tests share state across methods, marked by a project setting or a header line the docs name) runs whole; on The Guildkeeper's scratch copy the full run's wall time and its slowest job are recorded before and after (check) · following AGENTS.md › Project rules for framework work
 - Brief: Scope › Framework features
@@ -403,7 +404,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: every framework link points at the new tags; the check how-to says the check limits each test run (`[tests] timeout`, exit 3) in all three frameworks, and the troubleshooting page says what the Bash guard blocks and the form that works for each (an empty Python heredoc, an unbounded wait, a Godot run without a time limit); the Godot-Director pages say the check skips an unchanged import pass (`--import` forces it); the SaaSAllTheThings page lists the `network-public` rule with what's enforced and what isn't, and mentions the CI workflow template with its dependency review and SBOM, and the compliance mapping table, each checked against the release; the selftest passes (check)
 - Brief: Scope › Framework features
 
-### T197 · Godot-Director: a sweep plays its scenarios side by side, and the builder doesn't play smoke twice · todo · M · agent
+### T197 · Godot-Director: a sweep plays its scenarios side by side, and the builder doesn't play smoke twice · in-progress 2026-10-25 · M · agent
 - Depends on: -
 - Touches: work/Godot-Director: framework/tools/autoplay.sh, framework/.godot-director/procedures/build.md, framework/.godot-director/procedures/autoplay.md, selftest.sh
 - Done when: `bash tools/autoplay.sh <scenario> <scenario> ...` (and `--all`) runs the scenarios in separate Godot processes at the same time under the one lock and one import check, each with its own user dir, log and run folder, capped at the CPU count, and reports each scenario's result with exit codes unchanged; one scenario behaves as today (check) · `build.md` has the builder play the scenarios the item names once, after the tests pass, in one call, and leave out `smoke` when `tools/check.cfg` › `[autoplay]` has the check play it (check) · measured on The Guildkeeper's scratch copy: a sweep of quest_job, quest_hold, quest_controls and smoke before and after (check) · following AGENTS.md › Project rules for framework work
