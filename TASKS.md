@@ -272,9 +272,9 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: a seeded table with control id, requirement, met by (rule, ADR or test), label (direct, partial, interpretive or unverified) and evidence location; architecture sessions add or update rows as ADRs are accepted, review flags a change to a mapped rule, ADR or test that leaves its row stale, and align reports rows whose rule, ADR or test no longer exists; nothing marks a control met from a framework's name (check) · following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Planned framework changes
 
-### T172 · SaaSAllTheThings: dependency review and an SBOM in the shipped workflow · in-progress 2026-10-25 · S · agent
+### T172 · SaaSAllTheThings: dependency review and an SBOM in the shipped workflow · done 2026-10-25 · S · agent
 - Depends on: T170
-- PRs: SaaSAllTheThings #32 (open)
+- PRs: SaaSAllTheThings #32 (merged)
 - Touches: work/SaaSAllTheThings: framework/.satt/templates/check-workflow.yml, framework/.satt/reference/infra.md, selftest.sh
 - Done when: the shipped workflow reviews dependency changes on pull requests and exports an SPDX SBOM from GitHub's dependency graph as an artifact, and the reference says what that covers and that vulnerability response stays the customer's process (check) · following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Planned framework changes
@@ -351,7 +351,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 
 ### T189 · Godot-Director: the check balances its jobs by last run's timings and splits a slow test file by test method · in-progress 2026-10-25 · L · agent
 - Depends on: T163
-- Note: built and passing (selftest 752) on `ddd/T189` in work/Godot-Director, not published. On The Guildkeeper's copy (12 jobs, 12 logical processors) it doesn't reliably beat file order: 376 s before; 411 s and 284 s after. Longest first starts all the heavy map files at once and they slow each other (one whole file went from 58 s to 143 s). It also exposes game tests that depend on run order. Waiting on the director: ship opt-in, ship as is, or shelve; T190 waits with it.
+- Note: the director chose opt-in (balance and split_over off by default); the builder is making that change. T190 stays parked while the heavy files compete for the CPU.
 - Touches: work/Godot-Director: framework/tools/check.sh, framework/tools/check.gd, project/tools/check.cfg, selftest.sh
 - Done when: the parallel run hands out test files longest first, using each file's time from the last run (kept under .godot/godot-director/, unknown files first), instead of file order; a file whose last time is over `[tests] split_over` seconds (default 60) is run as several shards of its test methods across the jobs, each shard in its own process, the file's results merged as one; a file that can't be split (its tests share state across methods, marked by a project setting or a header line the docs name) runs whole; on The Guildkeeper's scratch copy the full run's wall time and its slowest job are recorded before and after (check) · following AGENTS.md › Project rules for framework work
 - Brief: Scope › Framework features
@@ -390,8 +390,8 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: the release pull request bumps every version carrier and template link together, turns Unreleased into the 1.10.0 heading (the Bash guard against hangs and the check's time limit), passes the selftest and carries the release notes in its commit body; once merged, `tools/work-release.sh` tags v1.10.0 and publishes the release (check) · following AGENTS.md › Project rules for framework work
 - Brief: Scope › Framework features
 
-### T195 · Release SaaSAllTheThings 0.12.0 · todo · S · agent
-- Depends on: T165
+### T195 · Release SaaSAllTheThings 0.12.0 · in-progress 2026-10-25 · S · agent
+- Depends on: T165, T167, T169, T170, T171, T172, T179
 - Touches: work/SaaSAllTheThings: the version carriers its CLAUDE.md lists, CHANGELOG.md
 - Done when: the release pull request bumps every version carrier and template link together, turns Unreleased into the 0.12.0 heading (the Bash guard against hangs and the check's time limit), passes the selftest and carries the release notes in its commit body; once merged, `tools/work-release.sh` tags v0.12.0 and publishes the release (check) · following AGENTS.md › Project rules for framework work
 - Brief: Scope › Framework features
