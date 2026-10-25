@@ -105,6 +105,7 @@ Onboarding also asks once whether you want to design screens by drawing over scr
 - **Commits and pushes** need no answer. The agent proposes each commit and you approve it. It pushes only when you ask.
 - **Model sizing.** The agent recommends it on and shows the mapping. In Claude Code the defaults are Haiku for XS and S, Sonnet for M, Opus for L and XL. Say whether any size should differ. Take the recommendation if unsure; the cost effects are in [It's costing more than I'd like](cost.md).
 - **Reviews** are stated rather than asked: an independent review after L and XL items, and after M items that change stored data schemas or public API contracts. See [Reviews](../concept/reviews.md).
+- **The security baseline.** Onboarding tells you about the OWASP baseline every app meets, and about the `[security] every` setting in `tools/check.cfg`, which sets how many built items pass before `/next-task` proposes a [`/security`](../skills/security.md) assessment.
 
 ### 6. The acceptance template
 

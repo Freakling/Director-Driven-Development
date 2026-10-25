@@ -91,6 +91,7 @@ nav:
           - "I need facts before I decide": how-to/facts.md
           - "How do I work with UI changes?": how-to/ui.md
           - "How do I check that what was built works?": how-to/check.md
+          - "Is what was built secure?": how-to/security.md
           - "How do I ship it?": how-to/ship.md
           - "I want to change something. Which file is it in?": how-to/where.md
       - When things go wrong:

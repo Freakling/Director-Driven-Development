@@ -53,6 +53,8 @@ What can be missing depends on the framework:
 
 - **App-Director:** gitleaks is missing, too old, or a version that can't scan, or the tool for your stack is missing.
 - **Godot-Director:** Godot is not found, or is older than 4.5. Give the agent the path to Godot; `setup-clone.sh` records it for this machine. Where GNU `timeout` is installed, a Godot run that passes its timeout also exits 3, and the report names the test file it was in. A hung test needs fixing; a suite that is only slow can have a longer `[tests] timeout` in `tools/check.cfg` (600 seconds by default). The check ends each run with its ten slowest test files, which show where the time goes. More in [what the check enforces](../frameworks/godot-director.md#what-the-check-enforces).
+
+Balanced test jobs are opt-in. `[tests] balance = true` in `tools/check.cfg` deals the test files to the parallel jobs by the last run's times, and `split_over` (seconds) splits a slow file by test method. A file whose tests share state across methods keeps a line `# gdir: no-split` among its first ten lines and runs whole, and `bash tools/check.sh --jobs 1` measures every file whole again. Where heavy test files compete for the CPU, balancing may not help, so measure with the slowest-files summary before and after. Turn it on only once no test depends on the order the files run in.
 - **SaaSAllTheThings:** the toolchain of your backend stack is missing, such as the .NET SDK for the default stack.
 
 An exit 3 is not a failure of your work. The agent reports the work as unverified rather than done, and says why.
@@ -71,7 +73,7 @@ A Bash guard in each framework blocks commands that hang or run past five minute
 
 ### A Godot test fails only in the check
 
-In Godot-Director the test files run side by side. A test that reads autoload or `user://` state another file left behind can pass alone and fail in the check. Make the test set up what it reads, and give each test file its own `user://` file name. Until the test is fixed, set `[tests] jobs` to `1` in `tools/check.cfg`, or pass `--jobs 1` for one run; either runs the tests in one process, as before. More in [what the check enforces](../frameworks/godot-director.md#what-the-check-enforces).
+In Godot-Director the test files run side by side. A test that reads autoload or `user://` state another file left behind can pass alone and fail in the check. Make the test set up what it reads, and give each test file its own `user://` file name. Until the test is fixed, set `[tests] jobs` to `1` in `tools/check.cfg`, or pass `--jobs 1` for one run; either runs the tests in one process. More in [what the check enforces](../frameworks/godot-director.md#what-the-check-enforces).
 
 ### A fresh clone of the project
 

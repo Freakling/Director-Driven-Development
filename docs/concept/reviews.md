@@ -15,7 +15,7 @@ The orchestrator decides from the task's size and the builder's report, which na
 ## How a review runs
 
 1. The orchestrator gives the reviewer the task ID, the builder's report and the check result.
-2. The reviewer reads the diff in a fresh, read-only context and checks it against the task, the framework's rules and the tests. In SaaSAllTheThings it also checks the reference architecture: tenant isolation, identity, messaging, layers and cost.
+2. The reviewer reads the diff in a fresh, read-only context and checks it against the task, the framework's rules and the tests. In SaaSAllTheThings it also checks the reference architecture: tenant isolation, identity, messaging, layers and cost. In App-Director and SaaSAllTheThings it also checks security-relevant changes against the OWASP baseline.
 3. It returns a ranked list of findings, not a rewrite.
 4. Findings inside the task's scope go back to a builder to fix. Findings outside it become new items in `TASKS.md`.
 

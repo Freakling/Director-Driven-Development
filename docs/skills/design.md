@@ -38,6 +38,7 @@ The procedure is at [`framework/.app-director/procedures/design.md`](https://git
 - It records decisions in `product/brief.md` and `product/decisions.md`, and open questions live in the brief's Open Questions section.
 - Before the options, it quotes the related lines from `product/decisions.md` word for word, so the director sees the state of play first.
 - New items carry a `Brief:` heading and follow the format in `.app-director/tasks.md`. Numbers and thresholds are set by the human in config or environment variables.
+- Where an option touches security (input, authentication, sessions, secrets, data access, file or network access, dependencies), it states the OWASP item it touches and whether it meets, strengthens or would deviate from the [OWASP baseline](../frameworks/app-director.md#the-owasp-baseline). An option that would deviate is shown with the accepted decision it needs, and is never recommended without saying so.
 - Research notes go in `product/research/`.
 
 ### SaaSAllTheThings
@@ -47,7 +48,7 @@ The procedure is at [`framework/.satt/procedures/design.md`](https://github.com/
 - It records decisions in the PRD (`product/prd.md`) and `product/decisions.md`. A decision about an external system's data also goes into `integrations/<system>/contract.md`.
 - Questions about how the system is built, such as a data store, a client's UI technology or a deviation from the reference, are not product calls. The skill hands them to `/architect` (the `architect.md` procedure).
 - If an idea contradicts a Product Pillar, the skill asks which gives way. New items carry a `PRD:` heading and follow the format in `.satt/tasks.md`, and limits, quotas, prices and timeouts stay `PLACEHOLDER` values.
-- It accepts both `/design questions` and `/design {topic}`.
+- It accepts both `/design questions` and `/design {topic}`. `/product` still runs the same session; it is a deprecated name for `/design`.
 - Research notes go in `product/research/`.
 
 <div class="takeaway"><span>Write down only what the director decides. Bring your next open question to <code>/design</code> in a fresh session.</span><span class="url"><a href="https://saemundsson.se/2026/10/07/director-driven-development/">Why: the blog post</a></span></div>

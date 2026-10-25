@@ -13,7 +13,7 @@ Make the game you designed, with AI doing the building and you staying the direc
 1. Godot's import pass, skipped when nothing it depends on has changed since the last passing run (`bash tools/check.sh --import` forces it).
 2. Loads every script, scene and resource, checks screen scripts for game rules, and runs `tests/**/test_*.gd` in parallel.
 3. Scans Godot's output for errors.
-4. Plays the smoke scenario headless, when `tools/check.cfg` › `[autoplay]` turns it on.
+4. Runs the layout lint of the screens and plays the smoke scenario headless, each when switched on: `[lint]` in `tools/ui_capture.cfg` and `[autoplay]` in `tools/check.cfg`. A new game starts with both on.
 5. Runs `tools/check.local.sh`, if the game has one (for example an existing GUT suite).
 
 A screen script fails the check when it rolls random numbers or writes to an autoload's state. Game rules live in plain classes that tests build directly, and screens only display them. The screen folders and any accepted exceptions are set in `tools/check.cfg`.

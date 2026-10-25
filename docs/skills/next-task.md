@@ -41,6 +41,7 @@ The procedure is at [`framework/.app-director/procedures/next-task.md`](https://
 - New items are formatted following `.app-director/tasks.md`, and IDs come from `Next IDs` in that file.
 - The report notes that `(demo)` outcomes and bug fixes without regression tests will appear in the next acceptance check.
 - A research item (`R<n>`) goes to the `researcher` instead of the builder. No check runs and there is no review: the session writes the note to `product/research/` and commits it with the records.
+- When a [`/security`](security.md) assessment is due, it proposes one before picking an item, and you can decline. In a run of several items it carries on picking and only names the assessment in the final report.
 
 ### Godot-Director
 
@@ -51,6 +52,7 @@ The procedure is at [`framework/.godot-director/procedures/next-task.md`](https:
 - New items are formatted following `.godot-director/tasks.md`, and IDs come from `Next IDs` in that file.
 - An item's `Depends on` can name an open question (`Q<n>`). That part is met once the question is no longer in GDD › Open Questions, so a decision made in `/design` makes the item ready.
 - The builder is told to skip the final `bash tools/check.sh` call: step 4 runs the check from the orchestrator session, and the pre-commit hook is the safety net.
+- The builder plays the scenarios the item names once, in one call, and leaves out `smoke` when the check already plays it.
 - The report notes that `(play)` outcomes and bug fixes without regression tests will appear in the next function check.
 - After a passing check, recurring warnings may appear as `check: note: recurring warning (N×): <text>`. The skill has a procedure for verifying, proposing and applying suppressions via `tools/check.ignore`.
 - A research item (`R<n>`) goes to the `researcher` instead of the builder. No check runs and there is no review: the session writes the note to `design/research/` and commits it with the records.
@@ -67,5 +69,6 @@ The procedure is at [`framework/.satt/procedures/next-task.md`](https://github.c
 - Its settings ask before the `az` and `azd` commands.
 - A research item (`R<n>`) goes to the `researcher` instead of the builder. No check runs and there is no review: the session writes the note to `product/research/` and commits it with the records.
 - The report notes that `(demo)` outcomes and bug fixes without regression tests will appear in the next acceptance check.
+- When a [`/security`](security.md) assessment is due, it proposes one before picking an item, and you can decline. In a run of several items it carries on picking and only names the assessment in the final report.
 
 <div class="takeaway"><span>One task, one check, one commit: the loop runs as fast as the check.</span><span class="url"><a href="https://saemundsson.se/2026/10/07/director-driven-development/">Why: the blog post</a></span></div>

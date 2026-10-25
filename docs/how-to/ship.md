@@ -10,7 +10,7 @@ All three frameworks ship `/release`, and each releases to its own kind of targe
 
 **Export a build to look at.** Godot-Director only. Say "Export the game" or "Make a Web build", or type `/export`. It exports every export preset headless into the gitignored `builds/` folder and reports what it produced. It changes no source file, commits nothing and does not run the check. The export templates for your Godot version must be installed, and the agent tells you how if they aren't.
 
-**Release.** Say "Release to production" (App-Director), "Release the game", "Push a build to UAT" or "Promote to production" (Godot-Director) or "Release to dev" (SaaSAllTheThings), or type `/release <target>`. Saying it and typing the command run the same procedure. The release exports or builds, shows you what it will do, and ships only after your yes.
+**Release.** Say "Release to web" (App-Director), "Release the game", "Push a build to UAT" or "Promote to production" (Godot-Director) or "Release to dev" (SaaSAllTheThings), or type `/release <target>`. Saying it and typing the command run the same procedure. The release exports or builds, shows you what it will do, and ships only after your yes.
 
 The stricter path is to let CI run the same steps, which pays off once you release often. Godot-Director's GitHub Actions template exports on every push, uploads to UAT from `main`, and runs production as a job you start by hand, which waits for your approval in a protected GitHub Environment. Any other CI can run the export and then `tools/release.sh uat`.
 

@@ -80,6 +80,8 @@ Anything you answer is written into `product/prd.md` as the current requirements
 
 SaaSAllTheThings is anchored in the customer's own security framework. If your customer has one, put its security and compliance requirements in a `compliance/` folder in the app. Architecture sessions and research read it, and weigh every option against it, tracing each requirement to a control. The residency, retention and personal data answers from the interview sit beside it in the PRD. You can add the folder at any time; nothing in onboarding waits for it.
 
+If section 10 of your brief is blank or vague, onboarding asks the [compliance questions](../frameworks/saasallthethings.md#the-compliance-questions) instead of moving on. It also seeds `compliance/mapping.md` with the ten OWASP baseline rows. Controls get in only from you or a document you provide, never from the agent's memory.
+
 ### 5. Who decides what
 
 The agent walks you through the defaults and records only the differences in `AGENTS.md`.
@@ -113,6 +115,7 @@ After the commit:
 - If the check passes, the agent installs the git pre-commit hook. If it fails or cannot run, the hook stays off and an item is added to install it once the check passes.
 - On a manual install it offers to delete the `SaaSAllTheThings` folder from the app. Deleting it is recommended.
 - It offers a "Development" section for your README: clone, run `bash tools/setup-clone.sh`, then the commands.
+- It offers a GitHub Actions workflow that runs the check on every pull request and keeps its output as an artifact.
 - It tells you what still needs your confirmation and which phrases to use.
 
 ## What your SaaS gets
@@ -128,6 +131,8 @@ The files below are yours and are never overwritten. The framework's own files (
 | `adr/` | Architecture decision records: the stack, and every accepted deviation |
 | `validation/TEMPLATE.md` | The feedback template, one section per capability |
 | `tools/check.cfg` | Settings for the check: the stack, the layers' folders, size limits |
+| `compliance/mapping.md` | Each control traced to the rule, ADR or test that meets it, starting with the OWASP baseline rows |
+| `.github/workflows/check.yml` | Optional: the check on every pull request, its output kept as an artifact |
 
 Later, `integrations/` holds one contract per external system, and `assessment/` holds assessment reports and workshop notes. The concepts behind these files are in [Records in files](../concept/records.md).
 

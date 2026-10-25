@@ -26,6 +26,7 @@ The procedure is at [`framework/.app-director/procedures/release.md`](https://gi
 
 - The request names the target: `web`, `mobile` (iOS or Android) or `desktop`. The stack and deploy method are in `tools/check.cfg` and AGENTS.md › Project facts.
 - The skill lists the `done` items since the last release tag, so the release says what it contains. A `high` bug that's done without a regression test goes into the next acceptance check.
+- Before it proposes the release, it runs a [`/security`](security.md) assessment when none exists yet or something was built since the last report. An open `high` bug that names an OWASP item blocks the release, unless an accepted decision in `product/decisions.md` deviates from that item.
 - Web targets deploy with the method AGENTS.md names (Vercel, Netlify, GitHub Pages or another), and a smoke test follows. Mobile and desktop targets stop at a prepared build; the human submits it to the store.
 - The release is recorded with a `v<version>` tag on the commit, pushed when the human asks. The `(demo)` outcomes go into the next acceptance check.
 
@@ -45,9 +46,10 @@ The procedure is at [`framework/.godot-director/procedures/release.md`](https://
 The procedure is at [`framework/.satt/procedures/release.md`](https://github.com/Freakling/SaaSAllTheThings/tree/v0.14.0/framework/.satt/procedures/release.md) in the SaaSAllTheThings repository.
 
 - The request names the environment, `dev` (the default) or `prod`. Dev deploys from `main`; prod deploys from a tag.
+- Before it proposes the release, it runs a [`/security`](security.md) assessment when none exists yet or something was built since the last report. An open `high` bug that names an OWASP item blocks the release, unless an accepted ADR deviates from that item.
 - Every step that touches Azure needs your approval, each time. The skill runs a what-if of the Bicep for the environment's resource group and summarises what it creates, changes and deletes. A deletion, or anything outside this app's resources, stops the run.
 - A complete-mode deployment and resource deletion are never run. Production is yours to run: the skill prepares everything and hands over the pipeline run or the commands, with the what-if summary.
 - The smoke test checks `GET /api/health` on each function app and, when the environment has a test tenant, one read as a test user.
-- A prod release is tagged `v<YYYY.MM.DD>` after your approval, and the tag is pushed only when you ask. The `(demo)` outcomes now deployed go into the next acceptance check, with their environment.
+- A prod release is tagged `v<YYYY.MM.DD>` after your approval, and the tag is pushed only when you ask. The release record names the CI run and its artifact (or the local check result when the app has no workflow) and the security report. The `(demo)` outcomes now deployed go into the next acceptance check, with their environment.
 
 <div class="takeaway"><span>The check gates the build, and you gate the release.</span><span class="url"><a href="https://saemundsson.se/2026/10/07/director-driven-development/">Why: the blog post</a></span></div>

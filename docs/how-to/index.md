@@ -22,6 +22,7 @@ Start by writing down what you want, in your own words, in the framework's templ
 - [I need facts before I decide](facts.md)
 - [How do I work with UI changes?](ui.md)
 - [How do I check that what was built works?](check.md)
+- [Is what was built secure?](security.md)
 - [How do I ship it?](ship.md)
 - [I want to change something. Which file is it in?](where.md)
 

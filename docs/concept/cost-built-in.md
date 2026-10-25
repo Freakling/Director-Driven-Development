@@ -32,6 +32,10 @@ An independent review reads the change, the task and the rules all over again in
 
 Everything a session needs lives in plain files in the repo. Once a task is committed, clearing the session loses nothing. See [Records in files](records.md). A task interrupted halfway gets a one-line `Note:` in the task list, and the next session picks it up from there. After a design session the conversation has no value left, because every decision is in the files, and the procedure reminds you to clear before the next topic.
 
+## Commands that keep waits short
+
+A wait of more than five minutes lets the prompt cache expire, and the next turn then rewrites the whole context. Each framework's command guard blocks the commands that would wait that long, such as a sleep loop with no limit, and names the form that works. The check limits its own test runs for the same reason. See [The agent's command is blocked](../how-to/trouble.md#the-agents-command-is-blocked).
+
 ## Task pruning
 
 Every session reads the task list to find the next task. `/prune` moves finished tasks from `TASKS.md` to `TASKS-archive.md`, so the list every session reads holds only what's still open. Tasks can still depend on archived ones; `/next-task` looks them up in the archive.

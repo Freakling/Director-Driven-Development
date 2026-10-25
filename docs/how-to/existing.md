@@ -219,7 +219,7 @@ A working proof of concept, or an app in use, that should become a multi-tenant 
 
 Ask "what does it take to make this app a SaaS?" in the app's folder. The agent follows the framework's assessment procedure. It is read only: it writes the report and nothing else, and it builds, runs or installs nothing unless you agree.
 
-1. **Framing.** It asks who the report is for (internal planning, or a proposal to a customer), what you already know (the goal, a deadline, the team, the first customer, the systems to integrate, constraints such as budget or the customer's Azure governance), and the report's language and place. What is unknown becomes an open question in the report, never a guess. It also asks for your filled product brief (`product/director-brief.md` once installed, or the template you copy and fill in before), reads it first and does not ask again what it answers. The report marks what came from the brief and what the agent inferred. The assessment goes ahead without one.
+1. **Framing.** It asks who the report is for (internal planning, or a proposal to a customer), what you already know (the goal, a deadline, the team, the first customer, the systems to integrate, constraints such as budget or the customer's Azure governance), and the report's language and place. What is unknown becomes an open question in the report, never a guess. It also asks for your filled product brief (`product/director-brief.md` once installed, or the template you copy and fill in before), reads it first and does not ask again what it answers. The report marks what came from the brief and what the agent inferred. The assessment goes ahead without one. When the brief's section 10 is blank or vague, it asks the [compliance questions](../frameworks/saasallthethings.md#the-compliance-questions) for the security framework, the regulations, the auditor and the evidence.
 2. **The scan.** It collects evidence, not impressions: the shape of the code, entry points, where the business rules live, data and whether anything identifies a customer, single-tenant habits, identity, configuration and secrets, integrations, clients, tests and delivery, and documents. A secret is reported as a file and line, never as a value, with the advice to rotate it.
 3. **The stack.** It tells you the languages it found and asks your preference, as in onboarding. Your answer decides whether the roadmap reuses or converts.
 4. **The verdict.** It scores nine dimensions from 0 (absent, or blocks the move) to 3 (already fits the reference), each with evidence and what it takes: stack, separation of business rules, data and tenant-awareness, identity, configuration and secrets, integrations, clients, tests, and delivery and operations. It maps each existing component onto its target layer as keep, extract, rebuild or retire, and gives a roadmap by stage with rough effort in person-days and a confidence. It recommends a first slice, and lists risks and assumptions. Every choice comes as options with a recommendation.
@@ -273,6 +273,8 @@ If workshop notes are in `assessment/workshops/`, their decisions are your answe
 
 Onboarding also offers `product/director-brief.md`, a product brief template for you or the customer's architect or product owner to fill in, in your own words. The agent reads a filled one first, together with the code, the assessment report and the workshop notes, marks what it took from it and what it inferred, and drafts ADRs for the architecture constraints it names. It never edits the brief. See [Where do I start with a SaaS?](start-saas.md#3-the-product-interview).
 
+When the brief's section 10 is blank, onboarding asks the same compliance questions.
+
 - **The PRD.** Each section of `product/prd.md` is filled from your documents and code. Anything inferred is marked `(inferred, please confirm)`, and anything unknown becomes an open question (`Q1`, `Q2` and so on). This is where you spend the most attention: read the marked lines and correct them.
 - **Architecture.** One row in `AGENTS.md` per existing area (a screen group, a service, a job, a store), marked `(outside the layers: Extract)`.
 - **The queue.** Known bugs and your priorities become items in `TASKS.md`. A secret found in the old code is a high-severity bug: rotate it first, then remove it.
@@ -294,6 +296,8 @@ Its sections come from the capabilities in the PRD. If the capabilities are not 
 The agent runs the check again, reports how many source files are still outside every layer, walks through the consistency checks of `/align`, and lists every file it created, changed or deleted. Nothing is committed until you say yes. The commit is `chore: install SaaSAllTheThings <version>`, and its body names the mode, the stack and everything the agent inferred.
 
 If the check passes, the agent installs the pre-commit hook. If it fails or cannot run, the hook stays off, and an item "Install the pre-commit hook once the check passes" is added to your queue.
+
+On an upgrade, the agent offers the GitHub Actions check workflow and the `compliance/mapping.md` table when either is absent, and never overwrites one you have.
 
 ### After the commit
 

@@ -10,7 +10,7 @@ How to use it: [It's costing more than I'd like](../how-to/cost.md)
 
 1. **Check the capability.** Model sizing needs an assistant that can start a builder subagent and choose that subagent's model for each call. If the assistant can't do both, the skill says so, writes nothing, and every build runs on the session's model.
 2. **Read the current map** in the project rules. The skill reports whether sizing is on and which model each size uses now.
-3. **Propose a model for each size**, with one line of reason for each. For Claude Code the tiers are Haiku for XS and S, Sonnet for M, and Opus for L and XL, with Fable as an alternative for XL on Claude platform access. Other assistants get the same tiers with their own model names.
+3. **Propose a model for each size**, with one line of reason for each. For Claude Code the tiers are Haiku for XS and S, Sonnet for M, and Opus for L and XL, with Fable as an alternative for XL where the account has access (Claude platform credits, or in Godot-Director also usage credits). Other assistants get the same tiers with their own model names.
 4. **Confirm with the director.** The director can name any model they can't access, or ask for a size to be mapped differently. The skill adjusts and asks again.
 5. **Write the block** into the project rules as `Model sizing: on` with five entries, and report the final map in a table.
 

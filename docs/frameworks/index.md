@@ -7,15 +7,16 @@ Three frameworks put Director-Driven Development to work. The same loop runs all
 | For | Small web, mobile and desktop apps | Games in Godot 4 | Multi-tenant B2B SaaS on Azure |
 | Stacks | TypeScript, Flutter, Python | GDScript | .NET by default; TypeScript and Python |
 | The director owns | Product vision and design | Design, balance, art direction | The product; the framework owns the architecture |
-| The check fails on | UI importing the data layer, secrets, failing types, lint or tests | Game rules in screen scripts, load errors, failing tests, smoke autoplay findings once the game's adapter is wired | Architecture rules (layers, tenancy, secrets, sizes, cost SKUs), failing build or tests |
-| Security baseline | OWASP Top 10 (2025), assessed by `/security` | | OWASP Top 10 (2025), assessed by `/security`, and the compliance questions |
+| The check fails on | UI importing the data layer, secrets, failing types, lint or tests | Game rules in screen scripts, load errors, failing tests, layout lint findings on the screens it enforces, smoke autoplay findings once the game's adapter is wired | Architecture rules (layers, tenancy, secrets, sizes, cost SKUs), failing build or tests |
+| Security baseline | OWASP Top 10 (2025), assessed by `/security` | `/security` isn't shipped | OWASP Top 10 (2025), assessed by `/security` |
+| Control framework | | | The compliance questions, and `compliance/mapping.md` |
 | Human rounds | `/acceptance` | `/playtest`, `/function-check` | `/acceptance`, `/feedback` |
 | In your project | `.app-director/` | `.godot-director/` | `.satt/` |
 
 ## Shared by all three
 
 - The loop through `/next-task`, design sessions through `/design`, and the records: `AGENTS.md`, `TASKS.md`, a design document and a decision log.
-- `/align`, `/drift-reset`, `/prune`, `/refresh-model-sizing`, [`/research`](../skills/research.md) and [`/ui-design`](../skills/ui-design.md).
+- [`/release`](../skills/release.md), each to its own kind of target, `/align`, `/drift-reset`, `/prune`, `/refresh-model-sizing`, [`/research`](../skills/research.md) and [`/ui-design`](../skills/ui-design.md).
 - A builder, a read-only reviewer and a read-only researcher as Claude Code subagents.
 - `bash tools/check.sh` with result caching (`--if-changed`), and a git pre-commit hook that runs it when a commit touches code.
 - Hooks in Claude Code that run the check before the agent ends its turn and block work-destroying git commands.

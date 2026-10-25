@@ -14,8 +14,8 @@ Director-Driven Development is a way of working with AI coding agents. The human
 1. **Who it is for.** Director-Driven Development is for anyone who wants to use AI coding agents to build software and stay in control of what gets built.
 2. **The problem.** The first prompt is easy. The second is where it breaks: context fills up, the agent quietly decides things nobody agreed to, and every new session reinterprets the project from scratch. Before you know it, the product that was built is no longer the product you ordered.
 3. **The solution.** DDD puts you in the director's seat. Every task is small and handed to a fresh agent that reads only what it needs. Design decisions come to you as options, and only your choice is recorded. One automatic check decides when a task is done. The agent never guesses intent.
-4. **Why it is different.** Most AI workflows guide the agent with prompts, and prompts can be ignored. DDD enforces the architecture through a check that fails the build: a rule in the wrong layer, a tenant ID read from a request, logic where it does not belong. Directing scales by turning repeated judgment into checks.
-5. **Try it.** Pick the framework that fits your stack, install it in your own repo, and run `/next-task`. All three frameworks are free, MIT licensed, and work with any AI coding assistant that reads `AGENTS.md`.
+4. **Why it is different.** Most AI workflows guide the agent with prompts, and prompts can be ignored. DDD enforces the architecture through a check that fails the build: a rule in the wrong layer, a tenant ID read from a request, logic where it does not belong. Directing scales by turning repeated judgement into checks.
+5. **Try it.** Pick the framework that fits your stack, install it in your own repo, and run `/next-task`. All three frameworks are free, MIT licensed, and designed to work with any AI coding assistant that reads `AGENTS.md`.
 
 ## The roles
 
@@ -104,7 +104,7 @@ Multi-tenant B2B SaaS on Azure, with an architecture the check enforces.
 </div>
 </div>
 
-All three are MIT licensed, run locally, and work with any AI coding assistant that reads `AGENTS.md`. They are built and tested on Claude Code.
+All three are MIT licensed, run locally, and designed to work with any AI coding assistant that reads `AGENTS.md`. They are built and tested on Claude Code; other assistants are untested.
 
 ## Built with the frameworks
 

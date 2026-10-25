@@ -26,7 +26,7 @@ The procedure is at [`framework/.godot-director/procedures/align.md`](https://gi
 - It checks the GDD, `design/decisions.md`, `playtesting/TEMPLATE.md` and `project.godot` against `AGENTS.md`. The whole-document read is of `design/gdd.md`, and the latest releases are the game's exports and their UAT or production uploads. Every autoload and every rule folder needs an Architecture row.
 - Every file listed under `[screens] known` in `tools/check.cfg` needs an open item that removes it from the list.
 - It counts the balance placeholders in the scripts and writes the number into the Content and balance milestone row.
-- The check must pass with no notes about typing or hooks.
+- When the game has an autoplay adapter, it lists logging gaps (signals that carry a player action or a turn step but write no play-log line) and scenario gaps (views, controls and offered actions no autoplay scenario covers). Neither fails the pass.
 - During onboarding, the fixes go into the install commit instead of a separate one.
 - `AGENTS.md` points to `.godot-director/rules.md`, and `CLAUDE.md` contains `@AGENTS.md`.
 - Items follow `.godot-director/tasks.md`.
@@ -54,6 +54,7 @@ The procedure is at [`framework/.satt/procedures/align.md`](https://github.com/F
 - It runs `bash tools/check.sh --architecture` and reports any stale ADR exceptions, any proposed ADR waiting longer than a week and the count of source files outside any layer.
 - It checks that `AGENTS.md` › Layout matches the layers in `tools/check.cfg`, and reports workshop notes under `assessment/workshops/` that have no `Processed:` line.
 - When the product has a screen catalog (`tools/ui/screens.mjs`), it lists the client screens the catalog doesn't cover, spec names missing from the source, drawings changed since they were processed, and `UI:` fields that point at no spec. None of it fails the pass.
+- When `compliance/mapping.md` exists, it reports each row whose Met by names a rule, workflow job, ADR or test that no longer exists, each `direct` row with no Met by yet, and any of the ten OWASP baseline rows the file lacks, which it offers to add. It never marks a control met.
 - It never changes the product or the architecture.
 - `AGENTS.md` points to `.satt/rules.md`, and `CLAUDE.md` contains `@AGENTS.md`.
 - Items follow `.satt/tasks.md`.

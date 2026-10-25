@@ -6,7 +6,7 @@
 
 `/security` runs a security assessment of what is built, against the OWASP baseline the framework sets. App-Director and SaaSAllTheThings ship it; Godot-Director doesn't. The skill follows the security procedure of its repository, which is the source of truth.
 
-How to use it: [How do I ship it?](../how-to/ship.md), since a release runs it first. The baseline is described on the [App-Director](../frameworks/app-director.md#the-owasp-baseline) and [SaaSAllTheThings](../frameworks/saasallthethings.md#the-owasp-baseline) pages.
+How to use it: [Is what was built secure?](../how-to/security.md) A release runs it first, as [How do I ship it?](../how-to/ship.md) describes. The baseline is described on the [App-Director](../frameworks/app-director.md#the-owasp-baseline) and [SaaSAllTheThings](../frameworks/saasallthethings.md#the-owasp-baseline) pages.
 
 ## What runs
 

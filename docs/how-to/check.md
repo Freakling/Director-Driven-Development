@@ -32,9 +32,8 @@ Saying it and typing the command run the same procedure.
 ## What can go wrong
 
 - **A test run has a time limit.** In all three frameworks the check runs each test command under GNU `timeout`, for `[tests] timeout` seconds in `tools/check.cfg` (600 by default). A run past the limit exits 3, which means the check couldn't run, and says so. Without GNU `timeout` the check notes it and runs without a limit.
-- **Godot-Director's balanced test jobs are opt-in.** `[tests] balance = true` in `tools/check.cfg` deals the test files to the parallel jobs by the last run's times, and `split_over` (seconds) splits a slow file by test method. A file whose tests share state across methods keeps a line `# gdir: no-split` among its first ten lines and runs whole, and `bash tools/check.sh --jobs 1` measures every file whole again. Where heavy test files compete for the CPU, balancing may not help, so measure with the slowest-files summary before and after. Turn it on only once no test depends on the order the files run in.
+- **Godot-Director's test jobs.** A test that fails only in the check is covered in [Something isn't there, or doesn't work](trouble.md#a-godot-test-fails-only-in-the-check).
 - **Godot-Director skips an unchanged import pass.** The check imports assets again only when a file Godot imports, or a script's path or class declaration, has changed. A fresh clone, or `bash tools/check.sh --import`, runs the pass.
-
 - **Notes drive the bug.** The agent takes the repro from what you wrote, so a precise note gives a precise bug.
 - **Use test accounts.** The *How* hints name the account to use. Keep real users' accounts out of it.
 - **A failing check stops the preparation.** Fix `bash tools/check.sh` first.
