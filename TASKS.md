@@ -449,6 +449,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 
 ### T203 · App-Director and SaaSAllTheThings: the OWASP baseline moves to the current Top 10 edition · in-progress 2026-10-25 · M · agent
 - Depends on: T201, T202
+- PRs: SaaSAllTheThings #38 (open); App-Director building
 - Touches: work/App-Director and work/SaaSAllTheThings: rules.md, reference/owasp.md, check.sh messages, the security procedure, compliance/mapping.md (SaaSAllTheThings), selftest.sh
 - Done when: the baseline, the checklists, the mapping rows and the check's messages use the current OWASP Top 10 edition's categories and names, checked against OWASP's published list, with an upgrade step that maps each old row to its new category (merged or renamed categories said plainly); one pull request per repo (check) · following AGENTS.md › Project rules for framework work
 - Brief: Scope › Framework features
