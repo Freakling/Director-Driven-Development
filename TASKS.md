@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T209 · B5 · R7
+**Next IDs:** T211 · B5 · R7
 
 ## Milestones
 | Milestone | Status |
@@ -404,9 +404,9 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: every framework link points at the new tags; the check how-to says the check limits each test run (`[tests] timeout`, exit 3) in all three frameworks, and the troubleshooting page says what the Bash guard blocks and the form that works for each (an empty Python heredoc, an unbounded wait, a Godot run without a time limit); the Godot-Director pages say the check skips an unchanged import pass (`--import` forces it); the SaaSAllTheThings page lists the `network-public` rule with what's enforced and what isn't, and mentions the CI workflow template with its dependency review and SBOM, and the compliance mapping table, each checked against the release; the selftest passes (check)
 - Brief: Scope › Framework features
 
-### T197 · Godot-Director: a sweep plays its scenarios side by side, and the builder doesn't play smoke twice · in-progress 2026-10-25 · M · agent
+### T197 · Godot-Director: a sweep plays its scenarios side by side, and the builder doesn't play smoke twice · done 2026-10-25 · M · agent
 - Depends on: -
-- PRs: Godot-Director #43 (open)
+- PRs: Godot-Director #43 (merged)
 - Note: The Guildkeeper sweep of four scenarios: 462 s one call at a time, 124 s in one call.
 - Touches: work/Godot-Director: framework/tools/autoplay.sh, framework/.godot-director/procedures/build.md, framework/.godot-director/procedures/autoplay.md, selftest.sh
 - Done when: `bash tools/autoplay.sh <scenario> <scenario> ...` (and `--all`) runs the scenarios in separate Godot processes at the same time under the one lock and one import check, each with its own user dir, log and run folder, capped at the CPU count, and reports each scenario's result with exit codes unchanged; one scenario behaves as today (check) · `build.md` has the builder play the scenarios the item names once, after the tests pass, in one call, and leave out `smoke` when `tools/check.cfg` › `[autoplay]` has the check play it (check) · measured on The Guildkeeper's scratch copy: a sweep of quest_job, quest_hold, quest_controls and smoke before and after (check) · following AGENTS.md › Project rules for framework work
@@ -456,9 +456,9 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: the baseline, the checklists, the mapping rows and the check's messages use the current OWASP Top 10 edition's categories and names, checked against OWASP's published list, with an upgrade step that maps each old row to its new category (merged or renamed categories said plainly); one pull request per repo (check) · following AGENTS.md › Project rules for framework work
 - Brief: Scope › Framework features
 
-### T204 · Release App-Director 1.11.0 · in-progress 2026-10-25 · S · agent
+### T204 · Release App-Director 1.11.0 · done 2026-10-25 · S · agent
 - Depends on: T199, T202, T205, T203
-- PRs: App-Director #39 (open)
+- PRs: App-Director #39 (merged); v1.11.0 tagged and published
 - Touches: work/App-Director: the version carriers its CLAUDE.md lists, CHANGELOG.md
 - Done when: the release pull request bumps every version carrier and template link together, turns Unreleased into the 1.11.0 heading (the OWASP baseline and the security assessment), passes the selftest and carries the release notes in its commit body; once merged, `tools/work-release.sh` tags v1.11.0 and publishes the release (check) · following AGENTS.md › Project rules for framework work
 - Brief: Scope › Framework features
@@ -477,9 +477,9 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: the release pull request bumps every version carrier, every skill's version and clone branch, and the template links together, turns Unreleased into the 0.13.0 heading (the OWASP baseline, the compliance questions, the security assessment), passes the selftest and carries the release notes in its commit body; once merged, `tools/work-release.sh` tags v0.13.0 and publishes the release (check) · following AGENTS.md › Project rules for framework work
 - Brief: Scope › Framework features
 
-### T207 · Release SaaSAllTheThings 0.14.0 · in-progress 2026-10-25 · S · agent
+### T207 · Release SaaSAllTheThings 0.14.0 · done 2026-10-25 · S · agent
 - Depends on: T203
-- PRs: SaaSAllTheThings #39 (open)
+- PRs: SaaSAllTheThings #39 (merged); v0.14.0 tagged and published
 - Touches: work/SaaSAllTheThings: the version carriers its CLAUDE.md lists, CHANGELOG.md
 - Done when: the release pull request bumps every version carrier, every skill's version and clone branch, and the template links together, turns Unreleased into the 0.14.0 heading (the OWASP Top 10 (2025)), passes the selftest and carries the release notes in its commit body; once merged, `tools/work-release.sh` tags v0.14.0 and publishes the release (check) · following AGENTS.md › Project rules for framework work
 - Brief: Scope › Framework features
@@ -488,6 +488,18 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Depends on: T204, T207
 - Touches: docs/**/*.md (the framework links), docs/frameworks/app-director.md, docs/frameworks/saasallthethings.md, docs/skills/, docs/how-to/, mkdocs.yml, product/brief.md
 - Done when: every framework link points at the new tags; the site describes the OWASP Top 10 (2025) baseline in both app frameworks (framework-owned, deviation only by a named, accepted decision), the `/security` assessment (what runs, what comes out, when it runs, what a clean run doesn't prove) with a skill page if the skills section covers framework-specific skills or a how-to otherwise, and SaaSAllTheThings' compliance-framework questions and mapping rows, each checked against the releases and without overclaiming; the selftest passes (check)
+- Brief: Scope › Framework features
+
+### T209 · The docs CI checks the framework releases the docs are written against, not GitHub's newest · in-progress 2026-10-25 · M · agent
+- Depends on: -
+- Touches: selftest.sh, frameworks.lock (new), AGENTS.md, tools/audit.sh
+- Done when: a committed `frameworks.lock` names the release each framework's docs are written against (one line per repo, `v<version>`); the selftest's link check, command coverage and release cache use those tags instead of each repo's highest tag, so a framework release no longer turns `main` red; the selftest prints a warning, not a failure, naming each framework whose newest release is past the pinned one; `tools/audit.sh` and the AGENTS.md Selftest row and "Latest only" rule say the docs follow-up item bumps the pin with the links; the pin starts at the releases the docs describe today, so the selftest passes now (check)
+- Brief: Scope › Orchestrator for the three frameworks
+
+### T210 · Release Godot-Director 4.5.0 · in-progress 2026-10-25 · S · agent
+- Depends on: T189, T197
+- Touches: work/Godot-Director: the version carriers its CLAUDE.md lists, CHANGELOG.md
+- Done when: the release pull request bumps every version carrier and template link together, turns Unreleased into the 4.5.0 heading (opt-in balanced test jobs, side-by-side autoplay sweeps), passes the selftest without Godot and carries the release notes in its commit body; once merged, `tools/work-release.sh` tags v4.5.0 and publishes the release (check) · following AGENTS.md › Project rules for framework work
 - Brief: Scope › Framework features
 
 ### T173 · The director pilots SaaSAllTheThings' example app in an Azure sandbox · todo · - · human
