@@ -450,13 +450,13 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: the baseline, the checklists, the mapping rows and the check's messages use the current OWASP Top 10 edition's categories and names, checked against OWASP's published list, with an upgrade step that maps each old row to its new category (merged or renamed categories said plainly); one pull request per repo (check) · following AGENTS.md › Project rules for framework work
 - Brief: Scope › Framework features
 
-### T204 · Release App-Director 1.11.0 · in-progress 2026-10-25 · S · agent
-- Depends on: T199, T202
+### T204 · Release App-Director 1.11.0 · todo · S · agent
+- Depends on: T199, T202, T205
 - Touches: work/App-Director: the version carriers its CLAUDE.md lists, CHANGELOG.md
 - Done when: the release pull request bumps every version carrier and template link together, turns Unreleased into the 1.11.0 heading (the OWASP baseline and the security assessment), passes the selftest and carries the release notes in its commit body; once merged, `tools/work-release.sh` tags v1.11.0 and publishes the release (check) · following AGENTS.md › Project rules for framework work
 - Brief: Scope › Framework features
 
-### T205 · App-Director: the security assessment never quotes a secret, and names its OWASP editions · todo · S · agent
+### T205 · App-Director: the security assessment never quotes a secret, and names its OWASP editions · in-progress 2026-10-25 · S · agent
 - Depends on: T202
 - Touches: work/App-Director: framework/.app-director/procedures/security.md, framework/.app-director/reference/owasp.md, framework/.app-director/rules.md, framework/.app-director/procedures/release.md, framework/tools/security.sh, selftest.sh
 - Done when: from SaaSAllTheThings' review of the same feature: evidence, the report and bug items never quote a secret, token, key or the line holding one, only file:line and the kind of secret; a tool counts as clean only when it exits 0 with its nothing-found summary, and a timeout, network or restore error is couldn't run (check security.sh does this for every tool); owasp.md and rules.md name the Top 10 (2021) edition until T203; release.md runs the assessment on main at the release commit, not on a detached tag (check) · following AGENTS.md › Project rules for framework work
