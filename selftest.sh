@@ -2,11 +2,11 @@
 # Docs site selftest. Run from the repository root: bash selftest.sh
 #
 #   1. No en or em dashes in the site sources.
-#   2. Docs coverage: every command a framework ships in its latest release is mentioned on its
+#   2. Docs coverage: every command a framework ships in its pinned release is mentioned on its
 #      framework page, or on the skill page that covers it (see skill_page below). A page that
 #      describes a command only main ships gets a warning: the docs follow releases, not main.
-#   3. Framework links: a docs link into a framework repo names that repo's latest release tag, not
-#      main or an older release, and the path it names exists at that release.
+#   3. Framework links: a docs link into a framework repo names that repo's pinned release tag (in
+#      frameworks.lock), not main or another release, and the path it names exists at that release.
 #   4. Skills nav: every skill page listed in the nav exists.
 #   5. How-to links: every skill page links some page under docs/how-to/, so a reader of the skill
 #      page finds the question that answers it; every page the How-to nav lists exists.
@@ -18,10 +18,14 @@
 #      the Godot engine, .NET, Node and gitleaks, which have versions of their own.
 #   8. The site builds in strict mode, which fails on broken internal links and anchors.
 #
+# frameworks.lock pins each framework to the release the docs describe. A new release therefore
+# never turns the run red by itself: online, a release past the pin prints a WARN, and the docs
+# follow-up item bumps the pin with the links. A pin naming a tag the remote lacks fails.
+#
 # The framework repos are kept as copies under .app-director/state/frameworks (gitignored), each
-# at its latest release tag (v<version>). Online, each run moves the copies to the latest release.
-# Offline, the cached copy is used with a notice; with no cache and no network, the run fails.
-# CI has no cache, so it clones the latest releases fresh.
+# at its pinned release tag (v<version>). Online, each run fetches exactly that tag. Offline, a
+# cached copy at the pin is used with a notice; with no such cache and no network, the run fails.
+# CI has no cache, so it clones the pinned releases fresh.
 #
 # FRAMEWORKS_DIR=<folder>      uses existing clones of the three framework repos instead
 #                              (each as <folder>/<repo name>); no cache, no network.
@@ -57,38 +61,58 @@ latest_tag() { grep -E '^v[0-9]+(\.[0-9]+)*$' | sort -V | tail -1; }
 # release_at <gitdir>: the release tag the cached copy is at, or nothing when it is at no tag.
 release_at() { git --git-dir="$1" tag --points-at HEAD 2>/dev/null | latest_tag; }
 
-# refresh_framework <repo> <dest>: 0 when <dest> holds the latest release of <repo>, or its cached copy.
+# pin_of <repo>: the tag frameworks.lock pins <repo> to.
+pin_of() { grep -v '^[[:space:]]*#' frameworks.lock 2>/dev/null | awk -v r="$1" '$1 == r { print $2; exit }'; }
+
+# refresh_framework <repo> <dest>: 0 when <dest> holds the pinned release of <repo>, or its cached copy.
 # <dest> is a work tree at the release tag. Its git metadata sits beside it in <dest>.git, not in
 # <dest>/.git: a nested repo makes `git ls-files -o` list the whole clone, which trips the pre-commit
 # hook. The metadata also holds the default branch (refs/remotes/github/main) for the main-only check.
-# Online, the latest release is fetched and checked out. If GitHub can't be reached, or the cache has
-# local changes, the cached copy is kept and a notice is printed.
+# Online, the pinned tag is fetched and checked out, and a newer release prints a WARN. A pin that
+# the remote doesn't have fails. If GitHub can't be reached, or the cache has local changes, a cached
+# copy at the pin is kept with a notice; a cache at another tag fails.
 refresh_framework() {
-  local repo="$1" dest="$2" gd="$2.git" tmp="$2.partial" url latest at
+  local repo="$1" dest="$2" gd="$2.git" tmp="$2.partial" url pin tags newest at
   url="$remote_base/$repo.git"
-  latest=$(timed 15 ls-remote --tags --refs "$url" 2>/dev/null | sed 's|.*refs/tags/||' | latest_tag)
+  pin=$(pin_of "$repo")
+  if [ -z "$pin" ]; then err "frameworks.lock has no pin for $repo"; return 0; fi
+  tags=$(timed 15 ls-remote --tags --refs "$url" 2>/dev/null | sed 's|.*refs/tags/||')
+  newest=$(latest_tag <<< "$tags")
+  if [ -n "$tags" ]; then
+    if ! grep -qxF "$pin" <<< "$tags"; then
+      err "frameworks.lock pins $repo to $pin, which $repo doesn't have on GitHub"; return 0
+    fi
+    if [ -n "$newest" ] && [ "$newest" != "$pin" ] && [ "$(printf '%s\n%s\n' "$pin" "$newest" | sort -V | tail -1)" = "$newest" ]; then
+      echo "WARN: $repo $newest is released; the docs are pinned to $pin: bump frameworks.lock with the links in the docs follow-up"
+    fi
+  else
+    echo "notice: could not check whether $repo has a release past its pin $pin (offline)"
+  fi
   if [ -d "$gd" ] && [ -d "$dest" ]; then
-    if [ -n "$latest" ] \
+    if [ -n "$tags" ] \
        && timed 120 --git-dir="$gd" fetch -q --depth 1 "$url" \
-            "+HEAD:refs/remotes/github/main" "+refs/tags/$latest:refs/tags/$latest" 2>/dev/null \
-       && git --git-dir="$gd" --work-tree="$dest" checkout -q --detach "refs/tags/$latest" 2>/dev/null; then
-      echo "ok: $repo at its latest release $latest ($(git --git-dir="$gd" log -1 --format='%h %cs' "$latest"))"
+            "+HEAD:refs/remotes/github/main" "+refs/tags/$pin:refs/tags/$pin" 2>/dev/null \
+       && git --git-dir="$gd" --work-tree="$dest" checkout -q --detach "refs/tags/$pin" 2>/dev/null; then
+      echo "ok: $repo at its pinned release $pin ($(git --git-dir="$gd" log -1 --format='%h %cs' "$pin"))"
     else
       at=$(release_at "$gd")
-      echo "notice: could not move $repo to its latest release (offline, or local changes in the cache);" \
-        "using the cached copy at ${at:-an untagged commit}"
+      if [ "$at" = "$pin" ]; then
+        echo "notice: could not move $repo to its pin (offline, or local changes in the cache); using the cached copy at $pin"
+      else
+        err "$repo's cached copy is at ${at:-an untagged commit}, not its pin $pin, and it can't be moved (offline, or local changes)"
+      fi
     fi
     return 0
   fi
-  # No cache yet: clone the latest release.
-  [ -n "$latest" ] || return 1
+  # No cache yet: clone the pinned release.
+  [ -n "$tags" ] || return 1
   rm -rf "$tmp" "$tmp.git"; mkdir -p "$tmp"
   if git --git-dir="$tmp.git" init -q \
      && timed 120 --git-dir="$tmp.git" fetch -q --depth 1 "$url" \
-          "+HEAD:refs/remotes/github/main" "+refs/tags/$latest:refs/tags/$latest" \
-     && git --git-dir="$tmp.git" --work-tree="$tmp" checkout -q --detach "refs/tags/$latest"; then
+          "+HEAD:refs/remotes/github/main" "+refs/tags/$pin:refs/tags/$pin" \
+     && git --git-dir="$tmp.git" --work-tree="$tmp" checkout -q --detach "refs/tags/$pin"; then
     rm -rf "$dest" "$gd"; mv "$tmp" "$dest"; mv "$tmp.git" "$gd"
-    echo "ok: $repo cloned from GitHub into the cache, at $latest"
+    echo "ok: $repo cloned from GitHub into the cache, at its pin $pin"
     return 0
   fi
   rm -rf "$tmp" "$tmp.git"
@@ -103,7 +127,7 @@ else
     repo="${pair%%:*}"
     [ -n "$src" ] || break
     refresh_framework "$repo" "$src/$repo" \
-      || err "could not get $repo's latest release: no network and no cached copy in $src/$repo (run once online)"
+      || err "could not get $repo's pinned release: no network and no cached copy in $src/$repo (run once online)"
   done
 fi
 
@@ -174,16 +198,16 @@ for pair in $repos; do
       printf '%s\n' "$release_names" | grep -qxF "$name" && continue
       label="$name"; [ "$kind" = slash ] && label="/$name"
       grep -rlE "\`/?$name([^a-z0-9-]|\$)" docs --include='*.md' 2>/dev/null | while IFS= read -r hit; do
-        echo "warning: $hit describes $label, which the latest release of $repo doesn't ship (main does)"
+        echo "warning: $hit describes $label, which the pinned release of $repo doesn't ship (main does)"
       done
     done < <(commands_of "$main_tmp/$repo")
   fi
 done
 
 # 3. Framework links ------------------------------------------------------------------------
-# A docs link into a framework repo names that repo's latest release tag, so the pages follow
-# releases. A link to main or to an older release fails, naming the page and the link, and so does
-# a path the release doesn't have. Links to a repo's root (no tree or blob path) are left alone.
+# A docs link into a framework repo names that repo's pinned release tag (frameworks.lock). A link
+# to main or to another release fails, naming the page and the link, and so does a path the
+# release doesn't have. Links to a repo's root (no tree or blob path) are left alone.
 link_re='github\.com/Freakling/(Godot-Director|App-Director|SaaSAllTheThings)/(tree|blob)/[^ )"]*'
 links=$(grep -rnoE --include='*.md' "$link_re" docs 2>/dev/null || true)
 ok_links=0
@@ -193,9 +217,9 @@ for pair in $repos; do
   mine=$(grep -F "github.com/Freakling/$repo/" <<< "$links" || true)
   [ -n "$mine" ] || continue
   gd="$src/$repo.git"; [ -n "${FRAMEWORKS_DIR:-}" ] && gd="$src/$repo/.git"
-  rel=$(release_at "$gd")
-  if [ -z "$rel" ]; then
-    err "$repo's copy isn't at a release tag, so the links into it can't be checked; check out its latest release"
+  rel=$(pin_of "$repo")
+  if [ -z "$rel" ] || ! git --git-dir="$gd" tag --points-at HEAD 2>/dev/null | grep -qxF "$rel"; then
+    err "$repo's copy isn't at its pin ${rel:-(none)}, so the links into it can't be checked; check out that tag"
     continue
   fi
   while IFS= read -r hit; do
@@ -203,15 +227,15 @@ for pair in $repos; do
     [[ $link =~ ^github\.com/Freakling/[^/]+/(tree|blob)/([^/]+)/(.*)$ ]] || continue
     ref=${BASH_REMATCH[2]}; path=${BASH_REMATCH[3]}
     if [ "$ref" != "$rel" ]; then
-      err "$where:$lineno links to $repo at $ref, not its latest release $rel: $link"
+      err "$where:$lineno links to $repo at $ref, not its pinned release $rel: $link"
     elif git --git-dir="$gd" cat-file -e "$rel:$path" 2>/dev/null; then
       ok_links=$((ok_links + 1))
     else
-      err "$where:$lineno links to $path, which $repo's latest release $rel doesn't have"
+      err "$where:$lineno links to $path, which $repo's pinned release $rel doesn't have"
     fi
   done <<< "$mine"
 done
-[ "$ok_links" -gt 0 ] && echo "ok: $ok_links links into the framework repos point at their latest release"
+[ "$ok_links" -gt 0 ] && echo "ok: $ok_links links into the framework repos point at their pinned release"
 
 # 4. Skills nav -----------------------------------------------------------------------------
 # Every skill page listed in the nav under Skills must exist on disk.

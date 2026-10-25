@@ -490,7 +490,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: every framework link points at the new tags; the site describes the OWASP Top 10 (2025) baseline in both app frameworks (framework-owned, deviation only by a named, accepted decision), the `/security` assessment (what runs, what comes out, when it runs, what a clean run doesn't prove) with a skill page if the skills section covers framework-specific skills or a how-to otherwise, and SaaSAllTheThings' compliance-framework questions and mapping rows, each checked against the releases and without overclaiming; the selftest passes (check)
 - Brief: Scope › Framework features
 
-### T209 · The docs CI checks the framework releases the docs are written against, not GitHub's newest · in-progress 2026-10-25 · M · agent
+### T209 · The docs CI checks the framework releases the docs are written against, not GitHub's newest · done 2026-10-25 · M · agent
 - Depends on: -
 - Touches: selftest.sh, frameworks.lock (new), AGENTS.md, tools/audit.sh
 - Done when: a committed `frameworks.lock` names the release each framework's docs are written against (one line per repo, `v<version>`); the selftest's link check, command coverage and release cache use those tags instead of each repo's highest tag, so a framework release no longer turns `main` red; the selftest prints a warning, not a failure, naming each framework whose newest release is past the pinned one; `tools/audit.sh` and the AGENTS.md Selftest row and "Latest only" rule say the docs follow-up item bumps the pin with the links; the pin starts at the releases the docs describe today, so the selftest passes now (check)

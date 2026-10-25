@@ -6,15 +6,15 @@
 # or the "Unique per repo" section for that framework). Flags differences rather
 # than silencing them.
 #
-# Compares each framework's latest release: the copy that selftest.sh keeps in the cache
-# (.app-director/state/frameworks, or FRAMEWORKS_CACHE). Reads the cache only, no network access.
-# A cache that isn't at its latest release (one still at main, say) is refused, so audit never
-# compares against main; run bash selftest.sh while online to move the cache to the releases.
-#
+# Compares each framework's pinned release (frameworks.lock): the copy that selftest.sh keeps in
+# the cache (.app-director/state/frameworks, or FRAMEWORKS_CACHE). Reads the cache only, no network
+# access. A cache that isn't at its pin is refused, so audit never compares against main or a
+# release the docs don't describe yet; run bash selftest.sh while online to move the cache to the pins.
+
 # Usage:  bash tools/audit.sh
 # Exit 0: no undocumented differences found
 # Exit 1: differences found (informational; not a blocker)
-# Exit 2: the cache isn't at each framework's latest release, so nothing was compared
+# Exit 2: the cache isn't at each framework's pinned release, so nothing was compared
 
 set -u
 cd "$(dirname "$0")/.." || exit 1
@@ -27,27 +27,30 @@ mkdir -p "$TMPDIR_AUDIT"
 cleanup() { rm -rf "$TMPDIR_AUDIT"; }
 trap cleanup EXIT
 
-# The same version order as selftest.sh: v1.10.0 > v1.9.0.
-latest_tag() { grep -E '^v[0-9]+(\.[0-9]+)*$' | sort -V | tail -1; }
+# pin_of <repo>: the tag frameworks.lock pins <repo> to.
+pin_of() { grep -v '^[[:space:]]*#' frameworks.lock 2>/dev/null | awk -v r="$1" '$1 == r { print $2; exit }'; }
 
-# Each cached copy must be at its latest release tag.
+# Each cached copy must be at its pinned release tag.
 releases=""
 for repo in App-Director Godot-Director SaaSAllTheThings; do
   gd="$FRAMEWORKS_DIR/$repo.git"
+  pin=$(pin_of "$repo")
+  if [ -z "$pin" ]; then
+    echo "audit: frameworks.lock has no pin for $repo"
+    exit 2
+  fi
   if [ ! -d "$gd" ]; then
     echo "audit: no cached copy of $repo in $FRAMEWORKS_DIR; run bash selftest.sh while online"
     exit 2
   fi
-  at=$(git --git-dir="$gd" tag --points-at HEAD 2>/dev/null | latest_tag)
-  newest=$(git --git-dir="$gd" tag -l 'v*' 2>/dev/null | latest_tag)
-  if [ -z "$at" ] || [ "$at" != "$newest" ]; then
-    echo "audit: $repo's cached copy is not at its latest release${newest:+ $newest} (it is at ${at:-an untagged commit})"
-    echo "       run bash selftest.sh while online to move the cache to the latest releases"
+  if ! git --git-dir="$gd" tag --points-at HEAD 2>/dev/null | grep -qxF "$pin"; then
+    echo "audit: $repo's cached copy is not at its pin $pin"
+    echo "       run bash selftest.sh while online to move the cache to the pinned releases"
     exit 2
   fi
-  releases="${releases}${releases:+, }$repo $at"
+  releases="${releases}${releases:+, }$repo $pin"
 done
-echo "audit: comparing against the latest releases: $releases"
+echo "audit: comparing against the pinned releases (frameworks.lock): $releases"
 echo ""
 
 # report <repo> <skill> <message>
