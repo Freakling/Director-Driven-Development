@@ -406,6 +406,8 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 
 ### T197 · Godot-Director: a sweep plays its scenarios side by side, and the builder doesn't play smoke twice · in-progress 2026-10-25 · M · agent
 - Depends on: -
+- PRs: Godot-Director #43 (open)
+- Note: The Guildkeeper sweep of four scenarios: 462 s one call at a time, 124 s in one call.
 - Touches: work/Godot-Director: framework/tools/autoplay.sh, framework/.godot-director/procedures/build.md, framework/.godot-director/procedures/autoplay.md, selftest.sh
 - Done when: `bash tools/autoplay.sh <scenario> <scenario> ...` (and `--all`) runs the scenarios in separate Godot processes at the same time under the one lock and one import check, each with its own user dir, log and run folder, capped at the CPU count, and reports each scenario's result with exit codes unchanged; one scenario behaves as today (check) · `build.md` has the builder play the scenarios the item names once, after the tests pass, in one call, and leave out `smoke` when `tools/check.cfg` › `[autoplay]` has the check play it (check) · measured on The Guildkeeper's scratch copy: a sweep of quest_job, quest_hold, quest_controls and smoke before and after (check) · following AGENTS.md › Project rules for framework work
 - Brief: Scope › Framework features
