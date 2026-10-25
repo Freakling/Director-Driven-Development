@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T203 · B5 · R7
+**Next IDs:** T204 · B5 · R7
 
 ## Milestones
 | Milestone | Status |
@@ -440,6 +440,12 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Depends on: T199
 - Touches: work/App-Director: framework/.app-director/procedures/security.md (new), framework/.claude/skills/security/ (new), framework/.app-director/reference/owasp.md (new), framework/.app-director/procedures/release.md, framework/.app-director/procedures/next-task.md, framework/.app-director/rules.md, ONBOARDING.md, tests/, selftest.sh
 - Done when: a security assessment procedure and skill (`/security`) validates what is built against the OWASP baseline: (1) tools first, each skipped with a note when not installed, never installed without asking: the stack's dependency vulnerability audit (`npm audit`, `dotnet list package --vulnerable --include-transitive`, `pip-audit`), the existing secrets scan, and Semgrep with its OWASP rules when present; (2) then a reviewer pass in a fresh context, category by category through a checklist in the framework's reference (each OWASP Top 10 and API Security Top 10 category broken into checks a reader can verify in code and config, from the OWASP ASVS level 1 where it applies), reading the code that each check concerns and citing file and line; (3) each finding gets the OWASP item, severity, evidence and a proposed fix, and becomes a bug item in TASKS.md (high severity first in the queue); (4) what can't be checked in the repository (people and process: access reviews, incident response, alert routing and who is on call, key rotation, the security officer's sign-off) becomes a list for the director with what to do and why, and human items where the director agrees; (5) the report is written to `product/security/YYYY-MM-DD.md` with the date, the commit, what ran, what was skipped and why, and a line per category: verified, findings, not checkable here, or not applicable (check) · it runs on request, as a step of the release procedure before a release is proposed, and is proposed by `/next-task` when a set number of items (a setting, default 10) are done since the last assessment (check) · the assessment never marks a category met from a tool passing alone, and says what a clean run does not prove (check) · the selftest proves a seeded vulnerable fixture (an injection, a missing authorization check, a secret, a vulnerable dependency where a tool is available) is reported with its OWASP item, and a clean fixture isn't (check) · following AGENTS.md › Project rules for framework work
+- Brief: Scope › Framework features
+
+### T203 · App-Director and SaaSAllTheThings: the OWASP baseline moves to the current Top 10 edition · todo · M · agent
+- Depends on: T201, T202
+- Touches: work/App-Director and work/SaaSAllTheThings: rules.md, reference/owasp.md, check.sh messages, the security procedure, compliance/mapping.md (SaaSAllTheThings), selftest.sh
+- Done when: the baseline, the checklists, the mapping rows and the check's messages use the current OWASP Top 10 edition's categories and names, checked against OWASP's published list, with an upgrade step that maps each old row to its new category (merged or renamed categories said plainly); one pull request per repo (check) · following AGENTS.md › Project rules for framework work
 - Brief: Scope › Framework features
 
 ### T173 · The director pilots SaaSAllTheThings' example app in an Azure sandbox · todo · - · human
