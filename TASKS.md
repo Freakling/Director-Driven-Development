@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T193 · B5 · R7
+**Next IDs:** T197 · B5 · R7
 
 ## Milestones
 | Milestone | Status |
@@ -175,9 +175,9 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: the release pull request bumps every version file and the template links together, turns Unreleased into the 4.2.0 heading, passes the selftest and carries the release notes as its description (check) · once merged, `bash tools/work-release.sh work/Godot-Director <pr>` tags v4.2.0 and publishes the release (check) · following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Framework features
 
-### T163 · Godot-Director: the Bash guard blocks hangs: empty Python heredocs, unbounded waits and Godot runs without a time limit · in-progress 2026-10-25 · M · agent
+### T163 · Godot-Director: the Bash guard blocks hangs: empty Python heredocs, unbounded waits and Godot runs without a time limit · done 2026-10-25 · M · agent
 - Depends on: -
-- PRs: Godot-Director #39 (open)
+- PRs: Godot-Director #39 (merged)
 - Note: selftest 718 passed, 0 failed on a quiet machine; a first run while two other framework selftests used the machine failed two capture and autoplay cases this item doesn't touch.
 - Touches: work/Godot-Director: framework/.claude/hooks/guard-git.sh, framework/.claude/settings.json, framework/.godot-director/rules.md, selftest.sh
 - Done when: the Bash guard (also run for Monitor) blocks, each with a message that says why and gives the form that works: (1) Python, `python3`, `py` or their `.exe` reading `-` from a heredoc whose body is empty, the "is Python here?" probe, which on Windows waits for console input and never returns (the message: test with `python3 --version`); (2) an `until` or `while` loop with `sleep` that isn't under `timeout N` with N of 280 or less, and a loop that reads a background command's `tasks/<id>.output` without waiting for the `[exited with code N]` or `[killed]` line Claude Code appends when the command ends; (3) a direct Godot run (the binary named by `$GODOT_BIN`, `tools/godot_bin.local` or `godot`, with `--headless`, `--script` or `--import`) that isn't under `timeout N` with N of 280 or less, since a scratch script that fails to compile keeps Godot running until it is killed (the framework's own `tools/check.sh`, `tools/autoplay.sh` and `tools/ui_capture.sh` cap their runs and are allowed); (4) a lone `sleep` over 280 seconds; the 280-second limit keeps a wait inside the five-minute prompt cache, so the turn after it doesn't rewrite the whole context; the selftest proves each block and passes the forms that work (a non-empty Python heredoc, a loop under `timeout 240`, the exit-marker loop, a short sleep) (check) · `rules.md` says in one place: give every command that may run long a time limit under five minutes, start a long check with `run_in_background` and keep working until its completion notice instead of polling, and never probe for a tool with an empty heredoc (check) · the guard still starts no other processes (check) · a CHANGELOG entry under Unreleased (check) · following AGENTS.md › Project rules for framework work (check)
@@ -365,6 +365,30 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Touches: init/guildkeeper-map-tests-prompt.md
 - Done when: a prompt for the game's own session, in `init/`, gives the measurements (the three map test files are half of all test time and the floor of the parallel check; each Godot process spends about 12 s starting the game's autoloads, 4 s of it the content loader) and asks it to share built maps across tests in those files, or split them, and to make the content loader lazy if tests don't need all content, verified by the check's slowest-files summary (check)
 - Brief: -
+
+### T193 · Release Godot-Director 4.4.0 · todo · S · agent
+- Depends on: T163
+- Touches: work/Godot-Director: the version carriers its CLAUDE.md lists, CHANGELOG.md
+- Done when: the release pull request bumps every version carrier and template link together, turns Unreleased into the 4.4.0 heading (the Bash guard against hangs), passes the selftest and carries the release notes in its commit body; once merged, `tools/work-release.sh` tags v4.4.0 and publishes the release (check) · following AGENTS.md › Project rules for framework work
+- Brief: Scope › Framework features
+
+### T194 · Release App-Director 1.10.0 · todo · S · agent
+- Depends on: T164
+- Touches: work/App-Director: the version carriers its CLAUDE.md lists, CHANGELOG.md
+- Done when: the release pull request bumps every version carrier and template link together, turns Unreleased into the 1.10.0 heading (the Bash guard against hangs and the check's time limit), passes the selftest and carries the release notes in its commit body; once merged, `tools/work-release.sh` tags v1.10.0 and publishes the release (check) · following AGENTS.md › Project rules for framework work
+- Brief: Scope › Framework features
+
+### T195 · Release SaaSAllTheThings 0.12.0 · todo · S · agent
+- Depends on: T165
+- Touches: work/SaaSAllTheThings: the version carriers its CLAUDE.md lists, CHANGELOG.md
+- Done when: the release pull request bumps every version carrier and template link together, turns Unreleased into the 0.12.0 heading (the Bash guard against hangs and the check's time limit), passes the selftest and carries the release notes in its commit body; once merged, `tools/work-release.sh` tags v0.12.0 and publishes the release (check) · following AGENTS.md › Project rules for framework work
+- Brief: Scope › Framework features
+
+### T196 · Docs follow Godot-Director 4.4.0, App-Director 1.10.0 and SaaSAllTheThings 0.12.0 · todo · S · agent
+- Depends on: T193, T194, T195
+- Touches: docs/**/*.md (the framework links), docs/how-to/check.md, docs/how-to/trouble.md
+- Done when: every framework link points at the new tags; the check how-to says the check limits each test run (`[tests] timeout`, exit 3) in all three frameworks, and the troubleshooting page says what the Bash guard blocks and the form that works for each (an empty Python heredoc, an unbounded wait, a Godot run without a time limit); the selftest passes (check)
+- Brief: Scope › Framework features
 
 ### T173 · The director pilots SaaSAllTheThings' example app in an Azure sandbox · todo · - · human
 - Depends on: T169
