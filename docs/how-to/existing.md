@@ -316,6 +316,6 @@ If the check passes, the agent installs the pre-commit hook. If it fails or cann
 
 - The framework pages: [App-Director](../frameworks/app-director.md), [Godot-Director](../frameworks/godot-director.md) and [SaaSAllTheThings](../frameworks/saasallthethings.md).
 - The skill pages [`/align`](../skills/align.md) and [Acceptance check](../skills/acceptance.md), and the concept [Align and drift reset](../concept/drift.md).
-- The onboarding steps in full: [App-Director](https://github.com/Freakling/App-Director/blob/v1.10.0/ONBOARDING.md), [Godot-Director](https://github.com/Freakling/Godot-Director/blob/v4.4.0/ONBOARDING.md) and [SaaSAllTheThings](https://github.com/Freakling/SaaSAllTheThings/blob/v0.12.0/ONBOARDING.md).
+- The onboarding steps in full: [App-Director](https://github.com/Freakling/App-Director/blob/v1.11.0/ONBOARDING.md), [Godot-Director](https://github.com/Freakling/Godot-Director/blob/v4.4.0/ONBOARDING.md) and [SaaSAllTheThings](https://github.com/Freakling/SaaSAllTheThings/blob/v0.14.0/ONBOARDING.md).
 
 <div class="takeaway"><span>Install into what you have. Onboarding reads it first and marks every guess.</span><span class="url"><a href="index.md">All questions</a></span></div>

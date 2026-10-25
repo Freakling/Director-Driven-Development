@@ -484,7 +484,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: the release pull request bumps every version carrier, every skill's version and clone branch, and the template links together, turns Unreleased into the 0.14.0 heading (the OWASP Top 10 (2025)), passes the selftest and carries the release notes in its commit body; once merged, `tools/work-release.sh` tags v0.14.0 and publishes the release (check) · following AGENTS.md › Project rules for framework work
 - Brief: Scope › Framework features
 
-### T208 · Docs follow App-Director 1.11.0 and SaaSAllTheThings 0.14.0: the OWASP baseline, the security assessment and the compliance questions · in-progress 2026-10-25 · M · agent
+### T208 · Docs follow App-Director 1.11.0 and SaaSAllTheThings 0.14.0: the OWASP baseline, the security assessment and the compliance questions · done 2026-10-25 · M · agent
 - Depends on: T204, T207
 - Touches: docs/**/*.md (the framework links), docs/frameworks/app-director.md, docs/frameworks/saasallthethings.md, docs/skills/, docs/how-to/, mkdocs.yml, product/brief.md
 - Done when: `frameworks.lock` and every App-Director and SaaSAllTheThings link move to v1.11.0 and v0.14.0; the site describes the OWASP Top 10 (2025) baseline in both app frameworks (framework-owned, deviation only by a named, accepted decision), the `/security` assessment (what runs, what comes out, when it runs, what a clean run doesn't prove) with a skill page if the skills section covers framework-specific skills or a how-to otherwise, and SaaSAllTheThings' compliance-framework questions and mapping rows, each checked against the releases and without overclaiming; the selftest passes (check)

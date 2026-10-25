@@ -4,7 +4,7 @@
 
 > Each skill is a named command that runs a procedure. The procedure is the source of truth; the skill is the shortcut that invokes it.
 
-Every framework ships a core set of skills that work the same way across all three repositories. These pages describe what each skill does and how it differs by framework. Skills that only one framework ships stay on that framework's page.
+Every framework ships a core set of skills that work the same way across all three repositories; `/security` is in App-Director and SaaSAllTheThings. These pages describe what each skill does and how it differs by framework. Skills that only one framework ships stay on that framework's page.
 
 ## The common skills
 
@@ -19,6 +19,7 @@ Every framework ships a core set of skills that work the same way across all thr
 | [/prune](prune.md) | Remove dead code, stale items and obsolete records |
 | [/refresh-model-sizing](refresh-model-sizing.md) | Update the per-size model map in AGENTS.md from the current best options |
 | [/release](release.md) | Check the build, prepare the target, and ship it with the human's approval |
+| [/security](security.md) | Assess what is built against the OWASP baseline, file the findings as bug items and write a dated report (App-Director and SaaSAllTheThings) |
 | [Acceptance check](acceptance.md) | Prove every (demo) outcome and pass the check before a release |
 
 ## How skills work

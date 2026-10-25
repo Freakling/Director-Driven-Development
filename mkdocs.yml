@@ -76,6 +76,7 @@ nav:
       - /prune: skills/prune.md
       - /refresh-model-sizing: skills/refresh-model-sizing.md
       - /release: skills/release.md
+      - /security: skills/security.md
       - Acceptance check: skills/acceptance.md
   - How-to:
       - how-to/index.md

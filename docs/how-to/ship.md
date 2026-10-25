@@ -25,6 +25,7 @@ The stricter path is to let CI run the same steps, which pays off once you relea
     - Godot-Director: `uat` (the default) or `production`, and optionally one preset, such as `/release uat Web`.
     - SaaSAllTheThings: `dev` (the default) or `prod`. Dev deploys from `main`, and prod deploys from a tag.
 3. **Check what the release contains.** App-Director and SaaSAllTheThings list the `done` items since the last release tag. In SaaSAllTheThings, a breaking contract change without its next version side by side stops the release.
+    - App-Director and SaaSAllTheThings also run a [`/security`](../skills/security.md) assessment before proposing the release, when none exists yet or something was built since the last one. An open high bug that names an OWASP item stops the release, unless an accepted decision deviates from that item.
 4. **Review the dry run.** Nothing is uploaded or deployed before you see what will happen.
     - App-Director builds for the target and checks the output.
     - Godot-Director exports the presets with `/export`, then shows the commands that `tools/release.sh uat --dry-run` would run.
@@ -46,6 +47,6 @@ The stricter path is to let CI run the same steps, which pays off once you relea
 ## Related
 
 - The [`/release` skill page](../skills/release.md), and the [Godot-Director page](../frameworks/godot-director.md#commands) for `/export`.
-- The procedures: [Godot-Director `/release`](https://github.com/Freakling/Godot-Director/tree/v4.4.0/framework/.godot-director/procedures/release.md) and [`/export`](https://github.com/Freakling/Godot-Director/tree/v4.4.0/framework/.godot-director/procedures/export.md), [App-Director](https://github.com/Freakling/App-Director/tree/v1.10.0/framework/.app-director/procedures/release.md) and [SaaSAllTheThings](https://github.com/Freakling/SaaSAllTheThings/tree/v0.12.0/framework/.satt/procedures/release.md).
+- The procedures: [Godot-Director `/release`](https://github.com/Freakling/Godot-Director/tree/v4.4.0/framework/.godot-director/procedures/release.md) and [`/export`](https://github.com/Freakling/Godot-Director/tree/v4.4.0/framework/.godot-director/procedures/export.md), [App-Director](https://github.com/Freakling/App-Director/tree/v1.11.0/framework/.app-director/procedures/release.md) and [SaaSAllTheThings](https://github.com/Freakling/SaaSAllTheThings/tree/v0.14.0/framework/.satt/procedures/release.md).
 
 <div class="takeaway"><span>The check gates the build, and you gate the release.</span><span class="url"><a href="index.md">All questions</a></span></div>
