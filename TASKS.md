@@ -267,6 +267,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 
 ### T171 · SaaSAllTheThings: a compliance mapping table that review and align read · in-progress 2026-10-25 · M · agent
 - Depends on: -
+- PRs: SaaSAllTheThings #31 (open)
 - Touches: work/SaaSAllTheThings: project/compliance/mapping.md (new), framework/.satt/procedures/architect.md, framework/.satt/procedures/review.md, framework/.satt/procedures/align.md, ONBOARDING.md, skills/saas-design-session/references/ (bundle), selftest.sh
 - Done when: a seeded table with control id, requirement, met by (rule, ADR or test), label (direct, partial, interpretive or unverified) and evidence location; architecture sessions add or update rows as ADRs are accepted, review flags a change to a mapped rule, ADR or test that leaves its row stale, and align reports rows whose rule, ADR or test no longer exists; nothing marks a control met from a framework's name (check) · following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Planned framework changes
