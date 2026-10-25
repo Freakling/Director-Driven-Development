@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T189 · B5 · R7
+**Next IDs:** T193 · B5 · R7
 
 ## Milestones
 | Milestone | Status |
@@ -341,6 +341,30 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Touches: docs/how-to/ui.md, docs/**/*.md (the App-Director and SaaSAllTheThings links)
 - Done when: every link into App-Director points at v1.9.0 and into SaaSAllTheThings at v0.11.0, and the release cache follows; the ui how-to says a screen is re-arranged by dragging the grey boxes in all three frameworks, with the blue box as the other way; the selftest passes (check)
 - Brief: Scope › Framework features
+
+### T189 · Godot-Director: the check balances its jobs by last run's timings and splits a slow test file by test method · todo · L · agent
+- Depends on: T163
+- Touches: work/Godot-Director: framework/tools/check.sh, framework/tools/check.gd, project/tools/check.cfg, selftest.sh
+- Done when: the parallel run hands out test files longest first, using each file's time from the last run (kept under .godot/godot-director/, unknown files first), instead of file order; a file whose last time is over `[tests] split_over` seconds (default 60) is run as several shards of its test methods across the jobs, each shard in its own process, the file's results merged as one; a file that can't be split (its tests share state across methods, marked by a project setting or a header line the docs name) runs whole; on The Guildkeeper's scratch copy the full run's wall time and its slowest job are recorded before and after (check) · following AGENTS.md › Project rules for framework work
+- Brief: Scope › Framework features
+
+### T190 · Godot-Director: the check plays its autoplay scenarios alongside the tests · todo · M · agent
+- Depends on: T189
+- Touches: work/Godot-Director: framework/tools/check.sh, framework/tools/autoplay.sh, selftest.sh
+- Done when: with `[autoplay] check_in_check` on, the enforced scenarios start as soon as the import and load pass are done, in their own process beside the test jobs (one fewer test job, so the CPU count isn't exceeded), and their result joins the check's report with exit codes unchanged; measured on The Guildkeeper's scratch copy (check) · following AGENTS.md › Project rules for framework work
+- Brief: Scope › Framework features
+
+### T191 · Godot-Director: the check skips the import pass when no imported file changed · todo · S · agent
+- Depends on: -
+- Touches: work/Godot-Director: framework/tools/check.sh, framework/tools/autoplay.sh, framework/tools/ui_capture.sh, selftest.sh
+- Done when: the check, autoplay and capture record a fingerprint of the files Godot imports (everything but scripts, scenes and resources it reads directly, and the .godot folder) after a passing import, and skip the next import pass when it is unchanged and `.godot/imported` exists, saying so in one line; a changed or new asset, a fresh clone, or `--import` forces the pass (check) · following AGENTS.md › Project rules for framework work
+- Brief: Scope › Framework features
+
+### T192 · The Guildkeeper: a prompt for its session to make the three quest map test files fast · todo · S · agent
+- Depends on: -
+- Touches: init/guildkeeper-map-tests-prompt.md
+- Done when: a prompt for the game's own session, in `init/`, gives the measurements (the three map test files are half of all test time and the floor of the parallel check; each Godot process spends about 12 s starting the game's autoloads, 4 s of it the content loader) and asks it to share built maps across tests in those files, or split them, and to make the content loader lazy if tests don't need all content, verified by the check's slowest-files summary (check)
+- Brief: -
 
 ### T173 · The director pilots SaaSAllTheThings' example app in an Azure sandbox · todo · - · human
 - Depends on: T169
