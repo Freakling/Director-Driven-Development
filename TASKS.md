@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T206 · B5 · R7
+**Next IDs:** T207 · B5 · R7
 
 ## Milestones
 | Milestone | Status |
@@ -430,9 +430,9 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: when the brief's section 10 is blank or vague, onboarding and the assessment ask a short set of questions instead of moving on: the security framework the organisation or customer works to (for example ISO/IEC 27001, NIST CSF, the ISF Standard of Good Practice, its own); which regulations and control frameworks follow from the markets, industry and data (for example GDPR for personal data of people in the EU, NIS2 and DORA for EU essential and financial entities, SOC 2 for customers who ask for it, PCI DSS for card data, HIPAA for US health data), each asked, never assumed; who audits and what evidence they expect; the answers go to PRD › Data and Compliance and to the brief's section 10 table, and each named framework gets its controls added to `compliance/mapping.md` by the human or from a document the human provides, never from the agent's memory; an unknown answer stays an open question; the vision and tenancy workshops check the answers with the security officer and the data protection officer; nothing marks a control met because a framework is named (check) · following AGENTS.md › Project rules for framework work
 - Brief: Scope › Framework features
 
-### T201 · SaaSAllTheThings: a recurring security assessment validates what is built against the OWASP baseline · in-progress 2026-10-25 · L · agent
+### T201 · SaaSAllTheThings: a recurring security assessment validates what is built against the OWASP baseline · done 2026-10-25 · L · agent
 - Depends on: T198
-- PRs: SaaSAllTheThings #36 (open)
+- PRs: SaaSAllTheThings #36 (merged)
 - Review: the Semgrep command printed matched source, failed tools could read as clean, findings could quote a secret, the fixture's manifests would trip Dependabot, the tenant checks missed where this architecture breaks; all fixed. Semgrep's emacs field layout is unverified (not installed here).
 - Touches: work/SaaSAllTheThings: framework/.satt/procedures/security.md (new), framework/.claude/skills/security/ (new), framework/.satt/reference/owasp.md (new), framework/.satt/procedures/release.md, framework/.satt/procedures/next-task.md, framework/.satt/rules.md, ONBOARDING.md, tests/, skills/ (bundle), selftest.sh
 - Done when: a security assessment procedure and skill (`/security`) validates what is built against the OWASP baseline: (1) tools first, each skipped with a note when not installed, never installed without asking: the stack's dependency vulnerability audit (`npm audit`, `dotnet list package --vulnerable --include-transitive`, `pip-audit`), the existing secrets scan, and Semgrep with its OWASP rules when present, and the Bicep rules for configuration; (2) then a reviewer pass in a fresh context, category by category through a checklist in the framework's reference (each OWASP Top 10 and API Security Top 10 category broken into checks a reader can verify in code and config, from the OWASP ASVS level 1 where it applies), reading the code that each check concerns and citing file and line; (3) each finding gets the OWASP item, severity, evidence and a proposed fix, and becomes a bug item in TASKS.md (high severity first in the queue); (4) what can't be checked in the repository (people and process: access reviews, incident response, alert routing and who is on call, key rotation, the security officer's sign-off) becomes a list for the director with what to do and why, and human items where the director agrees; (5) the report is written to `assessment/security/YYYY-MM-DD.md` with the date, the commit, what ran, what was skipped and why, and a line per category: verified, findings, not checkable here, or not applicable (check) · it runs on request, as a step of the release procedure before a release is proposed, and is proposed by `/next-task` when a set number of items (a setting, default 10) are done since the last assessment (check) · the assessment never marks a category met from a tool passing alone, and says what a clean run does not prove (check) · the selftest proves a seeded vulnerable fixture (an injection, a missing authorization check, a secret, a vulnerable dependency where a tool is available) is reported with its OWASP item, and a clean fixture isn't (check) · the assessment updates the Met by, Label and Evidence of the OWASP rows in `compliance/mapping.md` and flags rows of the customer's own framework that a finding touches (check) · following AGENTS.md › Project rules for framework work
@@ -462,6 +462,12 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Depends on: T202
 - Touches: work/App-Director: framework/.app-director/procedures/security.md, framework/.app-director/reference/owasp.md, framework/.app-director/rules.md, framework/.app-director/procedures/release.md, framework/tools/security.sh, selftest.sh
 - Done when: from SaaSAllTheThings' review of the same feature: evidence, the report and bug items never quote a secret, token, key or the line holding one, only file:line and the kind of secret; a tool counts as clean only when it exits 0 with its nothing-found summary, and a timeout, network or restore error is couldn't run (check security.sh does this for every tool); owasp.md and rules.md name the Top 10 (2021) edition until T203; release.md runs the assessment on main at the release commit, not on a detached tag (check) · following AGENTS.md › Project rules for framework work
+- Brief: Scope › Framework features
+
+### T206 · Release SaaSAllTheThings 0.13.0 · in-progress 2026-10-25 · S · agent
+- Depends on: T198, T200, T201
+- Touches: work/SaaSAllTheThings: the version carriers its CLAUDE.md lists, CHANGELOG.md
+- Done when: the release pull request bumps every version carrier, every skill's version and clone branch, and the template links together, turns Unreleased into the 0.13.0 heading (the OWASP baseline, the compliance questions, the security assessment), passes the selftest and carries the release notes in its commit body; once merged, `tools/work-release.sh` tags v0.13.0 and publishes the release (check) · following AGENTS.md › Project rules for framework work
 - Brief: Scope › Framework features
 
 ### T173 · The director pilots SaaSAllTheThings' example app in an Azure sandbox · todo · - · human
