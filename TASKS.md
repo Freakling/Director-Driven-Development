@@ -237,9 +237,9 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: the README's sentence that an `in-progress` claim stops two sessions touching the same item says what `rules.md` says instead: a claim protects only its own worktree, and sessions that build at the same time each take a git worktree (check) · following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Framework features
 
-### T167 · SaaSAllTheThings: its TASKS.md has one queue and unique IDs · in-progress 2026-10-25 · XS · agent
+### T167 · SaaSAllTheThings: its TASKS.md has one queue and unique IDs · done 2026-10-25 · XS · agent
 - Depends on: T151, T100
-- PRs: SaaSAllTheThings #28 (open)
+- PRs: SaaSAllTheThings #28 (merged)
 - Touches: work/SaaSAllTheThings: TASKS.md
 - Done when: the root TASKS.md has one `## Queue` heading (today three, at about lines 9, 35 and 49), the two items numbered T9 ("The README starts with writing your own product brief" and "/ui-design with Playwright capture") have distinct IDs with references to them updated, and T10's Done when names its own repo's item rather than the docs repo's T160 (check) · following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Orchestrator for the three frameworks
@@ -358,9 +358,9 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: with `[autoplay] check_in_check` on, the enforced scenarios start as soon as the import and load pass are done, in their own process beside the test jobs (one fewer test job, so the CPU count isn't exceeded), and their result joins the check's report with exit codes unchanged; measured on The Guildkeeper's scratch copy (check) · following AGENTS.md › Project rules for framework work
 - Brief: Scope › Framework features
 
-### T191 · Godot-Director: the check skips the import pass when no imported file changed · in-progress 2026-10-25 · S · agent
+### T191 · Godot-Director: the check skips the import pass when no imported file changed · done 2026-10-25 · S · agent
 - Depends on: -
-- PRs: Godot-Director #40 (open)
+- PRs: Godot-Director #40 (merged)
 - Note: a first build skipped the import when only a class_name changed, which would leave Godot's class cache stale; the fingerprint now includes each script's class_name, extends and @icon lines.
 - Touches: work/Godot-Director: framework/tools/check.sh, framework/tools/autoplay.sh, framework/tools/ui_capture.sh, selftest.sh
 - Done when: the check, autoplay and capture record a fingerprint of the files Godot imports (everything but scripts, scenes and resources it reads directly, and the .godot folder) after a passing import, and skip the next import pass when it is unchanged and `.godot/imported` exists, saying so in one line; a changed or new asset, a fresh clone, or `--import` forces the pass (check) · following AGENTS.md › Project rules for framework work
@@ -372,15 +372,15 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: a prompt for the game's own session, in `init/`, gives the measurements (the three map test files are half of all test time and the floor of the parallel check; each Godot process spends about 12 s starting the game's autoloads, 4 s of it the content loader) and asks it to share built maps across tests in those files, or split them, and to make the content loader lazy if tests don't need all content, verified by the check's slowest-files summary (check)
 - Brief: -
 
-### T193 · Release Godot-Director 4.4.0 · todo · S · agent
-- Depends on: T163
+### T193 · Release Godot-Director 4.4.0 · in-progress 2026-10-25 · S · agent
+- Depends on: T163, T191
 - Touches: work/Godot-Director: the version carriers its CLAUDE.md lists, CHANGELOG.md
 - Done when: the release pull request bumps every version carrier and template link together, turns Unreleased into the 4.4.0 heading (the Bash guard against hangs), passes the selftest and carries the release notes in its commit body; once merged, `tools/work-release.sh` tags v4.4.0 and publishes the release (check) · following AGENTS.md › Project rules for framework work
 - Brief: Scope › Framework features
 
-### T194 · Release App-Director 1.10.0 · in-progress 2026-10-25 · S · agent
+### T194 · Release App-Director 1.10.0 · done 2026-10-25 · S · agent
 - Depends on: T164, T102 (its App-Director half)
-- PRs: App-Director #34 (open)
+- PRs: App-Director #34 (merged); v1.10.0 tagged and published
 - Touches: work/App-Director: the version carriers its CLAUDE.md lists, CHANGELOG.md
 - Done when: the release pull request bumps every version carrier and template link together, turns Unreleased into the 1.10.0 heading (the Bash guard against hangs and the check's time limit), passes the selftest and carries the release notes in its commit body; once merged, `tools/work-release.sh` tags v1.10.0 and publishes the release (check) · following AGENTS.md › Project rules for framework work
 - Brief: Scope › Framework features
