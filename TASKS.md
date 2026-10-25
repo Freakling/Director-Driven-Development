@@ -299,6 +299,8 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 
 ### T183 · App-Director and SaaSAllTheThings: re-arrange a screen by dragging its existing boxes · in-progress 2026-10-25 · M · agent
 - Depends on: T180, T181, T182
+- PRs: App-Director #30 (open), SaaSAllTheThings #24 (open)
+- Note: the two Node readers are byte-identical ports apart from one comment; Godot's reader was run on the shared fixtures with Godot 4.7.2 and its output matches both. App-Director #30 also repairs the separators of its T17 heading, which #29 had written in Latin-1.
 - Touches: work/App-Director, work/SaaSAllTheThings: framework/tools/ui/drawing.mjs, project/product/ui/README.md (and examples/order-desk/product/ui/README.md in SaaSAllTheThings), the drawing fixtures under tests/, selftest.sh
 - Done when: the starter drawing's grey numbered boxes of the current elements are no longer locked, and the reader treats one that the human moved or resized as a blue "keep, move or resize" of that element (its name from the map, the new rectangle, any keys typed into it), while an untouched one is still skipped; a deleted or hidden one changes nothing; the fixture drawing and its expected output cover a moved, a resized and an untouched box; `design/ui/README.md` › Re-arranging a screen says you can drag the grey box to where the element should sit, and the Colours section says blue is still how you draw a move with a new box in both repos, one pull request each (check) · following AGENTS.md › Project rules for framework work
 - Brief: Scope › Framework features
