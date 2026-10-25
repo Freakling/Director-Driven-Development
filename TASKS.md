@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T211 · B5 · R7
+**Next IDs:** T212 · B5 · R7
 
 ## Milestones
 | Milestone | Status |
@@ -496,11 +496,17 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: a committed `frameworks.lock` names the release each framework's docs are written against (one line per repo, `v<version>`); the selftest's link check, command coverage and release cache use those tags instead of each repo's highest tag, so a framework release no longer turns `main` red; the selftest prints a warning, not a failure, naming each framework whose newest release is past the pinned one; `tools/audit.sh` and the AGENTS.md Selftest row and "Latest only" rule say the docs follow-up item bumps the pin with the links; the pin starts at the releases the docs describe today, so the selftest passes now (check)
 - Brief: Scope › Orchestrator for the three frameworks
 
-### T210 · Release Godot-Director 4.5.0 · in-progress 2026-10-25 · S · agent
+### T210 · Release Godot-Director 4.5.0 · done 2026-10-25 · S · agent
 - Depends on: T189, T197
-- PRs: Godot-Director #44 (open)
+- PRs: Godot-Director #44 (merged); v4.5.0 tagged and published
 - Touches: work/Godot-Director: the version carriers its CLAUDE.md lists, CHANGELOG.md
 - Done when: the release pull request bumps every version carrier and template link together, turns Unreleased into the 4.5.0 heading (opt-in balanced test jobs, side-by-side autoplay sweeps), passes the selftest without Godot and carries the release notes in its commit body; once merged, `tools/work-release.sh` tags v4.5.0 and publishes the release (check) · following AGENTS.md › Project rules for framework work
+- Brief: Scope › Framework features
+
+### T211 · Docs follow Godot-Director 4.5.0 · in-progress 2026-10-25 · S · agent
+- Depends on: T210
+- Touches: frameworks.lock, docs/**/*.md (the Godot-Director links), docs/how-to/check.md, docs/frameworks/godot-director.md
+- Done when: `frameworks.lock` and every Godot-Director link move to v4.5.0; the check how-to and the Godot-Director page describe the opt-in balanced and split test jobs (`[tests] balance`, `split_over`, `# gdir: no-split`, `--jobs 1` to re-measure, measure before and after) and that a sweep of several scenarios plays side by side in one call, checked against the release; the selftest passes with no WARN (check)
 - Brief: Scope › Framework features
 
 ### T173 · The director pilots SaaSAllTheThings' example app in an Azure sandbox · todo · - · human
