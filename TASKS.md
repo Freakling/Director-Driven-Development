@@ -460,6 +460,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 
 ### T205 · App-Director: the security assessment never quotes a secret, and names its OWASP editions · in-progress 2026-10-25 · S · agent
 - Depends on: T202
+- PRs: App-Director #37 (open)
 - Touches: work/App-Director: framework/.app-director/procedures/security.md, framework/.app-director/reference/owasp.md, framework/.app-director/rules.md, framework/.app-director/procedures/release.md, framework/tools/security.sh, selftest.sh
 - Done when: from SaaSAllTheThings' review of the same feature: evidence, the report and bug items never quote a secret, token, key or the line holding one, only file:line and the kind of secret; a tool counts as clean only when it exits 0 with its nothing-found summary, and a timeout, network or restore error is couldn't run (check security.sh does this for every tool); owasp.md and rules.md name the Top 10 (2021) edition until T203; release.md runs the assessment on main at the release commit, not on a detached tag (check) · following AGENTS.md › Project rules for framework work
 - Brief: Scope › Framework features
