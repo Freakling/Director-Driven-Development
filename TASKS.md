@@ -230,7 +230,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: every link into the three repos points at its latest release (check) · the App-Director and SaaSAllTheThings pages and the How-to pages describe what their releases ship: `/ui-design` for web clients (with SaaSAllTheThings' dev-environment capture), the README's start-here step with the brief template, one git worktree per building session, and every subagent launch passing its model explicitly; the Godot-Director page says the same of the model rule; each statement checked against the release (check) · the brief moves `/ui-design` from Planned framework changes to Framework features, now that all three ship it (check) · `bash tools/check.sh` passes (check)
 - Brief: Scope › Framework features
 
-### T179 · SaaSAllTheThings: the README says a claim protects only its own worktree · todo · XS · agent
+### T179 · SaaSAllTheThings: the README says a claim protects only its own worktree · in-progress 2026-10-25 · XS · agent
 - Depends on: -
 - Touches: work/SaaSAllTheThings: README.md
 - Done when: the README's sentence that an `in-progress` claim stops two sessions touching the same item says what `rules.md` says instead: a claim protects only its own worktree, and sessions that build at the same time each take a git worktree (check) · following AGENTS.md › Project rules for framework work (check)
@@ -242,7 +242,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: the root TASKS.md has one `## Queue` heading (today three, at about lines 9, 35 and 49), the two items numbered T9 ("The README starts with writing your own product brief" and "/ui-design with Playwright capture") have distinct IDs with references to them updated, and T10's Done when names its own repo's item rather than the docs repo's T160 (check) · following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Orchestrator for the three frameworks
 
-### T168 · The SaaSAllTheThings page says what its records show for production and compliance · todo · S · agent
+### T168 · The SaaSAllTheThings page says what its records show for production and compliance · in-progress 2026-10-25 · S · agent
 - Depends on: -
 - Touches: docs/frameworks/saasallthethings.md
 - Done when: a short section in the brief's wording: the check fails the build on broken architecture and security requirements, with exceptions only through an ADR the director accepts; the requirements and the customer's control framework live in the repository and every architecture session reads them; every decision and change leaves a record a reviewer can read; the running system provides the operating evidence; each statement checked against SaaSAllTheThings' latest release (check) · no page says production-ready, compliant, more secure than others, a full supply-chain view or cannot exfiltrate (check) · `bash tools/check.sh` passes (check)
@@ -354,13 +354,13 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: with `[autoplay] check_in_check` on, the enforced scenarios start as soon as the import and load pass are done, in their own process beside the test jobs (one fewer test job, so the CPU count isn't exceeded), and their result joins the check's report with exit codes unchanged; measured on The Guildkeeper's scratch copy (check) · following AGENTS.md › Project rules for framework work
 - Brief: Scope › Framework features
 
-### T191 · Godot-Director: the check skips the import pass when no imported file changed · todo · S · agent
+### T191 · Godot-Director: the check skips the import pass when no imported file changed · in-progress 2026-10-25 · S · agent
 - Depends on: -
 - Touches: work/Godot-Director: framework/tools/check.sh, framework/tools/autoplay.sh, framework/tools/ui_capture.sh, selftest.sh
 - Done when: the check, autoplay and capture record a fingerprint of the files Godot imports (everything but scripts, scenes and resources it reads directly, and the .godot folder) after a passing import, and skip the next import pass when it is unchanged and `.godot/imported` exists, saying so in one line; a changed or new asset, a fresh clone, or `--import` forces the pass (check) · following AGENTS.md › Project rules for framework work
 - Brief: Scope › Framework features
 
-### T192 · The Guildkeeper: a prompt for its session to make the three quest map test files fast · todo · S · agent
+### T192 · The Guildkeeper: a prompt for its session to make the three quest map test files fast · done 2026-10-25 · S · agent
 - Depends on: -
 - Touches: init/guildkeeper-map-tests-prompt.md
 - Done when: a prompt for the game's own session, in `init/`, gives the measurements (the three map test files are half of all test time and the floor of the parallel check; each Godot process spends about 12 s starting the game's autoloads, 4 s of it the content loader) and asks it to share built maps across tests in those files, or split them, and to make the content loader lazy if tests don't need all content, verified by the check's slowest-files summary (check)
@@ -438,7 +438,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: each framework's own `.gitignore` ignores `.DS_Store`, `Thumbs.db`, `desktop.ini` and `__MACOSX/`, as the plugin directory's scanner asks, in a pull request the director squash-merges to test whether single-parent commits pass the scan, following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Orchestrator for the three frameworks
 
-### T102 · The secrets scan doesn't flag drawings · todo · S · agent
+### T102 · The secrets scan doesn't flag drawings · in-progress 2026-10-25 · S · agent
 - Depends on: T84, T85
 - Touches: work/App-Director and work/SaaSAllTheThings: the secrets step of framework/tools/check.sh or the gitleaks config seed (one pull request per repo; the director squash-merges)
 - Done when: a committed drawing in `director/ui/*.excalidraw`, whose embedded base64 screenshot can match a key pattern, doesn't fail the check, while a real key in any other file still does, following AGENTS.md › Project rules for framework work (check)
