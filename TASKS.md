@@ -252,6 +252,8 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 
 ### T169 · SaaSAllTheThings: the check fails public network access and local authentication in Bicep · in-progress 2026-10-25 · M · agent
 - Depends on: -
+- PRs: SaaSAllTheThings #29 (open)
+- Review: existing references were failed and a resource's text ran past its closing brace (fixed, with selftest cases); block comments, strings and whole-word true/false tidied.
 - Touches: work/SaaSAllTheThings: framework/.satt/reference/network.md (new), framework/.satt/reference/README.md, framework/.satt/reference/cost.md, framework/tools/archcheck.awk, project/tools/check.cfg, ONBOARDING.md, skills/saas-design-session/references/ (bundle), selftest.sh
 - Done when: a new rule, named in reference/README.md › What the check enforces, archcheck.awk and selftest.sh, fails a Bicep resource that leaves public network access enabled or local authentication on, for the resource types the reference architecture uses where Azure offers the setting, and an accepted ADR with an exception for the rule and path excuses it (check) · the network topic gives the default posture, and cost.md says private-only needs Service Bus Premium, so an ADR with a `cost-sku` exception (check) · the rule is on for new apps and off on upgrade until the app turns it on in check.cfg, as the CHANGELOG's upgrade steps say (check) · following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Planned framework changes
