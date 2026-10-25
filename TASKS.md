@@ -250,15 +250,15 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: a short section in the brief's wording: the check fails the build on broken architecture and security requirements, with exceptions only through an ADR the director accepts; the requirements and the customer's control framework live in the repository and every architecture session reads them; every decision and change leaves a record a reviewer can read; the running system provides the operating evidence; each statement checked against SaaSAllTheThings' latest release (check) · no page says production-ready, compliant, more secure than others, a full supply-chain view or cannot exfiltrate (check) · `bash tools/check.sh` passes (check)
 - Brief: Scope › What the site claims for production and compliance
 
-### T169 · SaaSAllTheThings: the check fails public network access and local authentication in Bicep · in-progress 2026-10-25 · M · agent
+### T169 · SaaSAllTheThings: the check fails public network access and local authentication in Bicep · done 2026-10-25 · M · agent
 - Depends on: -
-- PRs: SaaSAllTheThings #29 (open)
+- PRs: SaaSAllTheThings #29 (merged)
 - Review: existing references were failed and a resource's text ran past its closing brace (fixed, with selftest cases); block comments, strings and whole-word true/false tidied.
 - Touches: work/SaaSAllTheThings: framework/.satt/reference/network.md (new), framework/.satt/reference/README.md, framework/.satt/reference/cost.md, framework/tools/archcheck.awk, project/tools/check.cfg, ONBOARDING.md, skills/saas-design-session/references/ (bundle), selftest.sh
 - Done when: a new rule, named in reference/README.md › What the check enforces, archcheck.awk and selftest.sh, fails a Bicep resource that leaves public network access enabled or local authentication on, for the resource types the reference architecture uses where Azure offers the setting, and an accepted ADR with an exception for the rule and path excuses it (check) · the network topic gives the default posture, and cost.md says private-only needs Service Bus Premium, so an ADR with a `cost-sku` exception (check) · the rule is on for new apps and off on upgrade until the app turns it on in check.cfg, as the CHANGELOG's upgrade steps say (check) · following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Planned framework changes
 
-### T170 · SaaSAllTheThings: a shipped CI workflow keeps the check's output as evidence · todo · M · agent
+### T170 · SaaSAllTheThings: a shipped CI workflow keeps the check's output as evidence · in-progress 2026-10-25 · M · agent
 - Depends on: -
 - Touches: work/SaaSAllTheThings: framework/.satt/templates/check-workflow.yml (new), ONBOARDING.md, framework/.satt/procedures/release.md, selftest.sh
 - Done when: a GitHub Actions workflow template runs `bash tools/check.sh` on every pull request and push to main and uploads its output and logs as an artifact, with how long it's kept left to the app's setting; onboarding offers to install it for new and existing apps; the selftest checks the template's steps (check) · following AGENTS.md › Project rules for framework work (check)
@@ -346,7 +346,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: every link into App-Director points at v1.9.0 and into SaaSAllTheThings at v0.11.0, and the release cache follows; the ui how-to says a screen is re-arranged by dragging the grey boxes in all three frameworks, with the blue box as the other way; the selftest passes (check)
 - Brief: Scope › Framework features
 
-### T189 · Godot-Director: the check balances its jobs by last run's timings and splits a slow test file by test method · todo · L · agent
+### T189 · Godot-Director: the check balances its jobs by last run's timings and splits a slow test file by test method · in-progress 2026-10-25 · L · agent
 - Depends on: T163
 - Touches: work/Godot-Director: framework/tools/check.sh, framework/tools/check.gd, project/tools/check.cfg, selftest.sh
 - Done when: the parallel run hands out test files longest first, using each file's time from the last run (kept under .godot/godot-director/, unknown files first), instead of file order; a file whose last time is over `[tests] split_over` seconds (default 60) is run as several shards of its test methods across the jobs, each shard in its own process, the file's results merged as one; a file that can't be split (its tests share state across methods, marked by a project setting or a header line the docs name) runs whole; on The Guildkeeper's scratch copy the full run's wall time and its slowest job are recorded before and after (check) · following AGENTS.md › Project rules for framework work
@@ -372,9 +372,9 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: a prompt for the game's own session, in `init/`, gives the measurements (the three map test files are half of all test time and the floor of the parallel check; each Godot process spends about 12 s starting the game's autoloads, 4 s of it the content loader) and asks it to share built maps across tests in those files, or split them, and to make the content loader lazy if tests don't need all content, verified by the check's slowest-files summary (check)
 - Brief: -
 
-### T193 · Release Godot-Director 4.4.0 · in-progress 2026-10-25 · S · agent
+### T193 · Release Godot-Director 4.4.0 · done 2026-10-25 · S · agent
 - Depends on: T163, T191
-- PRs: Godot-Director #41 (open)
+- PRs: Godot-Director #41 (merged); v4.4.0 tagged and published
 - Touches: work/Godot-Director: the version carriers its CLAUDE.md lists, CHANGELOG.md
 - Done when: the release pull request bumps every version carrier and template link together, turns Unreleased into the 4.4.0 heading (the Bash guard against hangs), passes the selftest and carries the release notes in its commit body; once merged, `tools/work-release.sh` tags v4.4.0 and publishes the release (check) · following AGENTS.md › Project rules for framework work
 - Brief: Scope › Framework features
