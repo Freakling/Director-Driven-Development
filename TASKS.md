@@ -360,6 +360,8 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 
 ### T191 · Godot-Director: the check skips the import pass when no imported file changed · in-progress 2026-10-25 · S · agent
 - Depends on: -
+- PRs: Godot-Director #40 (open)
+- Note: a first build skipped the import when only a class_name changed, which would leave Godot's class cache stale; the fingerprint now includes each script's class_name, extends and @icon lines.
 - Touches: work/Godot-Director: framework/tools/check.sh, framework/tools/autoplay.sh, framework/tools/ui_capture.sh, selftest.sh
 - Done when: the check, autoplay and capture record a fingerprint of the files Godot imports (everything but scripts, scenes and resources it reads directly, and the .godot folder) after a passing import, and skip the next import pass when it is unchanged and `.godot/imported` exists, saying so in one line; a changed or new asset, a fresh clone, or `--import` forces the pass (check) · following AGENTS.md › Project rules for framework work
 - Brief: Scope › Framework features
@@ -376,8 +378,8 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: the release pull request bumps every version carrier and template link together, turns Unreleased into the 4.4.0 heading (the Bash guard against hangs), passes the selftest and carries the release notes in its commit body; once merged, `tools/work-release.sh` tags v4.4.0 and publishes the release (check) · following AGENTS.md › Project rules for framework work
 - Brief: Scope › Framework features
 
-### T194 · Release App-Director 1.10.0 · todo · S · agent
-- Depends on: T164
+### T194 · Release App-Director 1.10.0 · in-progress 2026-10-25 · S · agent
+- Depends on: T164, T102 (its App-Director half)
 - Touches: work/App-Director: the version carriers its CLAUDE.md lists, CHANGELOG.md
 - Done when: the release pull request bumps every version carrier and template link together, turns Unreleased into the 1.10.0 heading (the Bash guard against hangs and the check's time limit), passes the selftest and carries the release notes in its commit body; once merged, `tools/work-release.sh` tags v1.10.0 and publishes the release (check) · following AGENTS.md › Project rules for framework work
 - Brief: Scope › Framework features
