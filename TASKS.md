@@ -232,12 +232,14 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 
 ### T179 · SaaSAllTheThings: the README says a claim protects only its own worktree · in-progress 2026-10-25 · XS · agent
 - Depends on: -
+- PRs: SaaSAllTheThings #27 (open)
 - Touches: work/SaaSAllTheThings: README.md
 - Done when: the README's sentence that an `in-progress` claim stops two sessions touching the same item says what `rules.md` says instead: a claim protects only its own worktree, and sessions that build at the same time each take a git worktree (check) · following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Framework features
 
-### T167 · SaaSAllTheThings: its TASKS.md has one queue and unique IDs · todo · XS · agent
+### T167 · SaaSAllTheThings: its TASKS.md has one queue and unique IDs · in-progress 2026-10-25 · XS · agent
 - Depends on: T151, T100
+- PRs: SaaSAllTheThings #28 (open)
 - Touches: work/SaaSAllTheThings: TASKS.md
 - Done when: the root TASKS.md has one `## Queue` heading (today three, at about lines 9, 35 and 49), the two items numbered T9 ("The README starts with writing your own product brief" and "/ui-design with Playwright capture") have distinct IDs with references to them updated, and T10's Done when names its own repo's item rather than the docs repo's T160 (check) · following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Orchestrator for the three frameworks
@@ -425,7 +427,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: once Godot-Director has released /ui-design, SaaSAllTheThings has a merged pull request that builds it from the anchor with the Playwright adapter, following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Planned framework changes
 
-### T86 · The /ui-design skill page · todo · S · agent
+### T86 · The /ui-design skill page · in-progress 2026-10-25 · S · agent
 - Depends on: T84, T85
 - Touches: docs/skills/ui-design.md (new), docs/skills/index.md, mkdocs.yml, docs/frameworks/*.md, docs/concept/ownership.md
 - Done when: once all three frameworks have released /ui-design, the page describes the shared behaviour and what is unique per repo, matching the released procedures, in the skills index and nav (check) · `bash tools/check.sh` passes (check)
