@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T198 · B5 · R7
+**Next IDs:** T201 · B5 · R7
 
 ## Milestones
 | Milestone | Status |
@@ -397,16 +397,34 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: the release pull request bumps every version carrier and template link together, turns Unreleased into the 0.12.0 heading (the Bash guard against hangs and the check's time limit), passes the selftest and carries the release notes in its commit body; once merged, `tools/work-release.sh` tags v0.12.0 and publishes the release (check) · following AGENTS.md › Project rules for framework work
 - Brief: Scope › Framework features
 
-### T196 · Docs follow Godot-Director 4.4.0, App-Director 1.10.0 and SaaSAllTheThings 0.12.0 · in-progress 2026-10-25 · S · agent
+### T196 · Docs follow Godot-Director 4.4.0, App-Director 1.10.0 and SaaSAllTheThings 0.12.0 · in-progress 2026-10-25 · M · agent
 - Depends on: T193, T194, T195
-- Touches: docs/**/*.md (the framework links), docs/how-to/check.md, docs/how-to/trouble.md
-- Done when: every framework link points at the new tags; the check how-to says the check limits each test run (`[tests] timeout`, exit 3) in all three frameworks, and the troubleshooting page says what the Bash guard blocks and the form that works for each (an empty Python heredoc, an unbounded wait, a Godot run without a time limit); the selftest passes (check)
+- Touches: docs/**/*.md (the framework links), docs/how-to/check.md, docs/how-to/trouble.md, docs/frameworks/saasallthethings.md, docs/frameworks/godot-director.md
+- Done when: every framework link points at the new tags; the check how-to says the check limits each test run (`[tests] timeout`, exit 3) in all three frameworks, and the troubleshooting page says what the Bash guard blocks and the form that works for each (an empty Python heredoc, an unbounded wait, a Godot run without a time limit); the Godot-Director pages say the check skips an unchanged import pass (`--import` forces it); the SaaSAllTheThings page lists the `network-public` rule with what's enforced and what isn't, and mentions the CI workflow template with its dependency review and SBOM, and the compliance mapping table, each checked against the release; the selftest passes (check)
 - Brief: Scope › Framework features
 
 ### T197 · Godot-Director: a sweep plays its scenarios side by side, and the builder doesn't play smoke twice · todo · M · agent
 - Depends on: -
 - Touches: work/Godot-Director: framework/tools/autoplay.sh, framework/.godot-director/procedures/build.md, framework/.godot-director/procedures/autoplay.md, selftest.sh
 - Done when: `bash tools/autoplay.sh <scenario> <scenario> ...` (and `--all`) runs the scenarios in separate Godot processes at the same time under the one lock and one import check, each with its own user dir, log and run folder, capped at the CPU count, and reports each scenario's result with exit codes unchanged; one scenario behaves as today (check) · `build.md` has the builder play the scenarios the item names once, after the tests pass, in one call, and leave out `smoke` when `tools/check.cfg` › `[autoplay]` has the check play it (check) · measured on The Guildkeeper's scratch copy: a sweep of quest_job, quest_hold, quest_controls and smoke before and after (check) · following AGENTS.md › Project rules for framework work
+- Brief: Scope › Framework features
+
+### T198 · SaaSAllTheThings: OWASP is a non-negotiable baseline · todo · M · agent
+- Depends on: -
+- Touches: work/SaaSAllTheThings: framework/.satt/rules.md, framework/.satt/procedures/architect.md, framework/.satt/procedures/review.md, project/compliance/mapping.md, ONBOARDING.md, skills/ (bundle), selftest.sh
+- Done when: OWASP Top 10, and the OWASP API Security Top 10 for anything that serves an API, is a baseline every app meets: `rules.md` states it as framework-owned, so no project setting turns it off; every design option states its effect on it; review checks each change that handles input, authentication, authorization, sessions, secrets, data access, file or network access, or dependencies against it and reports the item it falls under; a deviation is only ever an accepted ADR that names the OWASP item and why (check) · the seeded `compliance/mapping.md` carries the ten OWASP Top 10 categories as rows that are always there (marked as the baseline, not deletable like the example), each with what in the framework meets it today and an honest label (for example the tenant rules as partial for broken access control, the secrets rule as partial for cryptographic failures), and `none yet` where nothing does; align reports a removed baseline row (check) · following AGENTS.md › Project rules for framework work
+- Brief: Scope › Framework features
+
+### T199 · App-Director: OWASP is a non-negotiable baseline · todo · M · agent
+- Depends on: -
+- Touches: work/App-Director: framework/.app-director/rules.md, framework/.app-director/procedures/design.md, framework/.app-director/procedures/review.md, ONBOARDING.md, selftest.sh
+- Done when: OWASP Top 10, and the OWASP API Security Top 10 for anything that serves an API, is a baseline every app meets: `rules.md` states it as framework-owned, so no project setting turns it off; every design option states its effect on it; review checks each change that handles input, authentication, authorization, sessions, secrets, data access, file or network access, or dependencies against it and reports the item it falls under; a deviation is only ever an accepted ADR that names the OWASP item and why; the check's existing rules that serve an OWASP category (secrets, UI purity) say which one in their messages or docs (check) · following AGENTS.md › Project rules for framework work
+- Brief: Scope › Framework features
+
+### T200 · SaaSAllTheThings: onboarding and the assessment ask which compliance frameworks apply · todo · M · agent
+- Depends on: T198
+- Touches: work/SaaSAllTheThings: ONBOARDING.md, framework/.satt/procedures/assess.md, framework/.satt/workshops/vision.md, framework/.satt/workshops/tenancy-identity.md, project/product/director-brief.md, project/compliance/mapping.md, skills/ (bundle), selftest.sh
+- Done when: when the brief's section 10 is blank or vague, onboarding and the assessment ask a short set of questions instead of moving on: the security framework the organisation or customer works to (for example ISO/IEC 27001, NIST CSF, the ISF Standard of Good Practice, its own); which regulations and control frameworks follow from the markets, industry and data (for example GDPR for personal data of people in the EU, NIS2 and DORA for EU essential and financial entities, SOC 2 for customers who ask for it, PCI DSS for card data, HIPAA for US health data), each asked, never assumed; who audits and what evidence they expect; the answers go to PRD › Data and Compliance and to the brief's section 10 table, and each named framework gets its controls added to `compliance/mapping.md` by the human or from a document the human provides, never from the agent's memory; an unknown answer stays an open question; the vision and tenancy workshops check the answers with the security officer and the data protection officer; nothing marks a control met because a framework is named (check) · following AGENTS.md › Project rules for framework work
 - Brief: Scope › Framework features
 
 ### T173 · The director pilots SaaSAllTheThings' example app in an Azure sandbox · todo · - · human
