@@ -22,7 +22,7 @@ Each framework reports what ran and the result of each step.
 
 ### App-Director
 
-The procedure is at [`framework/.app-director/procedures/release.md`](https://github.com/Freakling/App-Director/tree/v1.9.0/framework/.app-director/procedures/release.md) in the App-Director repository.
+The procedure is at [`framework/.app-director/procedures/release.md`](https://github.com/Freakling/App-Director/tree/v1.10.0/framework/.app-director/procedures/release.md) in the App-Director repository.
 
 - The request names the target: `web`, `mobile` (iOS or Android) or `desktop`. The stack and deploy method are in `tools/check.cfg` and AGENTS.md › Project facts.
 - The skill lists the `done` items since the last release tag, so the release says what it contains. A `high` bug that's done without a regression test goes into the next acceptance check.
@@ -31,7 +31,7 @@ The procedure is at [`framework/.app-director/procedures/release.md`](https://gi
 
 ### Godot-Director
 
-The procedure is at [`framework/.godot-director/procedures/release.md`](https://github.com/Freakling/Godot-Director/tree/v4.3.0/framework/.godot-director/procedures/release.md) in the Godot-Director repository.
+The procedure is at [`framework/.godot-director/procedures/release.md`](https://github.com/Freakling/Godot-Director/tree/v4.4.0/framework/.godot-director/procedures/release.md) in the Godot-Director repository.
 
 - Godot Director knows no store. `release.cfg` in the project root has one section per export preset, with a `uat` command, an optional `production` command and the names of the secrets the commands read. Only names are in the file, never values.
 - The request names the stage, `uat` (the default) or `production`, and optionally one preset. The skill exports with [`/export`](../frameworks/godot-director.md), shows a dry run, then runs `tools/release.sh uat`.
@@ -42,7 +42,7 @@ The procedure is at [`framework/.godot-director/procedures/release.md`](https://
 
 ### SaaSAllTheThings
 
-The procedure is at [`framework/.satt/procedures/release.md`](https://github.com/Freakling/SaaSAllTheThings/tree/v0.11.0/framework/.satt/procedures/release.md) in the SaaSAllTheThings repository.
+The procedure is at [`framework/.satt/procedures/release.md`](https://github.com/Freakling/SaaSAllTheThings/tree/v0.12.0/framework/.satt/procedures/release.md) in the SaaSAllTheThings repository.
 
 - The request names the environment, `dev` (the default) or `prod`. Dev deploys from `main`; prod deploys from a tag.
 - Every step that touches Azure needs your approval, each time. The skill runs a what-if of the Bicep for the environment's resource group and summarises what it creates, changes and deletes. A deletion, or anything outside this app's resources, stops the run.

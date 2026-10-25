@@ -26,7 +26,7 @@ Make an empty folder for the game and open Claude Code in it. If the folder is n
 
 ## Write it down first
 
-Before you install, describe the game in your own words in the Game Design Document template. Open the [template](https://github.com/Freakling/Godot-Director/blob/v4.3.0/project/design/director-gdd.md) at the latest release and choose Raw to download it, fill in what you know (the pitch, the feeling, the pillars, the loop), and leave out what you have not decided. Keep it in the game's folder at `design/director-gdd.md`, the path onboarding offers. The Godot-Director README opens its install with this same "Start here" step.
+Before you install, describe the game in your own words in the Game Design Document template. Open the [template](https://github.com/Freakling/Godot-Director/blob/v4.4.0/project/design/director-gdd.md) at the latest release and choose Raw to download it, fill in what you know (the pitch, the feeling, the pillars, the loop), and leave out what you have not decided. Keep it in the game's folder at `design/director-gdd.md`, the path onboarding offers. The Godot-Director README opens its install with this same "Start here" step.
 
 Why first: a written document gives the agent your intent and the context behind it, which a chat interview doesn't. When you install, the agent reads it before it asks anything. You can also fill it during onboarding (the agent waits) or after it.
 
@@ -163,6 +163,6 @@ The concepts behind these files are in [Records in files](../concept/records.md)
 
 - The [Godot-Director page](../frameworks/godot-director.md), its [install section](../frameworks/godot-director.md#install), and the skill pages [`/next-task`](../skills/next-task.md) and [`/design`](../skills/design.md).
 - The concepts [Roles](../concept/roles.md) and [Agent development flow](../concept/agent-flow.md).
-- The onboarding steps in full: [`ONBOARDING.md`](https://github.com/Freakling/Godot-Director/blob/v4.3.0/ONBOARDING.md).
+- The onboarding steps in full: [`ONBOARDING.md`](https://github.com/Freakling/Godot-Director/blob/v4.4.0/ONBOARDING.md).
 
 <div class="takeaway"><span>Install, answer the interview, approve one commit, then ask for the next task.</span><span class="url"><a href="index.md">All questions</a></span></div>

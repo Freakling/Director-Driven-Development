@@ -6,7 +6,7 @@ Build a B2B SaaS from scratch, or turn a working proof of concept or an existing
 
 The architecture: an event-driven Azure Functions backend, separate Windows and mobile clients, OIDC sign-in with Entra ID and federated identity, pooled multi-tenancy that can move a customer to its own deployment later, and enterprise integrations starting with Navision (Dynamics NAV and Business Central). The product is anchored in the customer's own security framework: architecture sessions read the security and compliance requirements kept in the app's `compliance/` folder, and weigh every option against them.
 
-[Repository](https://github.com/Freakling/SaaSAllTheThings){ .md-button .md-button--primary } [README](https://github.com/Freakling/SaaSAllTheThings#readme){ .md-button } [Procedures](https://github.com/Freakling/SaaSAllTheThings/tree/v0.11.0/framework/.satt/procedures){ .md-button } [Reference architecture](https://github.com/Freakling/SaaSAllTheThings/tree/v0.11.0/framework/.satt/reference){ .md-button }
+[Repository](https://github.com/Freakling/SaaSAllTheThings){ .md-button .md-button--primary } [README](https://github.com/Freakling/SaaSAllTheThings#readme){ .md-button } [Procedures](https://github.com/Freakling/SaaSAllTheThings/tree/v0.12.0/framework/.satt/procedures){ .md-button } [Reference architecture](https://github.com/Freakling/SaaSAllTheThings/tree/v0.12.0/framework/.satt/reference){ .md-button }
 
 ## What the check enforces
 
@@ -30,6 +30,17 @@ The architecture: an event-driven Azure Functions backend, separate Windows and 
 | `host-size` | A host or platform file is longer than `host_max_lines` (80 by default) |
 | `message-version` | An event or command type isn't named `…V<n>` |
 | `cost-sku` | Bicep asks for a premium, isolated or dedicated SKU, or provisioned Cosmos DB throughput |
+| `network-public` | Bicep for a Service Bus namespace, Cosmos DB account, Key Vault or Storage account leaves public network access enabled or local authentication on (Service Bus Standard: local authentication only) |
+
+`network-public` runs when `tools/check.cfg` has `network-public = on` under `[rules]`, which new apps get. It reads the Bicep text: it doesn't prove that a private endpoint, private DNS zone or virtual network exists, and it doesn't look at egress control or Azure Policy, which stay with the customer's platform. More in the [network reference](https://github.com/Freakling/SaaSAllTheThings/blob/v0.12.0/framework/.satt/reference/network.md).
+
+The check limits each test run to `[tests] timeout` seconds in `tools/check.cfg` (600 by default); a run past it exits 3.
+
+### CI workflow and compliance mapping
+
+Onboarding offers a [GitHub Actions workflow](https://github.com/Freakling/SaaSAllTheThings/blob/v0.12.0/framework/.satt/templates/check-workflow.yml) that runs the check on every pull request and every push to main, and keeps its output as an artifact. It has two more jobs: a dependency review on pull requests, which fails one that adds a dependency with a high or critical advisory, and an SBOM per push to main, exported from GitHub's dependency graph. They don't cover your code, container images, Azure resources or the dependencies the graph can't see, and vulnerability response stays your process. More in [Dependencies and the SBOM](https://github.com/Freakling/SaaSAllTheThings/blob/v0.12.0/framework/.satt/reference/infra.md).
+
+The [compliance mapping table](https://github.com/Freakling/SaaSAllTheThings/blob/v0.12.0/project/compliance/mapping.md) maps each requirement of your control framework to what meets it: a rule, an ADR or a test, with a label and where the evidence is. You fill in the control and the requirement, and architecture sessions fill in the rest as ADRs are accepted. A framework's name never marks a control met; a row is a claim a reviewer checks.
 
 ### Deviation is an ADR
 
@@ -43,11 +54,11 @@ The only way past a rule is an architecture decision record that you accept. An 
 
 ## What the records show
 
-The check fails the build when an architecture or security rule breaks, and the exceptions are the ADRs above. Your requirements and your customer's control framework live in the repository, and every architecture session reads them. Every decision and change leaves a record a reviewer can read: a line in `product/decisions.md`, an ADR, a TASKS.md item or a commit message, as the [records table](https://github.com/Freakling/SaaSAllTheThings/blob/v0.11.0/framework/.satt/rules.md) sets out. The running system, not the repository, provides the operating evidence, through the logs, traces and alerts that the [observability reference](https://github.com/Freakling/SaaSAllTheThings/blob/v0.11.0/framework/.satt/reference/observability.md) sets up.
+The check fails the build when an architecture or security rule breaks, and the exceptions are the ADRs above. Your requirements and your customer's control framework live in the repository, and every architecture session reads them. The CI run's artifact is where a reviewer finds the check's result for a commit. Every decision and change leaves a record a reviewer can read: a line in `product/decisions.md`, an ADR, a TASKS.md item or a commit message, as the [records table](https://github.com/Freakling/SaaSAllTheThings/blob/v0.12.0/framework/.satt/rules.md) sets out. The running system, not the repository, provides the operating evidence, through the logs, traces and alerts that the [observability reference](https://github.com/Freakling/SaaSAllTheThings/blob/v0.12.0/framework/.satt/reference/observability.md) sets up.
 
 ## Install
 
-**Start here: write your product brief.** The README opens its how-to-use section with this step. Before you install, describe the product in your own words in a copy of the [product brief template](https://github.com/Freakling/SaaSAllTheThings/blob/v0.11.0/project/product/director-brief.md), saved as `product/director-brief.md` in your app, and fill in what you know. It also carries your enterprise architecture, requirements, security requirements and control frameworks. Then install: onboarding reads your brief and asks only what you left open. More in [write it down first](../how-to/start-saas.md#write-it-down-first).
+**Start here: write your product brief.** The README opens its how-to-use section with this step. Before you install, describe the product in your own words in a copy of the [product brief template](https://github.com/Freakling/SaaSAllTheThings/blob/v0.12.0/project/product/director-brief.md), saved as `product/director-brief.md` in your app, and fill in what you know. It also carries your enterprise architecture, requirements, security requirements and control frameworks. Then install: onboarding reads your brief and asks only what you left open. More in [write it down first](../how-to/start-saas.md#write-it-down-first).
 
 You need git with no uncommitted changes, bash (on Windows it comes with Git for Windows), and the toolchain of your backend stack: the .NET SDK 8 or newer for the default. Every option installs the latest release, tagged `v` followed by its version, not `main`.
 
@@ -98,8 +109,8 @@ Onboarding works out whether this is a new app, an existing app or an upgrade, s
 | `/assess` | A read-only assessment report; "process the workshop notes" turns a workshop's decisions into records |
 | `/roadmap` | Plans the next stage of the move to SaaS as small items |
 | `/design` | A product design session on a topic, or `/design questions` to rank the open questions. Step by step: [how do I decide what gets built?](../how-to/decide.md) |
-| `/research` | A read-only researcher answers one question in a fresh context and writes a dated note with its sources to `product/research/`. It informs; you decide. Procedure: [`research.md`](https://github.com/Freakling/SaaSAllTheThings/tree/v0.11.0/framework/.satt/procedures/research.md). Step by step: [I need facts before I decide](../how-to/facts.md) |
-| `/ui-design` | Captures your web client's screens, those behind sign-in as a test user of a seeded test tenant, for you to draw over, turns your drawing into a screen spec, and checks the built screen against that spec. Capture opens this machine, or the dev environment you name, never production; it uses Node and Playwright, installed once in `tools/ui/`. Your drawings go in `director/ui/`, the protected workspace the agent never writes to. Shared behaviour and this repo's section: [`/ui-design`](../skills/ui-design.md). Procedure: [`ui-design.md`](https://github.com/Freakling/SaaSAllTheThings/tree/v0.11.0/framework/.satt/procedures/ui-design.md). Step by step: [how do I work with UI changes?](../how-to/ui.md) |
+| `/research` | A read-only researcher answers one question in a fresh context and writes a dated note with its sources to `product/research/`. It informs; you decide. Procedure: [`research.md`](https://github.com/Freakling/SaaSAllTheThings/tree/v0.12.0/framework/.satt/procedures/research.md). Step by step: [I need facts before I decide](../how-to/facts.md) |
+| `/ui-design` | Captures your web client's screens, those behind sign-in as a test user of a seeded test tenant, for you to draw over, turns your drawing into a screen spec, and checks the built screen against that spec. Capture opens this machine, or the dev environment you name, never production; it uses Node and Playwright, installed once in `tools/ui/`. Your drawings go in `director/ui/`, the protected workspace the agent never writes to. Shared behaviour and this repo's section: [`/ui-design`](../skills/ui-design.md). Procedure: [`ui-design.md`](https://github.com/Freakling/SaaSAllTheThings/tree/v0.12.0/framework/.satt/procedures/ui-design.md). Step by step: [how do I work with UI changes?](../how-to/ui.md) |
 | `/architect` | An architecture session that ends in an ADR you accept |
 | `/integrate` | Works out an integration contract with you (direction, system of record, conflicts), then plans it in stages |
 | `/tenant` | Checks readiness for a new customer and hands you the consent and setup steps |

@@ -31,6 +31,9 @@ Saying it and typing the command run the same procedure.
 
 ## What can go wrong
 
+- **A test run has a time limit.** In all three frameworks the check runs each test command under GNU `timeout`, for `[tests] timeout` seconds in `tools/check.cfg` (600 by default). A run past the limit exits 3, which means the check couldn't run, and says so. Without GNU `timeout` the check notes it and runs without a limit.
+- **Godot-Director skips an unchanged import pass.** The check imports assets again only when a file Godot imports, or a script's path or class declaration, has changed. A fresh clone, or `bash tools/check.sh --import`, runs the pass.
+
 - **Notes drive the bug.** The agent takes the repro from what you wrote, so a precise note gives a precise bug.
 - **Use test accounts.** The *How* hints name the account to use. Keep real users' accounts out of it.
 - **A failing check stops the preparation.** Fix `bash tools/check.sh` first.
@@ -42,7 +45,7 @@ Saying it and typing the command run the same procedure.
 ## Related
 
 - The [acceptance check skill page](../skills/acceptance.md), and the concept [The check](../concept/check.md).
-- The procedures: [App-Director](https://github.com/Freakling/App-Director/tree/v1.9.0/framework/.app-director/procedures/acceptance.md), [SaaSAllTheThings](https://github.com/Freakling/SaaSAllTheThings/tree/v0.11.0/framework/.satt/procedures/acceptance.md), and for Godot-Director [`/function-check`](https://github.com/Freakling/Godot-Director/tree/v4.3.0/framework/.godot-director/procedures/function-check.md), [`/playtest`](https://github.com/Freakling/Godot-Director/tree/v4.3.0/framework/.godot-director/procedures/playtest.md) and [`autoplay`](https://github.com/Freakling/Godot-Director/tree/v4.3.0/framework/.godot-director/procedures/autoplay.md).
+- The procedures: [App-Director](https://github.com/Freakling/App-Director/tree/v1.10.0/framework/.app-director/procedures/acceptance.md), [SaaSAllTheThings](https://github.com/Freakling/SaaSAllTheThings/tree/v0.12.0/framework/.satt/procedures/acceptance.md), and for Godot-Director [`/function-check`](https://github.com/Freakling/Godot-Director/tree/v4.4.0/framework/.godot-director/procedures/function-check.md), [`/playtest`](https://github.com/Freakling/Godot-Director/tree/v4.4.0/framework/.godot-director/procedures/playtest.md) and [`autoplay`](https://github.com/Freakling/Godot-Director/tree/v4.4.0/framework/.godot-director/procedures/autoplay.md).
 - The [Godot-Director page](../frameworks/godot-director.md#the-play-log-and-autoplay) on the play log and autoplay.
 - Once the bugs are fixed: [How do I ship it?](ship.md)
 

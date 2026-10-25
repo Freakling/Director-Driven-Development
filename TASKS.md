@@ -397,7 +397,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: the release pull request bumps every version carrier and template link together, turns Unreleased into the 0.12.0 heading (the Bash guard against hangs and the check's time limit), passes the selftest and carries the release notes in its commit body; once merged, `tools/work-release.sh` tags v0.12.0 and publishes the release (check) · following AGENTS.md › Project rules for framework work
 - Brief: Scope › Framework features
 
-### T196 · Docs follow Godot-Director 4.4.0, App-Director 1.10.0 and SaaSAllTheThings 0.12.0 · in-progress 2026-10-25 · M · agent
+### T196 · Docs follow Godot-Director 4.4.0, App-Director 1.10.0 and SaaSAllTheThings 0.12.0 · done 2026-10-25 · M · agent
 - Depends on: T193, T194, T195
 - Touches: docs/**/*.md (the framework links), docs/how-to/check.md, docs/how-to/trouble.md, docs/frameworks/saasallthethings.md, docs/frameworks/godot-director.md
 - Done when: every framework link points at the new tags; the check how-to says the check limits each test run (`[tests] timeout`, exit 3) in all three frameworks, and the troubleshooting page says what the Bash guard blocks and the form that works for each (an empty Python heredoc, an unbounded wait, a Godot run without a time limit); the Godot-Director pages say the check skips an unchanged import pass (`--import` forces it); the SaaSAllTheThings page lists the `network-public` rule with what's enforced and what isn't, and mentions the CI workflow template with its dependency review and SBOM, and the compliance mapping table, each checked against the release; the selftest passes (check)

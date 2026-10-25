@@ -57,6 +57,18 @@ What can be missing depends on the framework:
 
 An exit 3 is not a failure of your work. The agent reports the work as unverified rather than done, and says why.
 
+### The agent's command is blocked
+
+A Bash guard in each framework blocks commands that hang or run past five minutes, since a wait that long lets the prompt cache expire and the next turn rewrites the whole context. The message names the form that works, and the agent uses it.
+
+| Blocked | The form that works |
+|---|---|
+| Python reading from an empty heredoc, the "is Python here?" probe, which waits for console input on Windows | `python3 --version` |
+| An `until` or `while` loop with `sleep` and no limit | The same loop under `timeout 240`, or, for a background command, wait for its completion notice |
+| A loop on a background command's output that doesn't wait for its exit line | Loop until the output holds `[exited with code N]` or `[killed]`, under `timeout 240` |
+| A `sleep` over 280 seconds | A shorter sleep, or a `timeout` loop of 280 seconds or less |
+| Godot-Director only: a direct Godot run with no time limit | `timeout 120` before the Godot command; `tools/check.sh`, `tools/autoplay.sh` and `tools/ui_capture.sh` cap their own runs |
+
 ### A Godot test fails only in the check
 
 In Godot-Director the test files run side by side. A test that reads autoload or `user://` state another file left behind can pass alone and fail in the check. Make the test set up what it reads, and give each test file its own `user://` file name. Until the test is fixed, set `[tests] jobs` to `1` in `tools/check.cfg`, or pass `--jobs 1` for one run; either runs the tests in one process, as before. More in [what the check enforces](../frameworks/godot-director.md#what-the-check-enforces).
@@ -82,6 +94,6 @@ This is by design too: the agent commits only with your approval. Asking for a r
 ## Related
 
 - The install sections of [App-Director](../frameworks/app-director.md#install), [Godot-Director](../frameworks/godot-director.md#install) and [SaaSAllTheThings](../frameworks/saasallthethings.md#install).
-- The procedures: [App-Director onboarding](https://github.com/Freakling/App-Director/blob/v1.9.0/ONBOARDING.md), [Godot-Director onboarding](https://github.com/Freakling/Godot-Director/blob/v4.3.0/ONBOARDING.md) and [SaaSAllTheThings onboarding](https://github.com/Freakling/SaaSAllTheThings/blob/v0.11.0/ONBOARDING.md).
+- The procedures: [App-Director onboarding](https://github.com/Freakling/App-Director/blob/v1.10.0/ONBOARDING.md), [Godot-Director onboarding](https://github.com/Freakling/Godot-Director/blob/v4.4.0/ONBOARDING.md) and [SaaSAllTheThings onboarding](https://github.com/Freakling/SaaSAllTheThings/blob/v0.12.0/ONBOARDING.md).
 
 <div class="takeaway"><span>Update, restart, and the commands you expect are there.</span><span class="url"><a href="index.md">All questions</a></span></div>
