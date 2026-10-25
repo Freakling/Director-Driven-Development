@@ -274,6 +274,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 
 ### T172 · SaaSAllTheThings: dependency review and an SBOM in the shipped workflow · in-progress 2026-10-25 · S · agent
 - Depends on: T170
+- PRs: SaaSAllTheThings #32 (open)
 - Touches: work/SaaSAllTheThings: framework/.satt/templates/check-workflow.yml, framework/.satt/reference/infra.md, selftest.sh
 - Done when: the shipped workflow reviews dependency changes on pull requests and exports an SPDX SBOM from GitHub's dependency graph as an artifact, and the reference says what that covers and that vulnerability response stays the customer's process (check) · following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Planned framework changes
