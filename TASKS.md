@@ -503,7 +503,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: the release pull request bumps every version carrier and template link together, turns Unreleased into the 4.5.0 heading (opt-in balanced test jobs, side-by-side autoplay sweeps), passes the selftest without Godot and carries the release notes in its commit body; once merged, `tools/work-release.sh` tags v4.5.0 and publishes the release (check) · following AGENTS.md › Project rules for framework work
 - Brief: Scope › Framework features
 
-### T211 · Docs follow Godot-Director 4.5.0 · in-progress 2026-10-25 · S · agent
+### T211 · Docs follow Godot-Director 4.5.0 · done 2026-10-25 · S · agent
 - Depends on: T210
 - Touches: frameworks.lock, docs/**/*.md (the Godot-Director links), docs/how-to/check.md, docs/frameworks/godot-director.md
 - Done when: `frameworks.lock` and every Godot-Director link move to v4.5.0; the check how-to and the Godot-Director page describe the opt-in balanced and split test jobs (`[tests] balance`, `split_over`, `# gdir: no-split`, `--jobs 1` to re-measure, measure before and after) and that a sweep of several scenarios plays side by side in one call, checked against the release; the selftest passes with no WARN (check)

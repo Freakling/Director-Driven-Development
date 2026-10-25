@@ -2,6 +2,6 @@
 # selftest.sh and tools/audit.sh read the release copies, links and command coverage at these tags.
 # A new framework release doesn't change them: the docs follow-up item bumps this file together
 # with the links in docs/ and the pages for what the release ships.
-Godot-Director v4.4.0
+Godot-Director v4.5.0
 App-Director v1.11.0
 SaaSAllTheThings v0.14.0

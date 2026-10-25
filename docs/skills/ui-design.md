@@ -19,7 +19,7 @@ How to use it: [How do I work with UI changes?](../how-to/ui.md)
 
 Open the starter in [Excalidraw](https://excalidraw.com), which runs in the browser and needs no account. Draw one rectangle per element, with its name on the first line. The stroke colour says what changes: green is new, blue is kept but moved or resized, red removes the element, orange is a question for you, and black is how it should be. To re-arrange a screen, drag a grey box to where the element should sit, or draw a blue box named after the element. Your drawings go in `director/ui/`, which the agent reads and never writes.
 
-The drawing conventions are in the README that each project keeps with its screen designs: [Godot-Director](https://github.com/Freakling/Godot-Director/tree/v4.4.0/project/design/ui/README.md), [App-Director](https://github.com/Freakling/App-Director/tree/v1.11.0/project/product/ui/README.md) and [SaaSAllTheThings](https://github.com/Freakling/SaaSAllTheThings/tree/v0.14.0/project/product/ui/README.md).
+The drawing conventions are in the README that each project keeps with its screen designs: [Godot-Director](https://github.com/Freakling/Godot-Director/tree/v4.5.0/project/design/ui/README.md), [App-Director](https://github.com/Freakling/App-Director/tree/v1.11.0/project/product/ui/README.md) and [SaaSAllTheThings](https://github.com/Freakling/SaaSAllTheThings/tree/v0.14.0/project/product/ui/README.md).
 
 ## Text path
 
@@ -36,6 +36,6 @@ Every step has a text path for an assistant that can't view images. The element 
 | The reader runs on | Godot, headless, with no display | Node | Node |
 | Spec folder | `design/ui/` | `product/ui/` | `product/ui/` |
 
-The procedures for each step are at [Godot-Director](https://github.com/Freakling/Godot-Director/tree/v4.4.0/framework/.godot-director/procedures/ui-design.md), [App-Director](https://github.com/Freakling/App-Director/tree/v1.11.0/framework/.app-director/procedures/ui-design.md) and [SaaSAllTheThings](https://github.com/Freakling/SaaSAllTheThings/tree/v0.14.0/framework/.satt/procedures/ui-design.md).
+The procedures for each step are at [Godot-Director](https://github.com/Freakling/Godot-Director/tree/v4.5.0/framework/.godot-director/procedures/ui-design.md), [App-Director](https://github.com/Freakling/App-Director/tree/v1.11.0/framework/.app-director/procedures/ui-design.md) and [SaaSAllTheThings](https://github.com/Freakling/SaaSAllTheThings/tree/v0.14.0/framework/.satt/procedures/ui-design.md).
 
 <div class="takeaway"><span>You draw the layout once; the agent records it and checks the screen against it.</span><span class="url"><a href="https://saemundsson.se/2026/10/07/director-driven-development/">Why: the blog post</a></span></div>
