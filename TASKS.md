@@ -260,11 +260,12 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 
 ### T170 · SaaSAllTheThings: a shipped CI workflow keeps the check's output as evidence · in-progress 2026-10-25 · M · agent
 - Depends on: -
+- PRs: SaaSAllTheThings #30 (open)
 - Touches: work/SaaSAllTheThings: framework/.satt/templates/check-workflow.yml (new), ONBOARDING.md, framework/.satt/procedures/release.md, selftest.sh
 - Done when: a GitHub Actions workflow template runs `bash tools/check.sh` on every pull request and push to main and uploads its output and logs as an artifact, with how long it's kept left to the app's setting; onboarding offers to install it for new and existing apps; the selftest checks the template's steps (check) · following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Planned framework changes
 
-### T171 · SaaSAllTheThings: a compliance mapping table that review and align read · todo · M · agent
+### T171 · SaaSAllTheThings: a compliance mapping table that review and align read · in-progress 2026-10-25 · M · agent
 - Depends on: -
 - Touches: work/SaaSAllTheThings: project/compliance/mapping.md (new), framework/.satt/procedures/architect.md, framework/.satt/procedures/review.md, framework/.satt/procedures/align.md, ONBOARDING.md, skills/saas-design-session/references/ (bundle), selftest.sh
 - Done when: a seeded table with control id, requirement, met by (rule, ADR or test), label (direct, partial, interpretive or unverified) and evidence location; architecture sessions add or update rows as ADRs are accepted, review flags a change to a mapped rule, ADR or test that leaves its row stale, and align reports rows whose rule, ADR or test no longer exists; nothing marks a control met from a framework's name (check) · following AGENTS.md › Project rules for framework work (check)
@@ -446,9 +447,9 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: each framework's own `.gitignore` ignores `.DS_Store`, `Thumbs.db`, `desktop.ini` and `__MACOSX/`, as the plugin directory's scanner asks, in a pull request the director squash-merges to test whether single-parent commits pass the scan, following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Orchestrator for the three frameworks
 
-### T102 · The secrets scan doesn't flag drawings · in-progress 2026-10-25 · S · agent
+### T102 · The secrets scan doesn't flag drawings · done 2026-10-25 · S · agent
 - Depends on: T84, T85
-- PRs: App-Director #33 (merged); the SaaSAllTheThings half waits for SaaSAllTheThings #29, which touches the same selftest
+- PRs: App-Director #33 (merged); SaaSAllTheThings needs no change: its check has no gitleaks, and each of its built-in secret patterns needs a fixed prefix or a character base64 never contains, so an embedded screenshot can't match one
 - Touches: work/App-Director and work/SaaSAllTheThings: the secrets step of framework/tools/check.sh or the gitleaks config seed (one pull request per repo; the director squash-merges)
 - Done when: a committed drawing in `director/ui/*.excalidraw`, whose embedded base64 screenshot can match a key pattern, doesn't fail the check, while a real key in any other file still does, following AGENTS.md › Project rules for framework work (check)
 - Note: found while building T85. Ships with /ui-design, so it waits for T84 and T85.
