@@ -230,9 +230,9 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: every link into the three repos points at its latest release (check) · the App-Director and SaaSAllTheThings pages and the How-to pages describe what their releases ship: `/ui-design` for web clients (with SaaSAllTheThings' dev-environment capture), the README's start-here step with the brief template, one git worktree per building session, and every subagent launch passing its model explicitly; the Godot-Director page says the same of the model rule; each statement checked against the release (check) · the brief moves `/ui-design` from Planned framework changes to Framework features, now that all three ship it (check) · `bash tools/check.sh` passes (check)
 - Brief: Scope › Framework features
 
-### T179 · SaaSAllTheThings: the README says a claim protects only its own worktree · in-progress 2026-10-25 · XS · agent
+### T179 · SaaSAllTheThings: the README says a claim protects only its own worktree · done 2026-10-25 · XS · agent
 - Depends on: -
-- PRs: SaaSAllTheThings #27 (open)
+- PRs: SaaSAllTheThings #27 (merged)
 - Touches: work/SaaSAllTheThings: README.md
 - Done when: the README's sentence that an `in-progress` claim stops two sessions touching the same item says what `rules.md` says instead: a claim protects only its own worktree, and sessions that build at the same time each take a git worktree (check) · following AGENTS.md › Project rules for framework work (check)
 - Brief: Scope › Framework features
@@ -444,7 +444,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 
 ### T102 · The secrets scan doesn't flag drawings · in-progress 2026-10-25 · S · agent
 - Depends on: T84, T85
-- PRs: App-Director #33 (open); the SaaSAllTheThings half follows when its clone is free
+- PRs: App-Director #33 (merged); the SaaSAllTheThings half waits for SaaSAllTheThings #29, which touches the same selftest
 - Touches: work/App-Director and work/SaaSAllTheThings: the secrets step of framework/tools/check.sh or the gitleaks config seed (one pull request per repo; the director squash-merges)
 - Done when: a committed drawing in `director/ui/*.excalidraw`, whose embedded base64 screenshot can match a key pattern, doesn't fail the check, while a real key in any other file still does, following AGENTS.md › Project rules for framework work (check)
 - Note: found while building T85. Ships with /ui-design, so it waits for T84 and T85.
