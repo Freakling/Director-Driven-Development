@@ -390,14 +390,14 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: the release pull request bumps every version carrier and template link together, turns Unreleased into the 1.10.0 heading (the Bash guard against hangs and the check's time limit), passes the selftest and carries the release notes in its commit body; once merged, `tools/work-release.sh` tags v1.10.0 and publishes the release (check) · following AGENTS.md › Project rules for framework work
 - Brief: Scope › Framework features
 
-### T195 · Release SaaSAllTheThings 0.12.0 · in-progress 2026-10-25 · S · agent
+### T195 · Release SaaSAllTheThings 0.12.0 · done 2026-10-25 · S · agent
 - Depends on: T165, T167, T169, T170, T171, T172, T179
-- PRs: SaaSAllTheThings #33 (open)
+- PRs: SaaSAllTheThings #33 (merged); v0.12.0 tagged and published
 - Touches: work/SaaSAllTheThings: the version carriers its CLAUDE.md lists, CHANGELOG.md
 - Done when: the release pull request bumps every version carrier and template link together, turns Unreleased into the 0.12.0 heading (the Bash guard against hangs and the check's time limit), passes the selftest and carries the release notes in its commit body; once merged, `tools/work-release.sh` tags v0.12.0 and publishes the release (check) · following AGENTS.md › Project rules for framework work
 - Brief: Scope › Framework features
 
-### T196 · Docs follow Godot-Director 4.4.0, App-Director 1.10.0 and SaaSAllTheThings 0.12.0 · todo · S · agent
+### T196 · Docs follow Godot-Director 4.4.0, App-Director 1.10.0 and SaaSAllTheThings 0.12.0 · in-progress 2026-10-25 · S · agent
 - Depends on: T193, T194, T195
 - Touches: docs/**/*.md (the framework links), docs/how-to/check.md, docs/how-to/trouble.md
 - Done when: every framework link points at the new tags; the check how-to says the check limits each test run (`[tests] timeout`, exit 3) in all three frameworks, and the troubleshooting page says what the Bash guard blocks and the form that works for each (an empty Python heredoc, an unbounded wait, a Godot run without a time limit); the selftest passes (check)
