@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T204 · B5 · R7
+**Next IDs:** T205 · B5 · R7
 
 ## Milestones
 | Milestone | Status |
@@ -448,6 +448,12 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Depends on: T201, T202
 - Touches: work/App-Director and work/SaaSAllTheThings: rules.md, reference/owasp.md, check.sh messages, the security procedure, compliance/mapping.md (SaaSAllTheThings), selftest.sh
 - Done when: the baseline, the checklists, the mapping rows and the check's messages use the current OWASP Top 10 edition's categories and names, checked against OWASP's published list, with an upgrade step that maps each old row to its new category (merged or renamed categories said plainly); one pull request per repo (check) · following AGENTS.md › Project rules for framework work
+- Brief: Scope › Framework features
+
+### T204 · Release App-Director 1.11.0 · in-progress 2026-10-25 · S · agent
+- Depends on: T199, T202
+- Touches: work/App-Director: the version carriers its CLAUDE.md lists, CHANGELOG.md
+- Done when: the release pull request bumps every version carrier and template link together, turns Unreleased into the 1.11.0 heading (the OWASP baseline and the security assessment), passes the selftest and carries the release notes in its commit body; once merged, `tools/work-release.sh` tags v1.11.0 and publishes the release (check) · following AGENTS.md › Project rules for framework work
 - Brief: Scope › Framework features
 
 ### T173 · The director pilots SaaSAllTheThings' example app in an Azure sandbox · todo · - · human
