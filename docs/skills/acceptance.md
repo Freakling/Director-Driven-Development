@@ -20,7 +20,7 @@ The request is `prepare` (the default), `process`, or `all` for a full regressio
 
 ### Godot-Director
 
-The skill is `/function-check`. Its procedure is at [`framework/.godot-director/procedures/function-check.md`](https://github.com/Freakling/Godot-Director/tree/v4.2.1/framework/.godot-director/procedures/function-check.md) in the Godot-Director repository.
+The skill is `/function-check`. Its procedure is at [`framework/.godot-director/procedures/function-check.md`](https://github.com/Freakling/Godot-Director/tree/v4.3.0/framework/.godot-director/procedures/function-check.md) in the Godot-Director repository.
 
 - It collects the `(play)` outcomes, which are what a person sees while playing. The checklist is written to `playtesting/YYYY-MM-DD-function-check.md`.
 - It plays the scenarios behind the `(autoplay)` outcomes first, and lists the clean ones as pre-verified with their run folder, so the person checks only what a machine can't judge.

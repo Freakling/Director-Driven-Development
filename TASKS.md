@@ -310,11 +310,11 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: the release pull request bumps every version file and the template links together, turns Unreleased into the 4.3.0 heading (the README by feature and drag-to-rearrange), passes the selftest without Godot, and carries the release notes in its commit body; once merged, `tools/work-release.sh` tags v4.3.0 and publishes the release (check) · the selftest's stale-Godot check no longer mistakes a Godot Director 4.3.x version for Godot 4.3 (check) · following AGENTS.md › Project rules for framework work
 - Brief: Scope › Framework features
 
-### T185 · Docs follow Godot-Director 4.3.0 · in-progress 2026-10-25 · S · agent
+### T185 · Docs follow Godot-Director 4.3.0 · done 2026-10-25 · S · agent
 - Depends on: T184
-- Touches: docs/frameworks/godot-director.md, docs/skills/ui-design.md, docs/how-to/*.md, selftest.sh
+- Touches: docs/how-to/ui.md, docs/**/*.md (the Godot-Director links)
 - Done when: every link into Godot-Director points at v4.3.0 and the release cache follows; the /ui-design skill page says a screen is re-arranged by dragging the grey boxes in the starter drawing (Godot-Director), while App-Director and SaaSAllTheThings still take a blue box, until T183 ships; the selftest passes (check)
-- Brief: Screens › Frameworks
+- Brief: Scope › Framework features
 
 ### T173 · The director pilots SaaSAllTheThings' example app in an Azure sandbox · todo · - · human
 - Depends on: T169

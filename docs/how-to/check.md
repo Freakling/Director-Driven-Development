@@ -42,7 +42,7 @@ Saying it and typing the command run the same procedure.
 ## Related
 
 - The [acceptance check skill page](../skills/acceptance.md), and the concept [The check](../concept/check.md).
-- The procedures: [App-Director](https://github.com/Freakling/App-Director/tree/v1.8.0/framework/.app-director/procedures/acceptance.md), [SaaSAllTheThings](https://github.com/Freakling/SaaSAllTheThings/tree/v0.10.0/framework/.satt/procedures/acceptance.md), and for Godot-Director [`/function-check`](https://github.com/Freakling/Godot-Director/tree/v4.2.1/framework/.godot-director/procedures/function-check.md), [`/playtest`](https://github.com/Freakling/Godot-Director/tree/v4.2.1/framework/.godot-director/procedures/playtest.md) and [`autoplay`](https://github.com/Freakling/Godot-Director/tree/v4.2.1/framework/.godot-director/procedures/autoplay.md).
+- The procedures: [App-Director](https://github.com/Freakling/App-Director/tree/v1.8.0/framework/.app-director/procedures/acceptance.md), [SaaSAllTheThings](https://github.com/Freakling/SaaSAllTheThings/tree/v0.10.0/framework/.satt/procedures/acceptance.md), and for Godot-Director [`/function-check`](https://github.com/Freakling/Godot-Director/tree/v4.3.0/framework/.godot-director/procedures/function-check.md), [`/playtest`](https://github.com/Freakling/Godot-Director/tree/v4.3.0/framework/.godot-director/procedures/playtest.md) and [`autoplay`](https://github.com/Freakling/Godot-Director/tree/v4.3.0/framework/.godot-director/procedures/autoplay.md).
 - The [Godot-Director page](../frameworks/godot-director.md#the-play-log-and-autoplay) on the play log and autoplay.
 - Once the bugs are fixed: [How do I ship it?](ship.md)
 

@@ -59,7 +59,9 @@ The steps are the same in all three frameworks; the capture differs. Nothing to 
 
 **Draw.** Open the starter in [Excalidraw](https://excalidraw.com), in the browser or as the desktop app.
 
-1. The screenshot is locked inside a frame named after the screen. The faint numbered boxes are what the screen has now. Hide or delete them, and delete the legend beside the frame once you know it.
+1. The screenshot is locked inside a frame named after the screen. The faint numbered boxes are what the screen has now, numbered as in the map image. Delete the legend beside the frame once you know it.
+    - In Godot-Director, re-arrange a screen by dragging a grey box to where the element should sit, or resizing it; type keys into it if they change. A grey box you don't touch is ignored, and hiding or deleting one changes nothing. Dragging the box out of the frame doesn't count: the agent reports it instead.
+    - In App-Director and SaaSAllTheThings the grey boxes are locked and only a reference: draw a blue box where the element should now sit, named after the element. That works in Godot-Director too.
 2. Draw one rectangle per thing you care about. The first line inside the box is its name, such as `Gear list`. The lines after it can hold any of these keys, which the agent understands when you use them and never requires: `shows:`, `does:` or `click:`, `key:`, `size:` (`fixed`, `fill` or `fit`), `stick:`, `scroll:`, `empty:` and `hidden when:`.
 3. Use the stroke colour to say what changes: green is new, blue is kept but moved or resized, red removes the element (or a red X over it), orange is not sure, let's talk, and black is how it should be.
 4. Draw arrows. From a note to a box, the arrow is a comment on that box. From one box to another, it is a flow, such as "clicking this opens that".
@@ -67,7 +69,7 @@ The steps are the same in all three frameworks; the capture differs. Nothing to 
 6. For another state or size, add another frame to the same file, named `<screen>.<state>` or `<screen>@2560x1080`.
 7. Save the file as `director/ui/<screen>.excalidraw`. If `director/ui/` isn't there, create it; in Godot-Director also put an empty `director/.gdignore` beside it so Godot doesn't import the PNGs you export there. In Chrome or Edge, the save can open a folder picker, so choose `director/ui`. In other browsers the file lands in Downloads, so move it there yourself.
 
-In App-Director and SaaSAllTheThings the same conventions, and how to open and save the starter, are in `product/ui/README.md` in your project.
+The same conventions, feature by feature, with how to open and save the starter, are in your project: `design/ui/README.md` in a Godot-Director game, `product/ui/README.md` in an App-Director or SaaSAllTheThings app.
 
 **Process.** Run `/ui-design process <screen>`. The agent:
 
@@ -99,7 +101,7 @@ If capture won't run, [Capture can't run](trouble.md#capture-cant-run) lists the
 
 ## Related
 
-- The `/ui-design` entry on each framework page ([Godot-Director](../frameworks/godot-director.md#commands), [App-Director](../frameworks/app-director.md#commands) and [SaaSAllTheThings](../frameworks/saasallthethings.md#commands)), and the `ui-design` procedures, which are the source of truth for the drawing steps: [Godot-Director](https://github.com/Freakling/Godot-Director/tree/v4.2.1/framework/.godot-director/procedures/ui-design.md), [App-Director](https://github.com/Freakling/App-Director/tree/v1.8.0/framework/.app-director/procedures/ui-design.md) and [SaaSAllTheThings](https://github.com/Freakling/SaaSAllTheThings/tree/v0.10.0/framework/.satt/procedures/ui-design.md).
+- The `/ui-design` entry on each framework page ([Godot-Director](../frameworks/godot-director.md#commands), [App-Director](../frameworks/app-director.md#commands) and [SaaSAllTheThings](../frameworks/saasallthethings.md#commands)), and the `ui-design` procedures, which are the source of truth for the drawing steps: [Godot-Director](https://github.com/Freakling/Godot-Director/tree/v4.3.0/framework/.godot-director/procedures/ui-design.md), [App-Director](https://github.com/Freakling/App-Director/tree/v1.8.0/framework/.app-director/procedures/ui-design.md) and [SaaSAllTheThings](https://github.com/Freakling/SaaSAllTheThings/tree/v0.10.0/framework/.satt/procedures/ui-design.md).
 - The skill pages [`/design`](../skills/design.md) and [`/next-task`](../skills/next-task.md), for the two ways that need no drawing.
 
 <div class="takeaway"><span>Describe it, or draw it. The agent builds it and a person checks it.</span><span class="url"><a href="index.md">All questions</a></span></div>
