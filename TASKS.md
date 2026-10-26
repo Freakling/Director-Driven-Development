@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T212 · B5 · R7
+**Next IDs:** T212 · B14 · R7
 
 ## Milestones
 | Milestone | Status |
@@ -18,6 +18,12 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 ✅ done · 🟨 in progress · ⬜ not started
 
 ## Queue
+
+### B5 · The Claude Code allow-list lets the agent run any code without a prompt (A01:2025 Broken Access Control) · todo · S · agent · med
+- Touches: .claude/settings.json
+- Repro: 1. Read `.claude/settings.json` allow rules: `Bash(npm *)`, `Bash(npx *)`, `Bash(pnpm *)`, `Bash(yarn *)`, `Bash(flutter *)`, `Bash(python *)`, `Bash(pip *)`, `WebSearch`, `WebFetch`; the deny list covers only `.env`, `*.pem`, `*.key`. 2. Expected: only what this repo runs is allowed without a prompt. Actual: `python -c`, `npx <package>` or `pip install <package>` run arbitrary code unprompted, which can push or read credential stores, so the "other pushes still prompt" boundary in `tools/work-publish.sh:15-17` and `tools/work-release.sh:16-19` doesn't hold; prompt injection from a fetched page or a framework repo is the trigger. The rules come from the App Director template, so an upgrade would restore them: file the template change as an App-Director item too.
+- Found in: product/security/2026-10-26.md › F1
+- Brief: -
 
 ### T146 · The Examples entries say what kind of thing each is · done 2026-10-19 · XS · agent
 - Depends on: T133
@@ -132,18 +138,6 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Depends on: -
 - Touches: work/Godot-Director: framework/tools/check.gd, framework/tools/check.sh, project/tools/check.cfg, README.md, framework/.godot-director/rules.md, selftest.sh
 - Done when: every run logs each test file's time and ends with a slowest-files summary; `--jobs N` (default from the CPU count, settable in check.cfg) splits the test files across N headless Godot processes, each in file order with its own log and its own timeout, and merges the results into one report with exit codes 0/1/3 unchanged; `--if-changed` and `--fingerprint` keep working; a run that hits the timeout says so instead of reading as a test failure; new check.cfg keys have defaults and an upgrade keeps existing settings; the docs say tests must isolate their autoload and user:// state and recommend one git worktree per parallel building session; CHANGELOG carries the upgrade notes (check) · measured on a scratch copy of The Guildkeeper (git archive of HEAD into a temp folder): the serial time, the parallel time, and the slowest-files summary, recorded in the item (check) · following AGENTS.md › Project rules for framework work; built on the branch `ddd/check-tiers`, one pull request (check)
-- Brief: Scope › Framework features
-
-### T158 · Godot-Director: a quick non-gating test mode for the builder, if the full run stays slow · todo · L · agent
-- Depends on: T157
-- Touches: work/Godot-Director: framework/tools/check.gd, framework/tools/check.sh, procedures/build.md, selftest.sh
-- Done when: decided on T157's numbers: if the parallel full run on The Guildkeeper is over about three minutes, the builder gets a `--quick` mode that selects the tests relevant to the changed files (one step out through class_name, autoload name or res:// path, widening to everything when shared plumbing changes) and says which it chose and why, used while iterating and never as the gate; the full parallel run stays what Done means (check) · if the full run is fast enough, this item is dropped with a note (check) · following AGENTS.md › Project rules for framework work; built on the branch `ddd/check-tiers`, one pull request (check)
-- Brief: Scope › Framework features
-
-### T159 · Godot-Director: two gated tiers with a full-run cadence, as a project opt-in · todo · L · agent
-- Depends on: T158
-- Touches: work/Godot-Director: framework/tools/check.sh, framework/.godot-director/rules.md, procedures/*.md, framework/.claude/hooks/*, framework/.githooks/pre-commit, selftest.sh
-- Done when: only if T158's quick mode is still too slow as a gate: a check.cfg opt-in, off by default, makes the quick mode the per-item gate with the item's autoplay scenarios, a full run every N commits and before a function check from a state file under .godot/godot-director/, and a full-run failure filed as a bug naming the commits since the last green run, with rules.md saying what Done means under the opt-in (the director's original spec, `init/godot-director-check-tiers-prompt.md`) (check) · following AGENTS.md › Project rules for framework work; built on the branch `ddd/check-tiers`, one pull request (check)
 - Brief: Scope › Framework features
 
 ### T160 · App-Director: one git worktree per parallel building session · done 2026-10-20 · XS · agent
@@ -508,6 +502,54 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Touches: frameworks.lock, docs/**/*.md (the Godot-Director links), docs/how-to/check.md, docs/frameworks/godot-director.md
 - Done when: `frameworks.lock` and every Godot-Director link move to v4.5.0; the check how-to and the Godot-Director page describe the opt-in balanced and split test jobs (`[tests] balance`, `split_over`, `# gdir: no-split`, `--jobs 1` to re-measure, measure before and after) and that a sweep of several scenarios plays side by side in one call, checked against the release; the selftest passes with no WARN (check)
 - Brief: Scope › Framework features
+
+### B6 · The CI build installs unpinned transitive Python packages without hashes (A03:2025 Software Supply Chain Failures) · todo · S · agent · low
+- Touches: requirements.txt, .github/workflows/docs.yml
+- Repro: 1. `requirements.txt:1-2` pins only mkdocs and mkdocs-material; `docs.yml:24` runs `pip install -r requirements.txt`. 2. Expected: every package the build installs is pinned with a hash. Actual: Markdown, pymdown-extensions, Jinja2 and the rest resolve to their newest releases on every run and render the published site.
+- Found in: product/security/2026-10-26.md › F2
+- Brief: -
+
+### B7 · The docs workflow pins actions by mutable tag (A08:2025 Software or Data Integrity Failures) · todo · XS · agent · low
+- Touches: .github/workflows/docs.yml
+- Repro: 1. `docs.yml:19,20,27,44` use actions by major tag. 2. Expected: actions pinned to a commit SHA, with updates proposed. Actual: a moved or compromised tag runs new code in the deploy job, which holds `pages: write` and `id-token: write` (all four are GitHub-owned, which lowers the risk).
+- Found in: product/security/2026-10-26.md › F3
+- Brief: -
+
+### B8 · Two paths skip the secrets scan: CI and the framework pushes (A07:2025 Authentication Failures) · todo · S · agent · low
+- Touches: .github/workflows/docs.yml, tools/work-publish.sh
+- Repro: 1. The scan runs only in `tools/check.sh` and the local pre-commit hook; `docs.yml` runs `selftest.sh`, which has no gitleaks step. 2. `tools/work-publish.sh:142` pushes `work/` clone commits to the public framework repos with no scan from this side. Expected: a commit made outside the hook, or a clone's item commit, is scanned before it reaches a public repo. Actual: neither is.
+- Found in: product/security/2026-10-26.md › F4
+- Brief: -
+
+### B9 · The published site sets no Content-Security-Policy (A02:2025 Security Misconfiguration) · todo · S · agent · low
+- Touches: mkdocs.yml, overrides/ (new)
+- Repro: 1. `mkdocs.yml` has no `theme.custom_dir` and no meta CSP; GitHub Pages can't send custom headers. 2. Expected: a meta CSP limits scripts, frames and images, and the headers Pages can't send are an accepted decision naming A02. Actual: nothing contains injected content.
+- Found in: product/security/2026-10-26.md › F5
+- Brief: -
+
+### B10 · The itch.io iframe has no sandbox (A08:2025 Software or Data Integrity Failures) · todo · XS · agent · low
+- Touches: docs/examples/pksei.md
+- Repro: 1. `docs/examples/pksei.md:12` embeds the itch.io frame without `sandbox`, `referrerpolicy` or `loading`. 2. Expected: the frame gets only what the game needs. Actual: compromised frame content could open popups or navigate the top window with user activation.
+- Found in: product/security/2026-10-26.md › F6
+- Brief: -
+
+### B11 · Two tools reuse a predictable temp folder (A01:2025 Broken Access Control) · todo · XS · agent · low
+- Touches: tools/push-alignment.sh, tools/audit.sh
+- Repro: 1. `tools/push-alignment.sh:27,78` uses `${TMPDIR:-/tmp}/push-alignment-$$` with `mkdir -p`, and with `--add` writes its TASKS.md copy back (line 154); `tools/audit.sh:25-26` does the same. 2. Expected: a fresh folder from `mktemp -d`, as `work-publish.sh` and `work-release.sh` do. Actual: on a shared Unix /tmp another user can pre-create the folder and change the copy before it's written back.
+- Found in: product/security/2026-10-26.md › F7
+- Brief: -
+
+### B12 · The work scripts' origin check accepts any host and ignores pushurl (A01:2025 Broken Access Control) · todo · XS · agent · low
+- Touches: tools/work-publish.sh, tools/work-release.sh, tools/work-clones.sh
+- Repro: 1. `work-publish.sh:89-92`, `work-release.sh:118-121`, `work-clones.sh:76-81` accept any origin ending in `/Freakling/<repo>` on any host, and never check `remote.origin.pushurl`. 2. Expected: only the real GitHub repo URL, and no differing pushurl. Actual: a tampered clone config sends a branch or tag elsewhere while the gh steps target the real repo.
+- Found in: product/security/2026-10-26.md › F8
+- Brief: -
+
+### B13 · The screen-capture tooling has an open version range and no lock file (A03:2025 Software Supply Chain Failures) · todo · XS · agent · low
+- Touches: tools/ui/package.json, tools/ui/.npmrc (framework-owned: an App-Director item)
+- Repro: 1. `tools/ui/package.json:9` has `playwright` at `^1.50.0` and `tools/ui/.npmrc:2` sets `package-lock=false`. 2. Expected: an exact version and a lock file, or a decision saying why not. Actual: `npm install` takes the newest release in the range. Framework-owned and unused by this static site, so the fix belongs in App-Director.
+- Found in: product/security/2026-10-26.md › F9
+- Brief: -
 
 ### T173 · The director pilots SaaSAllTheThings' example app in an Azure sandbox · todo · - · human
 - Depends on: T169
