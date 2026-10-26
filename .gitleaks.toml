@@ -8,7 +8,7 @@
 #
 # Reference: https://github.com/gitleaks/gitleaks#configuration
 
-title = "{{APP_NAME}}"
+title = "Director-Driven Development docs"
 
 [extend]
 # Inherit all built-in gitleaks detection rules.
@@ -19,6 +19,8 @@ description = "Framework repo clones: the selftest cache under .app-director/sta
 paths = [
   '''\.app-director[\\/]state[\\/]frameworks[\\/]''',
   '''(^|[\\/])work[\\/](App-Director|Godot-Director|SaaSAllTheThings)[\\/]''',
+  # The director's drawings embed a screenshot as base64, which can match a key rule by chance.
+  '''^director[\\/]ui[\\/][^\\/]*\.excalidraw$''',
 ]
 # commits = []
 

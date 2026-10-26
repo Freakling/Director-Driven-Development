@@ -12,9 +12,11 @@ These rules apply to any AI assistant working in this project. For each of these
 - **prune.md:** prune the task list.
 - **review.md:** review a finished change.
 - **release.md:** release to an environment or platform.
+- **security.md:** a security assessment (`/security`): the tools, then a fresh reader through the OWASP checklist in `.app-director/reference/owasp.md`; findings become bug items, people and process items go to the human, and a dated report goes in `product/security/`. It runs on request, before a release is proposed, and when `next-task.md` finds one due.
+- **ui-design.md:** capture the screens (`/ui-design`): a PNG per screen, state and size of the web app on this machine, with an element map, a numbered map image, layout lint and a starter drawing; process the human's Excalidraw drawing of a screen into a screen spec and items; verify a built screen against its spec and write compare images; list the screens in the catalog.
 - **refresh-model-sizing.md:** set or update the model sizing block in AGENTS.md › Project rules.
 
-In Claude Code these are also slash commands, and builds, reviews and research run as the `builder`, `reviewer` and `researcher` subagents.
+In Claude Code these are also slash commands, and builds, reviews (with the security assessment's reading pass) and research run as the `builder`, `reviewer` and `researcher` subagents.
 
 ## The human decides
 - The human owns product vision, design and priorities. You build, keep the records, and propose.
@@ -33,21 +35,25 @@ In Claude Code these are also slash commands, and builds, reviews and research r
 | What's undecided | brief › Open Questions |
 | Why a design decision was made | `product/decisions.md` (append-only) |
 | The evidence behind a design call | `product/research/`, one dated note per topic; the decision line links to it |
+| What the last security assessment found, and what it couldn't check | `product/security/YYYY-MM-DD.md`, one report per assessment (`procedures/security.md`) |
 | How the app was built before a design drift reset, and what drifted | `product/resets/YYYY-MM-DD/` (never deleted) |
 | Which systems exist and what each owns | `AGENTS.md` › Architecture |
+| How each screen is laid out | `product/ui/<screen>.md`, one spec per screen (`procedures/ui-design.md`) |
+| The human's screen drawings | `director/ui/` (Excalidraw files; read-only for you) |
 | Work, bugs, research, milestones | `TASKS.md` (format: `.app-director/tasks.md`; done items: `TASKS-archive.md`) |
 | Whether it works | `bash tools/check.sh` |
 
 Update the owning place in the same change that makes it untrue. Replace superseded text; never strike it through or keep two versions. Refer to brief sections by heading ("Brief: Authentication › Sign in"), never by number.
 
 ## Architecture defaults
-- **UI layer.** Screens, pages and components display state and call the logic layer. They never import from the data layer directly, never call `fetch`/`http` themselves, and hold no business logic. The check fails when a file in a configured UI folder imports from a configured data folder.
+- **UI layer.** Screens, pages and components display state and call the logic layer. They never import from the data layer directly, never call `fetch`/`http` themselves, and hold no business logic. The check fails when a file in a configured UI folder imports from a configured data folder. Every screen has an entry in the catalog, `tools/ui/screens.mjs`; add or update it whenever you add or change a screen. Elements a screen spec names get a `data-testid` (`gear-list`) that the spec, element maps and tests share. Build layouts with flex or grid, never pixel positions. The catalog seeds a screen's state through the app's public API, as a client does, and never imports the data layer.
 - **Logic layer.** Services, hooks, providers and stores hold business logic, state management, and calls to the data layer. This is what the UI calls and what tests exercise.
 - **Data layer.** Repositories, API clients and storage modules handle network access and persistent storage only. No UI concerns.
 - **Folder configuration.** `tools/check.cfg` › `[ui] dirs` lists the UI-layer folders; `[data] dirs` lists the data-layer folders. Update them when folders move.
 - **New stored data fields.** When storage already holds data, a new required field needs a migration or a default. The check fails if it finds a new required field without one.
-- **Secrets.** Never in source code. Use `.env` files (gitignored) locally; platform secrets (e.g. environment variables set in the deploy environment) in production. The check runs gitleaks on the working tree; the pre-commit hook also scans staged changes. Both fail when a credential is found. To allowlist a false positive: propose adding its `Fingerprint` (from `.app-director/state/gitleaks.json`) to `.gitleaksignore` and a reason to `product/decisions.md`; never add either without the human's approval. Any committed credential is compromised regardless of whether the commit is later removed; rotating it is the human's action, never the agent's.
+- **Secrets.** Never in source code. Use `.env` files (gitignored) locally; platform secrets (e.g. environment variables set in the deploy environment) in production. The check runs gitleaks on the working tree (this serves the OWASP baseline's Authentication Failures); the pre-commit hook also scans staged changes. Both fail when a credential is found. To allowlist a false positive: propose adding its `Fingerprint` (from `.app-director/state/gitleaks.json`) to `.gitleaksignore` and a reason to `product/decisions.md`; never add either without the human's approval. Any committed credential is compromised regardless of whether the commit is later removed; rotating it is the human's action, never the agent's.
 - **No hard-coded IDs, user data or environment-specific values in source.** Use config or environment variables.
+- **OWASP baseline.** The OWASP Top 10 (2025), and the OWASP API Security Top 10 (2023) for anything that serves an API, is the baseline every app meets. It is framework-owned: no project setting turns it off, and a project rule in AGENTS.md can't relax it. A deviation is only ever an accepted decision, a line in `product/decisions.md` that names the OWASP item and why; without one it is a finding in `review.md`. `design.md` states each option's effect on the baseline, `review.md` checks each change against it, `security.md` assesses everything built against it from time to time, and the check serves only two parts of it, with no claim to cover the rest: the secrets scan (credentials in source, Authentication Failures) and UI purity (no direct data access from UI code, Broken Access Control).
 - **Statically typed.** TypeScript `strict` mode, Flutter with sound null safety, Python with type annotations. The check fails on `any` casts that hide a type error or missing annotations on public API surfaces.
 
 ## Doing the work
@@ -60,7 +66,8 @@ Update the owning place in the same change that makes it untrue. Replace superse
   - `(check)`: a command you run and quote proves it, such as the check or a `grep`;
   - `(demo)`: a human verifies it in the next acceptance check.
 - **Done** means every `(test)` and `(check)` outcome holds, every `(demo)` outcome is implemented, and `bash tools/check.sh` exits 0. Never report done otherwise, and show the output of a failing check. Exit 3 means the check couldn't run, so say the work is unverified.
-- **Running the check.** Run it in the foreground with a long timeout (10 minutes or more).
+- **Running the check.** Run it in the foreground with a long timeout (10 minutes or more), or start it with `run_in_background` and keep working until its completion notice.
+- **Commands that may run long.** Give every command that may run long a time limit under five minutes (`timeout 240 ...`, at most 280 seconds), because a wait past five minutes lets the prompt cache expire and the next turn rewrites the whole context. Start a long check with `run_in_background` and keep working until its completion notice instead of polling it with `sleep` loops. Never probe for a tool with an empty heredoc (`python3 - <<'EOF'` followed by `EOF`): it waits for input and never returns, so use `python3 --version`. The command guard blocks these forms. `tools/check.sh` limits each test run to `[tests] timeout` in `tools/check.cfg` (600 seconds by default) and exits 3 when it hits the limit.
 - **Two failed attempts.** After two failed attempts at the same problem, stop and report instead of guessing further.
 
 ## Git
@@ -70,7 +77,7 @@ Update the owning place in the same change that makes it untrue. Replace superse
 
 ## Sessions and context
 - **New clone.** Run `bash tools/setup-clone.sh`. It checks that the stack tool is available and installs the pre-commit hook.
-- **Two sessions at once** (say design and coding): give one its own worktree (`git worktree add ../app-design`) and run `bash tools/setup-clone.sh` there. A claim in TASKS.md protects only its own worktree. So only one session per project picks items; the others name the item they work on.
+- **Any two sessions building at once** (say design and coding): each gets its own git worktree, since a shared checkout lets one session's half-written files fail the other's check and Stop hook, and both queue on the same build artefacts. Make one with `git worktree add ../app-design`, then run `bash tools/setup-clone.sh` there. A claim in TASKS.md protects only its own worktree. So only one session per project picks items; the others name the item they work on.
 - **The records are the hand-off.** TASKS.md (what's done and what's next), commit messages (why), AGENTS.md and the brief carry everything between sessions. Once an item is committed, a fresh session, or `/clear` in Claude Code, loses nothing.
 
 ## Reviews and model size
@@ -85,5 +92,5 @@ Update the owning place in the same change that makes it untrue. Replace superse
     - L:  <model-id>
     - XL: <model-id>
   ```
-  `next-task.md` reads the entry for the current item's size and passes it to the builder. A size without an entry uses the session model. Run `/refresh-model-sizing` to set or update these entries.
+  `next-task.md` passes the entry for the current item's size as an explicit model on every subagent launch: the builder, the reviewer and the researcher. A size without an entry, or model sizing off, passes the session model, also explicitly. Run `/refresh-model-sizing` to set or update these entries.
 - **Escalation:** a failed build retries once on the next size's model. An XL failure stops and comes to the director.

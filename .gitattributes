@@ -8,3 +8,5 @@
 /.claude/** text eol=lf
 /tools/check.sh text eol=lf
 /tools/setup-clone.sh text eol=lf
+# App Director
+/tools/ui/** text eol=lf

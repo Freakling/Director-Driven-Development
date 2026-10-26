@@ -1,10 +1,14 @@
 {
   "permissions": {
     "allow": [
-      "Bash(bash tools/work-clones.sh*)",
-      "Bash(bash tools/work-release.sh*)",
-      "Bash(bash tools/work-publish.sh*)",
       "Bash(bash tools/check.sh*)",
+      "Bash(bash tools/security.sh)",
+      "Bash(bash tools/security.sh --due)",
+      "Bash(bash tools/ui_capture.sh*)",
+      "Bash(node tools/ui/drawing.mjs *)",
+      "Bash(node tools/ui/overlay.mjs *)",
+      "Bash(node tools/ui/verify.mjs *)",
+      "Bash(node tools/ui/capture.mjs *)",
       "Bash(bash tools/setup-clone.sh*)",
       "Bash(bash tools/stacks/*.sh*)",
       "Bash(npm *)",
@@ -28,7 +32,10 @@
       "Bash(git ls-files *)",
       "Bash(git grep *)",
       "WebSearch",
-      "WebFetch"
+      "WebFetch",
+      "Bash(bash tools/work-clones.sh*)",
+      "Bash(bash tools/work-release.sh*)",
+      "Bash(bash tools/work-publish.sh*)"
     ],
     "deny": [
       "Read(.env)",
@@ -54,7 +61,7 @@
     ],
     "PreToolUse": [
       {
-        "matcher": "Bash",
+        "matcher": "Bash|Monitor",
         "hooks": [
           {
             "type": "command",

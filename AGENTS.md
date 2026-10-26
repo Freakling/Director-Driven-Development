@@ -22,6 +22,8 @@ Instructions for AI assistants working on this app. The workflow is App Director
 | `mkdocs.yml` | Site settings, theme, Markdown extensions and the navigation |
 | `selftest.sh` | Dashes, docs coverage and the strict build; run by `tools/check.local.sh` and CI |
 | `.github/workflows/` | CI: selftest on every push and pull request, deploy `main` to Pages |
+| `product/ui/` | Screen specs from `/ui-design` and its gitignored `captures/`; unused while the site has no screens to design |
+| `tools/ui/` | Screen capture (Node and Playwright), with `screens.mjs` the catalog; installed by App Director, not used by this static site |
 | `init/` | Gitignored handover material (drafts, graphics, prompts); read for context, never published |
 | `work/` | Gitignored clones of the three framework repos, where framework items are built (`tools/work-clones.sh`); they leave this machine only as pull requests (`tools/work-publish.sh`) |
 

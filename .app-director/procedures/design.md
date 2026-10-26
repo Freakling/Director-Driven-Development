@@ -21,6 +21,7 @@ Brainstorm a topic, answer open design questions, or change how part of the app 
    - The result is a note in `product/research/` and a done `R<n>` item. Tell the human where the researcher's assumptions are, since those are the first thing to check.
    - The researcher's recommendation is one option, shown with its reason like any other. It informs; the human decides.
 2. Offer 2-4 concrete options. For each: what the user experiences, what it would take to build (which systems in AGENTS.md › Architecture), and how it fits the product goals.
+   Where an option touches security (input, authentication, authorization, sessions, secrets, data access, file or network access, dependencies), state its effect on the OWASP baseline in `rules.md` › Architecture defaults: the item it touches (such as Broken Access Control) and whether it meets, strengthens or would deviate from it. An option that would deviate is shown with the accepted decision it needs, and never recommended without saying so.
 3. Recommend one, with a one-line reason.
 4. Wait for the human. If they answer only part, record only that part. If you had to interpret the answer, write down your reading and ask them to confirm it.
 
@@ -34,6 +35,7 @@ Brainstorm a topic, answer open design questions, or change how part of the app 
    - Leave `in-progress` items alone and tell the human about them, since another session may be working on them.
    - Suggest reorders; don't make them.
 5. **Numbers and thresholds** stay placeholders. Say what a value is for and how it should feel; the human sets it in config or environment variables.
+6. **Layout:** where things sit on a screen goes to `ui-design.md`. A design session settles what a screen is for, not where its elements are.
 
 ## Finish
 - Summarise what was decided, what's still open, and the next most useful question.

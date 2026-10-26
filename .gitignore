@@ -7,3 +7,7 @@ work/
 .env
 *.local
 .claude/settings.local.json
+# App Director
+/product/ui/captures/
+/tools/ui/node_modules/
+/tools/ui/.auth/
