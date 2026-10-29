@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T225 · B17 · R7
+**Next IDs:** T233 · B21 · R7
 
 ## Milestones
 | Milestone | Status |
@@ -673,6 +673,78 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Touches: a Godot game of the director's, with Godot-Director 3.11.0
 - Done when: the director has captured, drawn, processed and verified at least one screen with the released /ui-design, and said whether App-Director and SaaSAllTheThings should follow as the anchor says or after changes (demo)
 - Brief: Scope › Planned framework changes
+
+### B17 · The wildcard git allow rules write and read any file without a prompt (A01:2025 Broken Access Control) · todo · S · agent · med
+- Touches: .claude/settings.json, selftest.sh (framework-owned: an App-Director item too, as T213 was)
+- Repro: 1. `.claude/settings.json:15-17,21,23-24` allow `git diff *`, `git log *`, `git show *`, `git commit *`, `git stash *` and `git worktree *` with any flags. 2. `git log --output=<path>` (and `git diff`, `git show` or `git stash show` with `--output`) writes text to any path, such as `tools/check.local.sh`, which the allowed `bash tools/check.sh` then runs; `git diff --no-index /dev/null <path>`, or `git commit -F <path>` and then `git log`, prints any file on the machine, past the Read deny rules. Expected: no allow rule writes a file, reads outside the repository or runs code without a prompt. Actual: these flags do, by git's documented options (not yet confirmed on this machine: confirm each with a harmless write or read in a scratch folder first). Selftest section 8 checks code runners only (`selftest.sh:422-431`). The same class as B14 (`git grep -O`) and B15 (deny rules for the credential stores).
+- Found in: product/security/2026-10-29.md › F1
+- Brief: -
+
+### B18 · The pre-commit secrets scan skips Markdown, shell, HTML and the records (A07:2025 Authentication Failures) · todo · S · agent · low
+- Touches: .githooks/pre-commit, tools/check.sh, .claude/hooks/stop-check.sh (framework-owned: an App-Director item)
+- Repro: 1. Stage a change to a page under `docs/`, `overrides/main.html`, a script under `tools/`, `selftest.sh`, `requirements.txt`, `frameworks.lock` or `TASKS.md`, and commit. 2. Expected: the pre-commit hook scans the staged change for secrets, as `rules.md` › Secrets says. Actual: `.githooks/pre-commit:21-27` runs the check and its staged gitleaks scan only when a staged file ends in `ts`, `tsx`, `js`, `jsx`, `mjs`, `dart`, `py`, `json`, `yaml` or `yml` or is one of the check's own files, and `tools/check.sh:67-71` fingerprints the same set, so `--if-changed` (the hook and the Stop hook) reuses an earlier pass after any other change. CI's full-history scan finds it only once it's pushed to the public repository.
+- Found in: product/security/2026-10-29.md › F2
+- Brief: -
+
+### B19 · The publish and release pushes follow git push config the scripts don't pin (A01:2025 Broken Access Control) · todo · XS · agent · low
+- Touches: tools/work-publish.sh, tools/work-release.sh
+- Repro: 1. In a clone, set `remote.origin.push`, or `push.followTags=true` with a local annotated tag the bundle commits reach. 2. Run `bash tools/work-publish.sh work/<repo>`. Expected: only `refs/heads/<branch>` is pushed, to the same name, as the header (`tools/work-publish.sh:14-17`) promises. Actual: `tools/work-publish.sh:242` runs `git push -u origin "$branch"` with no explicit destination, so a push mapping decides where it lands (a `+` in it forces the push) and followTags pushes the tag too, before the director merges anything; `tools/work-release.sh` pushes its tag the same way. Neither setting is on this machine today.
+- Found in: product/security/2026-10-29.md › F3
+- Brief: -
+
+### B20 · This repo's screen-capture tooling still takes an open Playwright range (A03:2025 Software Supply Chain Failures) · todo · XS · agent · low
+- Touches: tools/ui/package.json, tools/ui/.npmrc (App Director's files: the App Director upgrade to its current release brings the pin)
+- Repro: 1. Read `tools/ui/package.json:9`, `"playwright": "^1.50.0"`, with `package-lock=false` in `tools/ui/.npmrc`. 2. Expected: the exact pin App-Director's release ships (B13). Actual: `npm install` here takes the newest release in the range. Nothing is installed (no `tools/ui/node_modules`), and the site doesn't use the tooling.
+- Found in: product/security/2026-10-29.md › F4
+- Brief: -
+
+### T225 · The director reviews who can change the repositories and accounts (A01:2025 Broken Access Control) · todo · - · human
+- Depends on: -
+- Touches: -
+- Done when: the director has reviewed who has write or admin access to the four repositories, their Pages settings, the WordPress site and its hosting, itch.io and the Anthropic account, removed what isn't needed, and set when to review it again (on a schedule and when someone leaves) (demo)
+- Brief: -
+
+### T226 · The director checks the Pages settings (A02:2025 Security Misconfiguration) · todo · - · human
+- Depends on: -
+- Touches: -
+- Done when: the Pages source is GitHub Actions, "Enforce HTTPS" is on and the `github-pages` environment deploys only from `main`, checked in this repository's settings (demo)
+- Brief: -
+
+### T227 · The director turns on dependency alerts and pip updates (A03:2025 Software Supply Chain Failures) · todo · - · human
+- Depends on: -
+- Touches: -
+- Done when: Dependabot alerts are on in all four repositories and Dependabot proposes `pip` updates where a repository has Python packages, beside the action updates, and the director has said who may add a dependency (demo)
+- Brief: -
+
+### T228 · The director rotates the GitHub and WordPress credentials (A04:2025 Cryptographic Failures) · todo · - · human
+- Depends on: -
+- Touches: -
+- Done when: the gh token, the git credential entry and the SSH keys on this machine and the WordPress application password are rotated, unused application passwords are revoked, the WordPress password lives only in the local MCP configuration, and the director has set when to rotate them again (demo)
+- Brief: -
+
+### T229 · The director reviews misuse before changing the agent's permissions or the publish scripts (A06:2025 Insecure Design) · todo · - · human
+- Depends on: -
+- Touches: -
+- Done when: the director has thought through how a change to `.claude/settings.json`, `tools/work-publish.sh` or `tools/work-release.sh` could be misused, starting with B17 and B19, and keeps doing so before each such change (demo)
+- Brief: -
+
+### T230 · The director turns on two-factor authentication on every account (A07:2025 Authentication Failures) · todo · - · human
+- Depends on: -
+- Touches: -
+- Done when: two-factor authentication is on for GitHub, WordPress and its hosting, itch.io and the Anthropic account (demo)
+- Brief: -
+
+### T231 · The director sets the GitHub rulesets and Actions settings (A08:2025 Software or Data Integrity Failures) · todo · - · human
+- Depends on: -
+- Touches: -
+- Done when: a branch ruleset on `main` in all four repositories requires a pull request and blocks force-push and deletion, a tag ruleset protects `v*` in the three framework repositories, the default `GITHUB_TOKEN` is read-only, only GitHub-owned or verified Actions may run, and secret scanning push protection is on (demo)
+- Brief: -
+
+### T232 · The director routes the alerts and writes an incident note (A09:2025 Security Logging and Alerting Failures) · todo · - · human
+- Depends on: -
+- Touches: -
+- Done when: failed workflow runs and Dependabot and secret scanning alerts reach the director's email, and a short note says what to do if the site is defaced or a token leaks (demo)
+- Brief: -
 
 ### T103 · /ui-design tells the director how to use Excalidraw · done 2026-10-20 · S · agent
 - PRs: Godot-Director #18 (merged), App-Director #25 (merged), SaaSAllTheThings #18 (merged)
