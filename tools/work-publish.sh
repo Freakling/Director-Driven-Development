@@ -6,7 +6,8 @@
 # commit per item. This script takes the last step: it pushes that branch to the framework repo
 # and opens the bundle's pull request the first time, or updates the open one, so the changes
 # reach the repo only through a review. Before it pushes, it scans the commits the push would send
-# for credentials with gitleaks, the same rules the check applies to the working tree.
+# for credentials with gitleaks, the same rules the check applies to the working tree, under
+# origin/main's allowlist: the clone's own .gitleaks.toml and .gitleaksignore are never read.
 #
 # MERGE IS HUMAN-OWNED (product/decisions.md, 2026-10-12), AND THE PULL REQUEST IS THE GATE
 # (2026-10-15, Q13). This script only pushes the bundle branch and opens its pull request, or
@@ -30,6 +31,10 @@
 #   - gitleaks finds a credential in the commits ahead of origin/main (the file names are printed,
 #     the values stay redacted)
 #   - gitleaks is not installed, or it can't scan those commits
+#
+# Not refused: a change to .gitleaks.toml or .gitleaksignore in those commits. The scan uses
+# origin/main's allowlist, never the push's, and the push prints that change for the director to
+# review in the pull request.
 #
 # The first time, the pull request is opened from the branch's first commit ahead of origin/main:
 # that commit's subject line and the rest of its message become the title and body, and the body
@@ -149,15 +154,41 @@ ahead="$(g rev-list --count "origin/$BASE_BRANCH..HEAD" 2>/dev/null)"
 # 4. Secrets scan: no credential in the commits the push would send. The check scans the working tree
 # and the pre-commit hook scans staged changes; this scans the commits themselves, so a commit made
 # outside the hook, or a clone's item commit, is caught before it reaches a public repository
-# (OWASP Authentication Failures). gitleaks reads the clone's own .gitleaks.toml and .gitleaksignore
-# from the source folder, if it has them. The report goes under the state folder by a relative path,
-# holds redacted values only, and is removed after the scan; its File entries name the files.
+# (OWASP Authentication Failures). The allowlist is origin/main's, never the push's: gitleaks would
+# otherwise read the clone's own .gitleaks.toml and .gitleaksignore, so a commit could allowlist its
+# own credential. Both files are read from origin/main into a private temp folder and passed on the
+# command line every time; where origin/main has none, the scan gets the default rules only, and no
+# ignores. A `gitleaks:allow` comment in the pushed commits doesn't count either
+# (--ignore-gitleaks-allow). The source is the clone's .git folder, not its working tree, because
+# gitleaks reads a .gitleaksignore from its source folder even when --gitleaks-ignore-path names
+# another file. The report goes under the state folder by a relative path, holds redacted values
+# only, and is removed after the scan; its File entries name the files.
 command -v gitleaks >/dev/null 2>&1 \
   || refuse "gitleaks is not installed or not on PATH, so the commits of $dir can't be scanned for credentials; nothing was pushed"
+scratch="$(mktemp -d "${TMPDIR:-/tmp}/work-publish-scan.XXXXXX")" \
+  || refuse "could not make a private temp folder for the scan; nothing was pushed"
+trap 'rm -rf "$scratch"' EXIT
+# origin_file <path> <dest>: writes origin/main's <path> to <dest> and returns 0, or returns 1 when
+# origin/main has no such file. It lists the blob with ls-tree, not a rev:path argument, because Git
+# Bash rewrites that argument into a Windows path list. A failed listing or read refuses, so the scan
+# never falls back to defaults on an error.
+origin_file() {
+  local listed sha
+  listed="$(g ls-tree "origin/$BASE_BRANCH" -- "$1")" \
+    || refuse "could not list $1 on origin/$BASE_BRANCH; nothing was pushed"
+  [ -n "$listed" ] || return 1
+  sha="$(printf '%s\n' "$listed" | awk '{ print $3 }')"
+  g cat-file blob "$sha" > "$2" \
+    || refuse "could not read $1 on origin/$BASE_BRANCH; nothing was pushed"
+}
+scan_cfg="$scratch/gitleaks.toml"
+scan_ignore="$scratch/gitleaksignore"
+origin_file .gitleaks.toml "$scan_cfg" || printf '[extend]\nuseDefault = true\n' > "$scan_cfg"
+origin_file .gitleaksignore "$scan_ignore" || : > "$scan_ignore"
 mkdir -p .app-director/state || refuse "could not create .app-director/state for the scan report; nothing was pushed"
 scan_report=".app-director/state/work-publish-scan.json"
 rm -f "$scan_report"
-scan_out="$(gitleaks git --redact --report-path="$scan_report" --log-opts="origin/$BASE_BRANCH..HEAD" "$dir" 2>&1)"
+scan_out="$(gitleaks git --redact --ignore-gitleaks-allow --config="$scan_cfg" --gitleaks-ignore-path="$scan_ignore" --report-path="$scan_report" --log-opts="origin/$BASE_BRANCH..HEAD" "$dir/.git" 2>&1)"
 scan_rc=$?
 if [ "$scan_rc" -ne 0 ]; then
   # A report with a File entry is a finding; a failure with none means the scan couldn't run.
@@ -177,6 +208,9 @@ if [ "$scan_rc" -ne 0 ]; then
   refuse "gitleaks couldn't scan the commits ahead of origin/$BASE_BRANCH on $branch; nothing was pushed"
 fi
 rm -f "$scan_report"
+if [ -n "$(g diff --name-only "origin/$BASE_BRANCH...HEAD" -- .gitleaks.toml .gitleaksignore)" ]; then
+  echo "work-publish: the scan used origin/$BASE_BRANCH's allowlist; this push changes .gitleaks.toml or .gitleaksignore, which the director reviews in the pull request"
+fi
 
 # 5. Title and body: the first commit ahead of origin/main is the bundle's first item commit.
 first="$(g rev-list --reverse "origin/$BASE_BRANCH..HEAD" | head -1)"
@@ -215,7 +249,7 @@ if [ -n "$existing" ]; then
 fi
 
 bodyfile="$(mktemp "${TMPDIR:-/tmp}/work-publish.XXXXXX")" || exit 1
-trap 'rm -f "$bodyfile"' EXIT
+trap 'rm -f "$bodyfile"; rm -rf "$scratch"' EXIT
 {
   if [ -n "$body" ]; then printf '%s\n\n' "$body"; fi
   printf '%s\n' "$ATTRIBUTION"

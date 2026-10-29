@@ -611,7 +611,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Found in: T213
 - Brief: -
 
-### B16 · The publish scan reads the clone's own gitleaks allowlist (A07:2025 Authentication Failures) · todo · XS · agent · low
+### B16 · The publish scan reads the clone's own gitleaks allowlist (A07:2025 Authentication Failures) · done 2026-10-29 · XS · agent · low
 - Touches: tools/work-publish.sh
 - Repro: 1. `tools/work-publish.sh` step 4 runs `gitleaks git` on the clone, which reads the clone's own `.gitleaks.toml` and `.gitleaksignore`. 2. A commit that adds a credential and an allowlist entry for it in the same push passes the scan (B8's builder confirmed it on a sandbox branch). Expected: a change to the clone's gitleaks allowlist in the commits being pushed is refused or named, or the scan ignores the clone's allowlist for those commits. Actual: it passes silently.
 - Found in: B8
