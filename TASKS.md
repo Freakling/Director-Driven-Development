@@ -549,8 +549,8 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Found in: product/security/2026-10-26.md › F2
 - Brief: -
 
-### B7 · The docs workflow pins actions by mutable tag (A08:2025 Software or Data Integrity Failures) · todo · XS · agent · low
-- Touches: .github/workflows/docs.yml
+### B7 · The docs workflow pins actions by mutable tag (A08:2025 Software or Data Integrity Failures) · done 2026-10-29 · XS · agent · low
+- Touches: .github/workflows/docs.yml, .github/dependabot.yml (new)
 - Repro: 1. `docs.yml:19,20,27,44` use actions by major tag. 2. Expected: actions pinned to a commit SHA, with updates proposed. Actual: a moved or compromised tag runs new code in the deploy job, which holds `pages: write` and `id-token: write` (all four are GitHub-owned, which lowers the risk).
 - Found in: product/security/2026-10-26.md › F3
 - Brief: -
