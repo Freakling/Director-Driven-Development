@@ -5,7 +5,8 @@
 # bundle branch (ddd/bundle-YYYY-MM-DD, AGENTS.md › Project rules › Framework work), with one
 # commit per item. This script takes the last step: it pushes that branch to the framework repo
 # and opens the bundle's pull request the first time, or updates the open one, so the changes
-# reach the repo only through a review.
+# reach the repo only through a review. Before it pushes, it scans the commits the push would send
+# for credentials with gitleaks, the same rules the check applies to the working tree.
 #
 # MERGE IS HUMAN-OWNED (product/decisions.md, 2026-10-12), AND THE PULL REQUEST IS THE GATE
 # (2026-10-15, Q13). This script only pushes the bundle branch and opens its pull request, or
@@ -24,6 +25,9 @@
 #   - the clone is on main, on the remote's default branch, or on a detached HEAD
 #   - the working tree has uncommitted changes (untracked files count)
 #   - the branch has no commits ahead of origin/main
+#   - gitleaks finds a credential in the commits ahead of origin/main (the file names are printed,
+#     the values stay redacted)
+#   - gitleaks is not installed, or it can't scan those commits
 #
 # The first time, the pull request is opened from the branch's first commit ahead of origin/main:
 # that commit's subject line and the rest of its message become the title and body, and the body
@@ -34,8 +38,8 @@
 # and no second one is opened.
 #
 # Usage:  bash tools/work-publish.sh work/<repo>              push, and open or update its pull request
-#         bash tools/work-publish.sh work/<repo> --dry-run    run the checks, print the push and
-#                                                             gh commands, run neither
+#         bash tools/work-publish.sh work/<repo> --dry-run    run the checks (the secrets scan too),
+#                                                             print the push and gh commands, run neither
 # The path is relative to the repository root, or absolute. The branch is pushed as it is
 # checked out in the clone; this script does not create, switch or reset branches.
 # Exit 0: pull request opened or already open, or dry run done. Exit 2: refused or bad use.
@@ -117,13 +121,46 @@ ahead="$(g rev-list --count "origin/$BASE_BRANCH..HEAD" 2>/dev/null)"
 [ "${ahead:-0}" -gt 0 ] \
   || refuse "branch '$branch' has no commits ahead of origin/$BASE_BRANCH; there is nothing to publish"
 
-# 4. Title and body: the first commit ahead of origin/main is the bundle's first item commit.
+# 4. Secrets scan: no credential in the commits the push would send. The check scans the working tree
+# and the pre-commit hook scans staged changes; this scans the commits themselves, so a commit made
+# outside the hook, or a clone's item commit, is caught before it reaches a public repository
+# (OWASP Authentication Failures). gitleaks reads the clone's own .gitleaks.toml and .gitleaksignore
+# from the source folder, if it has them. The report goes under the state folder by a relative path,
+# holds redacted values only, and is removed after the scan; its File entries name the files.
+command -v gitleaks >/dev/null 2>&1 \
+  || refuse "gitleaks is not installed or not on PATH, so the commits of $dir can't be scanned for credentials; nothing was pushed"
+mkdir -p .app-director/state || refuse "could not create .app-director/state for the scan report; nothing was pushed"
+scan_report=".app-director/state/work-publish-scan.json"
+rm -f "$scan_report"
+scan_out="$(gitleaks git --redact --report-path="$scan_report" --log-opts="origin/$BASE_BRANCH..HEAD" "$dir" 2>&1)"
+scan_rc=$?
+if [ "$scan_rc" -ne 0 ]; then
+  # A report with a File entry is a finding; a failure with none means the scan couldn't run.
+  files=""
+  if grep -qs '"File"' "$scan_report"; then
+    files="$(sed -n 's/.*"File"[[:space:]]*:[[:space:]]*"\(.*\)".*/\1/p' "$scan_report" | sed 's/\\\\/\\/g' | awk '!seen[$0]++')"
+  fi
+  rm -f "$scan_report"
+  if [ -n "$files" ]; then
+    echo "work-publish: refused: gitleaks found a credential in the commits ahead of origin/$BASE_BRANCH on $branch; nothing was pushed" >&2
+    printf '%s\n' "$files" | sed 's/^/  found in: /' >&2
+    echo "  Take it out of the commit that adds it, then run this again. A credential that was ever committed is compromised: the director rotates it." >&2
+    exit 2
+  fi
+  last="$(printf '%s\n' "$scan_out" | sed 's/\x1b\[[0-9;]*m//g' | tr -d '\r' | grep -v '^[[:space:]]*$' | tail -n 1)"
+  [ -n "$last" ] && echo "  gitleaks: $last" >&2
+  refuse "gitleaks couldn't scan the commits ahead of origin/$BASE_BRANCH on $branch; nothing was pushed"
+fi
+rm -f "$scan_report"
+
+# 5. Title and body: the first commit ahead of origin/main is the bundle's first item commit.
 first="$(g rev-list --reverse "origin/$BASE_BRANCH..HEAD" | head -1)"
 title="$(g log -1 --format=%s "$first")"
 body="$(g log -1 --format=%b "$first")"
 
 if [ "$dry" -eq 1 ]; then
   echo "work-publish: DRY RUN for $slug (branch $branch, $ahead commit(s) ahead of origin/$BASE_BRANCH); nothing is pushed or opened"
+  echo "checked: the branch is not the default branch; the working tree is clean; the branch is ahead of origin/$BASE_BRANCH; gitleaks finds no credential in those commits"
   echo "title: $title"
   if [ -n "$body" ]; then
     echo "body:"
@@ -139,7 +176,7 @@ if [ "$dry" -eq 1 ]; then
   exit 0
 fi
 
-# 5. Push, then open the pull request unless one is already open for this branch.
+# 6. Push, then open the pull request unless one is already open for this branch.
 command -v gh >/dev/null 2>&1 \
   || { echo "work-publish: gh (the GitHub CLI) is not installed or not on PATH; nothing was pushed" >&2; exit 1; }
 echo "work-publish: pushing $branch of $slug ($ahead commit(s) ahead of origin/$BASE_BRANCH)"

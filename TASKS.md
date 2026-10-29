@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T219 · B16 · R7
+**Next IDs:** T219 · B17 · R7
 
 ## Milestones
 | Milestone | Status |
@@ -555,7 +555,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Found in: product/security/2026-10-26.md › F3
 - Brief: -
 
-### B8 · Two paths skip the secrets scan: CI and the framework pushes (A07:2025 Authentication Failures) · todo · S · agent · low
+### B8 · Two paths skip the secrets scan: CI and the framework pushes (A07:2025 Authentication Failures) · done 2026-10-29 · S · agent · low
 - Touches: .github/workflows/docs.yml, tools/work-publish.sh
 - Repro: 1. The scan runs only in `tools/check.sh` and the local pre-commit hook; `docs.yml` runs `selftest.sh`, which has no gitleaks step. 2. `tools/work-publish.sh:142` pushes `work/` clone commits to the public framework repos with no scan from this side. Expected: a commit made outside the hook, or a clone's item commit, is scanned before it reaches a public repo. Actual: neither is.
 - Found in: product/security/2026-10-26.md › F4
@@ -607,6 +607,12 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Touches: .claude/settings.json, selftest.sh
 - Repro: 1. product/security/2026-10-26.md › F1's fix also asks for deny rules on reading the `gh` CLI's token store, git's credential store and `~/.ssh`. 2. Expected: `.claude/settings.json` (and App-Director's template) deny reads of those stores. Actual: the deny list covers only `.env`, `*.pem` and `*.key`, and a Bash `cat` isn't covered by Read rules.
 - Found in: T213
+- Brief: -
+
+### B16 · The publish scan reads the clone's own gitleaks allowlist (A07:2025 Authentication Failures) · todo · XS · agent · low
+- Touches: tools/work-publish.sh
+- Repro: 1. `tools/work-publish.sh` step 4 runs `gitleaks git` on the clone, which reads the clone's own `.gitleaks.toml` and `.gitleaksignore`. 2. A commit that adds a credential and an allowlist entry for it in the same push passes the scan (B8's builder confirmed it on a sandbox branch). Expected: a change to the clone's gitleaks allowlist in the commits being pushed is refused or named, or the scan ignores the clone's allowlist for those commits. Actual: it passes silently.
+- Found in: B8
 - Brief: -
 
 ### T218 · Godot-Director: the check names a Godot process that exits without an error line · todo · S · agent
