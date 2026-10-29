@@ -543,7 +543,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: `frameworks.lock` and every Godot-Director link move to v4.5.0; the check how-to and the Godot-Director page describe the opt-in balanced and split test jobs (`[tests] balance`, `split_over`, `# gdir: no-split`, `--jobs 1` to re-measure, measure before and after) and that a sweep of several scenarios plays side by side in one call, checked against the release; the selftest passes with no WARN (check)
 - Brief: Scope › Framework features
 
-### B6 · The CI build installs unpinned transitive Python packages without hashes (A03:2025 Software Supply Chain Failures) · todo · S · agent · low
+### B6 · The CI build installs unpinned transitive Python packages without hashes (A03:2025 Software Supply Chain Failures) · done 2026-10-29 · S · agent · low
 - Touches: requirements.txt, .github/workflows/docs.yml
 - Repro: 1. `requirements.txt:1-2` pins only mkdocs and mkdocs-material; `docs.yml:24` runs `pip install -r requirements.txt`. 2. Expected: every package the build installs is pinned with a hash. Actual: Markdown, pymdown-extensions, Jinja2 and the rest resolve to their newest releases on every run and render the published site.
 - Found in: product/security/2026-10-26.md › F2
