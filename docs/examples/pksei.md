@@ -9,7 +9,7 @@ It is also a tech demo for [Godot-Director](../frameworks/godot-director.md). Th
 The game is free, runs in the browser and is still in development. It plays with keyboard and touch, in English and Swedish.
 
 <div class="ddd-embed">
-<iframe frameborder="0" src="https://itch.io/embed/5170526?dark=true" width="552" height="167"><a href="https://freakling.itch.io/pksei">PKSEI by freakling</a></iframe>
+<iframe frameborder="0" src="https://itch.io/embed/5170526?dark=true" width="552" height="167" title="PKSEI on itch.io" sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox" referrerpolicy="no-referrer" loading="lazy"><a href="https://freakling.itch.io/pksei">PKSEI by freakling</a></iframe>
 </div>
 
 - **The game:** [freakling.itch.io/pksei](https://freakling.itch.io/pksei).

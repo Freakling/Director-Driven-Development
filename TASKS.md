@@ -567,7 +567,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Found in: product/security/2026-10-26.md › F5
 - Brief: -
 
-### B10 · The itch.io iframe has no sandbox (A08:2025 Software or Data Integrity Failures) · todo · XS · agent · low
+### B10 · The itch.io iframe has no sandbox (A08:2025 Software or Data Integrity Failures) · done 2026-10-29 · XS · agent · low
 - Touches: docs/examples/pksei.md
 - Repro: 1. `docs/examples/pksei.md:12` embeds the itch.io frame without `sandbox`, `referrerpolicy` or `loading`. 2. Expected: the frame gets only what the game needs. Actual: compromised frame content could open popups or navigate the top window with user activation.
 - Found in: product/security/2026-10-26.md › F6
