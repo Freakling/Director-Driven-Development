@@ -633,9 +633,10 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Found in: B13 (SaaSAllTheThings ships the same files with `^1.50.0`)
 - Brief: Scope › Framework features
 
-### T220 · App-Director and SaaSAllTheThings: the screen-capture tooling asks for Node 20, as Playwright does · todo · XS · agent
+### T220 · App-Director and SaaSAllTheThings: the screen-capture tooling asks for Node 20, as Playwright does · in-progress 2026-10-29 · XS · agent
+- PRs: App-Director #40 (open), SaaSAllTheThings #40 (open)
 - Depends on: B13, T219
-- Touches: work/App-Director and work/SaaSAllTheThings: framework/tools/ui/package.json, framework/tools/ui_capture.sh, framework/.app-director/procedures/ui-design.md (SaaSAllTheThings: its ui-design procedure), project/product/ui/README.md, ONBOARDING.md, selftest.sh
+- Touches: work/App-Director and work/SaaSAllTheThings: framework/tools/ui/package.json, framework/tools/ui_capture.sh, framework/.app-director/procedures/ui-design.md (SaaSAllTheThings: its ui-design procedure), project/product/ui/README.md, ONBOARDING.md, selftest.sh, framework/tools/ui/capture.mjs (SaaSAllTheThings also examples/order-desk/product/ui/README.md)
 - Done when: in both frameworks `engines.node` in `framework/tools/ui/package.json`, the Node check in `ui_capture.sh` and every place the docs, onboarding or selftest name Node 18 say Node 20 or newer, which playwright 1.64.1 declares (check) · following AGENTS.md › Project rules for framework work
 - Found in: B13 (playwright 1.64.1 declares `node >=20`, and `^1.50.0` already resolved to it, so a Node 18 machine passes the check and then fails the install)
 - Brief: Scope › Framework features
