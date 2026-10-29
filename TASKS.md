@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T212 · B14 · R7
+**Next IDs:** T213 · B14 · R7
 
 ## Milestones
 | Milestone | Status |
@@ -24,6 +24,12 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Repro: 1. Read `.claude/settings.json` allow rules: `Bash(npm *)`, `Bash(npx *)`, `Bash(pnpm *)`, `Bash(yarn *)`, `Bash(flutter *)`, `Bash(python *)`, `Bash(pip *)`, `WebSearch`, `WebFetch`; the deny list covers only `.env`, `*.pem`, `*.key`. 2. Expected: only what this repo runs is allowed without a prompt. Actual: `python -c`, `npx <package>` or `pip install <package>` run arbitrary code unprompted, which can push or read credential stores, so the "other pushes still prompt" boundary in `tools/work-publish.sh:15-17` and `tools/work-release.sh:16-19` doesn't hold; prompt injection from a fetched page or a framework repo is the trigger. The rules come from the App Director template, so an upgrade would restore them: file the template change as an App-Director item too.
 - Found in: product/security/2026-10-26.md › F1
 - Brief: -
+
+### T212 · The framework workflow page describes one bundle pull request per repo · todo · S · agent
+- Depends on: -
+- Touches: product/framework-workflow.md
+- Done when: the flowchart, the sequence diagram and the sections on done, after a merge and releases describe AGENTS.md › Project rules › Framework work as it now stands: one open bundle pull request per framework repo, each item one commit on it, an open bundle blocking nothing, the release commit ending the bundle with its notes as the description, and `work-release.sh` tagging after the merge; nothing still describes a branch or pull request per item (check) · `bash tools/check.sh` passes (check)
+- Brief: Scope › Orchestrator for the three frameworks
 
 ### T146 · The Examples entries say what kind of thing each is · done 2026-10-19 · XS · agent
 - Depends on: T133
