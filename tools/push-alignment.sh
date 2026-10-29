@@ -16,7 +16,7 @@
 #         bash tools/push-alignment.sh --add    adds them to the end of the Queue section of TASKS.md
 # PUSH_ALIGNMENT_TASKS=<file> works on that file instead of TASKS.md (for tests on a scratch copy).
 # Exit 0: nothing to add, dry run done, or items added. Exit 2: bad use, the audit couldn't compare
-# the releases, or TASKS.md has no Next IDs line.
+# the releases, no temp folder could be made, or TASKS.md has no Next IDs line.
 
 set -u
 cd "$(dirname "$0")/.." || exit 2
@@ -24,7 +24,7 @@ cd "$(dirname "$0")/.." || exit 2
 REPOS="App-Director Godot-Director SaaSAllTheThings"
 TASKS_FILE="${PUSH_ALIGNMENT_TASKS:-TASKS.md}"
 BRIEF="Scope › Orchestrator for the three frameworks"
-TMP_ROOT="${TMPDIR:-/tmp}/push-alignment-$$"
+TMP_ROOT="$(mktemp -d "${TMPDIR:-/tmp}/push-alignment.XXXXXX")" || { echo "push-alignment: could not make a temp folder in ${TMPDIR:-/tmp}; nothing added" >&2; exit 2; }
 trap 'rm -rf "$TMP_ROOT"' EXIT
 
 usage() {
@@ -75,7 +75,6 @@ add_item() {
 }
 
 # 1. Detect, with the audit. Its lines look like: "<Repo> / <skill>: <message>"
-mkdir -p "$TMP_ROOT" || exit 2
 bash tools/audit.sh > "$TMP_ROOT/audit.txt" 2>&1
 audit_status=$?
 if [ "$audit_status" -gt 1 ]; then

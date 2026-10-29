@@ -573,7 +573,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Found in: product/security/2026-10-26.md › F6
 - Brief: -
 
-### B11 · Two tools reuse a predictable temp folder (A01:2025 Broken Access Control) · todo · XS · agent · low
+### B11 · Two tools reuse a predictable temp folder (A01:2025 Broken Access Control) · done 2026-10-29 · XS · agent · low
 - Touches: tools/push-alignment.sh, tools/audit.sh
 - Repro: 1. `tools/push-alignment.sh:27,78` uses `${TMPDIR:-/tmp}/push-alignment-$$` with `mkdir -p`, and with `--add` writes its TASKS.md copy back (line 154); `tools/audit.sh:25-26` does the same. 2. Expected: a fresh folder from `mktemp -d`, as `work-publish.sh` and `work-release.sh` do. Actual: on a shared Unix /tmp another user can pre-create the folder and change the copy before it's written back.
 - Found in: product/security/2026-10-26.md › F7

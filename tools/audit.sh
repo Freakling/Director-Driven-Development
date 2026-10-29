@@ -14,7 +14,7 @@
 # Usage:  bash tools/audit.sh
 # Exit 0: no undocumented differences found
 # Exit 1: differences found (informational; not a blocker)
-# Exit 2: the cache isn't at each framework's pinned release, so nothing was compared
+# Exit 2: the cache isn't at each framework's pinned release, or no temp folder could be made, so nothing was compared
 
 set -u
 cd "$(dirname "$0")/.." || exit 1
@@ -22,8 +22,7 @@ cd "$(dirname "$0")/.." || exit 1
 FRAMEWORKS_DIR="${FRAMEWORKS_CACHE:-.app-director/state/frameworks}"
 SKILLS_DIR="docs/skills"
 differences=0
-TMPDIR_AUDIT="${TMPDIR:-/tmp}/audit-$$"
-mkdir -p "$TMPDIR_AUDIT"
+TMPDIR_AUDIT="$(mktemp -d "${TMPDIR:-/tmp}/audit.XXXXXX")" || { echo "audit: could not make a temp folder in ${TMPDIR:-/tmp}; nothing compared" >&2; exit 2; }
 cleanup() { rm -rf "$TMPDIR_AUDIT"; }
 trap cleanup EXIT
 
