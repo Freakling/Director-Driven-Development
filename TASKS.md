@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T213 · B14 · R7
+**Next IDs:** T214 · B15 · R7
 
 ## Milestones
 | Milestone | Status |
@@ -19,8 +19,8 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 
 ## Queue
 
-### B5 · The Claude Code allow-list lets the agent run any code without a prompt (A01:2025 Broken Access Control) · todo · S · agent · med
-- Touches: .claude/settings.json
+### B5 · The Claude Code allow-list lets the agent run any code without a prompt (A01:2025 Broken Access Control) · done 2026-10-29 · S · agent · med
+- Touches: .claude/settings.json, selftest.sh
 - Repro: 1. Read `.claude/settings.json` allow rules: `Bash(npm *)`, `Bash(npx *)`, `Bash(pnpm *)`, `Bash(yarn *)`, `Bash(flutter *)`, `Bash(python *)`, `Bash(pip *)`, `WebSearch`, `WebFetch`; the deny list covers only `.env`, `*.pem`, `*.key`. 2. Expected: only what this repo runs is allowed without a prompt. Actual: `python -c`, `npx <package>` or `pip install <package>` run arbitrary code unprompted, which can push or read credential stores, so the "other pushes still prompt" boundary in `tools/work-publish.sh:15-17` and `tools/work-release.sh:16-19` doesn't hold; prompt injection from a fetched page or a framework repo is the trigger. The rules come from the App Director template, so an upgrade would restore them: file the template change as an App-Director item too.
 - Found in: product/security/2026-10-26.md › F1
 - Brief: -
@@ -30,6 +30,12 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Touches: product/framework-workflow.md
 - Done when: the flowchart, the sequence diagram and the sections on done, after a merge and releases describe AGENTS.md › Project rules › Framework work as it now stands: one open bundle pull request per framework repo, each item one commit on it, an open bundle blocking nothing, the release commit ending the bundle with its notes as the description, and `work-release.sh` tagging after the merge; nothing still describes a branch or pull request per item (check) · `bash tools/check.sh` passes (check)
 - Brief: Scope › Orchestrator for the three frameworks
+
+### T213 · App-Director: the settings template allows no generic code runner · todo · S · agent
+- Depends on: B5
+- Touches: work/App-Director: framework/.claude/settings.json, selftest.sh
+- Done when: the template's allow list drops `Bash(npm *)`, `Bash(npx *)`, `Bash(pnpm *)`, `Bash(yarn *)`, `Bash(flutter *)`, `Bash(python *)` and `Bash(pip *)`, keeping the named `bash tools/...` and `node tools/ui/...` commands, and the selftest fails when the template allows a generic code runner with a wildcard; the CHANGELOG entry says apps get the narrower list on upgrade and that a stack command not named there now asks first (check) · following AGENTS.md › Project rules for framework work (check)
+- Brief: -
 
 ### T146 · The Examples entries say what kind of thing each is · done 2026-10-19 · XS · agent
 - Depends on: T133
@@ -562,6 +568,12 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Touches: -
 - Done when: the example app runs in an Azure sandbox subscription with Azure Policy Deny assignments for public network access and local authentication and Defender for Cloud on, it is tested from outside, and the results are written down in `product/research/` for a later claims decision (demo)
 - Brief: Scope › What the site claims for production and compliance
+
+### B14 · The `git grep` allow rule runs any command (A01:2025 Broken Access Control) · todo · S · agent · med
+- Touches: .claude/settings.json, selftest.sh
+- Repro: 1. `.claude/settings.json` allows `Bash(git grep *)`, and App-Director's template does too. 2. `git grep -O"<command>" <pattern>` runs the command as a pager on the matching files (B5's builder confirmed it with a harmless `echo`). Expected: no allow rule runs an arbitrary command without a prompt. Actual: `-O` or `--open-files-in-pager` does. Also check whether `Bash(bash tools/stacks/*.sh*)` can match a `../` path to another script (not verified).
+- Found in: B5
+- Brief: -
 
 ### T98 · The director tests /ui-design in a game · todo · - · human
 - Depends on: T97

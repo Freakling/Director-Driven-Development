@@ -16,7 +16,10 @@
 #   7. Version numbers: a docs page names no three-part version number in prose, because every page
 #      assumes the latest release. Links to a release tag are left out, and so are lines about
 #      the Godot engine, .NET, Node and gitleaks, which have versions of their own.
-#   8. The site builds in strict mode, which fails on broken internal links and anchors.
+#   8. Agent permissions: .claude/settings.json allows no generic code runner (npm, npx, python,
+#      node, bash...) with a wildcard, since that runs any code without a prompt. Each allow rule
+#      names the exact commands the repo runs.
+#   9. The site builds in strict mode, which fails on broken internal links and anchors.
 #
 # frameworks.lock pins each framework to the release the docs describe. A new release therefore
 # never turns the run red by itself: online, a release past the pin prints a WARN, and the docs
@@ -408,7 +411,24 @@ while IFS= read -r hit; do
 done <<< "$(grep -rnE --include='*.md' '[0-9]+\.[0-9]+\.[0-9]+' docs 2>/dev/null | grep -v '^docs/assets/' || true)"
 [ "$ver_fail" -eq 0 ] && echo "ok: no docs page names a version number in prose"
 
-# 8. Build and links ------------------------------------------------------------------------
+# 8. Agent permissions ----------------------------------------------------------------------
+# .claude/settings.json lets the agent run its Bash commands without a prompt. A generic runner
+# (npm, npx, python, node, bash...) with any arguments runs any code, so each allow rule names only
+# a command this repo runs (product/security/2026-10-26.md, F1). A runner followed by a wildcard
+# fails: `npm *`, `npm run *`, `python -m *`, `node*`. A rule naming a script passes:
+# `bash tools/check.sh*`, `node tools/ui/capture.mjs *`.
+perm_runners='npm|npx|pnpm|yarn|flutter|python3?|pip3?|node|bash'
+if [ ! -f .claude/settings.json ]; then
+  err ".claude/settings.json is missing, so the agent's permissions can't be checked"
+else
+  perm_hits=$(grep -nE "\"Bash\(($perm_runners)( [a-z-]+)?([ :]\*|\*)\)\"" .claude/settings.json || true)
+  if [ -n "$perm_hits" ]; then
+    err ".claude/settings.json allows a generic code runner without a prompt (allow the exact commands instead):"
+    echo "$perm_hits" | sed 's/^/  /'
+  else echo "ok: .claude/settings.json allows no generic code runner without a prompt"; fi
+fi
+
+# 9. Build and links ------------------------------------------------------------------------
 mkdocs=""
 if command -v mkdocs >/dev/null 2>&1; then mkdocs="mkdocs"
 else
