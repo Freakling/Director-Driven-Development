@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T224 · B17 · R7
+**Next IDs:** T225 · B17 · R7
 
 ## Milestones
 | Milestone | Status |
@@ -660,6 +660,12 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - PRs: SaaSAllTheThings #40 (merged); v0.14.1 tagged and published
 - Touches: work/SaaSAllTheThings: the version carriers its CLAUDE.md lists (every skill's version and `--branch` line included), CHANGELOG.md
 - Done when: the bundle ends with a release commit that bumps every version carrier, skill version and `--branch v0.14.1` line together, turns Unreleased into the 0.14.1 heading (the exact Playwright pin and Node 20), passes the selftest and carries the release notes, with What's new, How to install and How to upgrade, in its commit body, which become the pull request's description; once merged, `tools/work-release.sh` tags v0.14.1 and publishes the release (check) · following AGENTS.md › Project rules for framework work
+- Brief: Scope › Framework features
+
+### T224 · Docs follow App-Director 1.12.0, Godot-Director 4.6.0 and SaaSAllTheThings 0.14.1 · done 2026-10-29 · M · agent
+- Depends on: T221, T222, T223
+- Touches: frameworks.lock, docs/**/*.md (the framework links), docs/how-to/ui.md, docs/how-to/trouble.md, docs/how-to/where.md, docs/how-to/check.md, docs/frameworks/godot-director.md
+- Done when: `frameworks.lock` and every framework link move to v1.12.0, v4.6.0 and v0.14.1; the site says screen capture in App-Director and SaaSAllTheThings needs Node 20 or newer and installs one exact Playwright version (the "Playwright isn't pinned" limit goes); that App-Director's settings allow no generic code runner, so a stack command the agent runs directly asks first unless `.claude/settings.local.json` allows that exact command, and that the installer gitignores that file, claiming neither for the other two frameworks unless their releases do; that Godot-Director's check, in a parallel run with autoplay in the check, plays the scenarios beside the tests, and names a Godot process that exits without an error line; each checked against the releases and without overclaiming; the selftest passes with no WARN (check)
 - Brief: Scope › Framework features
 
 ### T98 · The director tests /ui-design in a game · todo · - · human

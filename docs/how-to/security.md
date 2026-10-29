@@ -35,6 +35,6 @@ A clean report says what was read in that commit, not that the app is secure. It
 ## Related
 
 - The [`/security` skill page](../skills/security.md), and the OWASP baseline on the [App-Director](../frameworks/app-director.md#the-owasp-baseline) and [SaaSAllTheThings](../frameworks/saasallthethings.md#the-owasp-baseline) pages.
-- The procedures: [App-Director](https://github.com/Freakling/App-Director/tree/v1.11.0/framework/.app-director/procedures/security.md) and [SaaSAllTheThings](https://github.com/Freakling/SaaSAllTheThings/tree/v0.14.0/framework/.satt/procedures/security.md).
+- The procedures: [App-Director](https://github.com/Freakling/App-Director/tree/v1.12.0/framework/.app-director/procedures/security.md) and [SaaSAllTheThings](https://github.com/Freakling/SaaSAllTheThings/tree/v0.14.1/framework/.satt/procedures/security.md).
 
 <div class="takeaway"><span>Run it before you release, fix the high findings first, and accept a deviation only on purpose.</span><span class="url"><a href="index.md">All questions</a></span></div>

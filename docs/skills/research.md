@@ -45,18 +45,18 @@ Web search and fetch are allowed for every research session in all three framewo
 
 ### App-Director
 
-The procedure is at [`framework/.app-director/procedures/research.md`](https://github.com/Freakling/App-Director/tree/v1.11.0/framework/.app-director/procedures/research.md) in the App-Director repository.
+The procedure is at [`framework/.app-director/procedures/research.md`](https://github.com/Freakling/App-Director/tree/v1.12.0/framework/.app-director/procedures/research.md) in the App-Director repository.
 
-- The domain file, [`research-domain.md`](https://github.com/Freakling/App-Director/tree/v1.11.0/framework/.app-director/research-domain.md), covers stacks and libraries (maturity, maintenance, advisories, licence and platform support), licences, and app-store and platform requirements. Those requirements are tier 1 binding requirements.
+- The domain file, [`research-domain.md`](https://github.com/Freakling/App-Director/tree/v1.12.0/framework/.app-director/research-domain.md), covers stacks and libraries (maturity, maintenance, advisories, licence and platform support), licences, and app-store and platform requirements. Those requirements are tier 1 binding requirements.
 - Notes go in `product/research/`, named `YYYY-MM-DD-<slug>.md`.
 - The item heading is `Brief:`, and an item that informs no question writes `Informs: -`.
 - The decision line in `product/decisions.md` ends its "why" with the note's path.
 
 ### Godot-Director
 
-The procedure is at [`framework/.godot-director/procedures/research.md`](https://github.com/Freakling/Godot-Director/tree/v4.5.0/framework/.godot-director/procedures/research.md) in the Godot-Director repository.
+The procedure is at [`framework/.godot-director/procedures/research.md`](https://github.com/Freakling/Godot-Director/tree/v4.6.0/framework/.godot-director/procedures/research.md) in the Godot-Director repository.
 
-- The domain file, [`research-domain.md`](https://github.com/Freakling/Godot-Director/tree/v4.5.0/framework/.godot-director/research-domain.md), covers the Godot docs for the project's engine version, plugins and assets (maintenance, engine version support and licence), export and store requirements, and comparable games as design references.
+- The domain file, [`research-domain.md`](https://github.com/Freakling/Godot-Director/tree/v4.6.0/framework/.godot-director/research-domain.md), covers the Godot docs for the project's engine version, plugins and assets (maintenance, engine version support and licence), export and store requirements, and comparable games as design references.
 - Comparable games are design references with Low or Medium confidence, and each option names the Design Pillar it serves or strains.
 - Notes go in `design/research/`, named `YYYY-MM-DD-<slug>.md`.
 - The item heading is `GDD:`, and an item that informs no question writes `Informs: (none)`.
@@ -64,12 +64,12 @@ The procedure is at [`framework/.godot-director/procedures/research.md`](https:/
 
 ### SaaSAllTheThings
 
-The procedure is at [`framework/.satt/procedures/research.md`](https://github.com/Freakling/SaaSAllTheThings/tree/v0.14.0/framework/.satt/procedures/research.md) in the SaaSAllTheThings repository.
+The procedure is at [`framework/.satt/procedures/research.md`](https://github.com/Freakling/SaaSAllTheThings/tree/v0.14.1/framework/.satt/procedures/research.md) in the SaaSAllTheThings repository.
 
-- The domain file, [`research-domain.md`](https://github.com/Freakling/SaaSAllTheThings/tree/v0.14.0/framework/.satt/research-domain.md), covers Azure when Azure is central to the question, the reference architecture and the customer's security framework. The reference architecture holds unless an accepted ADR says otherwise, and the requirements in `compliance/` are tier 1. Each requirement is traced to its control, labelled direct, partial, interpretive or unverified.
+- The domain file, [`research-domain.md`](https://github.com/Freakling/SaaSAllTheThings/tree/v0.14.1/framework/.satt/research-domain.md), covers Azure when Azure is central to the question, the reference architecture and the customer's security framework. The reference architecture holds unless an accepted ADR says otherwise, and the requirements in `compliance/` are tier 1. Each requirement is traced to its control, labelled direct, partial, interpretive or unverified.
 - Notes go in `product/research/`, named `YYYY-MM-DD-<slug>.md`.
 - The item heading is `PRD:`, and an item that informs no question writes `Informs: none`.
-- For an architecture question, the note ends with an ADR-ready summary. The [`/architect`](https://github.com/Freakling/SaaSAllTheThings/tree/v0.14.0/framework/.satt/procedures/architect.md) session lists the research on file, and when a decision followed the research, the ADR names the note in its Context. The researcher never writes an ADR and never accepts one.
+- For an architecture question, the note ends with an ADR-ready summary. The [`/architect`](https://github.com/Freakling/SaaSAllTheThings/tree/v0.14.1/framework/.satt/procedures/architect.md) session lists the research on file, and when a decision followed the research, the ADR names the note in its Context. The researcher never writes an ADR and never accepts one.
 - Confidential text is wider here: PRD and ADR text, tenant and subscription identifiers, integration contracts and anything from `compliance/` stay out of search queries, including the query strings of URLs.
 
 <div class="takeaway"><span>The researcher informs. The director decides.</span><span class="url"><a href="https://saemundsson.se/2026/10/07/director-driven-development/">Why: the blog post</a></span></div>
