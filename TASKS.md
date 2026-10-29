@@ -51,7 +51,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: an install or upgrade leaves `.claude/settings.local.json` ignored by git (today the installer's `*.local` line doesn't match that name, while the README says it's gitignored), checked with `git check-ignore` in the selftest's install fixture; the README's sentence stays true (check) · following AGENTS.md › Project rules for framework work (check)
 - Brief: -
 
-### T216 · work-publish.sh's messages speak of the bundle branch · todo · XS · agent
+### T216 · work-publish.sh's messages speak of the bundle branch · done 2026-10-29 · XS · agent
 - Depends on: T214
 - Touches: tools/work-publish.sh
 - Done when: the refusal messages that say "check out the item's branch first", "publish an item branch" and "commit them to the item's commit first" name the repo's bundle branch instead, with behaviour unchanged (check) · `bash tools/check.sh` passes (check)

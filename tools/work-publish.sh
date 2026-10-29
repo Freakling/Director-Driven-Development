@@ -97,19 +97,19 @@ esac
 
 # 3. The branch must be an item branch, with work on it and nothing left uncommitted.
 branch="$(g symbolic-ref -q --short HEAD 2>/dev/null)" \
-  || refuse "$dir is on a detached HEAD; check out the item's branch first"
+  || refuse "$dir is on a detached HEAD; check out the repo's bundle branch first"
 case "$branch" in
   -*|+*) refuse "the branch name '$branch' starts with '-' or '+'" ;;
 esac
 default="$(g symbolic-ref -q --short refs/remotes/origin/HEAD 2>/dev/null)"
 default="${default#origin/}"
 if [ "$branch" = "$BASE_BRANCH" ] || { [ -n "$default" ] && [ "$branch" = "$default" ]; }; then
-  refuse "$dir is on '$branch', the default branch; publish an item branch, never the default branch"
+  refuse "$dir is on '$branch', the default branch; publish the repo's bundle branch, never the default branch"
 fi
 changes="$(g status --porcelain 2>/dev/null)"
 if [ -n "$changes" ]; then
   echo "$changes" | sed 's/^/  /' >&2
-  refuse "$dir has uncommitted changes (listed above); commit them to the item's commit first"
+  refuse "$dir has uncommitted changes (listed above); commit them on the bundle branch first"
 fi
 g rev-parse -q --verify "refs/remotes/origin/$BASE_BRANCH" >/dev/null 2>&1 \
   || refuse "$dir has no origin/$BASE_BRANCH; run: bash tools/work-clones.sh $repo"
