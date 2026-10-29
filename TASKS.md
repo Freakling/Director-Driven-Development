@@ -617,7 +617,8 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Found in: B8
 - Brief: -
 
-### T218 · Godot-Director: the check names a Godot process that exits without an error line · todo · S · agent
+### T218 · Godot-Director: the check names a Godot process that exits without an error line · in-progress 2026-10-29 · S · agent
+- PRs: Godot-Director #45 (open)
 - Depends on: -
 - Touches: work/Godot-Director: framework/tools/check.sh, selftest.sh
 - Done when: when the import pass, the load pass, a test group or the layout lint exits non-zero (a crash such as a segmentation fault included) and its log has no error line the scan reports, the check prints one line naming that process, its exit status and its log before the FAIL, instead of a FAIL with no reason; the selftest covers a load pass and a test group that exit non-zero with a clean log (test) · following AGENTS.md › Project rules for framework work
