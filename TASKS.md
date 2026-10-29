@@ -31,8 +31,8 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: the flowchart, the sequence diagram and the sections on done, after a merge and releases describe AGENTS.md › Project rules › Framework work as it now stands: one open bundle pull request per framework repo, each item one commit on it, an open bundle blocking nothing, the release commit ending the bundle with its notes as the description, and `work-release.sh` tagging after the merge; nothing still describes a branch or pull request per item (check) · `bash tools/check.sh` passes (check)
 - Brief: Scope › Orchestrator for the three frameworks
 
-### T213 · App-Director: the settings template allows no generic code runner · in-progress 2026-10-29 · S · agent
-- PRs: App-Director #40 (open)
+### T213 · App-Director: the settings template allows no generic code runner · done 2026-10-29 · S · agent
+- PRs: App-Director #40 (merged)
 - Depends on: B5
 - Touches: work/App-Director: framework/.claude/settings.json, selftest.sh
 - Done when: the template's allow list drops `Bash(npm *)`, `Bash(npx *)`, `Bash(pnpm *)`, `Bash(yarn *)`, `Bash(flutter *)`, `Bash(python *)` and `Bash(pip *)`, keeping the named `bash tools/...` and `node tools/ui/...` commands, and the selftest fails when the template allows a generic code runner with a wildcard; the CHANGELOG entry says apps get the narrower list on upgrade and that a stack command not named there now asks first (check) · following AGENTS.md › Project rules for framework work (check)
@@ -44,8 +44,8 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: the script's header says it pushes a repo's bundle branch and opens its pull request the first time or updates it, and that `gh pr edit` then keeps the title and body naming every item it carries, as AGENTS.md › Framework work says, instead of describing one item per pull request; its behaviour is unchanged (check) · `bash tools/check.sh` passes (check)
 - Brief: Scope › Orchestrator for the three frameworks
 
-### T215 · App-Director: the installer gitignores .claude/settings.local.json, as the README says · in-progress 2026-10-29 · S · agent
-- PRs: App-Director #40 (open)
+### T215 · App-Director: the installer gitignores .claude/settings.local.json, as the README says · done 2026-10-29 · S · agent
+- PRs: App-Director #40 (merged)
 - Depends on: -
 - Touches: work/App-Director: install.sh, selftest.sh
 - Done when: an install or upgrade leaves `.claude/settings.local.json` ignored by git (today the installer's `*.local` line doesn't match that name, while the README says it's gitignored), checked with `git check-ignore` in the selftest's install fixture; the README's sentence stays true (check) · following AGENTS.md › Project rules for framework work (check)
@@ -57,8 +57,8 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: the refusal messages that say "check out the item's branch first", "publish an item branch" and "commit them to the item's commit first" name the repo's bundle branch instead, with behaviour unchanged (check) · `bash tools/check.sh` passes (check)
 - Brief: Scope › Orchestrator for the three frameworks
 
-### T217 · App-Director: an upgrade adds gitignore lines under the existing App Director heading · in-progress 2026-10-29 · XS · agent
-- PRs: App-Director #40 (open)
+### T217 · App-Director: an upgrade adds gitignore lines under the existing App Director heading · done 2026-10-29 · XS · agent
+- PRs: App-Director #40 (merged)
 - Depends on: -
 - Touches: work/App-Director: install.sh, selftest.sh
 - Done when: an upgrade that adds a missing `.gitignore` line puts it under the app's existing `# App Director` heading instead of writing a second heading at the end, and the selftest's upgrade fixture finds one heading (check) · following AGENTS.md › Project rules for framework work (check)
@@ -390,8 +390,8 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: the parallel run hands out test files longest first, using each file's time from the last run (kept under .godot/godot-director/, unknown files first), instead of file order; a file whose last time is over `[tests] split_over` seconds (default 60) is run as several shards of its test methods across the jobs, each shard in its own process, the file's results merged as one; a file that can't be split (its tests share state across methods, marked by a project setting or a header line the docs name) runs whole; on The Guildkeeper's scratch copy the full run's wall time and its slowest job are recorded before and after (check) · following AGENTS.md › Project rules for framework work
 - Brief: Scope › Framework features
 
-### T190 · Godot-Director: the check plays its autoplay scenarios alongside the tests · in-progress 2026-10-29 · M · agent
-- PRs: Godot-Director #45 (open)
+### T190 · Godot-Director: the check plays its autoplay scenarios alongside the tests · done 2026-10-29 · M · agent
+- PRs: Godot-Director #45 (merged)
 - Depends on: T189
 - Touches: work/Godot-Director: framework/tools/check.sh, framework/tools/autoplay.sh, project/tools/check.cfg, selftest.sh
 - Done when: with `[autoplay] check_in_check` on, the enforced scenarios start as soon as the import and load pass are done, in their own process beside the test jobs (one fewer test job, so the CPU count isn't exceeded), and their result joins the check's report with exit codes unchanged; measured on The Guildkeeper's scratch copy (check) · following AGENTS.md › Project rules for framework work
@@ -585,8 +585,8 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Found in: product/security/2026-10-26.md › F8
 - Brief: -
 
-### B13 · The screen-capture tooling has an open version range and no lock file (A03:2025 Software Supply Chain Failures) · in-progress 2026-10-29 · XS · agent · low
-- PRs: App-Director #40 (open)
+### B13 · The screen-capture tooling has an open version range and no lock file (A03:2025 Software Supply Chain Failures) · done 2026-10-29 · XS · agent · low
+- PRs: App-Director #40 (merged)
 - Touches: tools/ui/package.json, tools/ui/.npmrc (framework-owned: an App-Director item); built as work/App-Director: framework/tools/ui/package.json, framework/tools/ui/.npmrc, tests/ui-web/package.json, selftest.sh
 - Note: playwright pinned to 1.64.1 with no lock file, since it pins its only dependency exactly; this repo's tools/ui gets it with the next App-Director upgrade.
 - Repro: 1. `tools/ui/package.json:9` has `playwright` at `^1.50.0` and `tools/ui/.npmrc:2` sets `package-lock=false`. 2. Expected: an exact version and a lock file, or a decision saying why not. Actual: `npm install` takes the newest release in the range. Framework-owned and unused by this static site, so the fix belongs in App-Director.
@@ -617,47 +617,47 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Found in: B8
 - Brief: -
 
-### T218 · Godot-Director: the check names a Godot process that exits without an error line · in-progress 2026-10-29 · S · agent
-- PRs: Godot-Director #45 (open)
+### T218 · Godot-Director: the check names a Godot process that exits without an error line · done 2026-10-29 · S · agent
+- PRs: Godot-Director #45 (merged)
 - Depends on: -
 - Touches: work/Godot-Director: framework/tools/check.sh, selftest.sh
 - Done when: when the import pass, the load pass, a test group or the layout lint exits non-zero (a crash such as a segmentation fault included) and its log has no error line the scan reports, the check prints one line naming that process, its exit status and its log before the FAIL, instead of a FAIL with no reason; the selftest covers a load pass and a test group that exit non-zero with a clean log (test) · following AGENTS.md › Project rules for framework work
 - Found in: T190 (the load pass's Godot process crashed after its report once in 12 runs on The Guildkeeper, and the check failed with no error line)
 - Brief: Scope › Framework features
 
-### T219 · SaaSAllTheThings: the screen-capture tooling pins Playwright to one exact version · in-progress 2026-10-29 · XS · agent
-- PRs: SaaSAllTheThings #40 (open)
+### T219 · SaaSAllTheThings: the screen-capture tooling pins Playwright to one exact version · done 2026-10-29 · XS · agent
+- PRs: SaaSAllTheThings #40 (merged)
 - Depends on: -
 - Touches: work/SaaSAllTheThings: framework/tools/ui/package.json, framework/tools/ui/.npmrc, tests/ui-web/package.json, selftest.sh
 - Done when: `playwright` is pinned to 1.64.1, as App-Director's B13 fix does, in both package.json files, `.npmrc` says why no lock file is needed (playwright pins its only dependency exactly), and the selftest fails when either pin is a range (check) · following AGENTS.md › Project rules for framework work
 - Found in: B13 (SaaSAllTheThings ships the same files with `^1.50.0`)
 - Brief: Scope › Framework features
 
-### T220 · App-Director and SaaSAllTheThings: the screen-capture tooling asks for Node 20, as Playwright does · in-progress 2026-10-29 · XS · agent
-- PRs: App-Director #40 (open), SaaSAllTheThings #40 (open)
+### T220 · App-Director and SaaSAllTheThings: the screen-capture tooling asks for Node 20, as Playwright does · done 2026-10-29 · XS · agent
+- PRs: App-Director #40 (merged), SaaSAllTheThings #40 (merged)
 - Depends on: B13, T219
 - Touches: work/App-Director and work/SaaSAllTheThings: framework/tools/ui/package.json, framework/tools/ui_capture.sh, framework/.app-director/procedures/ui-design.md (SaaSAllTheThings: its ui-design procedure), project/product/ui/README.md, ONBOARDING.md, selftest.sh, framework/tools/ui/capture.mjs (SaaSAllTheThings also examples/order-desk/product/ui/README.md)
 - Done when: in both frameworks `engines.node` in `framework/tools/ui/package.json`, the Node check in `ui_capture.sh` and every place the docs, onboarding or selftest name Node 18 say Node 20 or newer, which playwright 1.64.1 declares (check) · following AGENTS.md › Project rules for framework work
 - Found in: B13 (playwright 1.64.1 declares `node >=20`, and `^1.50.0` already resolved to it, so a Node 18 machine passes the check and then fails the install)
 - Brief: Scope › Framework features
 
-### T221 · Release App-Director 1.12.0 · in-progress 2026-10-29 · S · agent
+### T221 · Release App-Director 1.12.0 · done 2026-10-29 · S · agent
 - Depends on: T213, T215, T217, B13, T220
-- PRs: App-Director #40 (open)
+- PRs: App-Director #40 (merged); v1.12.0 tagged and published
 - Touches: work/App-Director: the version carriers its CLAUDE.md lists, CHANGELOG.md
 - Done when: the bundle ends with a release commit that bumps every version carrier and template link together, turns Unreleased into the 1.12.0 heading (no generic code runner in the settings template, the gitignored local settings, one App Director heading on upgrade, the exact Playwright pin and Node 20), passes the selftest and carries the release notes in its commit body, which become the pull request's description; once merged, `tools/work-release.sh` tags v1.12.0 and publishes the release (check) · following AGENTS.md › Project rules for framework work
 - Brief: Scope › Framework features
 
-### T222 · Release Godot-Director 4.6.0 · in-progress 2026-10-29 · S · agent
+### T222 · Release Godot-Director 4.6.0 · done 2026-10-29 · S · agent
 - Depends on: T190, T218
-- PRs: Godot-Director #45 (open)
+- PRs: Godot-Director #45 (merged); v4.6.0 tagged and published
 - Touches: work/Godot-Director: the version carriers its CLAUDE.md lists, CHANGELOG.md
 - Done when: the bundle ends with a release commit that bumps every version carrier and template link together, turns Unreleased into the 4.6.0 heading (autoplay beside the tests, and the named crashed process), passes the selftest without the Godot path and carries the release notes in its commit body, which become the pull request's description; once merged, `tools/work-release.sh` tags v4.6.0 and publishes the release (check) · following AGENTS.md › Project rules for framework work
 - Brief: Scope › Framework features
 
-### T223 · Release SaaSAllTheThings 0.14.1 · in-progress 2026-10-29 · S · agent
+### T223 · Release SaaSAllTheThings 0.14.1 · done 2026-10-29 · S · agent
 - Depends on: T219, T220
-- PRs: SaaSAllTheThings #40 (open)
+- PRs: SaaSAllTheThings #40 (merged); v0.14.1 tagged and published
 - Touches: work/SaaSAllTheThings: the version carriers its CLAUDE.md lists (every skill's version and `--branch` line included), CHANGELOG.md
 - Done when: the bundle ends with a release commit that bumps every version carrier, skill version and `--branch v0.14.1` line together, turns Unreleased into the 0.14.1 heading (the exact Playwright pin and Node 20), passes the selftest and carries the release notes, with What's new, How to install and How to upgrade, in its commit body, which become the pull request's description; once merged, `tools/work-release.sh` tags v0.14.1 and publishes the release (check) · following AGENTS.md › Project rules for framework work
 - Brief: Scope › Framework features
