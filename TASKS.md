@@ -57,7 +57,8 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: the refusal messages that say "check out the item's branch first", "publish an item branch" and "commit them to the item's commit first" name the repo's bundle branch instead, with behaviour unchanged (check) · `bash tools/check.sh` passes (check)
 - Brief: Scope › Orchestrator for the three frameworks
 
-### T217 · App-Director: an upgrade adds gitignore lines under the existing App Director heading · todo · XS · agent
+### T217 · App-Director: an upgrade adds gitignore lines under the existing App Director heading · in-progress 2026-10-29 · XS · agent
+- PRs: App-Director #40 (open)
 - Depends on: -
 - Touches: work/App-Director: install.sh, selftest.sh
 - Done when: an upgrade that adds a missing `.gitignore` line puts it under the app's existing `# App Director` heading instead of writing a second heading at the end, and the selftest's upgrade fixture finds one heading (check) · following AGENTS.md › Project rules for framework work (check)
