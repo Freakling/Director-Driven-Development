@@ -14,7 +14,9 @@
 #
 # An existing clone is never reset, never switched to another branch and never cleaned: a fetch
 # only updates the origin/* refs, so work in progress stays as it is. A folder in work/ that
-# is not a clone of the right repo is left alone and reported.
+# is not a clone of the right repo, or whose origin does not fetch from and push only to it
+# (origin_problem: git's own URLs, so insteadOf, pushInsteadOf and remote.origin.pushurl count),
+# is left alone and reported.
 #
 # Usage:  bash tools/work-clones.sh              all three repos
 #         bash tools/work-clones.sh <repo>       one repo, by name (any letter case)
@@ -67,18 +69,41 @@ report() {
   echo "  $line"
 }
 
+# origin_problem <clone> <owner/repo>: prints the first URL of origin that is not the GitHub repo, and
+# returns 1. Prints nothing and returns 0 when origin fetches from the repo and pushes to exactly one
+# URL, which is the repo too. The URLs are git's own (insteadOf, pushInsteadOf and remote.origin.pushurl
+# are applied), so a rewrite or a push elsewhere shows up here. Accepted: the https://github.com/,
+# git@github.com: and ssh://git@github.com/ forms of the repo, each with or without .git.
+origin_problem() {
+  local clone="$1" want="$2" kind url pushes=0
+  while IFS=' ' read -r kind url; do
+    case "$url" in
+      "https://github.com/$want" | "https://github.com/$want.git" \
+      | "git@github.com:$want" | "git@github.com:$want.git" \
+      | "ssh://git@github.com/$want" | "ssh://git@github.com/$want.git") ;;
+      *) echo "origin $kind URL '$url' is not the GitHub repo $want"; return 1 ;;
+    esac
+    if [ "$kind" = push ]; then
+      pushes=$((pushes + 1))
+      [ "$pushes" -eq 1 ] || { echo "origin has a second push URL, '$url'"; return 1; }
+    fi
+  done <<EOF
+fetch $(git -C "$clone" remote get-url origin 2>/dev/null)
+$(git -C "$clone" remote get-url --push --all origin 2>/dev/null | sed 's/^/push /')
+EOF
+  [ "$pushes" -eq 1 ] || { echo "origin has no push URL"; return 1; }
+  return 0
+}
+
 # sync_repo <repo>: 0 when the clone is there afterwards (fetched or not), 1 when it is not.
 sync_repo() {
-  local repo="$1" dir="$WORK_DIR/$1" url origin out
+  local repo="$1" dir="$WORK_DIR/$1" url bad out
   url="https://github.com/$GH_OWNER/$repo.git"
   if [ -e "$dir/.git" ]; then
-    origin="$(git -C "$dir" config --get remote.origin.url 2>/dev/null)"
-    case "$origin" in
-      *[:/]"$GH_OWNER/$repo"|*[:/]"$GH_OWNER/$repo.git") ;;
-      *)
-        echo "$repo: $dir has origin '$origin', not $GH_OWNER/$repo; left alone"
-        return 1 ;;
-    esac
+    if ! bad="$(origin_problem "$dir" "$GH_OWNER/$repo")"; then
+      echo "$repo: $dir: $bad; accepted: https://github.com/$GH_OWNER/$repo, git@github.com:$GH_OWNER/$repo and ssh://git@github.com/$GH_OWNER/$repo, each with or without .git; left alone"
+      return 1
+    fi
     if out="$(git -C "$dir" fetch origin 2>&1)"; then
       echo "$repo: fetched origin in $dir"
     else

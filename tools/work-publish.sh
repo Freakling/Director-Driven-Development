@@ -21,7 +21,9 @@
 #
 # Refused with exit 2 and a message, before anything is pushed:
 #   - the path is not one of the three clones: work/App-Director, work/Godot-Director or
-#     work/SaaSAllTheThings (or its origin is not Freakling/<repo>)
+#     work/SaaSAllTheThings
+#   - origin does not fetch from and push only to the GitHub repo Freakling/<repo>, in an accepted
+#     form (origin_problem: git's own URLs, so insteadOf, pushInsteadOf and remote.origin.pushurl count)
 #   - the clone is on main, on the remote's default branch, or on a detached HEAD
 #   - the working tree has uncommitted changes (untracked files count)
 #   - the branch has no commits ahead of origin/main
@@ -93,11 +95,34 @@ slug="$GH_OWNER/$repo"
 [ -e "$dir/.git" ] || refuse "$dir is not a git clone; run: bash tools/work-clones.sh $repo"
 g() { git -C "$dir" "$@"; }
 
-origin="$(g config --get remote.origin.url 2>/dev/null)"
-case "$origin" in
-  *[:/]"$slug"|*[:/]"$slug.git") ;;
-  *) refuse "$dir has origin '$origin', not $slug" ;;
-esac
+# origin_problem <clone> <owner/repo>: prints the first URL of origin that is not the GitHub repo, and
+# returns 1. Prints nothing and returns 0 when origin fetches from the repo and pushes to exactly one
+# URL, which is the repo too. The URLs are git's own (insteadOf, pushInsteadOf and remote.origin.pushurl
+# are applied), so a rewrite or a push elsewhere shows up here. Accepted: the https://github.com/,
+# git@github.com: and ssh://git@github.com/ forms of the repo, each with or without .git.
+origin_problem() {
+  local clone="$1" want="$2" kind url pushes=0
+  while IFS=' ' read -r kind url; do
+    case "$url" in
+      "https://github.com/$want" | "https://github.com/$want.git" \
+      | "git@github.com:$want" | "git@github.com:$want.git" \
+      | "ssh://git@github.com/$want" | "ssh://git@github.com/$want.git") ;;
+      *) echo "origin $kind URL '$url' is not the GitHub repo $want"; return 1 ;;
+    esac
+    if [ "$kind" = push ]; then
+      pushes=$((pushes + 1))
+      [ "$pushes" -eq 1 ] || { echo "origin has a second push URL, '$url'"; return 1; }
+    fi
+  done <<EOF
+fetch $(git -C "$clone" remote get-url origin 2>/dev/null)
+$(git -C "$clone" remote get-url --push --all origin 2>/dev/null | sed 's/^/push /')
+EOF
+  [ "$pushes" -eq 1 ] || { echo "origin has no push URL"; return 1; }
+  return 0
+}
+
+bad="$(origin_problem "$dir" "$slug")" \
+  || refuse "$dir: $bad; accepted: https://github.com/$slug, git@github.com:$slug and ssh://git@github.com/$slug, each with or without .git; nothing was pushed"
 
 # 3. The branch must be an item branch, with work on it and nothing left uncommitted.
 branch="$(g symbolic-ref -q --short HEAD 2>/dev/null)" \

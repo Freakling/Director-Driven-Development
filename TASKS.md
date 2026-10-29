@@ -579,7 +579,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Found in: product/security/2026-10-26.md › F7
 - Brief: -
 
-### B12 · The work scripts' origin check accepts any host and ignores pushurl (A01:2025 Broken Access Control) · todo · XS · agent · low
+### B12 · The work scripts' origin check accepts any host and ignores pushurl (A01:2025 Broken Access Control) · done 2026-10-29 · XS · agent · low
 - Touches: tools/work-publish.sh, tools/work-release.sh, tools/work-clones.sh
 - Repro: 1. `work-publish.sh:89-92`, `work-release.sh:118-121`, `work-clones.sh:76-81` accept any origin ending in `/Freakling/<repo>` on any host, and never check `remote.origin.pushurl`. 2. Expected: only the real GitHub repo URL, and no differing pushurl. Actual: a tampered clone config sends a branch or tag elsewhere while the gh steps target the real repo.
 - Found in: product/security/2026-10-26.md › F8
