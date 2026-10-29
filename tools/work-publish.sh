@@ -1,16 +1,18 @@
 #!/usr/bin/env bash
-# tools/work-publish.sh -- Publish one framework item: push its branch and open the pull request.
+# tools/work-publish.sh -- Publish a framework repo's bundle: push it and open or update its pull request.
 #
-# A framework item is built in a clone under work/ (tools/work-clones.sh), on its own branch,
-# and committed there. This script takes the last step: it pushes that branch to the framework
-# repo and opens one pull request for it, so the change reaches the repo only through a review.
+# A framework repo's items are built in its clone under work/ (tools/work-clones.sh), on one
+# bundle branch (ddd/bundle-YYYY-MM-DD, AGENTS.md › Project rules › Framework work), with one
+# commit per item. This script takes the last step: it pushes that branch to the framework repo
+# and opens the bundle's pull request the first time, or updates the open one, so the changes
+# reach the repo only through a review.
 #
 # MERGE IS HUMAN-OWNED (product/decisions.md, 2026-10-12), AND THE PULL REQUEST IS THE GATE
-# (2026-10-15, Q13). This script only pushes the item's branch and opens a pull request. It never
-# merges one, never enables auto-merge and never pushes to main or to the remote's default
-# branch. It never force-pushes: the push is a plain `git push -u origin <branch>`, with no -f,
-# no force-with-lease and no +refspec (the guard hook blocks those anyway). The director reviews
-# the pull request on GitHub and merges it.
+# (2026-10-15, Q13). This script only pushes the bundle branch and opens its pull request, or
+# leaves an open one to show the new commits. It never merges one, never enables auto-merge and
+# never pushes to main or to the remote's default branch. It never force-pushes: the push is a
+# plain `git push -u origin <branch>`, with no -f, no force-with-lease and no +refspec (the guard
+# hook blocks those anyway). The director reviews the pull request on GitHub and merges it.
 #
 # Pushing is the one step that leaves this machine, so it is the only place the settings let
 # a script through without a prompt: .claude/settings.json allows `bash tools/work-publish.sh*`
@@ -23,13 +25,15 @@
 #   - the working tree has uncommitted changes (untracked files count)
 #   - the branch has no commits ahead of origin/main
 #
-# The pull request takes its title and body from the branch's first commit ahead of origin/main
-# (the item's commit): its subject line and the rest of its message, and the body ends with the
-# Claude Code attribution line. If an open pull request
-# for the branch already exists (a re-run, or more commits pushed to the same branch), the
-# push updates it, its URL is printed, and no second one is opened.
+# The first time, the pull request is opened from the branch's first commit ahead of origin/main:
+# that commit's subject line and the rest of its message become the title and body, and the body
+# ends with the Claude Code attribution line. This session then runs `gh pr edit` so the title
+# names every item the bundle carries and the body lists them, one line each with its source,
+# until the release notes replace the body. If an open pull request already exists for the branch
+# (a re-run, or more item commits pushed to the bundle), the push updates it, its URL is printed,
+# and no second one is opened.
 #
-# Usage:  bash tools/work-publish.sh work/<repo>              push and open the pull request
+# Usage:  bash tools/work-publish.sh work/<repo>              push, and open or update its pull request
 #         bash tools/work-publish.sh work/<repo> --dry-run    run the checks, print the push and
 #                                                             gh commands, run neither
 # The path is relative to the repository root, or absolute. The branch is pushed as it is
@@ -113,7 +117,7 @@ ahead="$(g rev-list --count "origin/$BASE_BRANCH..HEAD" 2>/dev/null)"
 [ "${ahead:-0}" -gt 0 ] \
   || refuse "branch '$branch' has no commits ahead of origin/$BASE_BRANCH; there is nothing to publish"
 
-# 4. Title and body: the first commit ahead of origin/main is the item's commit.
+# 4. Title and body: the first commit ahead of origin/main is the bundle's first item commit.
 first="$(g rev-list --reverse "origin/$BASE_BRANCH..HEAD" | head -1)"
 title="$(g log -1 --format=%s "$first")"
 body="$(g log -1 --format=%b "$first")"

@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T216 · B16 · R7
+**Next IDs:** T217 · B16 · R7
 
 ## Milestones
 | Milestone | Status |
@@ -38,7 +38,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: the template's allow list drops `Bash(npm *)`, `Bash(npx *)`, `Bash(pnpm *)`, `Bash(yarn *)`, `Bash(flutter *)`, `Bash(python *)` and `Bash(pip *)`, keeping the named `bash tools/...` and `node tools/ui/...` commands, and the selftest fails when the template allows a generic code runner with a wildcard; the CHANGELOG entry says apps get the narrower list on upgrade and that a stack command not named there now asks first (check) · following AGENTS.md › Project rules for framework work (check)
 - Brief: -
 
-### T214 · tools/work-publish.sh describes publishing a bundle · todo · XS · agent
+### T214 · tools/work-publish.sh describes publishing a bundle · done 2026-10-29 · XS · agent
 - Depends on: -
 - Touches: tools/work-publish.sh
 - Done when: the script's header says it pushes a repo's bundle branch and opens its pull request the first time or updates it, and that `gh pr edit` then keeps the title and body naming every item it carries, as AGENTS.md › Framework work says, instead of describing one item per pull request; its behaviour is unchanged (check) · `bash tools/check.sh` passes (check)
@@ -49,6 +49,12 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Touches: work/App-Director: install.sh, README.md, selftest.sh
 - Done when: an install or upgrade leaves `.claude/settings.local.json` ignored by git (today the installer's `*.local` line doesn't match that name, while the README says it's gitignored), checked with `git check-ignore` in the selftest's install fixture; the README's sentence stays true (check) · following AGENTS.md › Project rules for framework work (check)
 - Brief: -
+
+### T216 · work-publish.sh's messages speak of the bundle branch · todo · XS · agent
+- Depends on: T214
+- Touches: tools/work-publish.sh
+- Done when: the refusal messages that say "check out the item's branch first", "publish an item branch" and "commit them to the item's commit first" name the repo's bundle branch instead, with behaviour unchanged (check) · `bash tools/check.sh` passes (check)
+- Brief: Scope › Orchestrator for the three frameworks
 
 ### T146 · The Examples entries say what kind of thing each is · done 2026-10-19 · XS · agent
 - Depends on: T133
