@@ -625,9 +625,10 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Found in: T190 (the load pass's Godot process crashed after its report once in 12 runs on The Guildkeeper, and the check failed with no error line)
 - Brief: Scope › Framework features
 
-### T219 · SaaSAllTheThings: the screen-capture tooling pins Playwright to one exact version · todo · XS · agent
+### T219 · SaaSAllTheThings: the screen-capture tooling pins Playwright to one exact version · in-progress 2026-10-29 · XS · agent
+- PRs: SaaSAllTheThings #40 (open)
 - Depends on: -
-- Touches: work/SaaSAllTheThings: framework/tools/ui/package.json, framework/tools/ui/.npmrc, tests/ui-web/package.json
+- Touches: work/SaaSAllTheThings: framework/tools/ui/package.json, framework/tools/ui/.npmrc, tests/ui-web/package.json, selftest.sh
 - Done when: `playwright` is pinned to 1.64.1, as App-Director's B13 fix does, in both package.json files, `.npmrc` says why no lock file is needed (playwright pins its only dependency exactly), and the selftest fails when either pin is a range (check) · following AGENTS.md › Project rules for framework work
 - Found in: B13 (SaaSAllTheThings ships the same files with `^1.50.0`)
 - Brief: Scope › Framework features
