@@ -648,14 +648,14 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: the bundle ends with a release commit that bumps every version carrier and template link together, turns Unreleased into the 1.12.0 heading (no generic code runner in the settings template, the gitignored local settings, one App Director heading on upgrade, the exact Playwright pin and Node 20), passes the selftest and carries the release notes in its commit body, which become the pull request's description; once merged, `tools/work-release.sh` tags v1.12.0 and publishes the release (check) · following AGENTS.md › Project rules for framework work
 - Brief: Scope › Framework features
 
-### T222 · Release Godot-Director 4.6.0 · todo · S · agent
+### T222 · Release Godot-Director 4.6.0 · in-progress 2026-10-29 · S · agent
 - Depends on: T190, T218
 - PRs: Godot-Director #45 (open)
 - Touches: work/Godot-Director: the version carriers its CLAUDE.md lists, CHANGELOG.md
 - Done when: the bundle ends with a release commit that bumps every version carrier and template link together, turns Unreleased into the 4.6.0 heading (autoplay beside the tests, and the named crashed process), passes the selftest without the Godot path and carries the release notes in its commit body, which become the pull request's description; once merged, `tools/work-release.sh` tags v4.6.0 and publishes the release (check) · following AGENTS.md › Project rules for framework work
 - Brief: Scope › Framework features
 
-### T223 · Release SaaSAllTheThings 0.14.1 · todo · S · agent
+### T223 · Release SaaSAllTheThings 0.14.1 · in-progress 2026-10-29 · S · agent
 - Depends on: T219, T220
 - PRs: SaaSAllTheThings #40 (open)
 - Touches: work/SaaSAllTheThings: the version carriers its CLAUDE.md lists (every skill's version and `--branch` line included), CHANGELOG.md
