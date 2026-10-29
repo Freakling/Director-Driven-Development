@@ -1,0 +1,15 @@
+{#-
+  The site's Content-Security-Policy. GitHub Pages sends no response headers, so the policy is a meta
+  tag, and it comes first in the head: a meta CSP governs only what follows it, and nothing before it
+  runs a script or loads a stylesheet. script-src lists the sha256 of each inline script Material
+  renders. One of them holds the page's base URL, so there is one hash per page depth. selftest.sh
+  section 10 fails when a built page runs a script that isn't listed here.
+  The only frame is the PKSEI embed on itch.io. The header's repository facts are read from the GitHub
+  API at run time, which is why connect-src names it. frame-ancestors, report-uri and sandbox can't be
+  set by a meta tag, so they are left out.
+-#}
+{% extends "base.html" %}
+{% block site_meta %}
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-/8wPdzX9q0NNJXyA5lzsLojXFpkeaXVxhbfkUOQaWy8=' 'sha256-/nhm8p50KJxvwWLggwJ1OF8Xgq5W/b3iKECITLASfOg=' 'sha256-/K9p2JtEqCycL2fSbEonMakkteWpAHv57x2wndLqMNo=' 'sha256-siNzcx4EoA99UiQLRBxAsmWGcYXstPc1NwxmPiUfdaQ=' 'sha256-apoQPHefCNWjxbCm+HzVDOAW4CSVWhY7VylQjgOFyfk='; connect-src 'self' https://api.github.com; style-src 'self'; img-src 'self' data:; font-src 'self'; frame-src https://itch.io; object-src 'none'; base-uri 'self'; form-action 'self'">
+  {{ super() }}
+{% endblock %}

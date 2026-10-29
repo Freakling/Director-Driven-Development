@@ -9,6 +9,8 @@ copyright: © 2026 Vikingur Saemundsson · MIT licence · <a href="https://saemu
 
 theme:
   name: material
+  # overrides/main.html sets the Content-Security-Policy meta tag (GitHub Pages can't send headers).
+  custom_dir: overrides
   font: false
   palette:
     scheme: slate

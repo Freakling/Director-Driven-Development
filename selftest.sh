@@ -20,6 +20,8 @@
 #      node, bash...) with a wildcard, since that runs any code without a prompt. Each allow rule
 #      names the exact commands the repo runs.
 #   9. The site builds in strict mode, which fails on broken internal links and anchors.
+#  10. The Content-Security-Policy in overrides/main.html allows every inline script the built site
+#      runs (its sha256 is in script-src), and no script runs before the policy's meta tag.
 #
 # frameworks.lock pins each framework to the release the docs describe. A new release therefore
 # never turns the run red by itself: online, a release past the pin prints a WARN, and the docs
@@ -447,6 +449,71 @@ if [ -n "$mkdocs" ]; then
   else echo "ok: no unrendered Markdown links"; fi
 else
   err "mkdocs not installed (pip install -r requirements.txt)"
+fi
+
+# 10. Content-Security-Policy ---------------------------------------------------------------
+# GitHub Pages sends no response headers, so overrides/main.html sets the policy as a meta tag. A meta
+# CSP governs only what comes after it, so it sits first in the head, and its script-src lists the
+# sha256 of every inline script the built site runs (Material's; one per page depth). The check reads
+# each built page: an inline script whose hash isn't in script-src fails, naming the page and the
+# hash, and so does a script that runs before the tag. A Material upgrade that changes a script fails
+# here until the hash in overrides/main.html is updated.
+csp_py=""
+for py in python3 python; do "$py" -c 'import hashlib' >/dev/null 2>&1 && { csp_py="$py"; break; }; done
+if [ ! -d site ]; then err "site/ isn't built, so the Content-Security-Policy can't be checked"
+elif [ -z "$csp_py" ]; then err "python not found, so the Content-Security-Policy can't be checked (install Python 3)"
+else
+  csp_out=$("$csp_py" -I - overrides/main.html site 2>&1 <<'PY'
+import base64, glob, hashlib, os, re, sys
+
+policy_file, site = sys.argv[1], sys.argv[2]
+meta_re = re.compile(r"<meta\b[^>]*Content-Security-Policy[^>]*>", re.I)
+policy_tag = meta_re.search(open(policy_file, encoding="utf-8").read())
+policy = re.search(r'content="([^"]*)"', policy_tag.group(0)) if policy_tag else None
+if not policy:
+    print(f"{policy_file} has no Content-Security-Policy meta tag")
+    sys.exit(1)
+directives = {}
+for part in policy.group(1).split(";"):
+    words = part.split()
+    if words:
+        directives[words[0].lower()] = words[1:]
+allowed = [w.strip("'") for w in directives.get("script-src", directives.get("default-src", []))]
+
+# Scripts that run have no type, or a JavaScript one; data blocks such as __config (application/json) don't.
+run_types = {"", "text/javascript", "application/javascript", "module"}
+script_re = re.compile(r"<script\b([^>]*)>(.*?)</script\s*>", re.S | re.I)
+attr_re = re.compile(r"""([\w-]+)\s*=\s*(?:"([^"]*)"|'([^']*)')""")
+problems, pages, inline = [], 0, 0
+for page in sorted(glob.glob(os.path.join(site, "**", "*.html"), recursive=True)):
+    name = os.path.relpath(page, site).replace(os.sep, "/")
+    html = open(page, encoding="utf-8").read()  # text mode: CRLF become LF, as the browser's parser sees them
+    pages += 1
+    tag = meta_re.search(html)
+    if not tag:
+        problems.append(f"{name}: has no Content-Security-Policy meta tag")
+        continue
+    for m in script_re.finditer(html):
+        attrs = {k.lower(): (a or b) for k, a, b in attr_re.findall(m.group(1))}
+        if attrs.get("type", "").strip().lower() not in run_types:
+            continue
+        if m.start() < tag.start():
+            problems.append(f"{name}: a script runs before the Content-Security-Policy meta tag, which doesn't govern it")
+        if "src" in attrs:
+            continue
+        inline += 1
+        digest = "sha256-" + base64.b64encode(hashlib.sha256(m.group(2).encode("utf-8")).digest()).decode()
+        if digest not in allowed:
+            problems.append(f"{name}: inline script {digest} isn't in script-src of {policy_file}")
+if problems:
+    print("\n".join(problems))
+    sys.exit(1)
+print(f"ok: the Content-Security-Policy in {policy_file} allows all {inline} inline scripts on {pages} built pages, and no script runs before it")
+PY
+)
+  csp_rc=$?
+  if [ "$csp_rc" -eq 0 ]; then echo "$csp_out"
+  else err "the Content-Security-Policy in overrides/main.html doesn't allow everything the built site runs:"; echo "$csp_out" | sed 's/^/  /'; fi
 fi
 
 [ "$fail" -eq 0 ] && echo "selftest passed" || echo "selftest FAILED"

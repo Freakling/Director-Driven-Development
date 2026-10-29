@@ -561,8 +561,8 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Found in: product/security/2026-10-26.md › F4
 - Brief: -
 
-### B9 · The published site sets no Content-Security-Policy (A02:2025 Security Misconfiguration) · todo · S · agent · low
-- Touches: mkdocs.yml, overrides/ (new)
+### B9 · The published site sets no Content-Security-Policy (A02:2025 Security Misconfiguration) · done 2026-10-29 · S · agent · low
+- Touches: mkdocs.yml, overrides/ (new), selftest.sh
 - Repro: 1. `mkdocs.yml` has no `theme.custom_dir` and no meta CSP; GitHub Pages can't send custom headers. 2. Expected: a meta CSP limits scripts, frames and images, and the headers Pages can't send are an accepted decision naming A02. Actual: nothing contains injected content.
 - Found in: product/security/2026-10-26.md › F5
 - Brief: -
