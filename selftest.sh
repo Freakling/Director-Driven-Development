@@ -18,7 +18,9 @@
 #      the Godot engine, .NET, Node and gitleaks, which have versions of their own.
 #   8. Agent permissions: .claude/settings.json allows no generic code runner (npm, npx, python,
 #      node, bash...) with a wildcard, since that runs any code without a prompt. Each allow rule
-#      names the exact commands the repo runs.
+#      names the exact commands the repo runs. Where it allows a wildcard git rule, it also denies
+#      the git flags that write a file, read outside the repository or run a configured command,
+#      and the guard hook blocks those flags (fed the PreToolUse JSON) and passes the plain forms.
 #   9. The site builds in strict mode, which fails on broken internal links and anchors.
 #  10. The Content-Security-Policy in overrides/main.html allows every inline script the built site
 #      runs (its sha256 is in script-src), and no script runs before the policy's meta tag.
@@ -428,6 +430,81 @@ else
     err ".claude/settings.json allows a generic code runner without a prompt (allow the exact commands instead):"
     echo "$perm_hits" | sed 's/^/  /'
   else echo "ok: .claude/settings.json allows no generic code runner without a prompt"; fi
+
+  # The wildcard git rules take any flag, and some git flags write a file (--output), read a file
+  # outside the repository (--no-index, commit -F) or run a configured command (--ext-diff), none
+  # of which should run without the human (product/security/2026-10-29.md, F1). Two layers: deny
+  # rules the harness enforces, and the guard hook, which also covers commit -F (a rule can't tell
+  # -F <path> from -F -). A wildcard git rule with a deny rule missing fails; the hook is fed the
+  # PreToolUse JSON and must exit 2 on each flag, quoted, escaped, attached or combined, and 0 on
+  # the plain forms the procedures use.
+  git_fail=""
+  if sed -n '/"allow": *\[/,/\]/p' .claude/settings.json \
+      | grep -qE '"Bash\(git (diff|log|show|stash|commit) \*\)"'; then
+    git_deny=$(sed -n '/"deny": *\[/,/\]/p' .claude/settings.json)
+    for rule in 'Bash(git *--output*)' 'Bash(git *--no-index*)' 'Bash(git *--ext-diff*)' 'Bash(git commit *--file*)'; do
+      printf '%s\n' "$git_deny" | grep -qF "\"$rule\"" \
+        || git_fail="$git_fail"$'\n'"  settings.json allows a wildcard git rule but doesn't deny $rule"
+    done
+  fi
+  guard() { # guard <expected-exit> <command>
+    local esc="${2//\\/\\\\}" got
+    esc="${esc//\"/\\\"}"; esc="${esc//$'\n'/\\n}"; esc="${esc//$'\t'/\\t}"
+    printf '{"session_id":"s","tool_name":"Bash","tool_input":{"command":"%s","description":"run"}}' "$esc" \
+      | bash .claude/hooks/guard-commands.sh >/dev/null 2>&1
+    got=$?
+    [ "$got" -eq "$1" ] || git_fail="$git_fail"$'\n'"  guard exited $got, expected $1: ${2//$'\n'/ NL }"
+  }
+  if [ ! -f .claude/hooks/guard-commands.sh ]; then
+    git_fail="$git_fail"$'\n'"  .claude/hooks/guard-commands.sh is missing"
+  else
+    for cmd in \
+        'git log -1 --format=probe --output=/tmp/probe.txt' \
+        'git log --output /tmp/probe.txt' \
+        'git show --output /tmp/probe.txt HEAD' \
+        'git diff --output=probe.txt' \
+        'git stash show --output=/tmp/probe.txt' \
+        "git log '--output=/tmp/probe.txt'" \
+        'git log "--no-index"' \
+        'git log --out\put=/tmp/probe.txt' \
+        'git log --output="/tmp/my probe.txt"' \
+        'git diff --no-index a b' \
+        'git diff --no-index /dev/null /etc/hosts' \
+        'git log -p --ext-diff' \
+        'git diff --ext-diff' \
+        'git diff /etc/hosts README.md' \
+        'git diff ../other.txt README.md' \
+        'git commit -F /tmp/msg.txt' \
+        'git commit -F/tmp/msg.txt' \
+        'git commit -aF /tmp/msg.txt' \
+        'git commit -F "/tmp/my msg.txt"' \
+        'git commit --file /tmp/msg.txt' \
+        'git commit --file=/tmp/msg.txt' \
+        'git commit -F - -F /tmp/msg.txt' \
+        'git add -A && git commit -F /tmp/msg.txt' \
+        'git -C work/App-Director log --output=/tmp/probe.txt' \
+        $'git commit -q -F - <<\'EOF\'\nmsg\nEOF\ngit log --output=/tmp/probe.txt'; do
+      guard 2 "$cmd"
+    done
+    for cmd in \
+        'git log --oneline -5' \
+        'git diff HEAD' \
+        'git diff --cached --stat' \
+        'git diff origin/main..HEAD -- docs/index.md' \
+        'git show HEAD:README.md' \
+        'git commit -m "fix the --output handling"' \
+        'git commit -F -' \
+        'git commit --file=-' \
+        $'git commit -q -F - <<\'EOF\'\nfix the --output and --no-index handling, not -F /tmp/x\nEOF' \
+        'git stash list' \
+        'git worktree list'; do
+      guard 0 "$cmd"
+    done
+  fi
+  if [ -n "$git_fail" ]; then
+    err "git's file-writing, file-reading and external-command flags are not all blocked:"
+    printf '%s\n' "${git_fail#$'\n'}"
+  else echo "ok: the wildcard git rules deny, and the guard hook blocks, git's file-writing, file-reading and external-command flags"; fi
 fi
 
 # 9. Build and links ------------------------------------------------------------------------

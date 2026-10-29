@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T233 · B21 · R7
+**Next IDs:** T236 · B21 · R7
 
 ## Milestones
 | Milestone | Status |
@@ -674,8 +674,8 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: the director has captured, drawn, processed and verified at least one screen with the released /ui-design, and said whether App-Director and SaaSAllTheThings should follow as the anchor says or after changes (demo)
 - Brief: Scope › Planned framework changes
 
-### B17 · The wildcard git allow rules write and read any file without a prompt (A01:2025 Broken Access Control) · todo · S · agent · med
-- Touches: .claude/settings.json, selftest.sh (framework-owned: an App-Director item too, as T213 was)
+### B17 · The wildcard git allow rules write and read any file without a prompt (A01:2025 Broken Access Control) · done 2026-10-29 · M · agent · med
+- Touches: .claude/settings.json, .claude/hooks/guard-commands.sh, selftest.sh, AGENTS.md (the settings and the guard are framework-owned: an App-Director item too, as T213 was)
 - Repro: 1. `.claude/settings.json:15-17,21,23-24` allow `git diff *`, `git log *`, `git show *`, `git commit *`, `git stash *` and `git worktree *` with any flags. 2. `git log --output=<path>` (and `git diff`, `git show` or `git stash show` with `--output`) writes text to any path, such as `tools/check.local.sh`, which the allowed `bash tools/check.sh` then runs; `git diff --no-index /dev/null <path>`, or `git commit -F <path>` and then `git log`, prints any file on the machine, past the Read deny rules. Expected: no allow rule writes a file, reads outside the repository or runs code without a prompt. Actual: these flags do, by git's documented options (not yet confirmed on this machine: confirm each with a harmless write or read in a scratch folder first). Selftest section 8 checks code runners only (`selftest.sh:422-431`). The same class as B14 (`git grep -O`) and B15 (deny rules for the credential stores).
 - Found in: product/security/2026-10-29.md › F1
 - Brief: -
@@ -745,6 +745,25 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Touches: -
 - Done when: failed workflow runs and Dependabot and secret scanning alerts reach the director's email, and a short note says what to do if the site is defaced or a token leaks (demo)
 - Brief: -
+
+### T233 · App-Director: the guard blocks the git flags that write or read any file · in-progress 2026-10-29 · M · agent
+- PRs: App-Director #41 (open)
+- Depends on: B17
+- Touches: work/App-Director: framework/.claude/hooks/guard-commands.sh, framework/.claude/settings.json, selftest.sh
+- Done when: the template's guard hook blocks the git flags that write a file, read a file outside the repository or run a configured command, as this repo's does after B17, and its settings deny them; App-Director's selftest feeds the hook each case and fails when a wildcard git allow rule has no matching deny rules; the selftest passes (check) · following AGENTS.md › Project rules for framework work
+- Brief: Scope › Framework features
+
+### T234 · Godot-Director: the agent's git allow rules can't write or read any file · todo · M · agent
+- Depends on: T233
+- Touches: work/Godot-Director: framework/.claude/settings.json, its command hook, selftest.sh
+- Done when: `git diff *`, `git log *`, `git show *` and `git commit *` in the template's allow list can no longer write a file, read a file outside the repository or run a configured command without a prompt, by the same means as App-Director's (product/security/2026-10-29.md › F1), and the selftest proves it (check) · following AGENTS.md › Project rules for framework work
+- Brief: Scope › Framework features
+
+### T235 · SaaSAllTheThings: the agent's git allow rules can't write or read any file · todo · M · agent
+- Depends on: T233
+- Touches: work/SaaSAllTheThings: framework/.claude/settings.json, framework/.claude/hooks/guard-commands.sh, selftest.sh
+- Done when: `git diff *`, `git log *`, `git show *` and `git commit *` in the template's allow list can no longer write a file, read a file outside the repository or run a configured command without a prompt, by the same means as App-Director's (product/security/2026-10-29.md › F1), and the selftest proves it (check) · following AGENTS.md › Project rules for framework work
+- Brief: Scope › Framework features
 
 ### T103 · /ui-design tells the director how to use Excalidraw · done 2026-10-20 · S · agent
 - PRs: Godot-Director #18 (merged), App-Director #25 (merged), SaaSAllTheThings #18 (merged)
