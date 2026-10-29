@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T219 · B17 · R7
+**Next IDs:** T221 · B17 · R7
 
 ## Milestones
 | Milestone | Status |
@@ -585,8 +585,10 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Found in: product/security/2026-10-26.md › F8
 - Brief: -
 
-### B13 · The screen-capture tooling has an open version range and no lock file (A03:2025 Software Supply Chain Failures) · todo · XS · agent · low
-- Touches: tools/ui/package.json, tools/ui/.npmrc (framework-owned: an App-Director item)
+### B13 · The screen-capture tooling has an open version range and no lock file (A03:2025 Software Supply Chain Failures) · in-progress 2026-10-29 · XS · agent · low
+- PRs: App-Director #40 (open)
+- Touches: tools/ui/package.json, tools/ui/.npmrc (framework-owned: an App-Director item); built as work/App-Director: framework/tools/ui/package.json, framework/tools/ui/.npmrc, tests/ui-web/package.json, selftest.sh
+- Note: playwright pinned to 1.64.1 with no lock file, since it pins its only dependency exactly; this repo's tools/ui gets it with the next App-Director upgrade.
 - Repro: 1. `tools/ui/package.json:9` has `playwright` at `^1.50.0` and `tools/ui/.npmrc:2` sets `package-lock=false`. 2. Expected: an exact version and a lock file, or a decision saying why not. Actual: `npm install` takes the newest release in the range. Framework-owned and unused by this static site, so the fix belongs in App-Director.
 - Found in: product/security/2026-10-26.md › F9
 - Brief: -
@@ -620,6 +622,20 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Touches: work/Godot-Director: framework/tools/check.sh, selftest.sh
 - Done when: when the import pass, the load pass, a test group or the layout lint exits non-zero (a crash such as a segmentation fault included) and its log has no error line the scan reports, the check prints one line naming that process, its exit status and its log before the FAIL, instead of a FAIL with no reason; the selftest covers a load pass and a test group that exit non-zero with a clean log (test) · following AGENTS.md › Project rules for framework work
 - Found in: T190 (the load pass's Godot process crashed after its report once in 12 runs on The Guildkeeper, and the check failed with no error line)
+- Brief: Scope › Framework features
+
+### T219 · SaaSAllTheThings: the screen-capture tooling pins Playwright to one exact version · todo · XS · agent
+- Depends on: -
+- Touches: work/SaaSAllTheThings: framework/tools/ui/package.json, framework/tools/ui/.npmrc, tests/ui-web/package.json
+- Done when: `playwright` is pinned to 1.64.1, as App-Director's B13 fix does, in both package.json files, `.npmrc` says why no lock file is needed (playwright pins its only dependency exactly), and the selftest fails when either pin is a range (check) · following AGENTS.md › Project rules for framework work
+- Found in: B13 (SaaSAllTheThings ships the same files with `^1.50.0`)
+- Brief: Scope › Framework features
+
+### T220 · App-Director and SaaSAllTheThings: the screen-capture tooling asks for Node 20, as Playwright does · todo · XS · agent
+- Depends on: B13, T219
+- Touches: work/App-Director and work/SaaSAllTheThings: framework/tools/ui/package.json, framework/tools/ui_capture.sh, framework/.app-director/procedures/ui-design.md (SaaSAllTheThings: its ui-design procedure), project/product/ui/README.md, ONBOARDING.md, selftest.sh
+- Done when: in both frameworks `engines.node` in `framework/tools/ui/package.json`, the Node check in `ui_capture.sh` and every place the docs, onboarding or selftest name Node 18 say Node 20 or newer, which playwright 1.64.1 declares (check) · following AGENTS.md › Project rules for framework work
+- Found in: B13 (playwright 1.64.1 declares `node >=20`, and `^1.50.0` already resolved to it, so a Node 18 machine passes the check and then fails the install)
 - Brief: Scope › Framework features
 
 ### T98 · The director tests /ui-design in a game · todo · - · human
