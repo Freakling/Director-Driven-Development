@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T218 · B16 · R7
+**Next IDs:** T219 · B16 · R7
 
 ## Milestones
 | Milestone | Status |
@@ -390,9 +390,10 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: the parallel run hands out test files longest first, using each file's time from the last run (kept under .godot/godot-director/, unknown files first), instead of file order; a file whose last time is over `[tests] split_over` seconds (default 60) is run as several shards of its test methods across the jobs, each shard in its own process, the file's results merged as one; a file that can't be split (its tests share state across methods, marked by a project setting or a header line the docs name) runs whole; on The Guildkeeper's scratch copy the full run's wall time and its slowest job are recorded before and after (check) · following AGENTS.md › Project rules for framework work
 - Brief: Scope › Framework features
 
-### T190 · Godot-Director: the check plays its autoplay scenarios alongside the tests · todo · M · agent
+### T190 · Godot-Director: the check plays its autoplay scenarios alongside the tests · in-progress 2026-10-29 · M · agent
+- PRs: Godot-Director #45 (open)
 - Depends on: T189
-- Touches: work/Godot-Director: framework/tools/check.sh, framework/tools/autoplay.sh, selftest.sh
+- Touches: work/Godot-Director: framework/tools/check.sh, framework/tools/autoplay.sh, project/tools/check.cfg, selftest.sh
 - Done when: with `[autoplay] check_in_check` on, the enforced scenarios start as soon as the import and load pass are done, in their own process beside the test jobs (one fewer test job, so the CPU count isn't exceeded), and their result joins the check's report with exit codes unchanged; measured on The Guildkeeper's scratch copy (check) · following AGENTS.md › Project rules for framework work
 - Brief: Scope › Framework features
 
@@ -607,6 +608,13 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Repro: 1. product/security/2026-10-26.md › F1's fix also asks for deny rules on reading the `gh` CLI's token store, git's credential store and `~/.ssh`. 2. Expected: `.claude/settings.json` (and App-Director's template) deny reads of those stores. Actual: the deny list covers only `.env`, `*.pem` and `*.key`, and a Bash `cat` isn't covered by Read rules.
 - Found in: T213
 - Brief: -
+
+### T218 · Godot-Director: the check names a Godot process that exits without an error line · todo · S · agent
+- Depends on: -
+- Touches: work/Godot-Director: framework/tools/check.sh, selftest.sh
+- Done when: when the import pass, the load pass, a test group or the layout lint exits non-zero (a crash such as a segmentation fault included) and its log has no error line the scan reports, the check prints one line naming that process, its exit status and its log before the FAIL, instead of a FAIL with no reason; the selftest covers a load pass and a test group that exit non-zero with a clean log (test) · following AGENTS.md › Project rules for framework work
+- Found in: T190 (the load pass's Godot process crashed after its report once in 12 runs on The Guildkeeper, and the check failed with no error line)
+- Brief: Scope › Framework features
 
 ### T98 · The director tests /ui-design in a game · todo · - · human
 - Depends on: T97
