@@ -599,8 +599,8 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: the example app runs in an Azure sandbox subscription with Azure Policy Deny assignments for public network access and local authentication and Defender for Cloud on, it is tested from outside, and the results are written down in `product/research/` for a later claims decision (demo)
 - Brief: Scope › What the site claims for production and compliance
 
-### B14 · The `git grep` allow rule runs any command (A01:2025 Broken Access Control) · todo · S · agent · med
-- Touches: .claude/settings.json, selftest.sh
+### B14 · The `git grep` allow rule runs any command (A01:2025 Broken Access Control) · done 2026-10-30 · M · agent · med
+- Touches: .claude/settings.json, .claude/hooks/guard-commands.sh, selftest.sh (the settings and the guard are framework-owned: App-Director and SaaSAllTheThings items too)
 - Repro: 1. `.claude/settings.json` allows `Bash(git grep *)`, and App-Director's template does too. 2. `git grep -O"<command>" <pattern>` runs the command as a pager on the matching files (B5's builder confirmed it with a harmless `echo`). Expected: no allow rule runs an arbitrary command without a prompt. Actual: `-O` or `--open-files-in-pager` does. Also check whether `Bash(bash tools/stacks/*.sh*)` can match a `../` path to another script (not verified).
 - Found in: B5
 - Brief: -

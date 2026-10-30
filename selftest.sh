@@ -20,7 +20,8 @@
 #      node, bash...) with a wildcard, since that runs any code without a prompt. Each allow rule
 #      names the exact commands the repo runs. Where it allows a wildcard git rule, it also denies
 #      the git flags that write a file, read outside the repository or run a configured command,
-#      and the guard hook blocks those flags (fed the PreToolUse JSON) and passes the plain forms.
+#      and a `bash tools/` rule also denies a `..` in the path. The guard hook blocks those flags
+#      and a script path with `..` (fed the PreToolUse JSON) and passes the plain forms.
 #   9. The site builds in strict mode, which fails on broken internal links and anchors.
 #  10. The Content-Security-Policy in overrides/main.html allows every inline script the built site
 #      runs (its sha256 is in script-src), and no script runs before the policy's meta tag.
@@ -432,21 +433,31 @@ else
   else echo "ok: .claude/settings.json allows no generic code runner without a prompt"; fi
 
   # The wildcard git rules take any flag, and some git flags write a file (--output), read a file
-  # outside the repository (--no-index, commit -F) or run a configured command (--ext-diff), none
-  # of which should run without the human (product/security/2026-10-29.md, F1). Two layers: deny
-  # rules the harness enforces, and the guard hook, which also covers commit -F (a rule can't tell
-  # -F <path> from -F -). A wildcard git rule with a deny rule missing fails; the hook is fed the
-  # PreToolUse JSON and must exit 2 on each flag, quoted, escaped, attached or combined, and 0 on
-  # the plain forms the procedures use.
+  # outside the repository (--no-index, commit and tag -F) or run a configured command (--ext-diff,
+  # grep -O), none of which should run without the human (product/security/2026-10-29.md, F1; B14).
+  # A * in `bash tools/stacks/*.sh*` matches `..` too, so a script path can leave tools/. Two layers:
+  # deny rules the harness enforces, and the guard hook, which also covers commit and tag -F (a rule
+  # can't tell -F <path> from -F -), grep's short, combined and abbreviated pager flags and a script
+  # path with `..`. A wildcard rule with a deny rule missing fails; the hook is fed the PreToolUse
+  # JSON and must exit 2 on each flag, quoted, escaped, attached or combined, and 0 on the plain
+  # forms the procedures use.
   git_fail=""
-  if sed -n '/"allow": *\[/,/\]/p' .claude/settings.json \
-      | grep -qE '"Bash\(git (diff|log|show|stash|commit) \*\)"'; then
-    git_deny=$(sed -n '/"deny": *\[/,/\]/p' .claude/settings.json)
-    for rule in 'Bash(git *--output*)' 'Bash(git *--no-index*)' 'Bash(git *--ext-diff*)' 'Bash(git commit *--file*)'; do
-      printf '%s\n' "$git_deny" | grep -qF "\"$rule\"" \
-        || git_fail="$git_fail"$'\n'"  settings.json allows a wildcard git rule but doesn't deny $rule"
+  perm_allow=$(sed -n '/"allow": *\[/,/\]/p' .claude/settings.json)
+  perm_deny=$(sed -n '/"deny": *\[/,/\]/p' .claude/settings.json)
+  deny_needs() { # deny_needs <allow rule pattern> <deny rule>...
+    printf '%s\n' "$perm_allow" | grep -qE "$1" || return 0
+    shift
+    local rule
+    for rule in "$@"; do
+      printf '%s\n' "$perm_deny" | grep -qF "\"$rule\"" \
+        || git_fail="$git_fail"$'\n'"  settings.json allows a wildcard rule but doesn't deny $rule"
     done
-  fi
+  }
+  deny_needs '"Bash\(git (diff|log|show|stash|commit) \*\)"' \
+    'Bash(git *--output*)' 'Bash(git *--no-index*)' 'Bash(git *--ext-diff*)' 'Bash(git commit *--file*)'
+  deny_needs '"Bash\(git grep \*\)"' 'Bash(git grep *--open*)' 'Bash(git grep *-O*)'
+  deny_needs '"Bash\(git tag \*\)"' 'Bash(git tag *--file*)'
+  deny_needs '"Bash\(bash tools/[^"]*\*' 'Bash(bash tools/*..*)'
   guard() { # guard <expected-exit> <command>
     local esc="${2//\\/\\\\}" got
     esc="${esc//\"/\\\"}"; esc="${esc//$'\n'/\\n}"; esc="${esc//$'\t'/\\t}"
@@ -483,7 +494,36 @@ else
         'git commit -F - -F /tmp/msg.txt' \
         'git add -A && git commit -F /tmp/msg.txt' \
         'git -C work/App-Director log --output=/tmp/probe.txt' \
-        $'git commit -q -F - <<\'EOF\'\nmsg\nEOF\ngit log --output=/tmp/probe.txt'; do
+        $'git commit -q -F - <<\'EOF\'\nmsg\nEOF\ngit log --output=/tmp/probe.txt' \
+        'git grep -O foo' \
+        'git grep -Oecho foo' \
+        'git grep -n -Ovim foo' \
+        'git grep -iO foo' \
+        'git grep -nOvim foo' \
+        'git grep -e foo -Oecho' \
+        'git grep -A 1 -Oecho foo' \
+        'git grep --open-files-in-pager foo' \
+        'git grep --open-files-in-pager=echo foo' \
+        'git grep --open=echo foo' \
+        'git grep --op foo' \
+        'git grep "-Obj"' \
+        "git grep '-Oecho' foo" \
+        'git grep -nO"echo hi" foo' \
+        'git grep --"open-files-in-pager"=echo foo' \
+        'git -C work/App-Director grep -Oecho foo' \
+        'git add . && git grep -Oecho foo' \
+        'git tag -F /tmp/msg.txt v1' \
+        'git tag -aF /tmp/msg.txt v1' \
+        'git tag -a v1 -F/tmp/msg.txt' \
+        'git tag -a v1 --file=/tmp/msg.txt' \
+        'git tag --file /tmp/msg.txt v1' \
+        'git tag --fi=/tmp/msg.txt v1' \
+        'bash tools/stacks/../../x.sh' \
+        'bash -x tools/stacks/../x.sh' \
+        'bash tools/stacks/.\./x.sh' \
+        'bash tools/stacks/".."/x.sh' \
+        'sh ./tools/../x.sh' \
+        '/bin/bash tools/stacks/../x.sh'; do
       guard 2 "$cmd"
     done
     for cmd in \
@@ -497,14 +537,33 @@ else
         'git commit --file=-' \
         $'git commit -q -F - <<\'EOF\'\nfix the --output and --no-index handling, not -F /tmp/x\nEOF' \
         'git stash list' \
-        'git worktree list'; do
+        'git worktree list' \
+        'git grep -n foo' \
+        "git grep -i -e x -- '*.md'" \
+        'git grep -ie -O' \
+        'git grep -e -Oecho' \
+        'git grep -n "an -Obj pattern"' \
+        'git grep -c --no-open-files-in-pager foo' \
+        'git grep --only-matching foo' \
+        'git log --grep -O' \
+        'git tag -a v1 -m x' \
+        'git tag -a v1 -m "see --file and -F"' \
+        'git tag -n' \
+        'git tag -a v1 -F -' \
+        'git tag --file=- -a v1' \
+        'bash tools/check.sh' \
+        'bash tools/work-publish.sh work/App-Director' \
+        'bash tools/stacks/godot.sh --since HEAD~3..HEAD' \
+        'bash tools/check.sh && git log origin/main..HEAD' \
+        'bash ../x.sh' \
+        'cd tools && bash ../x.sh'; do
       guard 0 "$cmd"
     done
   fi
   if [ -n "$git_fail" ]; then
-    err "git's file-writing, file-reading and external-command flags are not all blocked:"
+    err "git's file-writing, file-reading and external-command flags, and script paths outside tools/, are not all blocked:"
     printf '%s\n' "${git_fail#$'\n'}"
-  else echo "ok: the wildcard git rules deny, and the guard hook blocks, git's file-writing, file-reading and external-command flags"; fi
+  else echo "ok: the wildcard rules deny, and the guard hook blocks, git's file-writing, file-reading and external-command flags and script paths outside tools/"; fi
 fi
 
 # 9. Build and links ------------------------------------------------------------------------
