@@ -23,7 +23,9 @@
 #      and a `bash tools/` rule also denies a `..` in the path. The guard hook blocks those flags
 #      and a script path with `..` (fed the PreToolUse JSON) and passes the plain forms. The Read
 #      tool denies the gh CLI's, git's and ~/.ssh credential stores, and the guard hook blocks
-#      reading them and the commands that print a credential (B15).
+#      reading them and the commands that print a credential (B15). The Read tool also denies the
+#      .env files that hold values (.env.local and the other .env.<suffix> files), and the guard
+#      hook blocks shell reads of them, while the committed templates stay readable (B21).
 #   9. The site builds in strict mode, which fails on broken internal links and anchors.
 #  10. The Content-Security-Policy in overrides/main.html allows every inline script the built site
 #      runs (its sha256 is in script-src), and no script runs before the policy's meta tag.
@@ -533,6 +535,13 @@ else
         'cat "C:\Users\V\.ssh\id_rsa"' \
         'cat "certs/server.pem"' \
         "head '.env'" \
+        'cat .env.local' \
+        'head ./.env.production' \
+        'cat "config/.env.staging"' \
+        'less .env.development.local' \
+        "tail '.env.test'" \
+        'tail -n 20 .env.local' \
+        'cat .env.example; cat .env.local' \
         'gh auth token' \
         'gh auth status -t' \
         "printf 'protocol=https\\nhost=github.com\\n' | git credential fill" \
@@ -572,6 +581,10 @@ else
         'cd tools && bash ../x.sh' \
         'cat README.md' \
         'cat docs/how-to/where.md' \
+        'cat .env.example' \
+        'cat config/.env.sample' \
+        'head .env.template' \
+        'cat .env.dist' \
         'grep -n ssh docs/how-to/trouble.md' \
         'git log --oneline -3' \
         'ls ~/.ssh' \
@@ -585,17 +598,21 @@ else
   else echo "ok: the wildcard rules deny, and the guard hook blocks, git's file-writing, file-reading and external-command flags and script paths outside tools/"; fi
 
   # The credential stores (B15): the Read tool may not open the gh CLI's token file, git's credentials or
-  # ~/.ssh, so each of these five Read rules must be in the deny list, named exactly.
+  # ~/.ssh. The .env files with values (B21): .env.local and the other .env.<suffix> files the guard hook
+  # blocks, each in its plain and **/ form. Each of these Read rules must be in the deny list, named exactly.
   read_fail=""
   for rule in 'Read(~/.ssh/**)' 'Read(~/.git-credentials)' 'Read(~/.config/git/credentials)' \
-      'Read(~/.config/gh/**)' 'Read(~/AppData/Roaming/GitHub CLI/**)'; do
+      'Read(~/.config/gh/**)' 'Read(~/AppData/Roaming/GitHub CLI/**)' \
+      'Read(.env.local)' 'Read(**/.env.local)' 'Read(.env.*.local)' 'Read(**/.env.*.local)' \
+      'Read(.env.development)' 'Read(**/.env.development)' 'Read(.env.production)' 'Read(**/.env.production)' \
+      'Read(.env.staging)' 'Read(**/.env.staging)' 'Read(.env.test)' 'Read(**/.env.test)'; do
     printf '%s\n' "$perm_deny" | grep -qF "\"$rule\"" \
       || read_fail="$read_fail"$'\n'"  settings.json doesn't deny $rule"
   done
   if [ -n "$read_fail" ]; then
-    err "the Read tool can open the credential stores (the gh CLI's, git's credentials, ~/.ssh):"
+    err "the Read tool can open the credential stores (the gh CLI's, git's credentials, ~/.ssh) or the .env files with values:"
     printf '%s\n' "${read_fail#$'\n'}"
-  else echo "ok: settings.json denies the Read tool the gh CLI's, git's and SSH credential stores"; fi
+  else echo "ok: settings.json denies the Read tool the gh CLI's, git's and SSH credential stores and the .env files with values"; fi
 fi
 
 # 9. Build and links ------------------------------------------------------------------------

@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T252 · B22 · R7
+**Next IDs:** T254 · B22 · R7
 
 ## Milestones
 | Milestone | Status |
@@ -878,11 +878,23 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: `frameworks.lock` and every Godot-Director and SaaSAllTheThings link move to v4.7.0 and v0.14.4; the site says Godot-Director's check and pre-commit hook scan for secrets when gitleaks is installed, and go on with a note when it isn't, checked against the release and without overclaiming; the selftest passes with no WARN (check)
 - Brief: Scope › Framework features
 
-### B21 · The .env rules miss .env.local and other .env.* files (A01:2025 Broken Access Control) · todo · S · agent · low
+### B21 · The .env rules miss .env.local and other .env.* files (A01:2025 Broken Access Control) · done 2026-10-30 · S · agent · low
 - Touches: .claude/settings.json, .claude/hooks/guard-commands.sh, selftest.sh (the settings and the guard are framework-owned: App-Director and SaaSAllTheThings items too)
 - Repro: 1. `.claude/settings.json` denies `Read(.env)` and `Read(**/.env)`, and the guard's credential check matches a path ending in `.env` only, here and in App-Director's and SaaSAllTheThings' templates. 2. Expected: `.env.local`, `.env.production` and the other `.env.*` files that hold real values are denied to the Read tool and blocked for shell reads, while `.env.example`, which is committed and holds no values, stays readable. Actual: `cat .env.local` passes the guard, and the Read rules name `.env` exactly (the Read tool on `.env.local` is not yet confirmed).
 - Found in: T248
 - Brief: -
+
+### T252 · App-Director: the .env rules cover .env.local and the other .env.* files · todo · S · agent
+- Depends on: B21
+- Touches: work/App-Director: framework/.claude/hooks/guard-commands.sh, framework/.claude/settings.json, selftest.sh
+- Done when: the template's guard hook and settings match this repo's after B21 (`.env.local`, `.env.production` and the other `.env.*` files blocked and denied, `.env.example`, `.env.sample`, `.env.template` and `.env.dist` readable), and App-Director's selftest covers each case and passes (check) · following AGENTS.md › Project rules for framework work
+- Brief: Scope › Framework features
+
+### T253 · SaaSAllTheThings: the .env rules cover .env.local and the other .env.* files · todo · S · agent
+- Depends on: B21
+- Touches: work/SaaSAllTheThings: framework/.claude/hooks/guard-commands.sh, framework/.claude/settings.json, selftest.sh
+- Done when: the template's guard hook and settings block and deny `.env.local`, `.env.production` and the other `.env.*` files while `.env.example`, `.env.sample`, `.env.template` and `.env.dist` stay readable, as this repo's do after B21, and the selftest covers each case and passes (check) · following AGENTS.md › Project rules for framework work
+- Brief: Scope › Framework features
 
 ### T103 · /ui-design tells the director how to use Excalidraw · done 2026-10-20 · S · agent
 - PRs: Godot-Director #18 (merged), App-Director #25 (merged), SaaSAllTheThings #18 (merged)
