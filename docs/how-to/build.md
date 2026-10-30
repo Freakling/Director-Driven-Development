@@ -26,7 +26,7 @@ Saying it and typing the command run the same procedure.
 
 ## Two sessions that build at once
 
-Give each its own git worktree, whether they are design and coding or two coding sessions: `git worktree add ../<folder>`, then `bash tools/setup-clone.sh` in the new worktree. In one working tree, one session's half-written files fail the other's check, and the two share the same build state: in App-Director and SaaSAllTheThings the Stop hook and the build artefacts, in Godot-Director `.godot/` and the check's lock. A claim in `TASKS.md` protects only its own worktree, so only one session per project picks items, and the others name the item they work on. The rule and its reason are in each framework's `rules.md`: [App-Director](https://github.com/Freakling/App-Director/blob/v1.12.2/framework/.app-director/rules.md), [Godot-Director](https://github.com/Freakling/Godot-Director/blob/v4.6.2/framework/.godot-director/rules.md) and [SaaSAllTheThings](https://github.com/Freakling/SaaSAllTheThings/blob/v0.14.3/framework/.satt/rules.md).
+Give each its own git worktree, whether they are design and coding or two coding sessions: `git worktree add ../<folder>`, then `bash tools/setup-clone.sh` in the new worktree. In one working tree, one session's half-written files fail the other's check, and the two share the same build state: in App-Director and SaaSAllTheThings the Stop hook and the build artefacts, in Godot-Director `.godot/` and the check's lock. A claim in `TASKS.md` protects only its own worktree, so only one session per project picks items, and the others name the item they work on. The rule and its reason are in each framework's `rules.md`: [App-Director](https://github.com/Freakling/App-Director/blob/v1.12.2/framework/.app-director/rules.md), [Godot-Director](https://github.com/Freakling/Godot-Director/blob/v4.7.0/framework/.godot-director/rules.md) and [SaaSAllTheThings](https://github.com/Freakling/SaaSAllTheThings/blob/v0.14.4/framework/.satt/rules.md).
 
 ## What can go wrong
 
@@ -43,7 +43,7 @@ Give each its own git worktree, whether they are design and coding or two coding
 ## Related
 
 - The [`/next-task` skill page](../skills/next-task.md), and the concept [Agent development flow](../concept/agent-flow.md).
-- The procedures: [App-Director](https://github.com/Freakling/App-Director/tree/v1.12.2/framework/.app-director/procedures/next-task.md), [Godot-Director](https://github.com/Freakling/Godot-Director/tree/v4.6.2/framework/.godot-director/procedures/next-task.md) and [SaaSAllTheThings](https://github.com/Freakling/SaaSAllTheThings/tree/v0.14.3/framework/.satt/procedures/next-task.md).
+- The procedures: [App-Director](https://github.com/Freakling/App-Director/tree/v1.12.2/framework/.app-director/procedures/next-task.md), [Godot-Director](https://github.com/Freakling/Godot-Director/tree/v4.7.0/framework/.godot-director/procedures/next-task.md) and [SaaSAllTheThings](https://github.com/Freakling/SaaSAllTheThings/tree/v0.14.4/framework/.satt/procedures/next-task.md).
 - When the queue has no items yet: [How do I decide what gets built, or change how something works?](decide.md)
 
 <div class="takeaway"><span>One task, one check, one commit. Ask for a run when you trust the queue.</span><span class="url"><a href="index.md">All questions</a></span></div>

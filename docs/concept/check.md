@@ -6,7 +6,7 @@ One check defines done. Each framework ships it as `bash tools/check.sh`, and ea
 
 | Framework | The check |
 |---|---|
-| Godot-Director | Godot's import pass; loads every script, scene and resource; fails screen scripts that hold game rules; runs the tests in parallel and times each file; scans Godot's output for errors; runs the layout lint and plays the smoke scenario headless when switched on (new games start with both on) |
+| Godot-Director | Secrets with gitleaks, when it's installed; Godot's import pass; loads every script, scene and resource; fails screen scripts that hold game rules; runs the tests in parallel and times each file; scans Godot's output for errors; runs the layout lint and plays the smoke scenario headless when switched on (new games start with both on) |
 | App-Director | UI purity (UI files may not import the data layer); secrets with gitleaks; the stack's type check, lint and tests |
 | SaaSAllTheThings | The architecture rules (layers, tenant source, secrets, file sizes, cost SKUs and more); the backend build and tests; the Bicep files |
 
@@ -18,7 +18,7 @@ The check exits 0 on pass, 1 on fail and 3 when it cannot run, so "it could not 
 
 ## The pre-commit hook
 
-The git pre-commit hook runs the check before any commit that touches code. In App-Director and SaaSAllTheThings it also scans every commit for secrets, whatever it touches. A failing task cannot land.
+The git pre-commit hook runs the check before any commit that touches code. In all three it also scans every commit for secrets, whatever it touches (in Godot-Director, when gitleaks is installed). A failing task cannot land.
 
 ## What a person proves
 

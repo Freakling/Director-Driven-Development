@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T251 · B21 · R7
+**Next IDs:** T252 · B21 · R7
 
 ## Milestones
 | Milestone | Status |
@@ -842,34 +842,40 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: `frameworks.lock` and every framework link move to v1.12.2, v4.6.2 and v0.14.3; the site says that each framework keeps the agent out of the gh, git credential and SSH stores, and that in App-Director and SaaSAllTheThings every commit is scanned for secrets, checked against the releases and without overclaiming; the selftest passes with no WARN (check)
 - Brief: Scope › Framework features
 
-### T247 · Godot-Director: the check and the pre-commit hook scan for secrets · in-progress 2026-10-30 · M · agent
-- PRs: Godot-Director #48 (open)
+### T247 · Godot-Director: the check and the pre-commit hook scan for secrets · done 2026-10-30 · M · agent
+- PRs: Godot-Director #48 (merged)
 - Depends on: -
 - Touches: work/Godot-Director: framework/tools/check.sh, framework/.githooks/pre-commit, selftest.sh, the onboarding toolchain step
 - Done when: with gitleaks installed, a credential committed in a game (a store upload key, an API token in a script or a config file) is caught before it enters history, by the check and by the pre-commit hook on every commit, whatever is staged; without it, both print a note naming the install and go on; the selftest proves both with a secret assembled at run time (check) · following AGENTS.md › Project rules for framework work
 - Note: the director chose gitleaks only when it's installed (2026-10-30): with gitleaks, the check and the pre-commit hook scan; without it, they print a note and go on, so a game needs no extra install. Found while building T241.
 - Brief: Scope › Framework features
 
-### T248 · SaaSAllTheThings: the guard and the Read rules block .env, .pem and .key reads · in-progress 2026-10-30 · S · agent
-- PRs: SaaSAllTheThings #43 (open)
+### T248 · SaaSAllTheThings: the guard and the Read rules block .env, .pem and .key reads · done 2026-10-30 · S · agent
+- PRs: SaaSAllTheThings #43 (merged)
 - Depends on: -
 - Touches: work/SaaSAllTheThings: framework/.claude/hooks/guard-commands.sh, framework/.claude/settings.json, selftest.sh
 - Done when: the template's settings deny the Read tool `.env`, `*.pem` and `*.key` files, and its guard hook blocks shell reads of them, quoted paths included, as App-Director's do; the selftest covers each case and passes (check) · following AGENTS.md › Project rules for framework work
 - Note: found while building T242: App-Director has both, SaaSAllTheThings has neither.
 - Brief: Scope › Framework features
 
-### T249 · Release Godot-Director 4.7.0 · in-progress 2026-10-30 · S · agent
+### T249 · Release Godot-Director 4.7.0 · done 2026-10-30 · S · agent
 - Depends on: T247
-- PRs: Godot-Director #48 (open)
+- PRs: Godot-Director #48 (merged); v4.7.0 tagged and published
 - Touches: work/Godot-Director: the version carriers its CLAUDE.md lists, CHANGELOG.md
 - Done when: the bundle ends with a release commit that bumps every version carrier and template link together, turns Unreleased into the 4.7.0 heading, passes the selftest without Godot and carries the release notes in its commit body, which become the pull request's description; once merged, `tools/work-release.sh` tags v4.7.0 and publishes the release (check) · following AGENTS.md › Project rules for framework work
 - Brief: Scope › Framework features
 
-### T250 · Release SaaSAllTheThings 0.14.4 · in-progress 2026-10-30 · S · agent
+### T250 · Release SaaSAllTheThings 0.14.4 · done 2026-10-30 · S · agent
 - Depends on: T248
-- PRs: SaaSAllTheThings #43 (open)
+- PRs: SaaSAllTheThings #43 (merged); v0.14.4 tagged and published
 - Touches: work/SaaSAllTheThings: the version carriers its CLAUDE.md lists (every skill's version and `--branch` line included), CHANGELOG.md
 - Done when: the bundle ends with a release commit that bumps every version carrier, skill version and `--branch v0.14.4` line together, turns Unreleased into the 0.14.4 heading, passes the selftest and carries the release notes, with What's new, How to install and How to upgrade, in its commit body, which become the pull request's description; once merged, `tools/work-release.sh` tags v0.14.4 and publishes the release (check) · following AGENTS.md › Project rules for framework work
+- Brief: Scope › Framework features
+
+### T251 · Docs follow Godot-Director 4.7.0 and SaaSAllTheThings 0.14.4 · done 2026-10-30 · S · agent
+- Depends on: T249, T250
+- Touches: frameworks.lock, docs/**/*.md (the Godot-Director and SaaSAllTheThings links), docs/frameworks/godot-director.md, docs/concept/check.md, docs/frameworks/index.md, docs/how-to/start-game.md
+- Done when: `frameworks.lock` and every Godot-Director and SaaSAllTheThings link move to v4.7.0 and v0.14.4; the site says Godot-Director's check and pre-commit hook scan for secrets when gitleaks is installed, and go on with a note when it isn't, checked against the release and without overclaiming; the selftest passes with no WARN (check)
 - Brief: Scope › Framework features
 
 ### T103 · /ui-design tells the director how to use Excalidraw · done 2026-10-20 · S · agent

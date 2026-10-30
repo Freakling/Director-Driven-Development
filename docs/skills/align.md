@@ -21,7 +21,7 @@ When a conflict comes back that was already settled, or one conflict spans sever
 
 ### Godot-Director
 
-The procedure is at [`framework/.godot-director/procedures/align.md`](https://github.com/Freakling/Godot-Director/tree/v4.6.2/framework/.godot-director/procedures/align.md) in the Godot-Director repository.
+The procedure is at [`framework/.godot-director/procedures/align.md`](https://github.com/Freakling/Godot-Director/tree/v4.7.0/framework/.godot-director/procedures/align.md) in the Godot-Director repository.
 
 - It checks the GDD, `design/decisions.md`, `playtesting/TEMPLATE.md` and `project.godot` against `AGENTS.md`. The whole-document read is of `design/gdd.md`, and the latest releases are the game's exports and their UAT or production uploads. Every autoload and every rule folder needs an Architecture row.
 - Every file listed under `[screens] known` in `tools/check.cfg` needs an open item that removes it from the list.
@@ -48,7 +48,7 @@ The procedure is at [`framework/.app-director/procedures/align.md`](https://gith
 
 ### SaaSAllTheThings
 
-The procedure is at [`framework/.satt/procedures/align.md`](https://github.com/Freakling/SaaSAllTheThings/tree/v0.14.3/framework/.satt/procedures/align.md) in the SaaSAllTheThings repository.
+The procedure is at [`framework/.satt/procedures/align.md`](https://github.com/Freakling/SaaSAllTheThings/tree/v0.14.4/framework/.satt/procedures/align.md) in the SaaSAllTheThings repository.
 
 - It checks the PRD, `product/decisions.md`, the ADRs and the integration contracts. The whole-document read covers the PRD and every ADR, and an ADR's status is a statement of state too: an accepted ADR's decision is in the code or infrastructure or has an open item, and a proposed ADR that the code already follows is stale. The latest releases are the deploys to `dev` and `prod`. Every `ADR:` an item names must exist, and every accepted ADR with a temporary deviation needs its removal item.
 - It runs `bash tools/check.sh --architecture` and reports any stale ADR exceptions, any proposed ADR waiting longer than a week and the count of source files outside any layer.

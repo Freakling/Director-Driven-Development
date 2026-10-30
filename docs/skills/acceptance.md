@@ -20,7 +20,7 @@ The request is `prepare` (the default), `process`, or `all` for a full regressio
 
 ### Godot-Director
 
-The skill is `/function-check`. Its procedure is at [`framework/.godot-director/procedures/function-check.md`](https://github.com/Freakling/Godot-Director/tree/v4.6.2/framework/.godot-director/procedures/function-check.md) in the Godot-Director repository.
+The skill is `/function-check`. Its procedure is at [`framework/.godot-director/procedures/function-check.md`](https://github.com/Freakling/Godot-Director/tree/v4.7.0/framework/.godot-director/procedures/function-check.md) in the Godot-Director repository.
 
 - It collects the `(play)` outcomes, which are what a person sees while playing. The checklist is written to `playtesting/YYYY-MM-DD-function-check.md`.
 - It plays the scenarios behind the `(autoplay)` outcomes first, and lists the clean ones as pre-verified with their run folder, so the person checks only what a machine can't judge.
@@ -39,7 +39,7 @@ The procedure is at [`framework/.app-director/procedures/acceptance.md`](https:/
 
 ### SaaSAllTheThings
 
-The procedure is at [`framework/.satt/procedures/acceptance.md`](https://github.com/Freakling/SaaSAllTheThings/tree/v0.14.3/framework/.satt/procedures/acceptance.md) in the SaaSAllTheThings repository.
+The procedure is at [`framework/.satt/procedures/acceptance.md`](https://github.com/Freakling/SaaSAllTheThings/tree/v0.14.4/framework/.satt/procedures/acceptance.md) in the SaaSAllTheThings repository.
 
 - It collects the `(demo)` outcomes, and the checklist is written to `validation/YYYY-MM-DD-acceptance.md` with the environment, `local` or `dev`.
 - Each item names the client and the role to use. Items about tenant isolation tell the tester to sign in as the second test tenant and confirm that the first tenant's data isn't visible.

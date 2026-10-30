@@ -21,7 +21,7 @@ The steps are the same in all three frameworks. What differs is the item format 
 
 ### Godot-Director
 
-The procedure is at [`framework/.godot-director/procedures/prune.md`](https://github.com/Freakling/Godot-Director/tree/v4.6.2/framework/.godot-director/procedures/prune.md) in the Godot-Director repository.
+The procedure is at [`framework/.godot-director/procedures/prune.md`](https://github.com/Freakling/Godot-Director/tree/v4.7.0/framework/.godot-director/procedures/prune.md) in the Godot-Director repository.
 
 - Items follow the format in `.godot-director/tasks.md`, which is what the move must keep unchanged.
 - The skill suggests pruning once `TASKS.md` holds more than about ten done items.
@@ -35,7 +35,7 @@ The procedure is at [`framework/.app-director/procedures/prune.md`](https://gith
 
 ### SaaSAllTheThings
 
-The procedure is at [`framework/.satt/procedures/prune.md`](https://github.com/Freakling/SaaSAllTheThings/tree/v0.14.3/framework/.satt/procedures/prune.md) in the SaaSAllTheThings repository.
+The procedure is at [`framework/.satt/procedures/prune.md`](https://github.com/Freakling/SaaSAllTheThings/tree/v0.14.4/framework/.satt/procedures/prune.md) in the SaaSAllTheThings repository.
 
 - Items follow the format in `.satt/tasks.md`.
 - The skill suggests pruning once `TASKS.md` holds more than about ten done items.

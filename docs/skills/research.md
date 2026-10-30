@@ -54,9 +54,9 @@ The procedure is at [`framework/.app-director/procedures/research.md`](https://g
 
 ### Godot-Director
 
-The procedure is at [`framework/.godot-director/procedures/research.md`](https://github.com/Freakling/Godot-Director/tree/v4.6.2/framework/.godot-director/procedures/research.md) in the Godot-Director repository.
+The procedure is at [`framework/.godot-director/procedures/research.md`](https://github.com/Freakling/Godot-Director/tree/v4.7.0/framework/.godot-director/procedures/research.md) in the Godot-Director repository.
 
-- The domain file, [`research-domain.md`](https://github.com/Freakling/Godot-Director/tree/v4.6.2/framework/.godot-director/research-domain.md), covers the Godot docs for the project's engine version, plugins and assets (maintenance, engine version support and licence), export and store requirements, and comparable games as design references.
+- The domain file, [`research-domain.md`](https://github.com/Freakling/Godot-Director/tree/v4.7.0/framework/.godot-director/research-domain.md), covers the Godot docs for the project's engine version, plugins and assets (maintenance, engine version support and licence), export and store requirements, and comparable games as design references.
 - Comparable games are design references with Low or Medium confidence, and each option names the Design Pillar it serves or strains.
 - Notes go in `design/research/`, named `YYYY-MM-DD-<slug>.md`.
 - The item heading is `GDD:`, and an item that informs no question writes `Informs: (none)`.
@@ -64,12 +64,12 @@ The procedure is at [`framework/.godot-director/procedures/research.md`](https:/
 
 ### SaaSAllTheThings
 
-The procedure is at [`framework/.satt/procedures/research.md`](https://github.com/Freakling/SaaSAllTheThings/tree/v0.14.3/framework/.satt/procedures/research.md) in the SaaSAllTheThings repository.
+The procedure is at [`framework/.satt/procedures/research.md`](https://github.com/Freakling/SaaSAllTheThings/tree/v0.14.4/framework/.satt/procedures/research.md) in the SaaSAllTheThings repository.
 
-- The domain file, [`research-domain.md`](https://github.com/Freakling/SaaSAllTheThings/tree/v0.14.3/framework/.satt/research-domain.md), covers Azure when Azure is central to the question, the reference architecture and the customer's security framework. The reference architecture holds unless an accepted ADR says otherwise, and the requirements in `compliance/` are tier 1. Each requirement is traced to its control, labelled direct, partial, interpretive or unverified.
+- The domain file, [`research-domain.md`](https://github.com/Freakling/SaaSAllTheThings/tree/v0.14.4/framework/.satt/research-domain.md), covers Azure when Azure is central to the question, the reference architecture and the customer's security framework. The reference architecture holds unless an accepted ADR says otherwise, and the requirements in `compliance/` are tier 1. Each requirement is traced to its control, labelled direct, partial, interpretive or unverified.
 - Notes go in `product/research/`, named `YYYY-MM-DD-<slug>.md`.
 - The item heading is `PRD:`, and an item that informs no question writes `Informs: none`.
-- For an architecture question, the note ends with an ADR-ready summary. The [`/architect`](https://github.com/Freakling/SaaSAllTheThings/tree/v0.14.3/framework/.satt/procedures/architect.md) session lists the research on file, and when a decision followed the research, the ADR names the note in its Context. The researcher never writes an ADR and never accepts one.
+- For an architecture question, the note ends with an ADR-ready summary. The [`/architect`](https://github.com/Freakling/SaaSAllTheThings/tree/v0.14.4/framework/.satt/procedures/architect.md) session lists the research on file, and when a decision followed the research, the ADR names the note in its Context. The researcher never writes an ADR and never accepts one.
 - Confidential text is wider here: PRD and ADR text, tenant and subscription identifiers, integration contracts and anything from `compliance/` stay out of search queries, including the query strings of URLs.
 
 <div class="takeaway"><span>The researcher informs. The director decides.</span><span class="url"><a href="https://saemundsson.se/2026/10/07/director-driven-development/">Why: the blog post</a></span></div>
