@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T239 · B21 · R7
+**Next IDs:** T240 · B21 · R7
 
 ## Milestones
 | Milestone | Status |
@@ -753,39 +753,45 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: the template's guard hook blocks the git flags that write a file, read a file outside the repository or run a configured command, as this repo's does after B17, and its settings deny them; App-Director's selftest feeds the hook each case and fails when a wildcard git allow rule has no matching deny rules; the selftest passes (check) · following AGENTS.md › Project rules for framework work
 - Brief: Scope › Framework features
 
-### T234 · Godot-Director: the agent's git allow rules can't write or read any file · in-progress 2026-10-29 · M · agent
-- PRs: Godot-Director #46 (open)
+### T234 · Godot-Director: the agent's git allow rules can't write or read any file · done 2026-10-30 · M · agent
+- PRs: Godot-Director #46 (merged)
 - Depends on: T233
 - Touches: work/Godot-Director: framework/.claude/settings.json, its command hook, selftest.sh
 - Done when: `git diff *`, `git log *`, `git show *` and `git commit *` in the template's allow list can no longer write a file, read a file outside the repository or run a configured command without a prompt, by the same means as App-Director's (product/security/2026-10-29.md › F1), and the selftest proves it (check) · following AGENTS.md › Project rules for framework work
 - Brief: Scope › Framework features
 
-### T235 · SaaSAllTheThings: the agent's git allow rules can't write or read any file · in-progress 2026-10-29 · M · agent
-- PRs: SaaSAllTheThings #41 (open)
+### T235 · SaaSAllTheThings: the agent's git allow rules can't write or read any file · done 2026-10-30 · M · agent
+- PRs: SaaSAllTheThings #41 (merged)
 - Depends on: T233
 - Touches: work/SaaSAllTheThings: framework/.claude/settings.json, framework/.claude/hooks/guard-commands.sh, selftest.sh
 - Done when: `git diff *`, `git log *`, `git show *` and `git commit *` in the template's allow list can no longer write a file, read a file outside the repository or run a configured command without a prompt, by the same means as App-Director's (product/security/2026-10-29.md › F1), and the selftest proves it (check) · following AGENTS.md › Project rules for framework work
 - Brief: Scope › Framework features
 
-### T236 · Release App-Director 1.12.1 · in-progress 2026-10-30 · S · agent
+### T236 · Release App-Director 1.12.1 · done 2026-10-30 · S · agent
 - Depends on: T233
-- PRs: App-Director #42 (open)
+- PRs: App-Director #42 (merged); v1.12.1 tagged and published
 - Touches: work/App-Director: the version carriers its CLAUDE.md lists, CHANGELOG.md
 - Done when: the bundle ends with a release commit that bumps every version carrier and template link together, turns Unreleased into the 1.12.1 heading (the guard blocks git's file-writing and file-reading flags), passes the selftest and carries the release notes in its commit body, which become the pull request's description; once merged, `tools/work-release.sh` tags v1.12.1 and publishes the release (check) · following AGENTS.md › Project rules for framework work
 - Brief: Scope › Framework features
 
-### T237 · Release Godot-Director 4.6.1 · in-progress 2026-10-30 · S · agent
+### T237 · Release Godot-Director 4.6.1 · done 2026-10-30 · S · agent
 - Depends on: T234
-- PRs: Godot-Director #46 (open)
+- PRs: Godot-Director #46 (merged); v4.6.1 tagged and published
 - Touches: work/Godot-Director: the version carriers its CLAUDE.md lists, CHANGELOG.md
 - Done when: the bundle ends with a release commit that bumps every version carrier and template link together, turns Unreleased into the 4.6.1 heading (the guard blocks git's file-writing and file-reading flags), passes the selftest without Godot and carries the release notes in its commit body, which become the pull request's description; once merged, `tools/work-release.sh` tags v4.6.1 and publishes the release (check) · following AGENTS.md › Project rules for framework work
 - Brief: Scope › Framework features
 
-### T238 · Release SaaSAllTheThings 0.14.2 · in-progress 2026-10-30 · S · agent
+### T238 · Release SaaSAllTheThings 0.14.2 · done 2026-10-30 · S · agent
 - Depends on: T235
-- PRs: SaaSAllTheThings #41 (open)
+- PRs: SaaSAllTheThings #41 (merged); v0.14.2 tagged and published
 - Touches: work/SaaSAllTheThings: the version carriers its CLAUDE.md lists (every skill's version and `--branch` line included), CHANGELOG.md
 - Done when: the bundle ends with a release commit that bumps every version carrier, skill version and `--branch v0.14.2` line together, turns Unreleased into the 0.14.2 heading (the guard blocks git's file-writing and file-reading flags), passes the selftest and carries the release notes, with What's new, How to install and How to upgrade, in its commit body, which become the pull request's description; once merged, `tools/work-release.sh` tags v0.14.2 and publishes the release (check) · following AGENTS.md › Project rules for framework work
+- Brief: Scope › Framework features
+
+### T239 · Docs follow App-Director 1.12.1, Godot-Director 4.6.1 and SaaSAllTheThings 0.14.2 · done 2026-10-30 · S · agent
+- Depends on: T236, T237, T238
+- Touches: frameworks.lock, docs/**/*.md (the framework links), docs/frameworks/index.md, docs/how-to/where.md
+- Done when: `frameworks.lock` and every framework link move to v1.12.1, v4.6.1 and v0.14.2; the site says that each framework's command guard also blocks the git flags that write a file, read a file outside the repository or run a configured command, so a commit message comes from `-m` or stdin, checked against the releases and without overclaiming; the selftest passes with no WARN (check)
 - Brief: Scope › Framework features
 
 ### T103 · /ui-design tells the director how to use Excalidraw · done 2026-10-20 · S · agent

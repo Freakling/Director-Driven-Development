@@ -19,7 +19,7 @@ Three frameworks put Director-Driven Development to work. The same loop runs all
 - [`/release`](../skills/release.md), each to its own kind of target, `/align`, `/drift-reset`, `/prune`, `/refresh-model-sizing`, [`/research`](../skills/research.md) and [`/ui-design`](../skills/ui-design.md).
 - A builder, a read-only reviewer and a read-only researcher as Claude Code subagents.
 - `bash tools/check.sh` with result caching (`--if-changed`), and a git pre-commit hook that runs it when a commit touches code.
-- Hooks in Claude Code that run the check before the agent ends its turn and block work-destroying git commands.
+- Hooks in Claude Code that run the check before the agent ends its turn and block work-destroying git commands. They also block the git flags that write a file, read a file outside the repository or run a configured command.
 - Installation as a skill (`npx skills add`), as a Claude Code plugin, or by hand, each taking the latest release, followed by onboarding that ends in one commit for you to approve.
 - MIT licence. Each framework runs on your machine and sends nothing anywhere, except the web searches its researcher makes.
 

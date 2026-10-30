@@ -21,21 +21,21 @@ The steps are the same in all three frameworks. What differs is the item format 
 
 ### Godot-Director
 
-The procedure is at [`framework/.godot-director/procedures/prune.md`](https://github.com/Freakling/Godot-Director/tree/v4.6.0/framework/.godot-director/procedures/prune.md) in the Godot-Director repository.
+The procedure is at [`framework/.godot-director/procedures/prune.md`](https://github.com/Freakling/Godot-Director/tree/v4.6.1/framework/.godot-director/procedures/prune.md) in the Godot-Director repository.
 
 - Items follow the format in `.godot-director/tasks.md`, which is what the move must keep unchanged.
 - The skill suggests pruning once `TASKS.md` holds more than about ten done items.
 
 ### App-Director
 
-The procedure is at [`framework/.app-director/procedures/prune.md`](https://github.com/Freakling/App-Director/tree/v1.12.0/framework/.app-director/procedures/prune.md) in the App-Director repository.
+The procedure is at [`framework/.app-director/procedures/prune.md`](https://github.com/Freakling/App-Director/tree/v1.12.1/framework/.app-director/procedures/prune.md) in the App-Director repository.
 
 - Items follow the format in `.app-director/tasks.md`.
 - The skill file gives no threshold. Run it whenever the queue gets hard to read.
 
 ### SaaSAllTheThings
 
-The procedure is at [`framework/.satt/procedures/prune.md`](https://github.com/Freakling/SaaSAllTheThings/tree/v0.14.1/framework/.satt/procedures/prune.md) in the SaaSAllTheThings repository.
+The procedure is at [`framework/.satt/procedures/prune.md`](https://github.com/Freakling/SaaSAllTheThings/tree/v0.14.2/framework/.satt/procedures/prune.md) in the SaaSAllTheThings repository.
 
 - Items follow the format in `.satt/tasks.md`.
 - The skill suggests pruning once `TASKS.md` holds more than about ten done items.
