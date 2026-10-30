@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T240 · B21 · R7
+**Next IDs:** T243 · B21 · R7
 
 ## Milestones
 | Milestone | Status |
@@ -680,8 +680,8 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Found in: product/security/2026-10-29.md › F1
 - Brief: -
 
-### B18 · The pre-commit secrets scan skips Markdown, shell, HTML and the records (A07:2025 Authentication Failures) · todo · S · agent · low
-- Touches: .githooks/pre-commit, tools/check.sh, .claude/hooks/stop-check.sh (framework-owned: an App-Director item)
+### B18 · The pre-commit secrets scan skips Markdown, shell, HTML and the records (A07:2025 Authentication Failures) · done 2026-10-30 · S · agent · low
+- Touches: .githooks/pre-commit (framework-owned: App-Director and SaaSAllTheThings items too, T240 and T242)
 - Repro: 1. Stage a change to a page under `docs/`, `overrides/main.html`, a script under `tools/`, `selftest.sh`, `requirements.txt`, `frameworks.lock` or `TASKS.md`, and commit. 2. Expected: the pre-commit hook scans the staged change for secrets, as `rules.md` › Secrets says. Actual: `.githooks/pre-commit:21-27` runs the check and its staged gitleaks scan only when a staged file ends in `ts`, `tsx`, `js`, `jsx`, `mjs`, `dart`, `py`, `json`, `yaml` or `yml` or is one of the check's own files, and `tools/check.sh:67-71` fingerprints the same set, so `--if-changed` (the hook and the Stop hook) reuses an earlier pass after any other change. CI's full-history scan finds it only once it's pushed to the public repository.
 - Found in: product/security/2026-10-29.md › F2
 - Brief: -
@@ -792,6 +792,24 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Depends on: T236, T237, T238
 - Touches: frameworks.lock, docs/**/*.md (the framework links), docs/frameworks/index.md, docs/how-to/where.md
 - Done when: `frameworks.lock` and every framework link move to v1.12.1, v4.6.1 and v0.14.2; the site says that each framework's command guard also blocks the git flags that write a file, read a file outside the repository or run a configured command, so a commit message comes from `-m` or stdin, checked against the releases and without overclaiming; the selftest passes with no WARN (check)
+- Brief: Scope › Framework features
+
+### T240 · App-Director: the guard closes the git grep pager, the credential stores and the unscanned commits · todo · M · agent
+- Depends on: B14, B15, B18
+- Touches: work/App-Director: framework/.claude/hooks/guard-commands.sh, framework/.claude/settings.json, framework/.githooks/pre-commit, selftest.sh
+- Done when: the template's guard hook, settings and pre-commit hook match this repo's after B14, B15 and B18 (the grep pager, a tag message from a file and script paths that leave tools/ blocked; the gh, git credential and SSH stores denied; the staged secrets scan on every commit), App-Director's selftest covers each case, and it passes (check) · following AGENTS.md › Project rules for framework work
+- Brief: Scope › Framework features
+
+### T241 · Godot-Director: the agent can't read the gh, git credential and SSH stores without the human · in-progress 2026-10-30 · S · agent
+- Depends on: B15
+- Touches: work/Godot-Director: framework/.claude/hooks/guard-git.sh, framework/.claude/settings.json, selftest.sh
+- Done when: the template's settings deny reads of the SSH folder, git's credential files and the gh token store, and its guard hook blocks shell reads of them and the gh and git commands that print a stored credential, as this repo's do after B15; the selftest covers each case and passes (check) · following AGENTS.md › Project rules for framework work
+- Brief: Scope › Framework features
+
+### T242 · SaaSAllTheThings: the guard closes the git grep pager, the credential stores and the unscanned commits · todo · M · agent
+- Depends on: B14, B15, B18
+- Touches: work/SaaSAllTheThings: framework/.claude/hooks/guard-commands.sh, framework/.claude/settings.json, framework/.githooks/pre-commit, selftest.sh
+- Done when: the template's guard hook blocks the grep pager, its settings and guard keep the agent out of the gh, git credential and SSH stores, and its pre-commit hook runs its secrets scan on every commit, as this repo's do after B14, B15 and B18; the selftest covers each case and passes (check) · following AGENTS.md › Project rules for framework work
 - Brief: Scope › Framework features
 
 ### T103 · /ui-design tells the director how to use Excalidraw · done 2026-10-20 · S · agent
