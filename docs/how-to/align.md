@@ -48,6 +48,6 @@ Saying it and typing the command run the same procedure. The explicit command pa
 
 - The [`/align` skill page](../skills/align.md), with what the pass checks in each framework, and the concept [Align and drift reset](../concept/drift.md).
 - When the pass keeps finding the same conflict: [The system was not built as I intended](drift.md).
-- The procedures: [App-Director](https://github.com/Freakling/App-Director/tree/v1.12.1/framework/.app-director/procedures/align.md), [Godot-Director](https://github.com/Freakling/Godot-Director/tree/v4.6.1/framework/.godot-director/procedures/align.md) and [SaaSAllTheThings](https://github.com/Freakling/SaaSAllTheThings/tree/v0.14.2/framework/.satt/procedures/align.md).
+- The procedures: [App-Director](https://github.com/Freakling/App-Director/tree/v1.12.2/framework/.app-director/procedures/align.md), [Godot-Director](https://github.com/Freakling/Godot-Director/tree/v4.6.2/framework/.godot-director/procedures/align.md) and [SaaSAllTheThings](https://github.com/Freakling/SaaSAllTheThings/tree/v0.14.3/framework/.satt/procedures/align.md).
 
 <div class="takeaway"><span>Run it after every big design change and catch the drift while it is small.</span><span class="url"><a href="index.md">All questions</a></span></div>

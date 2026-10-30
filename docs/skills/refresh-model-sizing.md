@@ -18,7 +18,7 @@ How to use it: [It's costing more than I'd like](../how-to/cost.md)
 
 ### Godot-Director
 
-The procedure is at [`framework/.godot-director/procedures/refresh-model-sizing.md`](https://github.com/Freakling/Godot-Director/tree/v4.6.1/framework/.godot-director/procedures/refresh-model-sizing.md) in the Godot-Director repository.
+The procedure is at [`framework/.godot-director/procedures/refresh-model-sizing.md`](https://github.com/Freakling/Godot-Director/tree/v4.6.2/framework/.godot-director/procedures/refresh-model-sizing.md) in the Godot-Director repository.
 
 - The capability check is explicit for other tools. The skill states which of the two capabilities the tool has, and if one is missing it suggests a note such as `Model sizing: not supported` in Project rules, so future sessions don't ask again.
 - Before proposing the map, it asks whether the director has access to each model, since Opus needs a plan that includes it and Fable needs Claude platform access or usage credits.
@@ -26,14 +26,14 @@ The procedure is at [`framework/.godot-director/procedures/refresh-model-sizing.
 
 ### App-Director
 
-The procedure is at [`framework/.app-director/procedures/refresh-model-sizing.md`](https://github.com/Freakling/App-Director/tree/v1.12.1/framework/.app-director/procedures/refresh-model-sizing.md) in the App-Director repository.
+The procedure is at [`framework/.app-director/procedures/refresh-model-sizing.md`](https://github.com/Freakling/App-Director/tree/v1.12.2/framework/.app-director/procedures/refresh-model-sizing.md) in the App-Director repository.
 
 - The capability check looks for the `builder` agent definition in `.claude/agents/`, and for a way to pass a different model to each subagent call. If either is missing, the skill stops.
 - The new block replaces any existing `Model sizing` lines in Project rules. If sizing was off, it is switched on.
 
 ### SaaSAllTheThings
 
-The procedure is at [`framework/.satt/procedures/refresh-model-sizing.md`](https://github.com/Freakling/SaaSAllTheThings/tree/v0.14.2/framework/.satt/procedures/refresh-model-sizing.md) in the SaaSAllTheThings repository.
+The procedure is at [`framework/.satt/procedures/refresh-model-sizing.md`](https://github.com/Freakling/SaaSAllTheThings/tree/v0.14.3/framework/.satt/procedures/refresh-model-sizing.md) in the SaaSAllTheThings repository.
 
 - If a sizing block with five entries already exists, the skill shows the current values and asks whether to update them or leave them.
 - To turn sizing off, the skill writes `Model sizing: off` and removes the size entries.

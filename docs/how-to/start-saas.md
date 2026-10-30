@@ -27,7 +27,7 @@ Make a folder for the app and open Claude Code in it. An empty folder, or one wi
 
 ## Write it down first
 
-Before you install, describe the product in your own words in the product brief template. Open the [template](https://github.com/Freakling/SaaSAllTheThings/blob/v0.14.2/project/product/director-brief.md) at the latest release and choose Raw to download it. Fill in the product, and the four sections for your customer's architect or product owner if you have one: the enterprise architecture, the requirements, the security requirements and the control frameworks. Leave out what you have not decided. Keep it in the app's repository at `product/director-brief.md`, the path onboarding offers. The SaaSAllTheThings README opens its how-to-use section with this same "Start here" step.
+Before you install, describe the product in your own words in the product brief template. Open the [template](https://github.com/Freakling/SaaSAllTheThings/blob/v0.14.3/project/product/director-brief.md) at the latest release and choose Raw to download it. Fill in the product, and the four sections for your customer's architect or product owner if you have one: the enterprise architecture, the requirements, the security requirements and the control frameworks. Leave out what you have not decided. Keep it in the app's repository at `product/director-brief.md`, the path onboarding offers. The SaaSAllTheThings README opens its how-to-use section with this same "Start here" step.
 
 Why first: a written brief gives the agent your intent and the context behind it, which a chat interview doesn't, and the customer's own requirements anchor every later session in their security framework. When you install, the agent reads it before it asks anything. You can also fill it during onboarding (the agent waits), after it, or with the customer.
 
@@ -165,6 +165,6 @@ Later, `integrations/` holds one contract per external system, and `assessment/`
 - The [SaaSAllTheThings page](../frameworks/saasallthethings.md), its [install section](../frameworks/saasallthethings.md#install), and the skill pages [`/next-task`](../skills/next-task.md) and [`/design`](../skills/design.md).
 - The concepts [Roles](../concept/roles.md) and [Agent development flow](../concept/agent-flow.md).
 - The step-by-step guide on the blog: [Build a B2B SaaS on Azure with Director-Driven Development](https://saemundsson.se/2026/10/09/build-a-b2b-saas-on-azure-with-director-driven-development/).
-- The onboarding steps in full: [`ONBOARDING.md`](https://github.com/Freakling/SaaSAllTheThings/blob/v0.14.2/ONBOARDING.md).
+- The onboarding steps in full: [`ONBOARDING.md`](https://github.com/Freakling/SaaSAllTheThings/blob/v0.14.3/ONBOARDING.md).
 
 <div class="takeaway"><span>Install, settle the stack, answer the interview, approve one commit, then ask for the next task.</span><span class="url"><a href="index.md">All questions</a></span></div>

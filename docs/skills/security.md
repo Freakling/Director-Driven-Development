@@ -34,7 +34,7 @@ A category is verified only for the checks in the checklist, read in that commit
 
 ### App-Director
 
-The procedure is at [`framework/.app-director/procedures/security.md`](https://github.com/Freakling/App-Director/tree/v1.12.1/framework/.app-director/procedures/security.md) in the App-Director repository.
+The procedure is at [`framework/.app-director/procedures/security.md`](https://github.com/Freakling/App-Director/tree/v1.12.2/framework/.app-director/procedures/security.md) in the App-Director repository.
 
 - `bash tools/security.sh` runs the tools: the dependency audit of the manifests it finds (npm, pnpm, yarn, pip-audit on fully pinned requirements, dotnet, and `flutter pub outdated` as information only), the check's secrets scan and UI purity step, and Semgrep.
 - The report is `product/security/YYYY-MM-DD.md`. It covers the OWASP Top 10 (2025), and the OWASP API Security Top 10 (2023) when the app serves an API.
@@ -43,7 +43,7 @@ The procedure is at [`framework/.app-director/procedures/security.md`](https://g
 
 ### SaaSAllTheThings
 
-The procedure is at [`framework/.satt/procedures/security.md`](https://github.com/Freakling/SaaSAllTheThings/tree/v0.14.2/framework/.satt/procedures/security.md) in the SaaSAllTheThings repository.
+The procedure is at [`framework/.satt/procedures/security.md`](https://github.com/Freakling/SaaSAllTheThings/tree/v0.14.3/framework/.satt/procedures/security.md) in the SaaSAllTheThings repository.
 
 - The tools are the check's architecture rules, the .NET, npm and pinned pip dependency audits, Semgrep, and the CI workflow's dependency review and SBOM when `gh` is signed in. It never calls Azure, and the dependency audits send package names and versions to public advisory databases, never code.
 - The report is `assessment/security/YYYY-MM-DD.md`, and the accepted deviations it reads are the ADRs that name an OWASP item.

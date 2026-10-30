@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T246 · B21 · R7
+**Next IDs:** T247 · B21 · R7
 
 ## Milestones
 | Milestone | Status |
@@ -794,46 +794,52 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: `frameworks.lock` and every framework link move to v1.12.1, v4.6.1 and v0.14.2; the site says that each framework's command guard also blocks the git flags that write a file, read a file outside the repository or run a configured command, so a commit message comes from `-m` or stdin, checked against the releases and without overclaiming; the selftest passes with no WARN (check)
 - Brief: Scope › Framework features
 
-### T240 · App-Director: the guard closes the git grep pager, the credential stores and the unscanned commits · in-progress 2026-10-30 · M · agent
-- PRs: App-Director #43 (open)
+### T240 · App-Director: the guard closes the git grep pager, the credential stores and the unscanned commits · done 2026-10-30 · M · agent
+- PRs: App-Director #43 (merged)
 - Depends on: B14, B15, B18
 - Touches: work/App-Director: framework/.claude/hooks/guard-commands.sh, framework/.claude/settings.json, framework/.githooks/pre-commit, selftest.sh
 - Done when: the template's guard hook, settings and pre-commit hook match this repo's after B14, B15 and B18 (the grep pager, a tag message from a file and script paths that leave tools/ blocked; the gh, git credential and SSH stores denied; the staged secrets scan on every commit), App-Director's selftest covers each case, and it passes (check) · following AGENTS.md › Project rules for framework work
 - Brief: Scope › Framework features
 
-### T241 · Godot-Director: the agent can't read the gh, git credential and SSH stores without the human · in-progress 2026-10-30 · S · agent
-- PRs: Godot-Director #47 (open)
+### T241 · Godot-Director: the agent can't read the gh, git credential and SSH stores without the human · done 2026-10-30 · S · agent
+- PRs: Godot-Director #47 (merged)
 - Depends on: B15
 - Touches: work/Godot-Director: framework/.claude/hooks/guard-git.sh, framework/.claude/settings.json, selftest.sh
 - Done when: the template's settings deny reads of the SSH folder, git's credential files and the gh token store, and its guard hook blocks shell reads of them and the gh and git commands that print a stored credential, as this repo's do after B15; the selftest covers each case and passes (check) · following AGENTS.md › Project rules for framework work
 - Brief: Scope › Framework features
 
-### T242 · SaaSAllTheThings: the guard closes the git grep pager, the credential stores and the unscanned commits · in-progress 2026-10-30 · M · agent
-- PRs: SaaSAllTheThings #42 (open)
+### T242 · SaaSAllTheThings: the guard closes the git grep pager, the credential stores and the unscanned commits · done 2026-10-30 · M · agent
+- PRs: SaaSAllTheThings #42 (merged)
 - Depends on: B14, B15, B18
 - Touches: work/SaaSAllTheThings: framework/.claude/hooks/guard-commands.sh, framework/.claude/settings.json, framework/.githooks/pre-commit, selftest.sh
 - Done when: the template's guard hook blocks the grep pager, its settings and guard keep the agent out of the gh, git credential and SSH stores, and its pre-commit hook runs its secrets scan on every commit, as this repo's do after B14, B15 and B18; the selftest covers each case and passes (check) · following AGENTS.md › Project rules for framework work
 - Brief: Scope › Framework features
 
-### T243 · Release App-Director 1.12.2 · in-progress 2026-10-30 · S · agent
+### T243 · Release App-Director 1.12.2 · done 2026-10-30 · S · agent
 - Depends on: T240
-- PRs: App-Director #43 (open)
+- PRs: App-Director #43 (merged); v1.12.2 tagged and published
 - Touches: work/App-Director: the version carriers its CLAUDE.md lists, CHANGELOG.md
 - Done when: the bundle ends with a release commit that bumps every version carrier and template link together, turns Unreleased into the 1.12.2 heading, passes the selftest and carries the release notes in its commit body, which become the pull request's description; once merged, `tools/work-release.sh` tags v1.12.2 and publishes the release (check) · following AGENTS.md › Project rules for framework work
 - Brief: Scope › Framework features
 
-### T244 · Release Godot-Director 4.6.2 · in-progress 2026-10-30 · S · agent
+### T244 · Release Godot-Director 4.6.2 · done 2026-10-30 · S · agent
 - Depends on: T241
-- PRs: Godot-Director #47 (open)
+- PRs: Godot-Director #47 (merged); v4.6.2 tagged and published
 - Touches: work/Godot-Director: the version carriers its CLAUDE.md lists, CHANGELOG.md
 - Done when: the bundle ends with a release commit that bumps every version carrier and template link together, turns Unreleased into the 4.6.2 heading, passes the selftest without Godot and carries the release notes in its commit body, which become the pull request's description; once merged, `tools/work-release.sh` tags v4.6.2 and publishes the release (check) · following AGENTS.md › Project rules for framework work
 - Brief: Scope › Framework features
 
-### T245 · Release SaaSAllTheThings 0.14.3 · in-progress 2026-10-30 · S · agent
+### T245 · Release SaaSAllTheThings 0.14.3 · done 2026-10-30 · S · agent
 - Depends on: T242
-- PRs: SaaSAllTheThings #42 (open)
+- PRs: SaaSAllTheThings #42 (merged); v0.14.3 tagged and published
 - Touches: work/SaaSAllTheThings: the version carriers its CLAUDE.md lists (every skill's version and `--branch` line included), CHANGELOG.md
 - Done when: the bundle ends with a release commit that bumps every version carrier, skill version and `--branch v0.14.3` line together, turns Unreleased into the 0.14.3 heading, passes the selftest and carries the release notes with What's new, How to install and How to upgrade, in its commit body, which become the pull request's description; once merged, `tools/work-release.sh` tags v0.14.3 and publishes the release (check) · following AGENTS.md › Project rules for framework work
+- Brief: Scope › Framework features
+
+### T246 · Docs follow App-Director 1.12.2, Godot-Director 4.6.2 and SaaSAllTheThings 0.14.3 · done 2026-10-30 · S · agent
+- Depends on: T243, T244, T245
+- Touches: frameworks.lock, docs/**/*.md (the framework links), docs/frameworks/index.md, docs/how-to/where.md, docs/concept/check.md
+- Done when: `frameworks.lock` and every framework link move to v1.12.2, v4.6.2 and v0.14.3; the site says that each framework keeps the agent out of the gh, git credential and SSH stores, and that in App-Director and SaaSAllTheThings every commit is scanned for secrets, checked against the releases and without overclaiming; the selftest passes with no WARN (check)
 - Brief: Scope › Framework features
 
 ### T103 · /ui-design tells the director how to use Excalidraw · done 2026-10-20 · S · agent

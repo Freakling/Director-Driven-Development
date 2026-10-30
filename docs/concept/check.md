@@ -18,7 +18,7 @@ The check exits 0 on pass, 1 on fail and 3 when it cannot run, so "it could not 
 
 ## The pre-commit hook
 
-The git pre-commit hook runs the check before any commit that touches code. A failing task cannot land.
+The git pre-commit hook runs the check before any commit that touches code. In App-Director and SaaSAllTheThings it also scans every commit for secrets, whatever it touches. A failing task cannot land.
 
 ## What a person proves
 
