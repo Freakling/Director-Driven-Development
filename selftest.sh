@@ -21,7 +21,9 @@
 #      names the exact commands the repo runs. Where it allows a wildcard git rule, it also denies
 #      the git flags that write a file, read outside the repository or run a configured command,
 #      and a `bash tools/` rule also denies a `..` in the path. The guard hook blocks those flags
-#      and a script path with `..` (fed the PreToolUse JSON) and passes the plain forms.
+#      and a script path with `..` (fed the PreToolUse JSON) and passes the plain forms. The Read
+#      tool denies the gh CLI's, git's and ~/.ssh credential stores, and the guard hook blocks
+#      reading them and the commands that print a credential (B15).
 #   9. The site builds in strict mode, which fails on broken internal links and anchors.
 #  10. The Content-Security-Policy in overrides/main.html allows every inline script the built site
 #      runs (its sha256 is in script-src), and no script runs before the policy's meta tag.
@@ -523,7 +525,18 @@ else
         'bash tools/stacks/.\./x.sh' \
         'bash tools/stacks/".."/x.sh' \
         'sh ./tools/../x.sh' \
-        '/bin/bash tools/stacks/../x.sh'; do
+        '/bin/bash tools/stacks/../x.sh' \
+        'cat ~/.ssh/id_ed25519' \
+        'head "$HOME/.git-credentials"' \
+        'cat ~/.config/gh/hosts.yml' \
+        'less "/c/Users/V/AppData/Roaming/GitHub CLI/hosts.yml"' \
+        'cat "C:\Users\V\.ssh\id_rsa"' \
+        'cat "certs/server.pem"' \
+        "head '.env'" \
+        'gh auth token' \
+        'gh auth status -t' \
+        "printf 'protocol=https\\nhost=github.com\\n' | git credential fill" \
+        "printf 'protocol=https\\nhost=github.com\\n' | git credential get"; do
       guard 2 "$cmd"
     done
     for cmd in \
@@ -556,7 +569,13 @@ else
         'bash tools/stacks/godot.sh --since HEAD~3..HEAD' \
         'bash tools/check.sh && git log origin/main..HEAD' \
         'bash ../x.sh' \
-        'cd tools && bash ../x.sh'; do
+        'cd tools && bash ../x.sh' \
+        'cat README.md' \
+        'cat docs/how-to/where.md' \
+        'grep -n ssh docs/how-to/trouble.md' \
+        'git log --oneline -3' \
+        'ls ~/.ssh' \
+        'gh auth status'; do
       guard 0 "$cmd"
     done
   fi
@@ -564,6 +583,19 @@ else
     err "git's file-writing, file-reading and external-command flags, and script paths outside tools/, are not all blocked:"
     printf '%s\n' "${git_fail#$'\n'}"
   else echo "ok: the wildcard rules deny, and the guard hook blocks, git's file-writing, file-reading and external-command flags and script paths outside tools/"; fi
+
+  # The credential stores (B15): the Read tool may not open the gh CLI's token file, git's credentials or
+  # ~/.ssh, so each of these five Read rules must be in the deny list, named exactly.
+  read_fail=""
+  for rule in 'Read(~/.ssh/**)' 'Read(~/.git-credentials)' 'Read(~/.config/git/credentials)' \
+      'Read(~/.config/gh/**)' 'Read(~/AppData/Roaming/GitHub CLI/**)'; do
+    printf '%s\n' "$perm_deny" | grep -qF "\"$rule\"" \
+      || read_fail="$read_fail"$'\n'"  settings.json doesn't deny $rule"
+  done
+  if [ -n "$read_fail" ]; then
+    err "the Read tool can open the credential stores (the gh CLI's, git's credentials, ~/.ssh):"
+    printf '%s\n' "${read_fail#$'\n'}"
+  else echo "ok: settings.json denies the Read tool the gh CLI's, git's and SSH credential stores"; fi
 fi
 
 # 9. Build and links ------------------------------------------------------------------------

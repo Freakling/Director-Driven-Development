@@ -605,7 +605,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Found in: B5
 - Brief: -
 
-### B15 · The deny list doesn't cover the gh, git credential and SSH stores (A01:2025 Broken Access Control) · todo · S · agent · low
+### B15 · The deny list doesn't cover the gh, git credential and SSH stores (A01:2025 Broken Access Control) · done 2026-10-30 · S · agent · low
 - Touches: .claude/settings.json, selftest.sh
 - Repro: 1. product/security/2026-10-26.md › F1's fix also asks for deny rules on reading the `gh` CLI's token store, git's credential store and `~/.ssh`. 2. Expected: `.claude/settings.json` (and App-Director's template) deny reads of those stores. Actual: the deny list covers only `.env`, `*.pem` and `*.key`, and a Bash `cat` isn't covered by Read rules.
 - Found in: T213

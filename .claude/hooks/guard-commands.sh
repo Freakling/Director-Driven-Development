@@ -14,9 +14,11 @@
 # section "git: flags that write a file" below. And a `bash` or `sh` command whose script path under
 # tools/ leaves it with `..`, because `bash tools/stacks/*.sh*` would match `tools/stacks/../../x.sh`.
 #
-# Also blocks shell commands that read credential files (.env, *.pem, *.key) directly. This is a
-# guardrail, not a guarantee: complex pipelines or indirect reads are not detected. The Read-tool
-# deny rules in settings.json cover the most common path.
+# Also blocks shell commands that read credential files directly (.env, *.pem, *.key, ~/.ssh, git's
+# credentials files, the gh CLI's hosts.yml) and the commands that print a stored credential (gh auth
+# token, gh auth status -t, git credential fill or get). This is a guardrail, not a guarantee: complex
+# pipelines or indirect reads are not detected. The Read-tool deny rules in settings.json cover the
+# most common path.
 
 IFS= read -r -d '' input || true
 re='"command"[[:space:]]*:[[:space:]]*"(([^"\\]|\\.)*)"'
@@ -36,14 +38,29 @@ block() {
 }
 
 # --- Credential file reads ------------------------------------------------------------------------
-# Block direct shell reads of .env, *.pem, *.key: these files may hold live credentials.
-# Any credential read in a conversation context must be considered compromised and rotated.
-# This is a best-effort check on the command text; indirect reads are not detected.
+# Block direct shell reads of .env, *.pem and *.key, and of the credential stores: ~/.ssh (any key,
+# known_hosts too), git's credentials files, and the gh CLI's hosts.yml (.config/gh, or AppData's
+# GitHub CLI). A path is blocked when it is one of those or sits inside one, however it is written:
+# ~/, $HOME/, ${HOME}/, /c/Users/<name>/, C:\Users\<name>\ or relative. The commands that print a
+# stored credential are blocked as well (gh auth token, gh auth status -t, git credential fill or get).
+# These files may hold live credentials. Any credential read in a conversation context must be
+# considered compromised and rotated. This is a best-effort check on the command text; indirect
+# reads are not detected.
+cred_end="([[:space:]\"';&|)]|\$)"
+cred_store_re='\.ssh([/\\]|'"$cred_end"')|\.git-credentials|\.config[/\\]git[/\\]credentials|\.config[/\\]gh([/\\]|'"$cred_end"')|GitHub CLI([/\\]|'"$cred_end"')'
 reads_cred_file() {
-  local cmd="$raw"
+  # The command as the shell reads it: JSON escapes undone (\\ is one backslash, so C:\Users\V
+  # works) and the \n that separates commands becomes ;. Bash expansions only, so no process starts.
+  local cmd="${raw//\\\\/$'\x01'}" bs='\'
+  cmd="${cmd//\\\"/\"}"; cmd="${cmd//\\n/;}"; cmd="${cmd//$'\x01'/$bs}"
+  # A store read: the command word, then a path that is a store, or has one after a character that
+  # isn't part of a name, so ~/.ssh, $HOME/.ssh and "C:\...\.ssh" match, and x.ssh doesn't.
+  local store_read_re='(^|[[:space:]|;&(])(cat|head|tail|less|more|strings)[[:space:]]+([^;&|]*[^[:alnum:]_.-])?('"$cred_store_re"')'
   # Commands that print file contents
-  [[ $cmd =~ (^|[[:space:]|;&])(cat|head|tail|less|more|strings)[[:space:]]+(\.\/)?\.env([[:space:]|;&]|$) ]] && return 0
-  [[ $cmd =~ (^|[[:space:]|;&])(cat|head|tail|less|more|strings)[[:space:]]+[^[:space:]]*(\.pem|\.key)([[:space:]|;&]|$) ]] && return 0
+  # A path in quotes counts too: "x.pem" and '.env' reach the command as x.pem and .env.
+  [[ $cmd =~ (^|[[:space:]|;&])(cat|head|tail|less|more|strings)[[:space:]]+[\"\']?(\.\/)?\.env([[:space:]|;&\"\']|$) ]] && return 0
+  [[ $cmd =~ (^|[[:space:]|;&])(cat|head|tail|less|more|strings)[[:space:]]+[^[:space:]]*(\.pem|\.key)([[:space:]|;&\"\']|$) ]] && return 0
+  [[ $cmd =~ $store_read_re ]] && return 0
   return 1
 }
 if reads_cred_file; then
@@ -52,6 +69,12 @@ if reads_cred_file; then
   echo "              Any credential read in a conversation must be treated as compromised and rotated." >&2
   exit 2
 fi
+# gh auth token, gh auth status -t and git credential fill or get print a stored credential. Matched on
+# code (the command with its quoted text blanked), so a commit message that names them isn't blocked.
+gh_print_re='(^|[^[:alnum:]_./-])gh[[:space:]]+auth[[:space:]]+(token([[:space:]]|$|[;&|)])|status[^;&|]*[[:space:]](-[[:alpha:]]*t[[:alpha:]]*|--show-token)([[:space:]]|$|[;&|)]))'
+git_print_re='(^|[^[:alnum:]_./-])git[[:space:]]+([^;&|]*[[:space:]])?credential[[:space:]]+(fill|get)([[:space:]]|$|[;&|)])'
+[[ $code =~ $gh_print_re ]] && block "gh auth token and gh auth status -t print the gh CLI's stored token"
+[[ $code =~ $git_print_re ]] && block "git credential fill and get print a credential from git's credential store"
 
 # --- Hangs ---------------------------------------------------------------------------------------
 # A command that never returns, or runs past five minutes, lets the prompt cache expire, and the next
