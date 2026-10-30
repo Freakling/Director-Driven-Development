@@ -10,8 +10,10 @@
 #
 # MERGE IS HUMAN-OWNED (product/decisions.md, 2026-10-12). This script never merges a pull request,
 # never enables auto-merge and never pushes a branch. The one thing it pushes is the new tag, as
-# `git push origin refs/tags/v<version>`: no -f, no force-with-lease, no +refspec (the guard hook
-# blocks those anyway). It never deletes or moves a tag; a tag that exists is a refusal.
+# `git push --no-follow-tags origin refs/tags/v<version>:refs/tags/v<version>`, which names both ends
+# and sends no other tag, even with push.followTags on. There is no -f, no force-with-lease and no
+# +refspec (the guard hook blocks those anyway). It never deletes or moves a tag; a tag that exists
+# is a refusal.
 #
 # Creating and pushing a tag and publishing a release are the steps that leave this machine, so this
 # is the only script the settings let through without a prompt for them: .claude/settings.json
@@ -23,6 +25,8 @@
 #     work/SaaSAllTheThings
 #   - origin does not fetch from and push only to the GitHub repo Freakling/<repo>, in an accepted
 #     form (origin_problem: git's own URLs, so insteadOf, pushInsteadOf and remote.origin.pushurl count)
+#   - the clone sets remote.origin.push (git config --get-all), a push mapping: refused rather than
+#     left to git's rules, since a plain push follows it and a `+` in it forces the push
 #   - the pull request is not merged, or was not merged into main, or its merge commit is not on
 #     origin/main
 #   - VERSION at the merge commit is missing or not <major>.<minor>.<patch>
@@ -144,6 +148,12 @@ EOF
 
 bad="$(origin_problem "$dir" "$slug")" \
   || refuse "$dir: $bad; accepted: https://github.com/$slug, git@github.com:$slug and ssh://git@github.com/$slug, each with or without .git; nothing was tagged, pushed or published"
+# A push mapping (remote.origin.push) is refused rather than relied on, as in work-publish.sh. The tag
+# push names its refspec, so git sends it to the named tag whatever a mapping says; a clone with a
+# mapping is still not one this script releases from.
+push_map="$(g config --get-all remote.origin.push 2>/dev/null)"
+[ -z "$push_map" ] \
+  || refuse "$dir sets remote.origin.push, a push mapping; remove it from git's config (git config --unset-all remote.origin.push) and run this again; nothing was tagged, pushed or published"
 
 command -v gh >/dev/null 2>&1 \
   || fail "gh (the GitHub CLI) is not installed or not on PATH; nothing was tagged, pushed or published"
@@ -320,7 +330,7 @@ printf '%s' "$checked"
   sed 's/^/    /' "$notes"
   echo "commands (not run):"
   echo "    git -C $dir tag -a $tag -m \"Release $tag\" $merge"
-  echo "    git -C $dir push origin refs/tags/$tag"
+  echo "    git -C $dir push --no-follow-tags origin refs/tags/$tag:refs/tags/$tag"
   echo "    gh release create $tag --repo $slug --title $tag --notes-file <notes> --verify-tag"
   exit 0
 fi
@@ -329,8 +339,8 @@ fi
 echo "work-release: tagging $tag on $short of $slug (pull request #$number)"
 g tag -a "$tag" -m "Release $tag" "$merge" \
   || fail "could not create the tag $tag in $dir (is git user.name and user.email set?); nothing was pushed or published"
-g push origin "refs/tags/$tag" \
-  || fail "pushing the tag failed; the tag $tag exists in $dir only. Push it with: git -C $dir push origin refs/tags/$tag"
+g push --no-follow-tags origin "refs/tags/$tag:refs/tags/$tag" \
+  || fail "pushing the tag failed; the tag $tag exists in $dir only. Push it with: git -C $dir push --no-follow-tags origin refs/tags/$tag:refs/tags/$tag"
 keep=1
 # Path translation is off (MSYS2_ARG_CONV_EXCL above), so hand a Windows gh a Windows path.
 notes_arg="$notes"

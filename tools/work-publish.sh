@@ -12,9 +12,11 @@
 # MERGE IS HUMAN-OWNED (product/decisions.md, 2026-10-12), AND THE PULL REQUEST IS THE GATE
 # (2026-10-15, Q13). This script only pushes the bundle branch and opens its pull request, or
 # leaves an open one to show the new commits. It never merges one, never enables auto-merge and
-# never pushes to main or to the remote's default branch. It never force-pushes: the push is a
-# plain `git push -u origin <branch>`, with no -f, no force-with-lease and no +refspec (the guard
-# hook blocks those anyway). The director reviews the pull request on GitHub and merges it.
+# never pushes to main or to the remote's default branch. It never force-pushes: the push is
+# `git push --no-follow-tags -u origin refs/heads/<branch>:refs/heads/<branch>`, which names both
+# ends, so the branch lands under its own name, and sends no tag, even with push.followTags on.
+# There is no -f, no force-with-lease and no +refspec (the guard hook blocks those anyway). The
+# director reviews the pull request on GitHub and merges it.
 #
 # Pushing is the one step that leaves this machine, so it is the only place the settings let
 # a script through without a prompt: .claude/settings.json allows `bash tools/work-publish.sh*`
@@ -25,6 +27,8 @@
 #     work/SaaSAllTheThings
 #   - origin does not fetch from and push only to the GitHub repo Freakling/<repo>, in an accepted
 #     form (origin_problem: git's own URLs, so insteadOf, pushInsteadOf and remote.origin.pushurl count)
+#   - the clone sets remote.origin.push (git config --get-all), a push mapping: refused rather than
+#     left to git's rules, since a plain push follows it and a `+` in it forces the push
 #   - the clone is on main, on the remote's default branch, or on a detached HEAD
 #   - the working tree has uncommitted changes (untracked files count)
 #   - the branch has no commits ahead of origin/main
@@ -128,6 +132,12 @@ EOF
 
 bad="$(origin_problem "$dir" "$slug")" \
   || refuse "$dir: $bad; accepted: https://github.com/$slug, git@github.com:$slug and ssh://git@github.com/$slug, each with or without .git; nothing was pushed"
+# A push mapping (remote.origin.push) is refused rather than relied on. The push below names its
+# refspec, so git sends it to the named branch whatever a mapping says; a clone with a mapping is
+# still not one this script publishes from.
+push_map="$(g config --get-all remote.origin.push 2>/dev/null)"
+[ -z "$push_map" ] \
+  || refuse "$dir sets remote.origin.push, a push mapping; remove it from git's config (git config --unset-all remote.origin.push) and run this again; nothing was pushed"
 
 # 3. The branch must be an item branch, with work on it and nothing left uncommitted.
 branch="$(g symbolic-ref -q --short HEAD 2>/dev/null)" \
@@ -229,7 +239,7 @@ if [ "$dry" -eq 1 ]; then
   fi
   echo "    (then: $ATTRIBUTION)"
   echo "commands (not run):"
-  echo "    git -C $dir push -u origin $branch"
+  echo "    git -C $dir push --no-follow-tags -u origin refs/heads/$branch:refs/heads/$branch"
   echo "    gh pr list --repo $slug --head $branch --state open   # when one is open, its URL is printed and no second one is created"
   echo "    gh pr create --repo $slug --base $BASE_BRANCH --head $branch --title \"$title\" --body-file <body>"
   exit 0
@@ -239,7 +249,7 @@ fi
 command -v gh >/dev/null 2>&1 \
   || { echo "work-publish: gh (the GitHub CLI) is not installed or not on PATH; nothing was pushed" >&2; exit 1; }
 echo "work-publish: pushing $branch of $slug ($ahead commit(s) ahead of origin/$BASE_BRANCH)"
-g push -u origin "$branch" || { echo "work-publish: the push failed; no pull request was opened" >&2; exit 1; }
+g push --no-follow-tags -u origin "refs/heads/$branch:refs/heads/$branch" || { echo "work-publish: the push failed; no pull request was opened" >&2; exit 1; }
 
 existing="$(gh pr list --repo "$slug" --head "$branch" --state open --json url --jq '.[0].url // empty' 2>/dev/null)" \
   || { echo "work-publish: pushed, but could not list pull requests for $slug; run this again once gh works" >&2; exit 1; }

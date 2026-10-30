@@ -686,7 +686,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Found in: product/security/2026-10-29.md › F2
 - Brief: -
 
-### B19 · The publish and release pushes follow git push config the scripts don't pin (A01:2025 Broken Access Control) · todo · XS · agent · low
+### B19 · The publish and release pushes follow git push config the scripts don't pin (A01:2025 Broken Access Control) · done 2026-10-30 · XS · agent · low
 - Touches: tools/work-publish.sh, tools/work-release.sh
 - Repro: 1. In a clone, set `remote.origin.push`, or `push.followTags=true` with a local annotated tag the bundle commits reach. 2. Run `bash tools/work-publish.sh work/<repo>`. Expected: only `refs/heads/<branch>` is pushed, to the same name, as the header (`tools/work-publish.sh:14-17`) promises. Actual: `tools/work-publish.sh:242` runs `git push -u origin "$branch"` with no explicit destination, so a push mapping decides where it lands (a `+` in it forces the push) and followTags pushes the tag too, before the director merges anything; `tools/work-release.sh` pushes its tag the same way. Neither setting is on this machine today.
 - Found in: product/security/2026-10-29.md › F3
