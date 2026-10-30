@@ -692,7 +692,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Found in: product/security/2026-10-29.md › F3
 - Brief: -
 
-### B20 · This repo's screen-capture tooling still takes an open Playwright range (A03:2025 Software Supply Chain Failures) · todo · XS · agent · low
+### B20 · This repo's screen-capture tooling still takes an open Playwright range (A03:2025 Software Supply Chain Failures) · done 2026-10-30 · XS · agent · low
 - Touches: tools/ui/package.json, tools/ui/.npmrc (App Director's files: the App Director upgrade to its current release brings the pin)
 - Repro: 1. Read `tools/ui/package.json:9`, `"playwright": "^1.50.0"`, with `package-lock=false` in `tools/ui/.npmrc`. 2. Expected: the exact pin App-Director's release ships (B13). Actual: `npm install` here takes the newest release in the range. Nothing is installed (no `tools/ui/node_modules`), and the site doesn't use the tooling.
 - Found in: product/security/2026-10-29.md › F4

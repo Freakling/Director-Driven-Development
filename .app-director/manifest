@@ -1,5 +1,5 @@
-# app-director 1.11.0
-# source c80193a
+# app-director 1.12.1
+# source 35d7db9
 7eaf95f60e4547cf8ae6db7074c4461ea952b393	.app-director/LICENSE
 f450acfc2860e0d58e113f484af51fe341ae4b7e	.app-director/procedures/acceptance.md
 3022a9f9ca0fd6514bd8f80b03b04536bc502720	.app-director/procedures/align.md
@@ -13,7 +13,7 @@ cbb97da1a79ab199df16009bd2f64f9ddeffdf04	.app-director/procedures/release.md
 53aca096578b8ff8690d7d497dfc848ad45c7e66	.app-director/procedures/research.md
 3fc2d15158a3117c0be28edd74b6f653a7b8ef89	.app-director/procedures/review.md
 ac11ca594f514e71976ec65be2ee8b1f87081648	.app-director/procedures/security.md
-72d8d5bb914325c8dfac5e6c4c1e424668a4675f	.app-director/procedures/ui-design.md
+e1f7c05f6e2891616a93f39c6315db8b1727d7b3	.app-director/procedures/ui-design.md
 62be6a18f7e8ff9945e99ed49eabcc7aec063cd9	.app-director/reference/owasp.md
 943795c7b888f33737d89176e1b93ce2a7dd0eef	.app-director/research-domain.md
 9cc082d9f5e0f0fcd466be2f276e698f29346eed	.app-director/rules.md
@@ -21,10 +21,10 @@ ac11ca594f514e71976ec65be2ee8b1f87081648	.app-director/procedures/security.md
 661b550ca059e47181ee4016446925b6a993f87d	.claude/agents/builder.md
 af0a1fdd6854fea1e627264af885b1020d0415b3	.claude/agents/researcher.md
 d66a86423af381ac9854e4dd7c6d70cce13b8ef4	.claude/agents/reviewer.md
-bb64d5c11397df22cd3771e205df74dfe9f2c0cb	.claude/hooks/guard-commands.sh
+32106d3a57ce514ec293af4af565c773017dfd83	.claude/hooks/guard-commands.sh
 92ed80971272c76966a224fb8e54e7894e7b5222	.claude/hooks/guard-protected.sh
 5f2046b4ab8f82884ff36ed7b4b8f35a573e39be	.claude/hooks/stop-check.sh
-5fcb3fea053bc31acb7c7fe7c10bc780f5298909	.claude/settings.json
+683c8aecba77297a5f1bc0b3ecad3a96a6908e1e	.claude/settings.json
 d368ca46a9e45374b21fef2765c8698d6f7508b1	.claude/skills/acceptance/SKILL.md
 1b201afafffb69cc6ea1ce4262cead8425b988d8	.claude/skills/align/SKILL.md
 ebbeefbba0e083b020fe7cdae452b346cc4ae59b	.claude/skills/design/SKILL.md
@@ -44,12 +44,12 @@ e897d6336c59d6d30e6e2977c3a08f4ad5f1a317	tools/stacks/flutter.sh
 155d6b23efd4159e9c91e622f84e0bdea2f599f8	tools/stacks/none.sh
 935c69926b37d551cbf63e5663a9dfb7feb5e912	tools/stacks/python.sh
 c2a6e6b11d7f4fbc481d3f70cfecddd11448a178	tools/stacks/typescript.sh
-ab6ee1637b62b22967a2feabd98665e2802efc3f	tools/ui/.npmrc
-67c118f772e2a3db12cca9321d2e350c34407b4f	tools/ui/capture.mjs
+ada8df749ed892c207e1ae05a0cc2aa5d21f6022	tools/ui/.npmrc
+ca6fbfb164025adcb849735e361544f6482c9d15	tools/ui/capture.mjs
 457c67524af71c0f064a8a3280df8669d46f47e1	tools/ui/common.mjs
 2ac1b2d46f69538c718d539cbd9d9d013867cb61	tools/ui/drawing.mjs
 3b9bbc6d54f11412179c0452437248f24a3cf8b5	tools/ui/lint.mjs
 890260dce452e5a72a9bf6356c536c78fd7aef68	tools/ui/overlay.mjs
-81060013e47c91afeab977c9e12386e69377edd1	tools/ui/package.json
+42fe4494235e30f8506e57d173c4a0009781d62c	tools/ui/package.json
 16cdfa0401e752a7e8e8e62e13d5e5e69e5da433	tools/ui/verify.mjs
-05720e07ab7011c65e9df57771643c9024a702e1	tools/ui_capture.sh
+415a9625b14a424bd25d524d499fa494f11617fb	tools/ui_capture.sh

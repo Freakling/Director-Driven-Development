@@ -6,8 +6,7 @@ work/
 *.adir-new
 .env
 *.local
-.claude/settings.local.json
-# App Director
+/.claude/settings.local.json
 /product/ui/captures/
 /tools/ui/node_modules/
 /tools/ui/.auth/
