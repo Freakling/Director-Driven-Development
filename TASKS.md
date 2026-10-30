@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T247 · B21 · R7
+**Next IDs:** T249 · B21 · R7
 
 ## Milestones
 | Milestone | Status |
@@ -840,6 +840,20 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Depends on: T243, T244, T245
 - Touches: frameworks.lock, docs/**/*.md (the framework links), docs/frameworks/index.md, docs/how-to/where.md, docs/concept/check.md
 - Done when: `frameworks.lock` and every framework link move to v1.12.2, v4.6.2 and v0.14.3; the site says that each framework keeps the agent out of the gh, git credential and SSH stores, and that in App-Director and SaaSAllTheThings every commit is scanned for secrets, checked against the releases and without overclaiming; the selftest passes with no WARN (check)
+- Brief: Scope › Framework features
+
+### T247 · Godot-Director: the check and the pre-commit hook scan for secrets · todo · M · agent
+- Depends on: -
+- Touches: work/Godot-Director: framework/tools/check.sh, framework/.githooks/pre-commit, selftest.sh, the onboarding toolchain step
+- Done when: a credential committed in a game (a store upload key, an API token in a script or a config file) is caught before it enters history, by the check and by the pre-commit hook on every commit, whatever is staged, and the selftest proves it with a secret assembled at run time (check) · following AGENTS.md › Project rules for framework work
+- Note: design call first. Godot-Director's check has no secrets scan, and no rule or decision says why. Options: gitleaks as App-Director uses it (mature rules, one more install for every game), gitleaks only when installed (a note when it's missing), or built-in patterns as SaaSAllTheThings has (no install, fewer rules). Found while building T241.
+- Brief: Scope › Framework features
+
+### T248 · SaaSAllTheThings: the guard and the Read rules block .env, .pem and .key reads · todo · S · agent
+- Depends on: -
+- Touches: work/SaaSAllTheThings: framework/.claude/hooks/guard-commands.sh, framework/.claude/settings.json, selftest.sh
+- Done when: the template's settings deny the Read tool `.env`, `*.pem` and `*.key` files, and its guard hook blocks shell reads of them, quoted paths included, as App-Director's do; the selftest covers each case and passes (check) · following AGENTS.md › Project rules for framework work
+- Note: found while building T242: App-Director has both, SaaSAllTheThings has neither.
 - Brief: Scope › Framework features
 
 ### T103 · /ui-design tells the director how to use Excalidraw · done 2026-10-20 · S · agent
