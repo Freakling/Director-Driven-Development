@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T257 · B22 · R7
+**Next IDs:** T257 · B23 · R7
 
 ## Milestones
 | Milestone | Status |
@@ -917,6 +917,12 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Touches: frameworks.lock, docs/**/*.md (the App-Director and SaaSAllTheThings links)
 - Done when: `frameworks.lock` and every App-Director and SaaSAllTheThings link move to v1.12.3 and v0.14.5 (the releases change only the `.env` rules, which no page describes); the selftest passes with no WARN (check)
 - Brief: Scope › Framework features
+
+### B22 · The guard checks only the first file a read names for env, pem and key files (A01:2025 Broken Access Control) · todo · S · agent · low
+- Touches: .claude/hooks/guard-commands.sh, selftest.sh (the guard is framework-owned: an App-Director item too)
+- Repro: 1. Feed the guard hook `cat README.md .env.local`, `tail -n 20 .env` or `head -5 certs/server.pem`. 2. Expected: each is blocked, as the guard blocks `cat .env.local`. Actual: the `.env` and `.pem`/`.key` checks in `reads_cred_file` match only the first word after the read command, so a second file argument or a leading option passes, here and in App-Director's template (the credential-store check already looks at every argument). SaaSAllTheThings' guard tests every argument since its T32.
+- Found in: T253
+- Brief: -
 
 ### T103 · /ui-design tells the director how to use Excalidraw · done 2026-10-20 · S · agent
 - PRs: Godot-Director #18 (merged), App-Director #25 (merged), SaaSAllTheThings #18 (merged)
