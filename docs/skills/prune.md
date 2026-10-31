@@ -28,14 +28,14 @@ The procedure is at [`framework/.godot-director/procedures/prune.md`](https://gi
 
 ### App-Director
 
-The procedure is at [`framework/.app-director/procedures/prune.md`](https://github.com/Freakling/App-Director/tree/v1.12.2/framework/.app-director/procedures/prune.md) in the App-Director repository.
+The procedure is at [`framework/.app-director/procedures/prune.md`](https://github.com/Freakling/App-Director/tree/v1.12.3/framework/.app-director/procedures/prune.md) in the App-Director repository.
 
 - Items follow the format in `.app-director/tasks.md`.
 - The skill file gives no threshold. Run it whenever the queue gets hard to read.
 
 ### SaaSAllTheThings
 
-The procedure is at [`framework/.satt/procedures/prune.md`](https://github.com/Freakling/SaaSAllTheThings/tree/v0.14.4/framework/.satt/procedures/prune.md) in the SaaSAllTheThings repository.
+The procedure is at [`framework/.satt/procedures/prune.md`](https://github.com/Freakling/SaaSAllTheThings/tree/v0.14.5/framework/.satt/procedures/prune.md) in the SaaSAllTheThings repository.
 
 - Items follow the format in `.satt/tasks.md`.
 - The skill suggests pruning once `TASKS.md` holds more than about ten done items.

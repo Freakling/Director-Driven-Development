@@ -3,5 +3,5 @@
 # A new framework release doesn't change them: the docs follow-up item bumps this file together
 # with the links in docs/ and the pages for what the release ships.
 Godot-Director v4.7.0
-App-Director v1.12.2
-SaaSAllTheThings v0.14.4
+App-Director v1.12.3
+SaaSAllTheThings v0.14.5

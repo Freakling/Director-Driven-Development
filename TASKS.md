@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T256 · B22 · R7
+**Next IDs:** T257 · B22 · R7
 
 ## Milestones
 | Milestone | Status |
@@ -884,32 +884,38 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Found in: T248
 - Brief: -
 
-### T252 · App-Director: the .env rules cover .env.local and the other .env.* files · in-progress 2026-10-30 · S · agent
-- PRs: App-Director #44 (open)
+### T252 · App-Director: the .env rules cover .env.local and the other .env.* files · done 2026-10-31 · S · agent
+- PRs: App-Director #44 (merged)
 - Depends on: B21
 - Touches: work/App-Director: framework/.claude/hooks/guard-commands.sh, framework/.claude/settings.json, selftest.sh
 - Done when: the template's guard hook and settings match this repo's after B21 (`.env.local`, `.env.production` and the other `.env.*` files blocked and denied, `.env.example`, `.env.sample`, `.env.template` and `.env.dist` readable), and App-Director's selftest covers each case and passes (check) · following AGENTS.md › Project rules for framework work
 - Brief: Scope › Framework features
 
-### T253 · SaaSAllTheThings: the .env rules cover .env.local and the other .env.* files · in-progress 2026-10-30 · S · agent
-- PRs: SaaSAllTheThings #44 (open)
+### T253 · SaaSAllTheThings: the .env rules cover .env.local and the other .env.* files · done 2026-10-31 · S · agent
+- PRs: SaaSAllTheThings #44 (merged)
 - Depends on: B21
 - Touches: work/SaaSAllTheThings: framework/.claude/hooks/guard-commands.sh, framework/.claude/settings.json, selftest.sh
 - Done when: the template's guard hook and settings block and deny `.env.local`, `.env.production` and the other `.env.*` files while `.env.example`, `.env.sample`, `.env.template` and `.env.dist` stay readable, as this repo's do after B21, and the selftest covers each case and passes (check) · following AGENTS.md › Project rules for framework work
 - Brief: Scope › Framework features
 
-### T254 · Release App-Director 1.12.3 · in-progress 2026-10-30 · S · agent
+### T254 · Release App-Director 1.12.3 · done 2026-10-31 · S · agent
 - Depends on: T252
-- PRs: App-Director #44 (open)
+- PRs: App-Director #44 (merged); v1.12.3 tagged and published
 - Touches: work/App-Director: the version carriers its CLAUDE.md lists, CHANGELOG.md
 - Done when: the bundle ends with a release commit that bumps every version carrier and template link together, turns Unreleased into the 1.12.3 heading, passes the selftest and carries the release notes in its commit body, which become the pull request's description; once merged, `tools/work-release.sh` tags v1.12.3 and publishes the release (check) · following AGENTS.md › Project rules for framework work
 - Brief: Scope › Framework features
 
-### T255 · Release SaaSAllTheThings 0.14.5 · in-progress 2026-10-30 · S · agent
+### T255 · Release SaaSAllTheThings 0.14.5 · done 2026-10-31 · S · agent
 - Depends on: T253
-- PRs: SaaSAllTheThings #44 (open)
+- PRs: SaaSAllTheThings #44 (merged); v0.14.5 tagged and published
 - Touches: work/SaaSAllTheThings: the version carriers its CLAUDE.md lists (every skill's version and `--branch` line included), CHANGELOG.md
 - Done when: the bundle ends with a release commit that bumps every version carrier, skill version and `--branch v0.14.5` line together, turns Unreleased into the 0.14.5 heading, passes the selftest and carries the release notes, with What's new, How to install and How to upgrade, in its commit body, which become the pull request's description; once merged, `tools/work-release.sh` tags v0.14.5 and publishes the release (check) · following AGENTS.md › Project rules for framework work
+- Brief: Scope › Framework features
+
+### T256 · Docs follow App-Director 1.12.3 and SaaSAllTheThings 0.14.5 · done 2026-10-31 · XS · agent
+- Depends on: T254, T255
+- Touches: frameworks.lock, docs/**/*.md (the App-Director and SaaSAllTheThings links)
+- Done when: `frameworks.lock` and every App-Director and SaaSAllTheThings link move to v1.12.3 and v0.14.5 (the releases change only the `.env` rules, which no page describes); the selftest passes with no WARN (check)
 - Brief: Scope › Framework features
 
 ### T103 · /ui-design tells the director how to use Excalidraw · done 2026-10-20 · S · agent

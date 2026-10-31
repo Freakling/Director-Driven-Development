@@ -22,7 +22,7 @@ Each framework reports what ran and the result of each step.
 
 ### App-Director
 
-The procedure is at [`framework/.app-director/procedures/release.md`](https://github.com/Freakling/App-Director/tree/v1.12.2/framework/.app-director/procedures/release.md) in the App-Director repository.
+The procedure is at [`framework/.app-director/procedures/release.md`](https://github.com/Freakling/App-Director/tree/v1.12.3/framework/.app-director/procedures/release.md) in the App-Director repository.
 
 - The request names the target: `web`, `mobile` (iOS or Android) or `desktop`. The stack and deploy method are in `tools/check.cfg` and AGENTS.md › Project facts.
 - The skill lists the `done` items since the last release tag, so the release says what it contains. A `high` bug that's done without a regression test goes into the next acceptance check.
@@ -43,7 +43,7 @@ The procedure is at [`framework/.godot-director/procedures/release.md`](https://
 
 ### SaaSAllTheThings
 
-The procedure is at [`framework/.satt/procedures/release.md`](https://github.com/Freakling/SaaSAllTheThings/tree/v0.14.4/framework/.satt/procedures/release.md) in the SaaSAllTheThings repository.
+The procedure is at [`framework/.satt/procedures/release.md`](https://github.com/Freakling/SaaSAllTheThings/tree/v0.14.5/framework/.satt/procedures/release.md) in the SaaSAllTheThings repository.
 
 - The request names the environment, `dev` (the default) or `prod`. Dev deploys from `main`; prod deploys from a tag.
 - Before it proposes the release, it runs a [`/security`](security.md) assessment when none exists yet or something was built since the last report. An open `high` bug that names an OWASP item blocks the release, unless an accepted ADR deviates from that item.
