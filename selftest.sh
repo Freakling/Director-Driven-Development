@@ -25,7 +25,8 @@
 #      tool denies the gh CLI's, git's and ~/.ssh credential stores, and the guard hook blocks
 #      reading them and the commands that print a credential (B15). The Read tool also denies the
 #      .env files that hold values (.env.local and the other .env.<suffix> files), and the guard
-#      hook blocks shell reads of them, while the committed templates stay readable (B21).
+#      hook blocks shell reads of them, while the committed templates stay readable (B21). The hook
+#      tests every argument of a read, so the file may follow an option or another file (B22).
 #   9. The site builds in strict mode, which fails on broken internal links and anchors.
 #  10. The Content-Security-Policy in overrides/main.html allows every inline script the built site
 #      runs (its sha256 is in script-src), and no script runs before the policy's meta tag.
@@ -542,6 +543,11 @@ else
         "tail '.env.test'" \
         'tail -n 20 .env.local' \
         'cat .env.example; cat .env.local' \
+        'cat README.md .env.local' \
+        'tail -n 20 .env' \
+        'head -5 certs/server.pem' \
+        'cat docs/a.md "deploy.key"' \
+        'less -R .env.production' \
         'gh auth token' \
         'gh auth status -t' \
         "printf 'protocol=https\\nhost=github.com\\n' | git credential fill" \
@@ -585,6 +591,10 @@ else
         'cat config/.env.sample' \
         'head .env.template' \
         'cat .env.dist' \
+        'cat README.md docs/x.md' \
+        'tail -n 20 .env.example' \
+        'head -5 notes.txt' \
+        'cat .env.example .env.sample' \
         'grep -n ssh docs/how-to/trouble.md' \
         'git log --oneline -3' \
         'ls ~/.ssh' \
