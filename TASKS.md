@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T258 · B23 · R7
+**Next IDs:** T259 · B23 · R7
 
 ## Milestones
 | Milestone | Status |
@@ -924,10 +924,18 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Found in: T253
 - Brief: -
 
-### T257 · App-Director: the guard checks every file a read names for env, pem and key files · todo · S · agent
+### T257 · App-Director: the guard checks every file a read names for env, pem and key files · in-progress 2026-10-31 · S · agent
+- PRs: App-Director #45 (open)
 - Depends on: B22
 - Touches: work/App-Director: framework/.claude/hooks/guard-commands.sh, selftest.sh
 - Done when: the template's guard hook matches this repo's after B22 (a second file argument or a leading option no longer gets an `.env`, `.env.*`, `.pem` or `.key` read past it), and App-Director's selftest covers each case and passes (check) · following AGENTS.md › Project rules for framework work
+- Brief: Scope › Framework features
+
+### T258 · Release App-Director 1.12.4 · in-progress 2026-10-31 · S · agent
+- Depends on: T257
+- PRs: App-Director #45 (open)
+- Touches: work/App-Director: the version carriers its CLAUDE.md lists, CHANGELOG.md
+- Done when: the bundle ends with a release commit that bumps every version carrier and template link together, turns Unreleased into the 1.12.4 heading, passes the selftest and carries the release notes in its commit body, which become the pull request's description; once merged, `tools/work-release.sh` tags v1.12.4 and publishes the release (check) · following AGENTS.md › Project rules for framework work
 - Brief: Scope › Framework features
 
 ### T103 · /ui-design tells the director how to use Excalidraw · done 2026-10-20 · S · agent
