@@ -34,7 +34,7 @@ A run covers commits only, not pushes, deploys or cloud changes. Each framework'
 
 ### App-Director
 
-The procedure is at [`framework/.app-director/procedures/next-task.md`](https://github.com/Freakling/App-Director/tree/v1.12.3/framework/.app-director/procedures/next-task.md) in the App-Director repository.
+The procedure is at [`framework/.app-director/procedures/next-task.md`](https://github.com/Freakling/App-Director/tree/v1.12.4/framework/.app-director/procedures/next-task.md) in the App-Director repository.
 
 - The building state file is `.app-director/state/building`. The Stop hook checks for it and leaves half-built files alone while it exists.
 - The review diff is written to `.app-director/state/review.diff`.
@@ -45,7 +45,7 @@ The procedure is at [`framework/.app-director/procedures/next-task.md`](https://
 
 ### Godot-Director
 
-The procedure is at [`framework/.godot-director/procedures/next-task.md`](https://github.com/Freakling/Godot-Director/tree/v4.7.0/framework/.godot-director/procedures/next-task.md) in the Godot-Director repository.
+The procedure is at [`framework/.godot-director/procedures/next-task.md`](https://github.com/Freakling/Godot-Director/tree/v4.8.0/framework/.godot-director/procedures/next-task.md) in the Godot-Director repository.
 
 - The building state file is `.godot/godot-director/building`. The Stop hook checks for it and leaves half-built files alone while it exists.
 - The review diff is written to `.godot/godot-director/review.diff`.

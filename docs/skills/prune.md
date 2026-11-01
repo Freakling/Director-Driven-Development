@@ -21,14 +21,14 @@ The steps are the same in all three frameworks. What differs is the item format 
 
 ### Godot-Director
 
-The procedure is at [`framework/.godot-director/procedures/prune.md`](https://github.com/Freakling/Godot-Director/tree/v4.7.0/framework/.godot-director/procedures/prune.md) in the Godot-Director repository.
+The procedure is at [`framework/.godot-director/procedures/prune.md`](https://github.com/Freakling/Godot-Director/tree/v4.8.0/framework/.godot-director/procedures/prune.md) in the Godot-Director repository.
 
 - Items follow the format in `.godot-director/tasks.md`, which is what the move must keep unchanged.
 - The skill suggests pruning once `TASKS.md` holds more than about ten done items.
 
 ### App-Director
 
-The procedure is at [`framework/.app-director/procedures/prune.md`](https://github.com/Freakling/App-Director/tree/v1.12.3/framework/.app-director/procedures/prune.md) in the App-Director repository.
+The procedure is at [`framework/.app-director/procedures/prune.md`](https://github.com/Freakling/App-Director/tree/v1.12.4/framework/.app-director/procedures/prune.md) in the App-Director repository.
 
 - Items follow the format in `.app-director/tasks.md`.
 - The skill file gives no threshold. Run it whenever the queue gets hard to read.

@@ -20,7 +20,7 @@ Only the human starts a reset, and nothing in a reset writes application code. E
 
 ### Godot-Director
 
-The procedure is at [`framework/.godot-director/procedures/drift-reset.md`](https://github.com/Freakling/Godot-Director/tree/v4.7.0/framework/.godot-director/procedures/drift-reset.md) in the Godot-Director repository.
+The procedure is at [`framework/.godot-director/procedures/drift-reset.md`](https://github.com/Freakling/Godot-Director/tree/v4.8.0/framework/.godot-director/procedures/drift-reset.md) in the Godot-Director repository.
 
 - The branch is `reset-YYYY-MM-DD`, and the reset folder is `design/resets/YYYY-MM-DD/`. A second reset on the same day adds `-2`.
 - Everything the reset writes goes in the reset folder, except the GDD and `design/decisions.md`, which change at the design step, and TASKS.md, which changes at the plan and postmortem steps. Nothing in the reset folder is deleted or rewritten; a correction is a new section.
@@ -33,7 +33,7 @@ The procedure is at [`framework/.godot-director/procedures/drift-reset.md`](http
 
 ### App-Director
 
-The procedure is at [`framework/.app-director/procedures/drift-reset.md`](https://github.com/Freakling/App-Director/tree/v1.12.3/framework/.app-director/procedures/drift-reset.md) in the App-Director repository.
+The procedure is at [`framework/.app-director/procedures/drift-reset.md`](https://github.com/Freakling/App-Director/tree/v1.12.4/framework/.app-director/procedures/drift-reset.md) in the App-Director repository.
 
 - The branch is `drift-reset-YYYY-MM-DD`, and the reset folder is `product/resets/YYYY-MM-DD/`. The working tree must be clean before it starts. If it isn't, the director decides what happens to the changes first.
 - No destructive git commands are used. The reset never discards work or rewrites history, and the git rules are in `rules.md`.

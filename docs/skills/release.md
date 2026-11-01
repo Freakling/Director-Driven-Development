@@ -22,7 +22,7 @@ Each framework reports what ran and the result of each step.
 
 ### App-Director
 
-The procedure is at [`framework/.app-director/procedures/release.md`](https://github.com/Freakling/App-Director/tree/v1.12.3/framework/.app-director/procedures/release.md) in the App-Director repository.
+The procedure is at [`framework/.app-director/procedures/release.md`](https://github.com/Freakling/App-Director/tree/v1.12.4/framework/.app-director/procedures/release.md) in the App-Director repository.
 
 - The request names the target: `web`, `mobile` (iOS or Android) or `desktop`. The stack and deploy method are in `tools/check.cfg` and AGENTS.md › Project facts.
 - The skill lists the `done` items since the last release tag, so the release says what it contains. A `high` bug that's done without a regression test goes into the next acceptance check.
@@ -32,7 +32,7 @@ The procedure is at [`framework/.app-director/procedures/release.md`](https://gi
 
 ### Godot-Director
 
-The procedure is at [`framework/.godot-director/procedures/release.md`](https://github.com/Freakling/Godot-Director/tree/v4.7.0/framework/.godot-director/procedures/release.md) in the Godot-Director repository.
+The procedure is at [`framework/.godot-director/procedures/release.md`](https://github.com/Freakling/Godot-Director/tree/v4.8.0/framework/.godot-director/procedures/release.md) in the Godot-Director repository.
 
 - Godot Director knows no store. `release.cfg` in the project root has one section per export preset, with a `uat` command, an optional `production` command and the names of the secrets the commands read. Only names are in the file, never values.
 - The request names the stage, `uat` (the default) or `production`, and optionally one preset. The skill exports with [`/export`](../frameworks/godot-director.md), shows a dry run, then runs `tools/release.sh uat`.

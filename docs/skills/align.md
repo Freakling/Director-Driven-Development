@@ -21,7 +21,7 @@ When a conflict comes back that was already settled, or one conflict spans sever
 
 ### Godot-Director
 
-The procedure is at [`framework/.godot-director/procedures/align.md`](https://github.com/Freakling/Godot-Director/tree/v4.7.0/framework/.godot-director/procedures/align.md) in the Godot-Director repository.
+The procedure is at [`framework/.godot-director/procedures/align.md`](https://github.com/Freakling/Godot-Director/tree/v4.8.0/framework/.godot-director/procedures/align.md) in the Godot-Director repository.
 
 - It checks the GDD, `design/decisions.md`, `playtesting/TEMPLATE.md` and `project.godot` against `AGENTS.md`. The whole-document read is of `design/gdd.md`, and the latest releases are the game's exports and their UAT or production uploads. Every autoload and every rule folder needs an Architecture row.
 - Every file listed under `[screens] known` in `tools/check.cfg` needs an open item that removes it from the list.
@@ -35,7 +35,7 @@ The procedure is at [`framework/.godot-director/procedures/align.md`](https://gi
 
 ### App-Director
 
-The procedure is at [`framework/.app-director/procedures/align.md`](https://github.com/Freakling/App-Director/tree/v1.12.3/framework/.app-director/procedures/align.md) in the App-Director repository.
+The procedure is at [`framework/.app-director/procedures/align.md`](https://github.com/Freakling/App-Director/tree/v1.12.4/framework/.app-director/procedures/align.md) in the App-Director repository.
 
 - It checks the brief, `product/decisions.md`, `validation/TEMPLATE.md` and the check config. The whole-document read is of `product/brief.md`, and the latest releases are the app's deploys. The `[ui] dirs` and `[data] dirs` in `tools/check.cfg` must match the folder layout.
 - Every item's `Brief:` value must be an existing heading, or `-` for items that aren't about the product design.
