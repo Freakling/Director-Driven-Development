@@ -105,6 +105,7 @@ What the three frameworks do as decided here, carried out through the orchestrat
 Changes the director has decided that aren't released yet.
 
 - **User stories anchor every item.** An app's `product/user-stories.md` (in Godot-Director, `design/user-stories.md`, if onboarding turns them on) holds its stories by role, each as "As a ... I ..., so ..." with an ID and the date the director confirmed it. Every item names the stories it serves in `Stories:`. The design procedure drafts a new or changed story with the design that needs it, and an existing app's onboarding and SaaSAllTheThings' assessment write them from the code, unconfirmed. The director confirms them in the design session, after every N built items, in each acceptance check and in align. It's baked into the procedures and templates, not a skill of its own.
+- **A prototype routine, apart from real building.** `/prototype <name>` opens a new git worktree on a `proto/<name>` branch for a session of its own, where the director tries a change fast, with no items, no check gate and no records, the guard and the secrets scan still on. When it feels right, the harvest reads the prototype in the main session and turns it into decisions, user stories and items, which are built from main as usual. The prototype never merges. All three frameworks.
 - **A pilot of SaaSAllTheThings in Azure:** the director deploys the example app to an Azure sandbox with Azure Policy Deny assignments and Defender for Cloud, tests it from outside and records the results.
 
 ## Core Flows

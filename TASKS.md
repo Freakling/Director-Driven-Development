@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T264 · B23 · R7
+**Next IDs:** T267 · B23 · R7
 
 ## Milestones
 | Milestone | Status |
@@ -968,6 +968,25 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Depends on: T261
 - Touches: work/Godot-Director: project/design/user-stories.md (new), framework/.godot-director/tasks.md, framework/.godot-director/rules.md, framework/.godot-director/procedures/ (design, next-task, align, playtest or function-check), project/TASKS.md, project/tools/check.cfg, ONBOARDING.md, README.md, selftest.sh
 - Done when: onboarding asks once whether the game uses user stories and records the answer as a project rule; with them on, the same as App-Director's T261, in `design/user-stories.md` with "As a player ..." stories under the design pillars, the GDD linking the file, and the validation in the playtest or function check where Godot-Director has no acceptance check; with them off, no item needs `Stories:` and nothing asks; the selftest checks both settings; it passes (check) · following AGENTS.md › Project rules for framework work
+- Brief: Scope › Planned framework changes
+
+### T264 · App-Director: a prototype routine, apart from real building · todo · L · agent
+- Depends on: T261
+- Touches: work/App-Director: framework/.app-director/procedures/prototype.md (new), framework/.claude/skills/prototype/SKILL.md (new), framework/.app-director/rules.md, framework/.app-director/procedures/design.md, framework/.githooks/pre-commit, framework/.app-director/tasks.md, README.md, selftest.sh
+- Done when: a tool-neutral `prototype.md` procedure and a `/prototype` skill: `/prototype <name>` creates a git worktree beside the project on a new `proto/<name>` branch from the latest main, runs `bash tools/setup-clone.sh` there and starts (or tells the director to open) a session in that folder; in a prototype session rules.md's loop is off (no items, no records, no builder), commits need no approval, the pre-commit hook skips the project check on a `proto/` branch but keeps the secrets scan, the guard stays on, and nothing is pushed or merged; the director keeps notes on what was tried and how it felt in `PROTOTYPE.md` in the worktree; `/prototype harvest <name>` in the main session reads the prototype's diff against main and its notes and runs the design procedure on them, proposing decisions, user stories and items that each name the prototype (`Prototype: proto/<name>`), built from main like any item; after the harvest it offers to remove the worktree and delete the branch, on the director's yes; rules.md, the README and the skills list describe it; with `/ui-design` captures before and after where the app has a web UI; the selftest checks the procedure, the skill, the hook's `proto/` rule (the secrets scan still blocks there) and a harvest that writes no item without the director; it passes (check) · following AGENTS.md › Project rules for framework work
+- Note: the reference build; T265 and T266 follow it. Decided 2026-11-01 (product/decisions.md). Depends on T261 so the harvest proposes user stories.
+- Brief: Scope › Planned framework changes
+
+### T265 · SaaSAllTheThings: a prototype routine, apart from real building · todo · M · agent
+- Depends on: T264, T262
+- Touches: work/SaaSAllTheThings: framework/.satt/procedures/prototype.md (new), framework/.claude/skills/prototype/SKILL.md (new), framework/.satt/rules.md, the design procedure, framework/.githooks/pre-commit, framework/.satt/tasks.md, README.md, selftest.sh
+- Done when: the same as App-Director's T264, where a prototype never deploys to any Azure environment and the harvest keeps to the reference architecture (a deviation goes through `/architect` and an ADR, as in any design); the selftest checks the same; it passes (check) · following AGENTS.md › Project rules for framework work
+- Brief: Scope › Planned framework changes
+
+### T266 · Godot-Director: a prototype routine, apart from real building · todo · M · agent
+- Depends on: T264, T263
+- Touches: work/Godot-Director: framework/.godot-director/procedures/prototype.md (new), framework/.claude/skills/prototype/SKILL.md (new), framework/.godot-director/rules.md, the design procedure, framework/.githooks/pre-commit, framework/.godot-director/tasks.md, README.md, selftest.sh
+- Done when: the same as App-Director's T264, where the prototype session can run the game, autoplay and a playtest, and the harvest proposes GDD changes and, when the game uses them, user stories; the selftest checks the same; it passes (check) · following AGENTS.md › Project rules for framework work
 - Brief: Scope › Planned framework changes
 
 ### T103 · /ui-design tells the director how to use Excalidraw · done 2026-10-20 · S · agent
