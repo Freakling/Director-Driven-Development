@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T259 · B23 · R7
+**Next IDs:** T260 · B23 · R7
 
 ## Milestones
 | Milestone | Status |
@@ -937,6 +937,12 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Touches: work/App-Director: the version carriers its CLAUDE.md lists, CHANGELOG.md
 - Done when: the bundle ends with a release commit that bumps every version carrier and template link together, turns Unreleased into the 1.12.4 heading, passes the selftest and carries the release notes in its commit body, which become the pull request's description; once merged, `tools/work-release.sh` tags v1.12.4 and publishes the release (check) · following AGENTS.md › Project rules for framework work
 - Brief: Scope › Framework features
+
+### T259 · tools/usage.py prices a project's work per item · done 2026-11-01 · S · agent
+- Depends on: T148
+- Touches: tools/usage.py, AGENTS.md (Architecture › Usage), docs/concept/cost-tuning.md
+- Done when: `python tools/usage.py --tasks <project> <repo> [--csv <file>]` prints the project's total, the director's keyboard hours, the orchestrator's and the subagents' hours, the cost and time by item size and by kind (T, B, R), and the most expensive items, and writes one row per item to the CSV when asked; a subagent's cost goes to the item its first prompt names and its kind comes from its `.meta.json`, the orchestrating sessions' cost and the director's time go to the next item commit, and the per-item total matches the project total; run on BRFService as it stood on 2026-10-31 it gives $949 for 265 done items of 320, and its director hours equal the keyboard hours `python tools/usage.py <project>` reports; the selftest passes (check)
+- Brief: -
 
 ### T103 · /ui-design tells the director how to use Excalidraw · done 2026-10-20 · S · agent
 - PRs: Godot-Director #18 (merged), App-Director #25 (merged), SaaSAllTheThings #18 (merged)

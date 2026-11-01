@@ -58,7 +58,7 @@ If an agent heads in the wrong direction, press Escape at once instead of lettin
 - `/usage` shows what the session has cost and how much of the input came from the cache. On a subscription plan it also shows how much of your recent usage went to skills, subagents and MCP servers.
 - `/context` shows what is filling the context window right now.
 - `/insights` analyses your recent sessions and points out friction, such as misunderstood requests.
-- [`tools/usage.py`](https://github.com/Freakling/Director-Driven-Development/blob/main/tools/usage.py) in the Director-Driven Development repository prices a project's Claude Code transcripts at dated API rates, by token kind and by session.
+- [`tools/usage.py`](https://github.com/Freakling/Director-Driven-Development/blob/main/tools/usage.py) in the Director-Driven Development repository prices a project's Claude Code transcripts at dated API rates, by token kind, by session and by task.
 
 Tune what the numbers point at, not what feels expensive.
 
