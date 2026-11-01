@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T261 · B23 · R7
+**Next IDs:** T264 · B23 · R7
 
 ## Milestones
 | Milestone | Status |
@@ -950,6 +950,25 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: `frameworks.lock` and every Godot-Director and App-Director link move to v4.8.0 and v1.12.4; the site describes what 4.8.0 ships where it covers those areas (`bash tools/check.sh --only tests/<file>.gd` to run one test file, the log review leaving the committed signatures file alone, a single-file restore or checkout no longer asking), checked against the release and without overclaiming; the selftest passes with no WARN (check)
 - Note: Godot-Director 4.8.0 came from another session's pull request (#49), released here on 2026-11-01 with its notes set as the description.
 - Brief: Scope › Framework features
+
+### T261 · App-Director: user stories anchor every item · todo · L · agent
+- Depends on: -
+- Touches: work/App-Director: project/product/user-stories.md (new), framework/.app-director/tasks.md, framework/.app-director/rules.md, framework/.app-director/procedures/design.md, next-task.md, acceptance.md, align.md, project/TASKS.md, project/tools/check.cfg, ONBOARDING.md, README.md, selftest.sh
+- Done when: `product/user-stories.md` in the project template, with a worked example: the value in one paragraph per role, the roles, then a table per area with the story ID (`US-<n>`, the next one in the file's header), the story ("As a ... I ..., so ...") and the date the director confirmed it (or `unconfirmed`), and a line with the date and commit the stories were last validated; the item format gains `Stories:` (the IDs an item serves, or `-` for foundation, tooling and infrastructure), and the TASKS.md seed shows it; the design procedure drafts the new or changed stories a design needs and puts them to the director with it, and a feature item with no story gets one drafted before it is built; the director validates on a cadence (`[stories] every` in `tools/check.cfg`, 10 built items by default), proposed by next-task as the security assessment is and named in a run's final report, in each acceptance check (the stories behind the checked items, with "still right?") and in align (stories no item serves, feature items with no story, stories unconfirmed past the cadence); the "each fact lives in one place" table names the file; an existing app's onboarding writes the stories from the code, unconfirmed; the selftest checks the template, the field and the setting; it passes (check) · following AGENTS.md › Project rules for framework work
+- Note: the reference build; T262 and T263 follow its format and cadence. Decided 2026-11-01 (product/decisions.md).
+- Brief: Scope › Planned framework changes
+
+### T262 · SaaSAllTheThings: user stories anchor every item · todo · L · agent
+- Depends on: T261
+- Touches: work/SaaSAllTheThings: project/product/user-stories.md (new), framework/.satt/tasks.md, framework/.satt/rules.md, framework/.satt/procedures/ (design, next-task, acceptance, align, assess), project/product/prd.md, project/TASKS.md, project/tools/check.cfg, ONBOARDING.md, README.md, selftest.sh
+- Done when: the same as App-Director's T261, with the PRD's personas and roles naming the story roles and the PRD linking the file, and `/assess` writing the stories it finds in an existing app or proof of concept into its report, unconfirmed; the selftest checks the template, the field and the setting; it passes (check) · following AGENTS.md › Project rules for framework work
+- Brief: Scope › Planned framework changes
+
+### T263 · Godot-Director: user stories, if onboarding turns them on · todo · L · agent
+- Depends on: T261
+- Touches: work/Godot-Director: project/design/user-stories.md (new), framework/.godot-director/tasks.md, framework/.godot-director/rules.md, framework/.godot-director/procedures/ (design, next-task, align, playtest or function-check), project/TASKS.md, project/tools/check.cfg, ONBOARDING.md, README.md, selftest.sh
+- Done when: onboarding asks once whether the game uses user stories and records the answer as a project rule; with them on, the same as App-Director's T261, in `design/user-stories.md` with "As a player ..." stories under the design pillars, the GDD linking the file, and the validation in the playtest or function check where Godot-Director has no acceptance check; with them off, no item needs `Stories:` and nothing asks; the selftest checks both settings; it passes (check) · following AGENTS.md › Project rules for framework work
+- Brief: Scope › Planned framework changes
 
 ### T103 · /ui-design tells the director how to use Excalidraw · done 2026-10-20 · S · agent
 - PRs: Godot-Director #18 (merged), App-Director #25 (merged), SaaSAllTheThings #18 (merged)
