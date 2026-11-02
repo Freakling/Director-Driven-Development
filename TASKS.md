@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T275 · B27 · R7
+**Next IDs:** T276 · B27 · R7
 
 ## Milestones
 | Milestone | Status |
@@ -1077,6 +1077,12 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Depends on: T269, T270, T273
 - Touches: frameworks.lock, docs/**/*.md (the framework links), docs/concept/ (a user stories page), docs/skills/ (a /prototype page), docs/how-to/ (decide, check, align, where, a prototype how-to), docs/frameworks/, mkdocs.yml, product/brief.md
 - Done when: `frameworks.lock` and every framework link move to v1.13.0, v0.15.0 and v4.9.0; the site describes user stories (why each thing is built, the stories file, `Stories:` on items, drafted in design, written from the code for an existing app, validated in design, on a cadence, in the acceptance check or playtest and in align; optional in Godot-Director) and the prototype routine (`/prototype`, its own worktree and session outside the build loop, the gates that stay on, the harvest, never merged; no deploy in SaaSAllTheThings, gitleaks required in Godot-Director), and covers every new command the releases ship, each checked against the releases and without overclaiming; the brief's Planned framework changes bullets move to Framework features; the selftest passes with no WARN (check)
+- Brief: Scope › Framework features
+
+### T275 · The three frameworks record only after the director approves a summary · todo · M · agent
+- Depends on: -
+- Touches: work/App-Director, work/SaaSAllTheThings, work/Godot-Director, read only: every procedure that writes records from a conversation with the director (design, ADRs in SaaSAllTheThings, drift reset, align, assessments and workshops, research, acceptance and playtests, /ui-design, the prototype harvest, the stories validation) and each `rules.md`; TASKS.md here
+- Done when: each framework's procedures are checked against the rule (nothing is written without the director's explicit approval; a chat message or an "Other" answer during the session is a scope change or modification, so the session re-assesses the options on it and restarts or continues; once everything is chosen, a summary of what will be written is approved, then written and committed), and every difference becomes an item here for that framework's clone, naming the procedure, the step and the change it needs, reported to the director (check)
 - Brief: Scope › Framework features
 
 ### T103 · /ui-design tells the director how to use Excalidraw · done 2026-10-20 · S · agent
