@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T271 · B26 · R7
+**Next IDs:** T273 · B27 · R7
 
 ## Milestones
 | Milestone | Status |
@@ -1042,6 +1042,28 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Touches: work/SaaSAllTheThings: the version carriers its CLAUDE.md lists (every skill's version and `--branch` line included), CHANGELOG.md
 - Done when: the bundle ends with a release commit that bumps every version carrier, skill version and `--branch v0.15.0` line together, turns Unreleased into the 0.15.0 heading (the user stories and the prototype routine), passes the selftest and carries the release notes, with What's new, How to install and How to upgrade, in its commit body, which become the pull request's description; once merged, `tools/work-release.sh` tags v0.15.0 and publishes the release (check) · following AGENTS.md › Project rules for framework work
 - Brief: Scope › Planned framework changes
+
+### T271 · App-Director: a quoted no-verify, an inline allow and a gate edit can't get a commit past the hooks · in-progress 2026-11-02 · S · agent
+- Depends on: T264
+- PRs: App-Director #47 (open)
+- Touches: work/App-Director: framework/.claude/hooks/guard-commands.sh, framework/.claude/hooks/ (the protected-files hook), framework/.githooks/pre-commit, framework/tools/prototype.sh, selftest.sh, CHANGELOG.md
+- Done when: the guard blocks `git commit` with `-n` or `--no-verify` quoted or split (`'-n'`, `"-n"`, `-""n`, `--no-ve''rify`); in a prototype the pre-commit hook blocks a staged line with `gitleaks:allow`, Edit and Write are refused on the hooks, the guard, `tools/prototype.sh`, `tools/setup-clone.sh` and the gitleaks allowlist files, and `prototype.sh harvest` and `list` name any of those that differ from main's; the selftest covers each; the entry sits under the 1.13.0 heading and the release notes in #47 say so (check) · following AGENTS.md › Project rules for framework work
+- Note: found in T266's review, and the quoted `-n` in all four guards (this repo's is B26).
+- Brief: Scope › Planned framework changes
+
+### T272 · SaaSAllTheThings: a quoted no-verify and a gate edit can't get a commit past the hooks · in-progress 2026-11-02 · S · agent
+- Depends on: T265
+- PRs: SaaSAllTheThings #45 (open)
+- Touches: work/SaaSAllTheThings: framework/.claude/hooks/guard-commands.sh, framework/.claude/hooks/guard-authority.sh, framework/tools/prototype.sh, selftest.sh, CHANGELOG.md
+- Done when: the guard blocks `git commit` with `-n` or `--no-verify` quoted or split; in a prototype, Edit and Write are refused on the hooks, the guard, `tools/prototype.sh`, `tools/setup-clone.sh` and the files that excuse a scan finding without the human, and `prototype.sh harvest` and `list` name any of those that differ from main's; the selftest covers each; the entry sits under the 0.15.0 heading and the release notes in #45 say so (check) · following AGENTS.md › Project rules for framework work
+- Note: found in T266's review; SaaSAllTheThings' scan has no inline allow, so that part doesn't apply.
+- Brief: Scope › Planned framework changes
+
+### B26 · A quoted or split no-verify gets a commit past the guard (A01:2025 Broken Access Control) · done 2026-11-02 · S · agent · high
+- Touches: .claude/hooks/guard-commands.sh, selftest.sh (the guard is framework-owned: App-Director's T271 fixes the template)
+- Repro: 1. Feed the guard hook `git commit '-n' -m x`, `git commit "-n" -m x`, `git commit -""n -m x` or `git commit --no-ve''rify -m x`. 2. Expected: each is blocked, as `git commit -n -m x` is. Actual: all pass, because the `-n` test reads the command with its quoted strings blanked; `git commit *` is allowed, so the commit runs without a prompt and skips the pre-commit check and the secrets scan.
+- Found in: T266's review
+- Brief: -
 
 ### T103 · /ui-design tells the director how to use Excalidraw · done 2026-10-20 · S · agent
 - PRs: Godot-Director #18 (merged), App-Director #25 (merged), SaaSAllTheThings #18 (merged)

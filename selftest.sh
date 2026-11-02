@@ -28,6 +28,7 @@
 #      hook blocks shell reads of them, while the committed templates stay readable (B21). The hook
 #      tests every argument of a read, so the file may follow an option or another file (B22). A git
 #      command on a later line, after a newline or a tab, is blocked as it is on its own line (B23).
+#      A git commit whose -n or --no-verify is quoted or split (B26) is blocked as the plain flag is.
 #   9. The site builds in strict mode, which fails on broken internal links and anchors.
 #  10. The Content-Security-Policy in overrides/main.html allows every inline script the built site
 #      runs (its sha256 is in script-src), and no script runs before the policy's meta tag.
@@ -559,7 +560,12 @@ else
         $'echo a\ngit push --force' \
         $'cd x\ngit commit -F /tmp/msg.txt' \
         $'cd x\ngit credential fill' \
-        $'echo x\nbash tools/stacks/../x.sh'; do
+        $'echo x\nbash tools/stacks/../x.sh' \
+        "git commit '-n' -m x" \
+        'git commit "-n" -m x' \
+        'git commit -""n -m x' \
+        "git commit --no-ve''rify -m x" \
+        "git commit -m -- '-n'"; do
       guard 2 "$cmd"
     done
     for cmd in \
@@ -569,6 +575,8 @@ else
         'git diff origin/main..HEAD -- docs/index.md' \
         'git show HEAD:README.md' \
         'git commit -m "fix the --output handling"' \
+        'git commit -m x -- docs/index.md' \
+        "git commit -m x -- '-n'" \
         'git commit -F -' \
         'git commit --file=-' \
         $'git commit -q -F - <<\'EOF\'\nfix the --output and --no-index handling, not -F /tmp/x\nEOF' \

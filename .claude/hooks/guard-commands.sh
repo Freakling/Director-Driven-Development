@@ -284,6 +284,19 @@ for gs in "${gsegs[@]}"; do
   case ${w[k]:-} in
     commit|tag)
       sub="${w[k]}"
+      if [[ $sub == commit ]]; then
+        # git commit -n and --no-verify in any spelling the shell reads as the flag (B26): a short cluster
+        # holding n, or --no-veri*. A -- ends the options, so a path after it isn't checked; a -- right after
+        # a word that starts with - is that option's value (git commit -m -- '-n' takes -- as the message).
+        prev=""
+        for ((j = k + 1; j < n; j++)); do
+          a="${w[j]}"
+          [[ $a == -- && $prev != -* ]] && break
+          [[ $a =~ ^-[a-mo-zA-Z]*n[a-zA-Z]*$ || $a == --no-veri* ]] &&
+            block "git commit -n and --no-verify skip the project check, however the flag is quoted or split"
+          prev="$a"
+        done
+      fi
       for ((k++; k < n; k++)); do
         a="${w[k]}"
         if [[ $a =~ ^-[adefilnopqsvz]*F(.*)$ ]]; then v="${BASH_REMATCH[1]:-${w[k+1]:-}}"
