@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T273 · B27 · R7
+**Next IDs:** T274 · B27 · R7
 
 ## Milestones
 | Milestone | Status |
@@ -959,52 +959,53 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Note: the reference build; T262 and T263 follow its format and cadence. Decided 2026-11-01 (product/decisions.md).
 - Brief: Scope › Planned framework changes
 
-### T262 · SaaSAllTheThings: user stories anchor every item · in-progress 2026-11-02 · L · agent
-- PRs: SaaSAllTheThings #45 (open)
+### T262 · SaaSAllTheThings: user stories anchor every item · done 2026-11-02 · L · agent
+- PRs: SaaSAllTheThings #45 (merged)
 - Depends on: T261
 - Touches: work/SaaSAllTheThings: project/product/user-stories.md (new), framework/tools/stories.sh (new), framework/.satt/tasks.md, framework/.satt/rules.md, framework/.satt/procedures/ (design, next-task, acceptance, align, assess, build, ui-design, drift-reset, roadmap), framework/.satt/templates/assessment.md, framework/.satt/workshops/ (README, capabilities), framework/.claude/settings.json, the design, align and assess skills, skills/saas-assessment, skills/saas-design-session (SKILL.md, references/), project/product/prd.md, project/TASKS.md, project/tools/check.cfg, examples/order-desk/, ONBOARDING.md, README.md, CHANGELOG.md, TASKS.md, selftest.sh
 - Done when: the same as App-Director's T261, with the PRD's personas and roles naming the story roles and the PRD linking the file, and `/assess` writing the stories it finds in an existing app or proof of concept into its report, unconfirmed; the selftest checks the template, the field and the setting; it passes (check) · following AGENTS.md › Project rules for framework work
 - Brief: Scope › Planned framework changes
 
-### T263 · Godot-Director: user stories, if onboarding turns them on · in-progress 2026-11-02 · L · agent
-- PRs: Godot-Director #50 (open)
+### T263 · Godot-Director: user stories, if onboarding turns them on · done 2026-11-02 · L · agent
+- PRs: Godot-Director #50 (merged)
 - Depends on: T261
 - Touches: work/Godot-Director: project/design/user-stories.md (new), framework/tools/stories.sh (new), framework/.godot-director/tasks.md, framework/.godot-director/rules.md, framework/.godot-director/procedures/ (design, next-task, align, build, playtest or function-check, ui-design), framework/.claude/settings.json, the design and align skills, project/TASKS.md, project/tools/check.cfg, ONBOARDING.md, README.md, CHANGELOG.md, TASKS.md, selftest.sh
 - Done when: onboarding asks once whether the game uses user stories and records the answer as a project rule; with them on, the same as App-Director's T261, in `design/user-stories.md` with "As a player ..." stories under the design pillars, the GDD linking the file, and the validation in the playtest or function check where Godot-Director has no acceptance check; with them off, no item needs `Stories:` and nothing asks; the selftest checks both settings; it passes (check) · following AGENTS.md › Project rules for framework work
 - Note: built with deviations the review accepted: the stories file is a framework-owned template that design.md copies when a game turns them on, not a `project/` seed (the installer would restore a seed on every upgrade of a game with them off), so `project/TASKS.md` is untouched; `(none)` instead of `-` and the `GDD:` field, as Godot-Director's items already use; `every=10` in the ConfigFile style; the onboarding question recommends neither answer. Also changed: drift-reset.md, playtesting/README.md, project/AGENTS.md and examples/market-day/.
 - Brief: Scope › Planned framework changes
 
-### T264 · App-Director: a prototype routine, apart from real building · in-progress 2026-11-02 · L · agent
-- PRs: App-Director #47 (open)
+### T264 · App-Director: a prototype routine, apart from real building · done 2026-11-02 · L · agent
+- PRs: App-Director #47 (merged)
 - Depends on: T261
 - Touches: work/App-Director: framework/.app-director/procedures/prototype.md (new), framework/.claude/skills/prototype/SKILL.md (new), framework/tools/prototype.sh (new), framework/.githooks/pre-commit, framework/.githooks/pre-push (new), framework/.claude/hooks/ (stop-check, guard-commands), framework/.claude/settings.json, framework/.app-director/rules.md, framework/.app-director/procedures/ (design, build), framework/.app-director/tasks.md, ONBOARDING.md, README.md, CHANGELOG.md, TASKS.md, selftest.sh
 - Done when: a tool-neutral `prototype.md` procedure and a `/prototype` skill: `/prototype <name>` creates a git worktree beside the project on a new `proto/<name>` branch from the latest main, runs `bash tools/setup-clone.sh` there and starts (or tells the director to open) a session in that folder; in a prototype session rules.md's loop is off (no items, no records, no builder), commits need no approval, the pre-commit hook skips the project check on a `proto/` branch but keeps the secrets scan, the guard stays on, and nothing is pushed or merged; the director keeps notes on what was tried and how it felt in `PROTOTYPE.md` in the worktree; `/prototype harvest <name>` in the main session reads the prototype's diff against main and its notes and runs the design procedure on them, proposing decisions, user stories and items that each name the prototype (`Prototype: proto/<name>`), built from main like any item; after the harvest it offers to remove the worktree and delete the branch, on the director's yes; rules.md, the README and the skills list describe it; with `/ui-design` captures before and after where the app has a web UI; the selftest checks the procedure, the skill, the hook's `proto/` rule (the secrets scan still blocks there) and a harvest that writes no item without the director; it passes (check) · following AGENTS.md › Project rules for framework work
 - Note: the reference build; T265 and T266 follow it. Decided 2026-11-01 (product/decisions.md). Depends on T261 so the harvest proposes user stories. Built with two deviations from Done when: the worktree starts from the local main, with an offer to bring it up to date when origin is ahead, and the agent removes the worktree but the director runs `git branch -D`, which the guard keeps with the human.
 - Brief: Scope › Planned framework changes
 
-### T265 · SaaSAllTheThings: a prototype routine, apart from real building · in-progress 2026-11-02 · M · agent
-- PRs: SaaSAllTheThings #45 (open)
+### T265 · SaaSAllTheThings: a prototype routine, apart from real building · done 2026-11-02 · M · agent
+- PRs: SaaSAllTheThings #45 (merged)
 - Depends on: T264, T262
 - Touches: work/SaaSAllTheThings: framework/.satt/procedures/prototype.md (new), framework/.claude/skills/prototype/SKILL.md (new), framework/.satt/rules.md, the design procedure, framework/.githooks/pre-commit, framework/.satt/tasks.md, README.md, selftest.sh
 - Done when: the same as App-Director's T264, where a prototype never deploys to any Azure environment and the harvest keeps to the reference architecture (a deviation goes through `/architect` and an ADR, as in any design); the selftest checks the same; it passes (check) · following AGENTS.md › Project rules for framework work
 - Brief: Scope › Planned framework changes
 
 ### T266 · Godot-Director: a prototype routine, apart from real building · in-progress 2026-11-02 · M · agent
+- PRs: Godot-Director #51 (open)
 - Depends on: T264, T263
 - Touches: work/Godot-Director: framework/.godot-director/procedures/prototype.md (new), framework/.claude/skills/prototype/SKILL.md (new), framework/.godot-director/rules.md, the design procedure, framework/.githooks/pre-commit, framework/.godot-director/tasks.md, README.md, selftest.sh
 - Done when: the same as App-Director's T264, where the prototype session can run the game, autoplay and a playtest, and the harvest proposes GDD changes and, when the game uses them, user stories; the selftest checks the same; it passes (check) · following AGENTS.md › Project rules for framework work
 - Brief: Scope › Planned framework changes
 
-### T267 · App-Director: align reports bugs with no story · in-progress 2026-11-02 · XS · agent
-- PRs: App-Director #47 (open)
+### T267 · App-Director: align reports bugs with no story · done 2026-11-02 · XS · agent
+- PRs: App-Director #47 (merged)
 - Depends on: T261
 - Touches: work/App-Director: framework/.app-director/procedures/align.md, selftest.sh
 - Done when: align reports bugs that aren't done and have no `Stories:` line (security bugs included), recommending the story whose behaviour each restores, or `-`, instead of skipping them, as SaaSAllTheThings' align does after T262; the selftest passes (check) · following AGENTS.md › Project rules for framework work
 - Note: found in T262's review; App-Director's reference build had the same gap.
 - Brief: Scope › Planned framework changes
 
-### T268 · App-Director: the guard reads a git command on any line · in-progress 2026-11-02 · S · agent
-- PRs: App-Director #47 (open)
+### T268 · App-Director: the guard reads a git command on any line · done 2026-11-02 · S · agent
+- PRs: App-Director #47 (merged)
 - Depends on: -
 - Touches: work/App-Director: framework/.claude/hooks/guard-commands.sh, selftest.sh
 - Done when: a git command that starts on a later line of a multi-line command, after a newline and any spaces or tabs, reaches every git rule (`cd x` newline `git branch -D y` and `cd x` newline, tab, `git log --output=/tmp/x` are blocked), as Godot-Director's guard already does for the newline case; the selftest covers both and passes (check) · following AGENTS.md › Project rules for framework work
@@ -1029,31 +1030,31 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Found in: B23
 - Brief: -
 
-### T269 · Release App-Director 1.13.0 · in-progress 2026-11-02 · S · agent
+### T269 · Release App-Director 1.13.0 · done 2026-11-02 · S · agent
 - Depends on: T264, T267, T268
-- PRs: App-Director #47 (open)
+- PRs: App-Director #47 (merged); v1.13.0 tagged and published
 - Touches: work/App-Director: the version carriers its CLAUDE.md lists, CHANGELOG.md
 - Done when: the bundle ends with a release commit that bumps every version carrier and template link together, turns Unreleased into the 1.13.0 heading (the user stories merged in #46, the prototype routine, align's bugs, the guard's later lines), passes the selftest and carries the release notes in its commit body, which become the pull request's description; once merged, `tools/work-release.sh` tags v1.13.0 and publishes the release (check) · following AGENTS.md › Project rules for framework work
 - Brief: Scope › Planned framework changes
 
-### T270 · Release SaaSAllTheThings 0.15.0 · in-progress 2026-11-02 · S · agent
+### T270 · Release SaaSAllTheThings 0.15.0 · done 2026-11-02 · S · agent
 - Depends on: T262, T265
-- PRs: SaaSAllTheThings #45 (open)
+- PRs: SaaSAllTheThings #45 (merged); v0.15.0 tagged and published
 - Touches: work/SaaSAllTheThings: the version carriers its CLAUDE.md lists (every skill's version and `--branch` line included), CHANGELOG.md
 - Done when: the bundle ends with a release commit that bumps every version carrier, skill version and `--branch v0.15.0` line together, turns Unreleased into the 0.15.0 heading (the user stories and the prototype routine), passes the selftest and carries the release notes, with What's new, How to install and How to upgrade, in its commit body, which become the pull request's description; once merged, `tools/work-release.sh` tags v0.15.0 and publishes the release (check) · following AGENTS.md › Project rules for framework work
 - Brief: Scope › Planned framework changes
 
-### T271 · App-Director: a quoted no-verify, an inline allow and a gate edit can't get a commit past the hooks · in-progress 2026-11-02 · S · agent
+### T271 · App-Director: a quoted no-verify, an inline allow and a gate edit can't get a commit past the hooks · done 2026-11-02 · S · agent
 - Depends on: T264
-- PRs: App-Director #47 (open)
+- PRs: App-Director #47 (merged)
 - Touches: work/App-Director: framework/.claude/hooks/guard-commands.sh, framework/.claude/hooks/ (the protected-files hook), framework/.githooks/pre-commit, framework/tools/prototype.sh, selftest.sh, CHANGELOG.md
 - Done when: the guard blocks `git commit` with `-n` or `--no-verify` quoted or split (`'-n'`, `"-n"`, `-""n`, `--no-ve''rify`); in a prototype the pre-commit hook blocks a staged line with `gitleaks:allow`, Edit and Write are refused on the hooks, the guard, `tools/prototype.sh`, `tools/setup-clone.sh` and the gitleaks allowlist files, and `prototype.sh harvest` and `list` name any of those that differ from main's; the selftest covers each; the entry sits under the 1.13.0 heading and the release notes in #47 say so (check) · following AGENTS.md › Project rules for framework work
 - Note: found in T266's review, and the quoted `-n` in all four guards (this repo's is B26).
 - Brief: Scope › Planned framework changes
 
-### T272 · SaaSAllTheThings: a quoted no-verify and a gate edit can't get a commit past the hooks · in-progress 2026-11-02 · S · agent
+### T272 · SaaSAllTheThings: a quoted no-verify and a gate edit can't get a commit past the hooks · done 2026-11-02 · S · agent
 - Depends on: T265
-- PRs: SaaSAllTheThings #45 (open)
+- PRs: SaaSAllTheThings #45 (merged)
 - Touches: work/SaaSAllTheThings: framework/.claude/hooks/guard-commands.sh, framework/.claude/hooks/guard-authority.sh, framework/tools/prototype.sh, selftest.sh, CHANGELOG.md
 - Done when: the guard blocks `git commit` with `-n` or `--no-verify` quoted or split; in a prototype, Edit and Write are refused on the hooks, the guard, `tools/prototype.sh`, `tools/setup-clone.sh` and the files that excuse a scan finding without the human, and `prototype.sh harvest` and `list` name any of those that differ from main's; the selftest covers each; the entry sits under the 0.15.0 heading and the release notes in #45 say so (check) · following AGENTS.md › Project rules for framework work
 - Note: found in T266's review; SaaSAllTheThings' scan has no inline allow, so that part doesn't apply.
@@ -1064,6 +1065,13 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Repro: 1. Feed the guard hook `git commit '-n' -m x`, `git commit "-n" -m x`, `git commit -""n -m x` or `git commit --no-ve''rify -m x`. 2. Expected: each is blocked, as `git commit -n -m x` is. Actual: all pass, because the `-n` test reads the command with its quoted strings blanked; `git commit *` is allowed, so the commit runs without a prompt and skips the pre-commit check and the secrets scan.
 - Found in: T266's review
 - Brief: -
+
+### T273 · Release Godot-Director 4.9.0 · in-progress 2026-11-02 · S · agent
+- Depends on: T263, T266
+- PRs: Godot-Director #51 (open)
+- Touches: work/Godot-Director: the version carriers its CLAUDE.md lists, CHANGELOG.md
+- Done when: the bundle ends with a release commit that bumps every version carrier and template link together, turns Unreleased into the 4.9.0 heading (the user stories merged in #50, the prototype routine, the guard reading every git command as the shell does), passes the selftest without Godot and carries the release notes in its commit body, which become the pull request's description; once merged, `tools/work-release.sh` tags v4.9.0 and publishes the release (check) · following AGENTS.md › Project rules for framework work
+- Brief: Scope › Planned framework changes
 
 ### T103 · /ui-design tells the director how to use Excalidraw · done 2026-10-20 · S · agent
 - PRs: Godot-Director #18 (merged), App-Director #25 (merged), SaaSAllTheThings #18 (merged)
