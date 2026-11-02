@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T269 · B25 · R7
+**Next IDs:** T271 · B26 · R7
 
 ## Milestones
 | Milestone | Status |
@@ -983,6 +983,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Brief: Scope › Planned framework changes
 
 ### T265 · SaaSAllTheThings: a prototype routine, apart from real building · in-progress 2026-11-02 · M · agent
+- PRs: SaaSAllTheThings #45 (open)
 - Depends on: T264, T262
 - Touches: work/SaaSAllTheThings: framework/.satt/procedures/prototype.md (new), framework/.claude/skills/prototype/SKILL.md (new), framework/.satt/rules.md, the design procedure, framework/.githooks/pre-commit, framework/.satt/tasks.md, README.md, selftest.sh
 - Done when: the same as App-Director's T264, where a prototype never deploys to any Azure environment and the harvest keeps to the reference architecture (a deviation goes through `/architect` and an ADR, as in any design); the selftest checks the same; it passes (check) · following AGENTS.md › Project rules for framework work
@@ -995,6 +996,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Brief: Scope › Planned framework changes
 
 ### T267 · App-Director: align reports bugs with no story · in-progress 2026-11-02 · XS · agent
+- PRs: App-Director #47 (open)
 - Depends on: T261
 - Touches: work/App-Director: framework/.app-director/procedures/align.md, selftest.sh
 - Done when: align reports bugs that aren't done and have no `Stories:` line (security bugs included), recommending the story whose behaviour each restores, or `-`, instead of skipping them, as SaaSAllTheThings' align does after T262; the selftest passes (check) · following AGENTS.md › Project rules for framework work
@@ -1002,6 +1004,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Brief: Scope › Planned framework changes
 
 ### T268 · App-Director: the guard reads a git command on any line · in-progress 2026-11-02 · S · agent
+- PRs: App-Director #47 (open)
 - Depends on: -
 - Touches: work/App-Director: framework/.claude/hooks/guard-commands.sh, selftest.sh
 - Done when: a git command that starts on a later line of a multi-line command, after a newline and any spaces or tabs, reaches every git rule (`cd x` newline `git branch -D y` and `cd x` newline, tab, `git log --output=/tmp/x` are blocked), as Godot-Director's guard already does for the newline case; the selftest covers both and passes (check) · following AGENTS.md › Project rules for framework work
@@ -1019,6 +1022,26 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Repro: 1. Read `.claude/settings.json`: the guard hook's matcher is `Bash|Monitor`, and every allow, ask and deny rule is a `Bash(...)` or `Read(...)` rule. 2. In a session that has the PowerShell tool (this one does), a git command such as `git push --force` or `git commit --no-verify` run through PowerShell never reaches the guard, and the `Bash(...)` deny rules don't apply to it. Expected: the guard sees every shell the agent can use, and the deny rules cover them. Actual: PowerShell commands meet only the default permission prompt.
 - Found in: T265's review
 - Brief: -
+
+### B25 · A line continuation or a tab hides a flag or a read from the guard (A01:2025 Broken Access Control) · todo · S · agent · med
+- Touches: .claude/hooks/guard-commands.sh, selftest.sh (the guard is framework-owned: an item for each framework too)
+- Repro: 1. Feed the guard hook `git commit \` with `-n` on the next line, `git push \` with `--force` on the next line, or `cat`, a tab and `.env.local`. 2. Expected: each is blocked, as `git commit -n`, `git push --force` and `cat .env.local` are. Actual: all three pass: the git rules don't join a backslash line continuation, and the credential-read check matches only a space after the command.
+- Found in: B23
+- Brief: -
+
+### T269 · Release App-Director 1.13.0 · in-progress 2026-11-02 · S · agent
+- Depends on: T264, T267, T268
+- PRs: App-Director #47 (open)
+- Touches: work/App-Director: the version carriers its CLAUDE.md lists, CHANGELOG.md
+- Done when: the bundle ends with a release commit that bumps every version carrier and template link together, turns Unreleased into the 1.13.0 heading (the user stories merged in #46, the prototype routine, align's bugs, the guard's later lines), passes the selftest and carries the release notes in its commit body, which become the pull request's description; once merged, `tools/work-release.sh` tags v1.13.0 and publishes the release (check) · following AGENTS.md › Project rules for framework work
+- Brief: Scope › Planned framework changes
+
+### T270 · Release SaaSAllTheThings 0.15.0 · in-progress 2026-11-02 · S · agent
+- Depends on: T262, T265
+- PRs: SaaSAllTheThings #45 (open)
+- Touches: work/SaaSAllTheThings: the version carriers its CLAUDE.md lists (every skill's version and `--branch` line included), CHANGELOG.md
+- Done when: the bundle ends with a release commit that bumps every version carrier, skill version and `--branch v0.15.0` line together, turns Unreleased into the 0.15.0 heading (the user stories and the prototype routine), passes the selftest and carries the release notes, with What's new, How to install and How to upgrade, in its commit body, which become the pull request's description; once merged, `tools/work-release.sh` tags v0.15.0 and publishes the release (check) · following AGENTS.md › Project rules for framework work
+- Brief: Scope › Planned framework changes
 
 ### T103 · /ui-design tells the director how to use Excalidraw · done 2026-10-20 · S · agent
 - PRs: Godot-Director #18 (merged), App-Director #25 (merged), SaaSAllTheThings #18 (merged)
