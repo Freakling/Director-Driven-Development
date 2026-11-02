@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T276 · B27 · R7
+**Next IDs:** T279 · B28 · R7
 
 ## Milestones
 | Milestone | Status |
@@ -1018,7 +1018,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Found in: T265's review
 - Brief: -
 
-### B24 · The guard and the deny rules aren't wired to the PowerShell tool (A01:2025 Broken Access Control) · todo · S · agent · med
+### B24 · The guard and the deny rules aren't wired to the PowerShell tool (A01:2025 Broken Access Control) · done 2026-11-03 · S · agent · med
 - Touches: .claude/settings.json, selftest.sh (framework-owned: an item for each framework too)
 - Repro: 1. Read `.claude/settings.json`: the guard hook's matcher is `Bash|Monitor`, and every allow, ask and deny rule is a `Bash(...)` or `Read(...)` rule. 2. In a session that has the PowerShell tool (this one does), a git command such as `git push --force` or `git commit --no-verify` run through PowerShell never reaches the guard, and the `Bash(...)` deny rules don't apply to it. Expected: the guard sees every shell the agent can use, and the deny rules cover them. Actual: PowerShell commands meet only the default permission prompt.
 - Found in: T265's review
@@ -1028,6 +1028,12 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Touches: .claude/hooks/guard-commands.sh, selftest.sh (the guard is framework-owned: an item for each framework too)
 - Repro: 1. Feed the guard hook `git commit \` with `-n` on the next line, `git push \` with `--force` on the next line, or `cat`, a tab and `.env.local`. 2. Expected: each is blocked, as `git commit -n`, `git push --force` and `cat .env.local` are. Actual: all three pass: the git rules don't join a backslash line continuation, and the credential-read check matches only a space after the command.
 - Found in: B23
+- Brief: -
+
+### B27 · A PowerShell read of a credential file passes the guard (A01:2025 Broken Access Control) · todo · S · agent · med
+- Touches: .claude/hooks/guard-commands.sh, selftest.sh (the guard is framework-owned: T276, T277 and T278 carry the fix)
+- Repro: 1. Feed the guard hook `{"tool_name":"PowerShell","tool_input":{"command":"Get-Content .env.local"}}`, or the same with `gc` or `type`. 2. Expected: blocked (exit 2), as `cat .env.local` is. Actual: exit 0: the credential-read check knows only cat, head, tail, less, more and strings, and the `Read(...)` deny rules don't apply to a shell tool.
+- Found in: B24
 - Brief: -
 
 ### T269 · Release App-Director 1.13.0 · done 2026-11-02 · S · agent
@@ -1084,6 +1090,27 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Touches: work/App-Director, work/SaaSAllTheThings, work/Godot-Director, read only: every procedure that writes records from a conversation with the director (design, ADRs in SaaSAllTheThings, drift reset, align, assessments and workshops, research, acceptance and playtests, /ui-design, the prototype harvest, the stories validation) and each `rules.md`; TASKS.md here
 - Done when: each framework's procedures are checked against the rule (nothing is written without the director's explicit approval; a chat message or an "Other" answer during the session is a scope change or modification, so the session re-assesses the options on it and restarts or continues; once everything is chosen, a summary of what will be written is approved, then written and committed), and every difference becomes an item here for that framework's clone, naming the procedure, the step and the change it needs, reported to the director (check)
 - Brief: Scope › Framework features
+
+### T276 · App-Director: the guard and the deny rules reach the PowerShell tool, and a continuation, a tab or a PowerShell read can't hide from it · todo · S · agent
+- Depends on: B25, B27
+- Touches: work/App-Director: framework/.claude/settings.json, framework/.claude/hooks/guard-commands.sh, selftest.sh
+- Done when: the guard hook's matcher names PowerShell and every Bash deny and ask rule has a PowerShell twin, with no PowerShell allow rule, as B24 did here; the git rules join a backslash line continuation, the credential-read check matches a tab, as B25 does here, and a PowerShell read of a credential file (`Get-Content`, `gc`, `type`) is blocked, as B27 does here; the selftest covers each and passes (check) · following AGENTS.md › Project rules for framework work
+- Note: found in B24: framework/.claude/settings.json has the same `Bash|Monitor` matcher and eight Bash deny rules, and its selftest pins the matcher.
+- Brief: -
+
+### T277 · SaaSAllTheThings: the guard and the deny rules reach the PowerShell tool, and a continuation, a tab or a PowerShell read can't hide from it · todo · S · agent
+- Depends on: B25, B27
+- Touches: work/SaaSAllTheThings: framework/.claude/settings.json, framework/.claude/hooks/guard-commands.sh, selftest.sh
+- Done when: the guard hook's matcher names PowerShell and every Bash deny and ask rule has a PowerShell twin, with no PowerShell allow rule, as B24 did here; the git rules join a backslash line continuation, the credential-read check matches a tab, as B25 does here, and a PowerShell read of a credential file (`Get-Content`, `gc`, `type`) is blocked, as B27 does here; the selftest covers each and passes (check) · following AGENTS.md › Project rules for framework work
+- Note: found in B24: framework/.claude/settings.json has the same `Bash|Monitor` matcher plus Bash ask and deny rules, and its selftest pins the matcher.
+- Brief: -
+
+### T278 · Godot-Director: the guard and the deny rules reach the PowerShell tool, and a continuation, a tab or a PowerShell read can't hide from it · todo · S · agent
+- Depends on: B25, B27
+- Touches: work/Godot-Director: framework/.claude/settings.json, framework/.claude/hooks/, selftest.sh
+- Done when: the guard hook's matcher names PowerShell and every Bash deny and ask rule has a PowerShell twin, with no PowerShell allow rule, as B24 did here; the git rules join a backslash line continuation, as B25 does here, and where its guard checks credential reads, a tab and a PowerShell read (`Get-Content`, `gc`, `type`) can't pass it, as B25 and B27 do here; the selftest covers each and passes (check) · following AGENTS.md › Project rules for framework work
+- Note: found in B24: framework/.claude/settings.json wires guard-git.sh with separate `Bash` and `Monitor` matchers plus Bash ask and deny rules.
+- Brief: -
 
 ### T103 · /ui-design tells the director how to use Excalidraw · done 2026-10-20 · S · agent
 - PRs: Godot-Director #18 (merged), App-Director #25 (merged), SaaSAllTheThings #18 (merged)

@@ -29,6 +29,9 @@
 #      tests every argument of a read, so the file may follow an option or another file (B22). A git
 #      command on a later line, after a newline or a tab, is blocked as it is on its own line (B23).
 #      A git commit whose -n or --no-verify is quoted or split (B26) is blocked as the plain flag is.
+#      The PowerShell tool (B24) is wired the same way: the guard's matcher names it, each Bash deny
+#      rule has a PowerShell twin, the hook blocks the same commands in a PowerShell payload, and the
+#      allow list names no PowerShell command, so PowerShell runs nothing without a prompt.
 #   9. The site builds in strict mode, which fails on broken internal links and anchors.
 #  10. The Content-Security-Policy in overrides/main.html allows every inline script the built site
 #      runs (its sha256 is in script-src), and no script runs before the policy's meta tag.
@@ -465,13 +468,13 @@ else
   deny_needs '"Bash\(git grep \*\)"' 'Bash(git grep *--open*)' 'Bash(git grep *-O*)'
   deny_needs '"Bash\(git tag \*\)"' 'Bash(git tag *--file*)'
   deny_needs '"Bash\(bash tools/[^"]*\*' 'Bash(bash tools/*..*)'
-  guard() { # guard <expected-exit> <command>
-    local esc="${2//\\/\\\\}" got
+  guard() { # guard <expected-exit> <command> [tool name: Bash by default, or PowerShell]
+    local esc="${2//\\/\\\\}" got tool="${3:-Bash}"
     esc="${esc//\"/\\\"}"; esc="${esc//$'\n'/\\n}"; esc="${esc//$'\t'/\\t}"
-    printf '{"session_id":"s","tool_name":"Bash","tool_input":{"command":"%s","description":"run"}}' "$esc" \
+    printf '{"session_id":"s","tool_name":"%s","tool_input":{"command":"%s","description":"run"}}' "$tool" "$esc" \
       | bash .claude/hooks/guard-commands.sh >/dev/null 2>&1
     got=$?
-    [ "$got" -eq "$1" ] || git_fail="$git_fail"$'\n'"  guard exited $got, expected $1: ${2//$'\n'/ NL }"
+    [ "$got" -eq "$1" ] || git_fail="$git_fail"$'\n'"  guard exited $got, expected $1 ($tool): ${2//$'\n'/ NL }"
   }
   if [ ! -f .claude/hooks/guard-commands.sh ]; then
     git_fail="$git_fail"$'\n'"  .claude/hooks/guard-commands.sh is missing"
@@ -621,6 +624,24 @@ else
         'echo x\\ngit branch -D y'; do
       guard 0 "$cmd"
     done
+    # PowerShell (B24): its input carries the command as tool_input.command, like Bash's, so the hook must
+    # exit the same way on a PowerShell payload. These are the git flags the deny rules and the guard block.
+    for cmd in \
+        'git push --force' \
+        'git commit --no-verify -m x' \
+        'git reset --hard HEAD~1' \
+        'git log --output=/tmp/probe.txt' \
+        'git diff --no-index a b' \
+        'git commit -F /tmp/msg.txt' \
+        'git grep -Oecho foo' \
+        'git tag -F /tmp/msg.txt v1' \
+        'bash tools/stacks/../../x.sh' \
+        'cat .env.local'; do
+      guard 2 "$cmd" PowerShell
+    done
+    for cmd in 'git status' 'git log --oneline -5' 'git diff HEAD'; do
+      guard 0 "$cmd" PowerShell
+    done
   fi
   if [ -n "$git_fail" ]; then
     err "git's file-writing, file-reading and external-command flags, and script paths outside tools/, are not all blocked:"
@@ -643,6 +664,34 @@ else
     err "the Read tool can open the credential stores (the gh CLI's, git's credentials, ~/.ssh) or the .env files with values:"
     printf '%s\n' "${read_fail#$'\n'}"
   else echo "ok: settings.json denies the Read tool the gh CLI's, git's and SSH credential stores and the .env files with values"; fi
+
+  # The PowerShell tool (B24) has its own name. The guard runs for it only when the hook's matcher names it,
+  # and a Bash(...) deny or ask rule stops the same command in PowerShell only through its PowerShell(...)
+  # twin, in the same list. The allow list names no PowerShell command, so nothing PowerShell runs is allowed
+  # without a prompt. Read(...) rules are the Read tool's; PowerShell's own file reads are not covered here.
+  ps_fail=""
+  guard_matcher=$(awk -F'"' '/"matcher"/ { m = $4 } /guard-commands\.sh/ { print m; exit }' .claude/settings.json)
+  for tool in Bash Monitor PowerShell; do
+    case "|$guard_matcher|" in
+      *"|$tool|"*) ;;
+      *) ps_fail="$ps_fail"$'\n'"  the guard hook's matcher \"$guard_matcher\" doesn't name $tool" ;;
+    esac
+  done
+  for list in deny ask; do
+    arr=$(sed -n "/\"$list\": *\[/,/\]/p" .claude/settings.json)
+    while IFS= read -r rule; do
+      [ -n "$rule" ] || continue
+      twin="PowerShell(${rule#Bash(}"
+      printf '%s\n' "$arr" | grep -qF "\"$twin\"" \
+        || ps_fail="$ps_fail"$'\n'"  settings.json's $list rules have $rule but no $twin"
+    done <<< "$(printf '%s\n' "$arr" | grep -oE '"Bash\([^"]*\)"' | tr -d '"')"
+  done
+  printf '%s\n' "$perm_allow" | grep -q 'PowerShell(' \
+    && ps_fail="$ps_fail"$'\n'"  settings.json's allow list names a PowerShell command, so PowerShell would run it without a prompt"
+  if [ -n "$ps_fail" ]; then
+    err "the PowerShell tool isn't wired to the guard and the deny rules (B24):"
+    printf '%s\n' "${ps_fail#$'\n'}"
+  else echo "ok: the guard hook's matcher names PowerShell, every Bash deny rule has a PowerShell twin, and the allow list names no PowerShell command"; fi
 fi
 
 # 9. Build and links ------------------------------------------------------------------------
