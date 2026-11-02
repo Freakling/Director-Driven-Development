@@ -25,8 +25,15 @@ re='"command"[[:space:]]*:[[:space:]]*"(([^"\\]|\\.)*)"'
 [[ $input =~ $re ]] || exit 0
 raw="${BASH_REMATCH[1]}"
 
+# The command as the shell reads its line breaks and tabs: a JSON \n ends a command, as ; does, and \t
+# is a space. A real backslash (the pair \\) stays as it is, so \\n is text, not a line break. The early
+# tests read this text, so a git command on any line is seen (B23). Expansions only, so no process starts.
+bs='\'
+detect="${raw//\\\\/$'\x01'}"; detect="${detect//\\n/;}"; detect="${detect//\\t/ }"
+detect="${detect//$'\x01'/$bs$bs}"
+
 # Blank quoted strings so a commit message or filename can't trip flag tests.
-code="$raw"
+code="$detect"
 dq='\\"([^\\]|\\[^"])*\\"'
 while [[ $code =~ $dq ]]; do code="${code/"${BASH_REMATCH[0]}"/ Q }"; done
 sq="'[^']*'"
@@ -159,8 +166,8 @@ while [[ $rest =~ $loop_re ]]; do
 done
 
 # --- git-specific rules --------------------------------------------------------------------------
-isgit=0; [[ $raw =~ (^|[^[:alnum:]_./-])git([[:space:]]|$) ]] && isgit=1
-isbash=0; [[ $raw =~ (^|[^[:alnum:]_.-])(ba)?sh([[:space:]]|$) ]] && isbash=1
+isgit=0; [[ $detect =~ (^|[^[:alnum:]_./-])git([[:space:]]|$) ]] && isgit=1
+isbash=0; [[ $detect =~ (^|[^[:alnum:]_.-])(ba)?sh([[:space:]]|$) ]] && isbash=1
 ((isgit || isbash)) || exit 0
 
 seg='[^;&|]*'
