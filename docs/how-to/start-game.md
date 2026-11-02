@@ -27,7 +27,7 @@ Make an empty folder for the game and open Claude Code in it. If the folder is n
 
 ## Write it down first
 
-Before you install, describe the game in your own words in the Game Design Document template. Open the [template](https://github.com/Freakling/Godot-Director/blob/v4.8.0/project/design/director-gdd.md) at the latest release and choose Raw to download it, fill in what you know (the pitch, the feeling, the pillars, the loop), and leave out what you have not decided. Keep it in the game's folder at `design/director-gdd.md`, the path onboarding offers. The Godot-Director README opens its install with this same "Start here" step.
+Before you install, describe the game in your own words in the Game Design Document template. Open the [template](https://github.com/Freakling/Godot-Director/blob/v4.9.0/project/design/director-gdd.md) at the latest release and choose Raw to download it, fill in what you know (the pitch, the feeling, the pillars, the loop), and leave out what you have not decided. Keep it in the game's folder at `design/director-gdd.md`, the path onboarding offers. The Godot-Director README opens its install with this same "Start here" step.
 
 Why first: a written document gives the agent your intent and the context behind it, which a chat interview doesn't. When you install, the agent reads it before it asks anything. You can also fill it during onboarding (the agent waits) or after it.
 
@@ -66,6 +66,7 @@ The agent writes a minimal `project.godot` itself, so do not use Godot's project
 | Three to five Design Pillars | Short statements you would use to turn down a feature, such as "short sessions" | Every later feature is checked against them, and an idea that contradicts one stops a design session |
 | The core loop: moment to moment, a session, a run or campaign, and the starting conditions | The smallest loop that is fun to repeat. Leave out what you have not decided | The GDD's Core Loop, and the first playable scene |
 | Platforms, input, 2D or 3D, camera, art direction and target aspect ratios | Where you want to ship first and how it is played. The default renderer is `forward_plus`; `gl_compatibility` suits web and low-end targets | The project's rendering setting, AGENTS.md and the GDD's Presentation and Platforms |
+| Whether the game uses user stories | Either answer is fine, and the agent recommends neither. Some developers prefer the GDD alone | `User stories: on` or `off` in `AGENTS.md` › Project rules, and with `on`, `design/user-stories.md` |
 
 Anything you answer is written into `design/gdd.md` as the current design, with one line in `design/decisions.md` for each decision. Anything you leave undecided becomes an open question (`Q1`, `Q2` and so on). The agent never answers one itself. "I don't know yet" is a fine answer and costs nothing.
 
@@ -127,6 +128,7 @@ The files below are yours and are never overwritten. The framework's own files (
 | `TASKS.md` | Milestones and the queue of tasks, bugs and research |
 | `design/gdd.md` | The current design, and the open questions |
 | `design/decisions.md` | Why: one line per decision |
+| `design/user-stories.md` | Only with user stories on: why each feature is built, as stories with the date you confirmed each |
 | `playtesting/TEMPLATE.md` | The playtest template, one section per core loop |
 | `tools/check.cfg` | Settings for the check, including whether it plays smoke autoplay (`[autoplay]`) |
 | `tools/play_log.gd` | The game's play log hooks: what it records for this game |
@@ -164,6 +166,6 @@ The concepts behind these files are in [Records in files](../concept/records.md)
 
 - The [Godot-Director page](../frameworks/godot-director.md), its [install section](../frameworks/godot-director.md#install), and the skill pages [`/next-task`](../skills/next-task.md) and [`/design`](../skills/design.md).
 - The concepts [Roles](../concept/roles.md) and [Agent development flow](../concept/agent-flow.md).
-- The onboarding steps in full: [`ONBOARDING.md`](https://github.com/Freakling/Godot-Director/blob/v4.8.0/ONBOARDING.md).
+- The onboarding steps in full: [`ONBOARDING.md`](https://github.com/Freakling/Godot-Director/blob/v4.9.0/ONBOARDING.md).
 
 <div class="takeaway"><span>Install, answer the interview, approve one commit, then ask for the next task.</span><span class="url"><a href="index.md">All questions</a></span></div>

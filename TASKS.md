@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T274 · B27 · R7
+**Next IDs:** T275 · B27 · R7
 
 ## Milestones
 | Milestone | Status |
@@ -989,8 +989,8 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: the same as App-Director's T264, where a prototype never deploys to any Azure environment and the harvest keeps to the reference architecture (a deviation goes through `/architect` and an ADR, as in any design); the selftest checks the same; it passes (check) · following AGENTS.md › Project rules for framework work
 - Brief: Scope › Planned framework changes
 
-### T266 · Godot-Director: a prototype routine, apart from real building · in-progress 2026-11-02 · M · agent
-- PRs: Godot-Director #51 (open)
+### T266 · Godot-Director: a prototype routine, apart from real building · done 2026-11-02 · M · agent
+- PRs: Godot-Director #51 (merged)
 - Depends on: T264, T263
 - Touches: work/Godot-Director: framework/.godot-director/procedures/prototype.md (new), framework/.claude/skills/prototype/SKILL.md (new), framework/.godot-director/rules.md, the design procedure, framework/.githooks/pre-commit, framework/.godot-director/tasks.md, README.md, selftest.sh
 - Done when: the same as App-Director's T264, where the prototype session can run the game, autoplay and a playtest, and the harvest proposes GDD changes and, when the game uses them, user stories; the selftest checks the same; it passes (check) · following AGENTS.md › Project rules for framework work
@@ -1066,12 +1066,18 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Found in: T266's review
 - Brief: -
 
-### T273 · Release Godot-Director 4.9.0 · in-progress 2026-11-02 · S · agent
+### T273 · Release Godot-Director 4.9.0 · done 2026-11-02 · S · agent
 - Depends on: T263, T266
-- PRs: Godot-Director #51 (open)
+- PRs: Godot-Director #51 (merged); v4.9.0 tagged and published
 - Touches: work/Godot-Director: the version carriers its CLAUDE.md lists, CHANGELOG.md
 - Done when: the bundle ends with a release commit that bumps every version carrier and template link together, turns Unreleased into the 4.9.0 heading (the user stories merged in #50, the prototype routine, the guard reading every git command as the shell does), passes the selftest without Godot and carries the release notes in its commit body, which become the pull request's description; once merged, `tools/work-release.sh` tags v4.9.0 and publishes the release (check) · following AGENTS.md › Project rules for framework work
 - Brief: Scope › Planned framework changes
+
+### T274 · Docs follow App-Director 1.13.0, SaaSAllTheThings 0.15.0 and Godot-Director 4.9.0: user stories and prototypes · done 2026-11-02 · M · agent
+- Depends on: T269, T270, T273
+- Touches: frameworks.lock, docs/**/*.md (the framework links), docs/concept/ (a user stories page), docs/skills/ (a /prototype page), docs/how-to/ (decide, check, align, where, a prototype how-to), docs/frameworks/, mkdocs.yml, product/brief.md
+- Done when: `frameworks.lock` and every framework link move to v1.13.0, v0.15.0 and v4.9.0; the site describes user stories (why each thing is built, the stories file, `Stories:` on items, drafted in design, written from the code for an existing app, validated in design, on a cadence, in the acceptance check or playtest and in align; optional in Godot-Director) and the prototype routine (`/prototype`, its own worktree and session outside the build loop, the gates that stay on, the harvest, never merged; no deploy in SaaSAllTheThings, gitleaks required in Godot-Director), and covers every new command the releases ship, each checked against the releases and without overclaiming; the brief's Planned framework changes bullets move to Framework features; the selftest passes with no WARN (check)
+- Brief: Scope › Framework features
 
 ### T103 · /ui-design tells the director how to use Excalidraw · done 2026-10-20 · S · agent
 - PRs: Godot-Director #18 (merged), App-Director #25 (merged), SaaSAllTheThings #18 (merged)

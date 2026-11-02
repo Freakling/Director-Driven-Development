@@ -35,7 +35,7 @@ Make a folder for the app and open Claude Code in it. The tree has to be clean: 
 
 ## Write it down first
 
-Before you install, describe the app in your own words in the product brief template. Open the [template](https://github.com/Freakling/App-Director/blob/v1.12.4/project/product/director-brief.md) at the latest release and choose Raw to download it, fill in what you know (the pitch, the core flows, the platforms and the stack), and leave out what you have not decided. Keep it in the app's folder at `product/director-brief.md`, the path onboarding offers. The App-Director README opens its install with this same "Start here" step.
+Before you install, describe the app in your own words in the product brief template. Open the [template](https://github.com/Freakling/App-Director/blob/v1.13.0/project/product/director-brief.md) at the latest release and choose Raw to download it, fill in what you know (the pitch, the core flows, the platforms and the stack), and leave out what you have not decided. Keep it in the app's folder at `product/director-brief.md`, the path onboarding offers. The App-Director README opens its install with this same "Start here" step.
 
 Why first: a written brief gives the agent your intent and the context behind it, which a chat interview doesn't. When you install, the agent reads it before it asks anything. You can also fill it during onboarding (the agent waits) or after it.
 
@@ -74,6 +74,8 @@ The agent interviews you in short rounds. Each question comes with options and a
 | The stack: TypeScript, Flutter, Python, or none | The one you or your team already know | `tools/check.cfg`, and which tools the check runs |
 
 Anything you answer is written into `product/brief.md` as the current design. Anything you leave undecided becomes an open question (`Q1`, `Q2` and so on). The agent never answers one itself. "I don't know yet" is a fine answer and costs nothing.
+
+From the pitch and the core flows the agent also drafts the first user stories, a role for each kind of user and a story for each thing they do, and puts them to you with the brief to confirm, correct or drop. The ones you confirm are dated, and the rest wait as `unconfirmed` for a later validation ([User stories](../concept/user-stories.md)).
 
 ### 3. Project facts and folders
 
@@ -129,6 +131,7 @@ The files below are yours and are never overwritten. The framework's own files (
 | `AGENTS.md` | Project facts, layout, architecture, ownership and project rules, for every assistant |
 | `TASKS.md` | Milestones and the queue of tasks, bugs and research |
 | `product/brief.md` | The current design, and the open questions |
+| `product/user-stories.md` | The roles the app serves and why each feature is built, as stories with the date you confirmed each |
 | `product/decisions.md` | Why: one line per decision |
 | `validation/TEMPLATE.md` | The acceptance template, one section per core flow |
 | `tools/check.cfg` | Settings for the check: the stack, and the UI and data folders |
@@ -162,6 +165,6 @@ The concepts behind these files are in [Records in files](../concept/records.md)
 
 - The [App-Director page](../frameworks/app-director.md), its [install section](../frameworks/app-director.md#install), and the skill pages [`/next-task`](../skills/next-task.md) and [`/design`](../skills/design.md).
 - The concepts [Roles](../concept/roles.md) and [Agent development flow](../concept/agent-flow.md).
-- The onboarding steps in full: [`ONBOARDING.md`](https://github.com/Freakling/App-Director/blob/v1.12.4/ONBOARDING.md).
+- The onboarding steps in full: [`ONBOARDING.md`](https://github.com/Freakling/App-Director/blob/v1.13.0/ONBOARDING.md).
 
 <div class="takeaway"><span>Install, answer the interview, approve one commit, then ask for the next task.</span><span class="url"><a href="index.md">All questions</a></span></div>

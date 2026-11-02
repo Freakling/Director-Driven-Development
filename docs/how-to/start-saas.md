@@ -27,7 +27,7 @@ Make a folder for the app and open Claude Code in it. An empty folder, or one wi
 
 ## Write it down first
 
-Before you install, describe the product in your own words in the product brief template. Open the [template](https://github.com/Freakling/SaaSAllTheThings/blob/v0.14.5/project/product/director-brief.md) at the latest release and choose Raw to download it. Fill in the product, and the four sections for your customer's architect or product owner if you have one: the enterprise architecture, the requirements, the security requirements and the control frameworks. Leave out what you have not decided. Keep it in the app's repository at `product/director-brief.md`, the path onboarding offers. The SaaSAllTheThings README opens its how-to-use section with this same "Start here" step.
+Before you install, describe the product in your own words in the product brief template. Open the [template](https://github.com/Freakling/SaaSAllTheThings/blob/v0.15.0/project/product/director-brief.md) at the latest release and choose Raw to download it. Fill in the product, and the four sections for your customer's architect or product owner if you have one: the enterprise architecture, the requirements, the security requirements and the control frameworks. Leave out what you have not decided. Keep it in the app's repository at `product/director-brief.md`, the path onboarding offers. The SaaSAllTheThings README opens its how-to-use section with this same "Start here" step.
 
 Why first: a written brief gives the agent your intent and the context behind it, which a chat interview doesn't, and the customer's own requirements anchor every later session in their security framework. When you install, the agent reads it before it asks anything. You can also fill it during onboarding (the agent waits), after it, or with the customer.
 
@@ -75,6 +75,8 @@ The agent interviews you in short rounds. Each question comes with options and a
 | Data and compliance: residency, retention, personal data | Where the data must live and how long you keep it | The PRD's Data and Compliance |
 
 Anything you answer is written into `product/prd.md` as the current requirements, with one line in `product/decisions.md` for each decision. Anything you leave undecided becomes an open question (`Q1`, `Q2` and so on). The agent never answers one itself. "I don't know yet" is a fine answer and costs nothing.
+
+From the first capabilities the agent also drafts the first user stories, one role for each persona in the PRD and a story for each thing they do, and puts them to you with the PRD to confirm, correct or drop. The ones you confirm are dated, and the rest wait as `unconfirmed` for a later validation ([User stories](../concept/user-stories.md)).
 
 ### 4. Your customer's security framework
 
@@ -128,6 +130,7 @@ The files below are yours and are never overwritten. The framework's own files (
 | `TASKS.md` | The stages as milestones, and the queue of tasks, bugs and research |
 | `product/prd.md` | The current requirements, and the open questions |
 | `product/decisions.md` | Why: one line per product decision |
+| `product/user-stories.md` | Why each capability is built, for which persona, as stories with the date you confirmed each |
 | `adr/` | Architecture decision records: the stack, and every accepted deviation |
 | `validation/TEMPLATE.md` | The feedback template, one section per capability |
 | `tools/check.cfg` | Settings for the check: the stack, the layers' folders, size limits |
@@ -165,6 +168,6 @@ Later, `integrations/` holds one contract per external system, and `assessment/`
 - The [SaaSAllTheThings page](../frameworks/saasallthethings.md), its [install section](../frameworks/saasallthethings.md#install), and the skill pages [`/next-task`](../skills/next-task.md) and [`/design`](../skills/design.md).
 - The concepts [Roles](../concept/roles.md) and [Agent development flow](../concept/agent-flow.md).
 - The step-by-step guide on the blog: [Build a B2B SaaS on Azure with Director-Driven Development](https://saemundsson.se/2026/10/09/build-a-b2b-saas-on-azure-with-director-driven-development/).
-- The onboarding steps in full: [`ONBOARDING.md`](https://github.com/Freakling/SaaSAllTheThings/blob/v0.14.5/ONBOARDING.md).
+- The onboarding steps in full: [`ONBOARDING.md`](https://github.com/Freakling/SaaSAllTheThings/blob/v0.15.0/ONBOARDING.md).
 
 <div class="takeaway"><span>Install, settle the stack, answer the interview, approve one commit, then ask for the next task.</span><span class="url"><a href="index.md">All questions</a></span></div>

@@ -10,6 +10,7 @@
 |---|---|---|---|---|
 | What the product is | `product/brief.md` | `design/gdd.md` | `product/prd.md` | Through a [design session](decide.md) |
 | Why a decision was made | `product/decisions.md` | `design/decisions.md` | `product/decisions.md` | Through a [design session](decide.md). The log is append-only: a session adds a line, and no one edits an old one |
+| Why each thing is built, and for whom | `product/user-stories.md` | `design/user-stories.md`, when the game uses user stories | `product/user-stories.md` | Through a [design session](decide.md), which drafts the stories for you to confirm. You also confirm them in the acceptance check (the playtest and the function check in Godot-Director) and in a validation every few built items ([User stories](../concept/user-stories.md)) |
 | What's undecided | brief › Open Questions | GDD › Open Questions | PRD › Open Questions | Through a [design session](decide.md). `/design questions` ranks them, and the agent never answers one for you |
 | What gets built next, and in what order | `TASKS.md` | `TASKS.md` | `TASKS.md` | Edit the order yourself, or ask the agent for a suggestion ([How do I get things built?](build.md)) |
 | The rules the agent follows | `AGENTS.md` › Project rules | `AGENTS.md` › Project rules | `AGENTS.md` › Project rules | Edit it yourself. The agent reads it at the start of every session, and [the records check](align.md) compares it with the rest |
@@ -27,7 +28,7 @@
 
 Edit a file yourself when the change is small and you can see the result in it. Ask the agent when the change should land with the code it touches, as a build does. Go through a design session when the change is a decision, because the decision and its reason are written down together, and the decision log never changes by hand.
 
-The rows come from each framework's "Each fact lives in one place" table at its latest release: [App-Director](https://github.com/Freakling/App-Director/blob/v1.12.4/framework/.app-director/rules.md), [Godot-Director](https://github.com/Freakling/Godot-Director/blob/v4.8.0/framework/.godot-director/rules.md) and [SaaSAllTheThings](https://github.com/Freakling/SaaSAllTheThings/blob/v0.14.5/framework/.satt/rules.md). Not sure where a fact lives? Ask the agent. It reads the same table at the start of every session.
+The rows come from each framework's "Each fact lives in one place" table at its latest release: [App-Director](https://github.com/Freakling/App-Director/blob/v1.13.0/framework/.app-director/rules.md), [Godot-Director](https://github.com/Freakling/Godot-Director/blob/v4.9.0/framework/.godot-director/rules.md) and [SaaSAllTheThings](https://github.com/Freakling/SaaSAllTheThings/blob/v0.15.0/framework/.satt/rules.md). Not sure where a fact lives? Ask the agent. It reads the same table at the start of every session.
 
 ## Related
 

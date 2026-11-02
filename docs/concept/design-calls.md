@@ -16,7 +16,7 @@ Anything the director has not answered goes on the open-questions list. The agen
 
 ## From decision to task
 
-Each decision the director makes becomes one or more task items in `TASKS.md`. Each item is sized and names the files it touches, so the builder knows exactly what to read and what to change. See [Task and model sizing](sizing.md).
+Each decision the director makes becomes one or more task items in `TASKS.md`. Each item is sized and names the files it touches, so the builder knows exactly what to read and what to change. A feature item also names the user stories it serves, which the design drafts for the director to confirm ([User stories](user-stories.md)). See [Task and model sizing](sizing.md).
 
 ## During a build
 

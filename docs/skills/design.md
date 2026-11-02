@@ -19,21 +19,24 @@ A question that depends on facts nobody has checked goes to the [researcher](res
 
 Run it as `/design <topic>` for a topic, or `/design questions` to rank the open questions. Numbers and limits stay placeholders until the director sets them.
 
+Each option names the user stories it serves and drafts the new or changed ones it needs, for the director to confirm with the option ([User stories](../concept/user-stories.md)). The same procedure validates the stories on request, or when `/next-task` proposes it, and harvests a prototype ([/prototype](prototype.md)).
+
 ## Unique per repo
 
 ### Godot-Director
 
-The procedure is at [`framework/.godot-director/procedures/design.md`](https://github.com/Freakling/Godot-Director/tree/v4.8.0/framework/.godot-director/procedures/design.md) in the Godot-Director repository.
+The procedure is at [`framework/.godot-director/procedures/design.md`](https://github.com/Freakling/Godot-Director/tree/v4.9.0/framework/.godot-director/procedures/design.md) in the Godot-Director repository.
 
 - It reads the Design Pillars and the GDD's Open Questions, and records decisions in `design/gdd.md` and `design/decisions.md`.
 - If an idea contradicts a Design Pillar, the skill stops and asks which gives way, the pillar or the idea.
 - New items carry a `GDD:` heading and follow the format in `.godot-director/tasks.md`. A big rework is planned in stages: first move rules out of screens, then rework the systems, then rebuild the UI.
 - The session leaves data and scenes alone. Tunable values are placeholders the director edits in the `.tres` files.
 - Research notes go in `design/research/`.
+- User stories are optional. The procedure turns them on or off when the director asks, and asks about stories only in a game that uses them.
 
 ### App-Director
 
-The procedure is at [`framework/.app-director/procedures/design.md`](https://github.com/Freakling/App-Director/tree/v1.12.4/framework/.app-director/procedures/design.md) in the App-Director repository.
+The procedure is at [`framework/.app-director/procedures/design.md`](https://github.com/Freakling/App-Director/tree/v1.13.0/framework/.app-director/procedures/design.md) in the App-Director repository.
 
 - It records decisions in `product/brief.md` and `product/decisions.md`, and open questions live in the brief's Open Questions section.
 - Before the options, it quotes the related lines from `product/decisions.md` word for word, so the director sees the state of play first.
@@ -43,7 +46,7 @@ The procedure is at [`framework/.app-director/procedures/design.md`](https://git
 
 ### SaaSAllTheThings
 
-The procedure is at [`framework/.satt/procedures/design.md`](https://github.com/Freakling/SaaSAllTheThings/tree/v0.14.5/framework/.satt/procedures/design.md) in the SaaSAllTheThings repository.
+The procedure is at [`framework/.satt/procedures/design.md`](https://github.com/Freakling/SaaSAllTheThings/tree/v0.15.0/framework/.satt/procedures/design.md) in the SaaSAllTheThings repository.
 
 - It records decisions in the PRD (`product/prd.md`) and `product/decisions.md`. A decision about an external system's data also goes into `integrations/<system>/contract.md`.
 - Questions about how the system is built, such as a data store, a client's UI technology or a deviation from the reference, are not product calls. The skill hands them to `/architect` (the `architect.md` procedure).

@@ -13,6 +13,7 @@ Every framework ships a core set of skills that work the same way across all thr
 | [/next-task](next-task.md) | Pick the next ready item, build it, prove it and commit |
 | [/design](design.md) | Run a design session, record the decisions and open questions |
 | [/ui-design](ui-design.md) | Capture the screens for you to draw over, record each layout in a spec and check the built screen against it |
+| [/prototype](prototype.md) | Try a change in its own worktree and session, outside the build loop, then harvest what is worth keeping into decisions, user stories and items |
 | [/research](research.md) | A read-only researcher answers one question in a fresh context and writes a dated note |
 | [/align](align.md) | Check whether the codebase matches the design, and flag what doesn't |
 | [/drift-reset](drift-reset.md) | Reset a principle that has been built two different ways back to one |

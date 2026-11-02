@@ -57,6 +57,7 @@ nav:
       - concept/index.md
       - Roles: concept/roles.md
       - Design calls: concept/design-calls.md
+      - User stories: concept/user-stories.md
       - Agent development flow: concept/agent-flow.md
       - The check: concept/check.md
       - Task and model sizing: concept/sizing.md
@@ -72,6 +73,7 @@ nav:
       - /next-task: skills/next-task.md
       - /design: skills/design.md
       - /ui-design: skills/ui-design.md
+      - /prototype: skills/prototype.md
       - /research: skills/research.md
       - /align: skills/align.md
       - /drift-reset: skills/drift-reset.md
@@ -89,6 +91,7 @@ nav:
           - "I already have a project. Can I use this?": how-to/existing.md
       - Day to day:
           - "How do I get things built?": how-to/build.md
+          - "How do I try a change before it's built?": how-to/prototype.md
           - "How do I decide what gets built, or change how something works?": how-to/decide.md
           - "I need facts before I decide": how-to/facts.md
           - "How do I work with UI changes?": how-to/ui.md

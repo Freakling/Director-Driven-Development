@@ -9,9 +9,9 @@ How to use it: [How do I check that what was built works?](../how-to/check.md), 
 ## What it does
 
 1. **Prepare.** The skill runs the check first and stops if it fails, since a build that fails the check isn't worth testing by hand. It then collects the items that only a person can verify in the running project, from the done items, and keeps the ones not ticked in an earlier checklist. Finished bugs with no regression test are added, with the outcome "the repro no longer happens".
-2. **Write the checklist.** Items are grouped by the design section they belong to. Each one says what the person should see, with a short *How* hint on how to reach that state.
-3. **The person ticks.** Works or Broken, with notes on anything that went wrong. Items left blank are checked in the next round.
-4. **Process.** Works needs no record. Broken becomes a bug item, with the repro from the notes and a severity judged from the notes. If the notes say the behaviour itself should change, it isn't a bug: the skill raises a design question instead (a product question in SaaSAllTheThings). It offers options following `design.md`, or adds an Open Question for the director to settle, and it doesn't log the note as a bug.
+2. **Write the checklist.** Items are grouped by the design section they belong to. Each one says what the person should see, with a short *How* hint on how to reach that state. Under each item are the user stories it serves, word for word, each with ticks of its own ([User stories](../concept/user-stories.md)).
+3. **The person ticks.** Works or Broken, with notes on anything that went wrong, and Still right or Needs a change for each story. Items left blank are checked in the next round.
+4. **Process.** Works needs no record. Broken becomes a bug item, with the repro from the notes and a severity judged from the notes. If the notes say the behaviour itself should change, it isn't a bug: the skill raises a design question instead (a product question in SaaSAllTheThings). It offers options following `design.md`, or adds an Open Question for the director to settle, and it doesn't log the note as a bug. A story ticked Still right is dated as confirmed. One that Needs a change is rewritten from the notes, and kept `unconfirmed` until the director confirms it if the skill had to interpret them.
 5. **Finish** by marking the checklist as processed and committing the checklist and any new items once the director approves.
 
 The request is `prepare` (the default), `process`, or `all` for a full regression round. `all` keeps every item the person needs to verify, plus one item for each design rule that no done item covers, which picks up behaviour the project had before the framework.
@@ -20,17 +20,18 @@ The request is `prepare` (the default), `process`, or `all` for a full regressio
 
 ### Godot-Director
 
-The skill is `/function-check`. Its procedure is at [`framework/.godot-director/procedures/function-check.md`](https://github.com/Freakling/Godot-Director/tree/v4.8.0/framework/.godot-director/procedures/function-check.md) in the Godot-Director repository.
+The skill is `/function-check`. Its procedure is at [`framework/.godot-director/procedures/function-check.md`](https://github.com/Freakling/Godot-Director/tree/v4.9.0/framework/.godot-director/procedures/function-check.md) in the Godot-Director repository.
 
 - It collects the `(play)` outcomes, which are what a person sees while playing. The checklist is written to `playtesting/YYYY-MM-DD-function-check.md`.
 - It plays the scenarios behind the `(autoplay)` outcomes first, and lists the clean ones as pre-verified with their run folder, so the person checks only what a machine can't judge.
 - Severity is `high` if the game crashes or blocks play, `low` if it is cosmetic, and `med` otherwise.
 - The commit message is `docs: process function check YYYY-MM-DD`.
+- In a game that uses user stories, the function check shows the stories behind its items, and a playtest the stories behind the items built since the previous report, each with the same two ticks.
 - The sibling skill `/playtest` is a different job. It asks how the game feels, and it starts or processes a playtest report into bugs, design proposals and score trends.
 
 ### App-Director
 
-The procedure is at [`framework/.app-director/procedures/acceptance.md`](https://github.com/Freakling/App-Director/tree/v1.12.4/framework/.app-director/procedures/acceptance.md) in the App-Director repository.
+The procedure is at [`framework/.app-director/procedures/acceptance.md`](https://github.com/Freakling/App-Director/tree/v1.13.0/framework/.app-director/procedures/acceptance.md) in the App-Director repository.
 
 - It collects the `(demo)` outcomes, and the checklist is written to `validation/YYYY-MM-DD-acceptance.md`.
 - The checklist header names the environment, `local`, `staging` or `prod`, and the *How* hints name the test account and any state the item needs.
@@ -39,7 +40,7 @@ The procedure is at [`framework/.app-director/procedures/acceptance.md`](https:/
 
 ### SaaSAllTheThings
 
-The procedure is at [`framework/.satt/procedures/acceptance.md`](https://github.com/Freakling/SaaSAllTheThings/tree/v0.14.5/framework/.satt/procedures/acceptance.md) in the SaaSAllTheThings repository.
+The procedure is at [`framework/.satt/procedures/acceptance.md`](https://github.com/Freakling/SaaSAllTheThings/tree/v0.15.0/framework/.satt/procedures/acceptance.md) in the SaaSAllTheThings repository.
 
 - It collects the `(demo)` outcomes, and the checklist is written to `validation/YYYY-MM-DD-acceptance.md` with the environment, `local` or `dev`.
 - Each item names the client and the role to use. Items about tenant isolation tell the tester to sign in as the second test tenant and confirm that the first tenant's data isn't visible.

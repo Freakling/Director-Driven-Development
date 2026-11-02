@@ -18,6 +18,8 @@ How to use it: [How do I get things built?](../how-to/build.md)
 6. **Review** when the framework's rules call for one, based on item size and whether the build changed a public contract.
 7. **Commit** the item's files and its records together (see [Commits](#commits)), then report what changed, the check result and anything waiting on the human.
 
+A feature item with no user story gets one drafted first, marked `unconfirmed`, and the report names it for the director to confirm. When the stories are due for validation (`bash tools/stories.sh --due`), the skill proposes that too before picking an item, and the director can decline. In a run of several items it carries on picking and only names the validation in the final report. In Godot-Director both apply only in a game that uses user stories ([User stories](../concept/user-stories.md)).
+
 If a build fails, the skill escalates to the next model size and retries once. If blocked, it brings the question with options and a recommendation to the director. A design decision made this way is recorded following `design.md` before the rebuild, and that record is committed with the item.
 
 Tools without a `builder` subagent follow `build.md` directly, or hand it to a subagent if they have one. Once the item is committed, the records hold everything about it, so a new session (or `/clear` in Claude Code) can start the next item without losing context.
@@ -34,7 +36,7 @@ A run covers commits only, not pushes, deploys or cloud changes. Each framework'
 
 ### App-Director
 
-The procedure is at [`framework/.app-director/procedures/next-task.md`](https://github.com/Freakling/App-Director/tree/v1.12.4/framework/.app-director/procedures/next-task.md) in the App-Director repository.
+The procedure is at [`framework/.app-director/procedures/next-task.md`](https://github.com/Freakling/App-Director/tree/v1.13.0/framework/.app-director/procedures/next-task.md) in the App-Director repository.
 
 - The building state file is `.app-director/state/building`. The Stop hook checks for it and leaves half-built files alone while it exists.
 - The review diff is written to `.app-director/state/review.diff`.
@@ -45,7 +47,7 @@ The procedure is at [`framework/.app-director/procedures/next-task.md`](https://
 
 ### Godot-Director
 
-The procedure is at [`framework/.godot-director/procedures/next-task.md`](https://github.com/Freakling/Godot-Director/tree/v4.8.0/framework/.godot-director/procedures/next-task.md) in the Godot-Director repository.
+The procedure is at [`framework/.godot-director/procedures/next-task.md`](https://github.com/Freakling/Godot-Director/tree/v4.9.0/framework/.godot-director/procedures/next-task.md) in the Godot-Director repository.
 
 - The building state file is `.godot/godot-director/building`. The Stop hook checks for it and leaves half-built files alone while it exists.
 - The review diff is written to `.godot/godot-director/review.diff`.
@@ -59,7 +61,7 @@ The procedure is at [`framework/.godot-director/procedures/next-task.md`](https:
 
 ### SaaSAllTheThings
 
-The procedure is at [`framework/.satt/procedures/next-task.md`](https://github.com/Freakling/SaaSAllTheThings/tree/v0.14.5/framework/.satt/procedures/next-task.md) in the SaaSAllTheThings repository.
+The procedure is at [`framework/.satt/procedures/next-task.md`](https://github.com/Freakling/SaaSAllTheThings/tree/v0.15.0/framework/.satt/procedures/next-task.md) in the SaaSAllTheThings repository.
 
 - The building state file is `.satt/state/building`. The Stop hook checks for it and leaves half-built files alone while it exists.
 - The review diff is written to `.satt/state/review.diff`.

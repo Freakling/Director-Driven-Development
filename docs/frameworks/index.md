@@ -11,12 +11,14 @@ Three frameworks put Director-Driven Development to work. The same loop runs all
 | Security baseline | OWASP Top 10 (2025), assessed by `/security` | `/security` isn't shipped | OWASP Top 10 (2025), assessed by `/security` |
 | Control framework | | | The compliance questions, and `compliance/mapping.md` |
 | Human rounds | `/acceptance` | `/playtest`, `/function-check` | `/acceptance`, `/feedback` |
+| User stories | Always kept, in `product/user-stories.md` | Optional, asked once in onboarding, in `design/user-stories.md` | Always kept, in `product/user-stories.md`, with the PRD's personas as the roles |
 | In your project | `.app-director/` | `.godot-director/` | `.satt/` |
 
 ## Shared by all three
 
 - The loop through `/next-task`, design sessions through `/design`, and the records: `AGENTS.md`, `TASKS.md`, a design document and a decision log.
-- [`/release`](../skills/release.md), each to its own kind of target, `/align`, `/drift-reset`, `/prune`, `/refresh-model-sizing`, [`/research`](../skills/research.md) and [`/ui-design`](../skills/ui-design.md).
+- [`/release`](../skills/release.md), each to its own kind of target, `/align`, `/drift-reset`, `/prune`, `/refresh-model-sizing`, [`/research`](../skills/research.md), [`/ui-design`](../skills/ui-design.md) and [`/prototype`](../skills/prototype.md), which tries a change in a worktree of its own before it is built.
+- [User stories](../concept/user-stories.md) that say why each item is built, and that you confirm in design sessions, in the human round and in align.
 - A builder, a read-only reviewer and a read-only researcher as Claude Code subagents.
 - `bash tools/check.sh` with result caching (`--if-changed`), and a git pre-commit hook that runs it when a commit touches code.
 - Hooks in Claude Code that run the check before the agent ends its turn and block work-destroying git commands. They also block the git flags that write a file, read a file outside the repository or run a configured command. The hooks also keep the agent out of the gh, git credential and SSH stores.

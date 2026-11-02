@@ -24,9 +24,9 @@ Saying it and typing the command run the same procedure. The explicit session pa
 
 1. **Pick what to settle.** `/design questions` ranks the open questions: first one that blocks a ready item, then one that would cause rework if answered later, then one that gates a placeholder value, then long-term questions. Each position gets a one-line reason.
 2. **Read the briefing.** Before any option appears, the agent shows the design text the topic touches, the related lines in the decision log and any research on file. Tell it if something is missing or out of date. If you change something already decided, the agent says what has changed since.
-3. **Answer each question.** The agent asks one at a time, with two to four options. Each says what it would take to build and how it fits the project, and one is recommended. Pick an option or answer in your own words. If you answer only part of a question, only that part is recorded. If the agent had to interpret your answer, it writes down its reading and asks you to confirm it.
+3. **Answer each question.** The agent asks one at a time, with two to four options. Each says what it would take to build and how it fits the project, and one is recommended. Pick an option or answer in your own words. If you answer only part of a question, only that part is recorded. If the agent had to interpret your answer, it writes down its reading and asks you to confirm it. Each option also names the user stories it serves and drafts the new or changed ones it needs, so you confirm them with the option ([User stories](../concept/user-stories.md)).
 4. **Let research run when facts are missing.** The agent starts the researcher, and its note appears in the research folder. See [I need facts before I decide](facts.md).
-5. **Review what was recorded.** One change holds the rewritten design text, one line in the decision log, the removed question and the tasks the decision creates in `TASKS.md`. The agent leaves `in-progress` items alone and tells you about any it would have changed.
+5. **Review what was recorded.** One change holds the rewritten design text, one line in the decision log, the removed question, the stories you confirmed and the tasks the decision creates in `TASKS.md`. Each task names the stories it serves. The agent leaves `in-progress` items alone and tells you about any it would have changed.
 6. **Approve the commit.** The agent summarises what was decided and what is open, then commits the design files as `docs: <summary>` once you say yes. Run `/clear` before the next topic.
 
 ## What can go wrong
@@ -36,13 +36,13 @@ Saying it and typing the command run the same procedure. The explicit session pa
 - **A decision changes a finished item through a new one.** Items already `done` are not reopened.
 - **The session never edits source code.** The tasks it creates are built through [`/next-task`](build.md).
 - **Framework differences.**
-    - Godot-Director: an idea that contradicts a Design Pillar stops the session until you say which gives way.
+    - Godot-Director: an idea that contradicts a Design Pillar stops the session until you say which gives way. User stories are drafted only in a game that uses them.
     - SaaSAllTheThings: a question about how the system is built, such as a data store or a deviation from the reference, goes to `/architect`.
     - All three: where things sit on a screen goes to [the UI question](ui.md).
 
 ## Related
 
-- The [`/design` skill page](../skills/design.md), and the concepts [Design calls](../concept/design-calls.md) and [Agent development flow](../concept/agent-flow.md).
-- The procedures: [App-Director](https://github.com/Freakling/App-Director/tree/v1.12.4/framework/.app-director/procedures/design.md), [Godot-Director](https://github.com/Freakling/Godot-Director/tree/v4.8.0/framework/.godot-director/procedures/design.md) and [SaaSAllTheThings](https://github.com/Freakling/SaaSAllTheThings/tree/v0.14.5/framework/.satt/procedures/design.md).
+- The [`/design` skill page](../skills/design.md), and the concepts [Design calls](../concept/design-calls.md), [User stories](../concept/user-stories.md) and [Agent development flow](../concept/agent-flow.md).
+- The procedures: [App-Director](https://github.com/Freakling/App-Director/tree/v1.13.0/framework/.app-director/procedures/design.md), [Godot-Director](https://github.com/Freakling/Godot-Director/tree/v4.9.0/framework/.godot-director/procedures/design.md) and [SaaSAllTheThings](https://github.com/Freakling/SaaSAllTheThings/tree/v0.15.0/framework/.satt/procedures/design.md).
 
 <div class="takeaway"><span>You make the call. The agent writes down only what you decided.</span><span class="url"><a href="index.md">All questions</a></span></div>

@@ -18,6 +18,7 @@ Start by writing down what you want, in your own words, in the framework's templ
 ## Day to day
 
 - [How do I get things built?](build.md)
+- [How do I try a change before it's built?](prototype.md)
 - [How do I decide what gets built, or change how something works?](decide.md)
 - [I need facts before I decide](facts.md)
 - [How do I work with UI changes?](ui.md)

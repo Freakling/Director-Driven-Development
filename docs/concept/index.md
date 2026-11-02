@@ -14,6 +14,7 @@ The director doesn't write the implementation. The director decides what gets bu
 |---|---|
 | [Roles](roles.md) | Director, orchestrator, builder, reviewer and researcher, and who may do what |
 | [Design calls](design-calls.md) | How the director decides: options, research notes, records, open questions and placeholders |
+| [User stories](user-stories.md) | Why each item is built: the stories file, how stories are drafted, and how the director confirms them |
 | [Agent development flow](agent-flow.md) | Build, research, commit and the human rounds that feed back into design |
 | [The check](check.md) | One automated check that defines done, per framework |
 | [Task and model sizing](sizing.md) | Sizes XS to XL for tasks and research items, the model map, escalation and the two-attempt limit |
