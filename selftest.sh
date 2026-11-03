@@ -45,6 +45,9 @@
 #      readers too; a pattern is an argument as well, so grep "\.env" is blocked (B36).
 #      In Bash a backslash that escapes an ordinary character is removed as the shell removes it, so c\at .env.local and
 #      .en\v.local are blocked as cat is; Windows paths, the templates and PowerShell's backslash (not an escape) pass (B44).
+#      In Bash an escaped space in a store path (GitHub\ CLI) is a space, an ANSI-C string ($'...') in a reader's or a file's
+#      name is the text it spells (\xHH, \NNN and the common escapes), and a PowerShell command's $(...) is read as a command of
+#      its own, so the credential reads in it are blocked too; .env\ .example stays one word and passes (B52).
 #      A Bash comment that ends in a backslash holds no continuation (B31): the line after it is a command of its
 #      own, and a continued command after such a comment is still read. The hang check reads a heredoc header
 #      joined to its delimiter line (B29). A PowerShell comment that ends in a backtick is read the same way (B35).
@@ -1150,6 +1153,67 @@ else
     err "the guard hook misses a backslash that escapes a character in a Bash credential read, or blocks an ordinary read or a PowerShell backslash (B44):"
     printf '%s\n' "${git_fail#$'\n'}"
   else echo "ok: the guard hook blocks a Bash credential read whose reader or name has a backslash that escapes a character (c\\at, .en\\v.local), and passes the templates, Windows paths and a PowerShell backslash (B44)"; fi
+
+  # The credential-read check (B52): an escaped space in a store path (GitHub\ CLI is the gh CLI's folder, and the backslash-space is
+  # the space in it); an ANSI-C string ($'...') in a reader's or a file's name, which is read as the shell reads it (\xHH, \NNN and the
+  # common escapes), with an escape the guard can't decode (\u, \0) blocked as unjudgeable; and a PowerShell command's $(...), read as
+  # a command of its own, so a Bash command in it that reads through a backslash (c\at) is blocked. A backslash-space in a name
+  # (.env\ .example) is one word, not .env, and passes. PowerShell's backslash is no escape (its escape is the backtick), so its store
+  # path passes as written (B44).
+  git_fail=""
+  if [ -f .claude/hooks/guard-commands.sh ]; then
+    for cmd in \
+        'cat ~/AppData/Roaming/GitHub\ CLI/hosts.yml' \
+        'cat ~/AppData/Roaming/GitHub\ CLI' \
+        'cat "~/AppData/Roaming/GitHub\ CLI/hosts.yml"' \
+        'cat ~/AppData/Roaming/Git\Hub\ CLI/hosts.yml' \
+        "\$'\\x63at' .env.local" \
+        "\$'\\143at' .env.local" \
+        "cat \$'.en\\x76.local'" \
+        "cat \$'\\x2eenv.local'" \
+        "cat \$'\\x2e\\x65nv\\x2elocal'" \
+        "cat \$'\\x2eenv'\$'.local'" \
+        "cat \$'.env\\x2elocal' docs/index.md" \
+        "cat \$'\\x2eenv' .example" \
+        "cat \$'\\u0063at' .env.local" \
+        "cat \$'\\0' README.md" \
+        "echo \$(bash -c \$'c\\x61t .env.local')" \
+        "echo \$(bash -c 'c\\at .env.local')" \
+        "git log \$(bash -c 'c\\at .env.local')"; do
+      guard 2 "$cmd"
+    done
+    for cmd in \
+        "echo \$(bash -c 'c\\at .env.local')" \
+        "echo \"\$(bash -c 'c\\at .env.local')\"" \
+        "Write-Output \$(bash -c \"c\\at ~/.ssh/id_rsa\")"; do
+      guard 2 "$cmd" PowerShell
+    done
+    for cmd in \
+        'cat .env\ .example' \
+        'cat README.md docs/index.md' \
+        "printf '%s' \$'\\e[31mred\\e[0m'" \
+        "tr -d \$'\\r' < docs/index.md" \
+        "cat \$'README\\56md'" \
+        "cat \$'\\101\\x42C.md'" \
+        "cat \$'.env.example'" \
+        "cat \$'\\x2eenv.template'" \
+        "echo \"\$(bash -c 'c\\at README.md')\"" \
+        "echo \$(bash -c 'echo hi')"; do
+      guard 0 "$cmd"
+    done
+    for cmd in \
+        'cat ~/AppData/Roaming/GitHub\ CLI/hosts.yml' \
+        'Write-Output "$(Get-Content .env.example)"' \
+        'Write-Output "$(Get-Content README.md)"' \
+        "Write-Output \"\$(bash -c 'c\\at README.md')\""; do
+      guard 0 "$cmd" PowerShell
+    done
+  fi
+  guard_run
+  if [ -n "$git_fail" ]; then
+    err "the guard hook misses an escaped space in a store path, an ANSI-C string in a reader's or a file's name, or a PowerShell command's substitution that reads a credential file, or blocks an ordinary read (B52):"
+    printf '%s\n' "${git_fail#$'\n'}"
+  else echo "ok: the guard hook blocks a credential read through an escaped space in a store path, an ANSI-C string in a name, and a PowerShell command's substitution, and passes an ANSI-C string that names no credential and the substitutions that read none (B52)"; fi
 
   # A command substitution in a git command's words (B32): what it prints can be a flag, and the text it runs is a command
   # the guard can't see. The repro (git push $(echo --force) and its backtick form) is blocked as the plain flag is, in Bash

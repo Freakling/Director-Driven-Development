@@ -18,7 +18,8 @@
 # *.pem, *.key, ~/.ssh, git's credentials files, the gh CLI's hosts.yml) and the commands that print a stored
 # credential (gh auth token, gh auth status -t, git credential fill or get). This is a guardrail, not a
 # guarantee: complex pipelines or indirect reads are not detected. The Read-tool deny rules in settings.json
-# cover the most common path.
+# cover the most common path. In Bash, an escaped space in a store path (GitHub\ CLI) is a space, and an ANSI-C
+# string ($'...') in a reader's or a file's name is the text it spells (B52). See "Credential file reads" below.
 #
 # A command substitution ($(...), `...`, <(...), >(...); PowerShell's $(...), @(...) and (...)) runs a command the
 # guard can't see, and what it prints is text the rules can't read (B32). In a git command's words it can be a flag, and
@@ -32,7 +33,8 @@
 # is a command of its own: each is read as one, and a script nested in one to four levels too (B34). See the section
 # "Shell wrappers" below. A wait loop in such a script is judged too, and a script under timeout 280 or less is bounded (B42).
 # The hang check also reads a C-style for ((...)) loop, PowerShell's do { } while or until, Start-Sleep, cmd's timeout /t, and a
-# Bash command's substitutions, which run before a timeout above them starts, so the timeout doesn't bound them (B49).
+# command's substitutions, which run before a timeout above them starts, so the timeout doesn't bound them (B49). A PowerShell
+# command's $(...) is read the same way, for the hang check and the credential-read check (B52).
 # The hang rules read the command without the bodies no shell runs (B50): a commit's, tag's or gh message, and a cat or tee
 # body nothing runs, are left out, so a message can name a loop, a pause or a timed wait.
 # A shell or PowerShell name starts a script anywhere except right after a word that only prints its words (echo, printf,
@@ -1100,9 +1102,13 @@ store_arg_re='(^|[^[:alnum:]_.-])('"$cred_store_re"')'
 # ./.env.production, "config/.env.staging") is one, except the committed templates .env.example, .env.sample,
 # .env.template and .env.dist: they hold no values, so they stay readable. Bash regexes have no negative
 # lookahead, so each .env.<suffix> match is tested and the search goes on after it.
+# cred_args <arguments> [1]: with a second argument of 1 (Bash, B52) an escaped space is a space inside the same word, so the store
+# is also tested with each \ space read as a space. Only the store names read it: .env\ .example stays one word, not .env.
+MSG_ANSI="an ANSI-C string (\$'...') holds an escape the guard can't decode (\\u, \\U, \\c and the rest, or a NUL or a byte past ASCII), and the text it spells can't be read: write the text out"
 cred_args() {
-  local args="$1"
+  local args="$1" sp="${2:-0}"
   [[ $args =~ $dot_env_re || $args =~ $pem_key_re || $args =~ $store_arg_re ]] && return 0
+  ((sp)) && [[ ${args//'\ '/ } =~ $store_arg_re ]] && return 0
   while [[ $args =~ $env_re ]]; do
     case ${BASH_REMATCH[2]} in example|sample|template|dist) ;; *) return 0 ;; esac
     args="${args#*"${BASH_REMATCH[0]}"}"
@@ -1125,10 +1131,79 @@ bs_unescape() {
   ((ncm)) && shopt -s nocasematch
   return 0
 }
+# ascii_of <value>: sets ch to the character of an ASCII value from 1 to 127, and returns 1 for any other value (B52).
+ascii_of() {
+  (($1 >= 1 && $1 <= 127)) || return 1
+  printf -v ch '%03o' "$1"; printf -v ch "\\$ch"
+}
+# ansi_c <text>: sets ansic to the text with each ANSI-C string ($'...', outside quotes) replaced by the text it spells (B52), as
+# the shell reads it: \a \b \e \E \f \n \r \t \v \\ \' \" \? , \xHH (one or two hex digits) and \NNN (one to three octal digits),
+# each an ASCII character from 1 to 127. A ; & or | the string holds is a placeholder (\x05), since the shell keeps it in the
+# word, so it splits no read. Returns 1 when the string can't be read: an escape not in that list (\u, \U, \c and the rest, which
+# can spell any character), a NUL or a byte past ASCII, or no closing quote. Single and double quotes are copied, and a $' inside
+# double quotes is text, as the shell reads it.
+ansi_c() {
+  local s="$1" L=${#1} i=0 j c n k v h ch ncm=0 out=""
+  shopt -q nocasematch && ncm=1
+  shopt -u nocasematch
+  while ((i < L)); do
+    c="${s:i:1}"; n="${s:i+1:1}"
+    case $c in
+      '\') out+="${s:i:2}"; ((i += 2)); continue ;;
+      "'")
+        k="${s:i+1}"
+        [[ $k == *"'"* ]] || { out+="${s:i}"; break; }
+        k="${k%%"'"*}"; out+="'$k'"; ((i += ${#k} + 2)); continue ;;
+      '"')
+        k=$((i + 1))
+        while ((k < L)) && [[ ${s:k:1} != '"' ]]; do
+          [[ ${s:k:1} == '\' ]] && ((k++))
+          ((k++))
+        done
+        out+="${s:i:k - i + 1}"; i=$((k + 1)); continue ;;
+      '$')
+        if [[ $n == '$' ]]; then out+='$$'; ((i += 2)); continue; fi
+        if [[ $n == "'" ]]; then
+          j=$((i + 2)); v=""
+          while ((j < L)) && [[ ${s:j:1} != "'" ]]; do
+            if [[ ${s:j:1} != '\' ]]; then v+="${s:j:1}"; ((j++)); continue; fi
+            n="${s:j+1:1}"; ((j += 2))
+            case $n in
+              '\' | "'" | '"' | '?') v+="$n" ;;
+              a) v+=$'\a' ;;
+              b) v+=$'\b' ;;
+              e | E) v+=$'\e' ;;
+              f) v+=$'\f' ;;
+              n) v+=$'\n' ;;
+              r) v+=$'\r' ;;
+              t) v+=$'\t' ;;
+              v) v+=$'\v' ;;
+              x)
+                h=""
+                while ((${#h} < 2)) && [[ ${s:j:1} == [0-9A-Fa-f] ]]; do h+="${s:j:1}"; ((j++)); done
+                ((${#h})) || return 1
+                ascii_of $((16#$h)) || return 1; v+="$ch" ;;
+              [0-7])
+                h="$n"
+                while ((${#h} < 3)) && [[ ${s:j:1} == [0-7] ]]; do h+="${s:j:1}"; ((j++)); done
+                ascii_of $((8#$h)) || return 1; v+="$ch" ;;
+              *) return 1 ;;
+            esac
+          done
+          ((j < L)) || return 1
+          v="${v//[;&|]/$'\x05'}"; out+="$v"; i=$((j + 1)); continue
+        fi ;;
+    esac
+    out+="$c"; ((i++))
+  done
+  ansic="$out"
+  ((ncm)) && shopt -s nocasematch
+  return 0
+}
 reads_cred_file() {
   # The command as the shell reads it (real, above, with the line breaks that end a command as ;), so
   # C:\Users\V works, a tab is a space and a backslash-joined line is one line (B25).
-  local cmd="${real//$nl/;}"
+  local cmd="${real//$nl/;}" sp=0
   # A reader is its command word after a space, a separator, an opening bracket, a quote (a -Command or -c
   # string: powershell -Command "gc .env"), a backslash, a slash or a backtick, then its arguments up to the next ; & or |.
   # Every argument is tested, so the file may follow an option (tail -n 20 .env) or another file (cat README.md
@@ -1151,7 +1226,16 @@ reads_cred_file() {
   # A name or a reader split by quotes (ca''t, c"a"t, .en''v.local) is read as the shell runs it: the quotes are removed,
   # and the same tests run on that text too (B36). A command with no quote is tested once.
   local -a texts=("$cmd")
-  [[ $cmd == *[\"\']* ]] && texts+=("${cmd//[\"\']/}")
+  # B52: in Bash an ANSI-C string is the text it spells, and that text is read as the command is (the quote removal below too). An
+  # escaped space (sp) is read as a space for the store names only (cred_args).
+  if [[ $tool != PowerShell || ${vpx[vi]:-0} == 1 ]]; then
+    [[ $cmd == *'\ '* ]] && sp=1
+    if [[ $cmd == *'$'\'* ]]; then ansi_c "$cmd" || block "$MSG_ANSI"; texts+=("$ansic"); fi
+  fi
+  local nq=${#texts[@]} q
+  for ((q = 0; q < nq; q++)); do
+    [[ ${texts[q]} == *[\"\']* ]] && texts+=("${texts[q]//[\"\']/}")
+  done
   # B44: in Bash an unquoted backslash that escapes an ordinary character is removed by the shell, so each text is read again with
   # those removed (c\at is cat). PowerShell's escape is the backtick (B30), so a PowerShell command's text is read as it is; a
   # script that a POSIX shell runs inside it (vpx, set in the wrapper reading) is Bash text.
@@ -1168,19 +1252,19 @@ reads_cred_file() {
     while [[ $rest =~ $read_re ]]; do
       args="${BASH_REMATCH[4]}"
       rest="${rest#*"${BASH_REMATCH[0]}"}"
-      cred_args "$args" && return 0
+      cred_args "$args" "$sp" && return 0
     done
     rest="$t"
     while [[ $rest =~ $file_re ]]; do
       args="${BASH_REMATCH[4]}"
       rest="${rest#*"${BASH_REMATCH[0]}"}"
-      cred_args "$args" && return 0
+      cred_args "$args" "$sp" && return 0
     done
     rest="$t"
     while [[ $rest =~ $stream_re ]]; do
       args="${BASH_REMATCH[6]}"
       rest="${rest#*"${BASH_REMATCH[0]}"}"
-      cred_args "$args" && return 0
+      cred_args "$args" "$sp" && return 0
     done
   done
   return 1
@@ -1422,9 +1506,11 @@ cnv=0
 # echo "$(until false; do sleep 1; done)" loops for ever. A Bash command that isn't git's has each substitution read as a view for
 # the hang rules alone (vhang): the gate below skips it, and it has the view's own bound (vcov), not the timeout in front of its
 # command. The text read is hst (B50): the command with the bodies no shell runs left out, so a quoted message's substitution, which
-# the shell doesn't expand, isn't read, and an unquoted message's is. A PowerShell command's substitutions are not read here; git's
-# are read in the git section (B32).
-if ((!isgit)) && [[ $tool != PowerShell && ( $real == *'$('* || $real == *'`'* || $real == *'<('* || $real == *'>('* ) ]]; then
+# the shell doesn't expand, isn't read, and an unquoted message's is. git's substitutions are read in the git section (B32), and
+# these views are read by the rules that come before the git section. B52: a PowerShell command's $(...) gets the same views, for the
+# hang rules and the credential-read check, so a Bash command in it (bash -c 'c\at .env.local' inside $(...)) is read as the Bash
+# command it is. PowerShell has no backtick or <( >( substitution, so only $( counts there.
+if ((!isgit)) && [[ $real == *'$('* || ( $tool != PowerShell && ( $real == *'`'* || $real == *'<('* || $real == *'>('* ) ) ]]; then
   hsubb=0
   if subst_cut "$hst"; then
     for ((vn = 0; vn < sn; vn++)); do

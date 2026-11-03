@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T279 · B59 · R7
+**Next IDs:** T279 · B60 · R7
 
 ## Milestones
 | Milestone | Status |
@@ -1182,7 +1182,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Found in: B43
 - Brief: -
 
-### B52 · An escaped space in a store path, ANSI-C quoting in a reader's name, or a substitution in a non-git command passes the credential-read check (A01:2025 Broken Access Control) · todo · S · agent · med
+### B52 · An escaped space in a store path, ANSI-C quoting in a reader's name, or a substitution in a non-git command passes the credential-read check (A01:2025 Broken Access Control) · done 2026-11-03 · S · agent · med
 - Touches: .claude/hooks/guard-commands.sh, selftest.sh (the guard is framework-owned: T276, T277 and T278 carry the fix)
 - Repro: 1. Feed the guard hook `cat ~/AppData/Roaming/GitHub\ CLI/hosts.yml`; `$'\x63at' .env.local`; or a PowerShell payload with `echo $(bash -c 'c\at .env.local')`. 2. Expected: each is blocked, as `cat .env.local` and the unescaped store path are. Actual: exit 0: B44 removes a backslash only before an ordinary character, ANSI-C quoting in a reader's name isn't decoded, and a substitution's script is read as a wrapper only in a git command.
 - Found in: B44
@@ -1282,9 +1282,9 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Found in: B48
 - Brief: -
 
-### B56 · A PowerShell `for (;;)` loop, or a PowerShell subexpression that waits, passes the hang check · todo · XS · agent · low
+### B56 · A PowerShell `for (;;)` loop passes the hang check · todo · XS · agent · low
 - Touches: .claude/hooks/guard-commands.sh, selftest.sh (the guard is framework-owned: an item for each framework once it's built)
-- Repro: 1. Feed the guard hook a PowerShell payload with `for (;;) { Start-Sleep 1 }`, or with a double-quoted string holding a subexpression that waits ten minutes. 2. Expected: each is blocked, as the Bash forms are since B49. Actual: exit 0: the loop rule reads Bash's C-style loop only, and PowerShell subexpressions in double quotes aren't read.
+- Repro: 1. Feed the guard hook a PowerShell payload with `for (;;) { Start-Sleep 1 }`. 2. Expected: blocked, as the Bash form is since B49. Actual: exit 0: the loop rule reads Bash's C-style loop only. (B52 made the hang rules read PowerShell subexpressions, which was this item's other half.)
 - Found in: B49
 - Brief: -
 
@@ -1298,6 +1298,12 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Touches: .claude/hooks/guard-commands.sh, selftest.sh (the guard is framework-owned: an item for each framework once it's built)
 - Repro: 1. Feed the guard hook a PowerShell payload with `<# it's #> git push origin ':main' 'x'`, or a Bash payload with `git push $'a\'b #' "$(printf '\055\055force')"`. 2. Expected: each is blocked. Actual: exit 0: B51 reads PowerShell's line comments but not its block comments, and B43's substitution reader takes the `#` after an ANSI-C quoted escape as a comment, so the substitution after it is never read.
 - Found in: B51
+- Brief: -
+
+### B59 · A quoted `;` in a reader's arguments, a substitution inside a reader's name, or git printing a file passes the credential-read check (A01:2025 Broken Access Control) · todo · S · agent · med
+- Touches: .claude/hooks/guard-commands.sh, selftest.sh (the guard is framework-owned: an item for each framework once it's built)
+- Repro: 1. Feed the guard hook `cat 'a;b' .env.local`, `c$(echo a)t .env.local`, `git show HEAD:.env.local` or `git cat-file -p HEAD:.env.local`. 2. Expected: each is blocked, as `cat .env.local` is. Actual: exit 0: a quoted `;` ends the reader's arguments, a substitution inside a reader's name isn't read, and no rule treats git's file printers as readers.
+- Found in: B52
 - Brief: -
 
 ### T103 · /ui-design tells the director how to use Excalidraw · done 2026-10-20 · S · agent
