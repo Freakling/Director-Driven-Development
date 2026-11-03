@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T287 · B63 · R7
+**Next IDs:** T290 · B63 · R7
 
 ## Milestones
 | Milestone | Status |
@@ -1273,7 +1273,8 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Note: found in B24: framework/.claude/settings.json has the same `Bash|Monitor` matcher plus Bash ask and deny rules, and its selftest pins the matcher.
 - Brief: -
 
-### T278 · Godot-Director: the guard and the deny rules reach the PowerShell tool, and a continuation, a tab or a PowerShell read can't hide from it · todo · L · agent
+### T278 · Godot-Director: the guard and the deny rules reach the PowerShell tool, and a continuation, a tab or a PowerShell read can't hide from it · in-progress 2026-11-03 · L · agent
+- PRs: Godot-Director #52 (open)
 - Depends on: B25, B27 to B40, B42 to B52, B55, B60
 - Touches: work/Godot-Director: framework/.claude/settings.json, framework/.claude/hooks/, selftest.sh
 - Done when: the guard hook's matcher names PowerShell and every Bash deny and ask rule has a PowerShell twin, with no PowerShell allow rule, as B24 did here; the guard closes the gaps B25, B27 to B40, B42 to B52, B55 and B60 closed here (the read fixes where its guard checks credential reads), ported with their selftest cases, including the readings of a continued command (as written, as joined, and joined from each line after a comment: B28, B31); the selftest passes (check) · following AGENTS.md › Project rules for framework work
@@ -1313,18 +1314,19 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Note: found in T276: the selftest took about 6 min 45 s before and after the guard port, past the five-minute limit every long command keeps to, so it can only run in the background; this repo's B41 shows the pattern (parallel guard batches, one git cat-file batch, bash or awk in place of a process per line).
 - Brief: -
 
-### T284 · This repo's guard gets App-Director's own rules and bash 3.2 forms · todo · S · agent
+### T284 · This repo's guard gets App-Director's own rules and bash 3.2 forms · todo · M · agent
 - Depends on: T276, T285
 - Touches: .claude/hooks/guard-commands.sh, selftest.sh
-- Done when: this repo's guard matches App-Director's merged hook from T276 (branch `-M` and `-C` and a forced move or copy, worktree `remove --force` and `add -B` or `-f`, brace expansion and `$IFS` in a git command, a commit option's value not read as a flag, git's value-taking global options in every subcommand finder, and the bash 3.2 forms: the `lower` and `str_swap` helpers, no `${x,,}` or negative offsets) and T277's three fixes (T285), with their cases in the selftest, which passes (check)
+- Done when: this repo's guard matches App-Director's merged hook from T276 (branch `-M` and `-C` and a forced move or copy, worktree `remove --force` and `add -B` or `-f`, brace expansion and `$IFS` in a git command, a commit option's value not read as a flag, git's value-taking global options in every subcommand finder, and the bash 3.2 forms: the `lower` and `str_swap` helpers, no `${x,,}` or negative offsets) and the port fixes T285 brings from SaaSAllTheThings and Godot-Director, with their cases in the selftest, which passes (check)
 - Note: found in T276. The hook is framework-owned, so the next App-Director upgrade here brings the same file; this item keeps the two equal until then, so a guard fix built here next starts from the merged hook.
+- Note: T278's review showed this repo's guard has the gaps T285 closes: on 2026-11-03 a 30 KB heredoc of GDScript `$Node.method()` lines took 10.8 s here, past the hook's 10 s limit (a hook that times out doesn't block, so padding a command could let it through unguarded), `vhang=1` in the environment let `git push --force` pass, and a nested wait loop and `sleep 600.5` passed.
 - Brief: -
 
-### T285 · App-Director: the guard takes SaaSAllTheThings' port fixes · todo · S · agent
-- Depends on: T276, T277
+### T285 · App-Director: the guard takes SaaSAllTheThings' and Godot-Director's port fixes · todo · M · agent
+- Depends on: T276, T277, T278
 - Touches: work/App-Director: framework/.claude/hooks/guard-commands.sh, selftest.sh
-- Done when: App-Director's guard has the three fixes T277 made while porting, with their cases: a path-qualified or `.exe` git (`/usr/bin/git push --force`, `git.exe push --force`) is git; an empty-heredoc probe reads its body line by line, so a heredoc of blank lines isn't read as empty and `/usr/bin/python3` counts as `python3`; and in the PowerShell tool a backslash at a line's end is a path separator, not a continuation, so `# c\` followed by `gh auth token` is blocked; the selftest passes (check) · following AGENTS.md › Project rules for framework work
-- Note: found in T277; SaaSAllTheThings' framework hook on its bundle (its T36) has them.
+- Done when: App-Director's guard has the three fixes T277 made while porting, with their cases: a path-qualified or `.exe` git (`/usr/bin/git push --force`, `git.exe push --force`) is git; an empty-heredoc probe reads its body line by line, so a heredoc of blank lines isn't read as empty and `/usr/bin/python3` counts as `python3`; and in the PowerShell tool a backslash at a line's end is a path separator, not a continuation, so `# c\` followed by `gh auth token` is blocked; and the loop reader ends a loop at the `done` that closes a command (T278), so `until [ -f done ]; do sleep 5; done` is a wait loop; and the fixes T278's review brought to Godot-Director's guard: a wait loop with a nested loop is read to its own `done` (do and done counted), a pause with a fraction (`sleep 600.5`) is a pause, the view flags (vdep, vcov, vpx, vhang) start empty so the environment can't set them, and the per-character walk skips the bodies nothing runs, PowerShell here-strings included, so a 30 KB heredoc or here-string of `$Node.method()` lines is judged well within the hook's 10 s limit (SaaSAllTheThings' hook took 41 s on the here-string), with a timed case for each shell; and the credential-print rules read the text without message bodies, so a message may name `gh auth token`; the selftest passes (check) · following AGENTS.md › Project rules for framework work
+- Note: found in T277 and T278; SaaSAllTheThings' framework hook on its bundle (its T36) has the first three, and Godot-Director's (its T39) the loop reader.
 - Brief: -
 
 ### T286 · SaaSAllTheThings: the Azure delete rule covers the Az PowerShell module · todo · S · agent
@@ -1332,6 +1334,27 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Touches: work/SaaSAllTheThings: framework/.claude/hooks/guard-commands.sh, framework/.claude/settings.json, selftest.sh
 - Done when: the guard blocks the Az PowerShell module's deletes (`Remove-AzResourceGroup`, `Remove-AzResource` and the other `Remove-Az*` cmdlets) as it blocks `az ... delete`, in any case and through every reading, and the settings have the matching ask or deny rules for the PowerShell tool; the selftest passes (check) · following AGENTS.md › Project rules for framework work
 - Note: found in T277.
+- Brief: -
+
+### T287 · Godot-Director: its docs say the guard covers PowerShell · todo · XS · agent
+- Depends on: T278
+- Touches: work/Godot-Director: framework/.godot-director/rules.md, framework/.claude/agents/builder.md, README.md, selftest.sh if it pins the wording
+- Done when: rules.md (about line 82), the builder agent and README.md (about line 227) say "the guard" or "the command guard" where they say "the Bash guard", since T278 wired it to PowerShell too, and name the PowerShell tool where they list the shells it reads; the selftest passes (check) · following AGENTS.md › Project rules for framework work
+- Note: found in T278.
+- Brief: -
+
+### T288 · SaaSAllTheThings: the guard takes Godot-Director's loop, pause, view-flag and speed fixes · todo · S · agent
+- Depends on: T277, T278
+- Touches: work/SaaSAllTheThings: framework/.claude/hooks/guard-commands.sh, selftest.sh
+- Done when: the hang check's loop reader ends a loop at the `done` that closes a command, not at any word `done`, as Godot-Director's T278 does, so `until [ -f done ]; do sleep 5; done` is still read as a wait loop, with its case, and the fixes T278's review brought to Godot-Director's guard: a wait loop with a nested loop is read to its own `done` (do and done counted), a pause with a fraction (`sleep 600.5`) is a pause, the view flags (vdep, vcov, vpx, vhang) start empty so the environment can't set them, and the per-character walk skips the bodies nothing runs, PowerShell here-strings included, so a 30 KB heredoc or here-string of `$Node.method()` lines is judged well within the hook's 10 s limit (SaaSAllTheThings' hook took 41 s on the here-string), with a timed case for each shell; and the credential-print rules read the text without message bodies, so a message may name `gh auth token`; the selftest passes (check) · following AGENTS.md › Project rules for framework work
+- Note: found in T278 and its review.
+- Brief: -
+
+### T289 · Godot-Director: the variable command name rule skips a global option's value · todo · XS · agent
+- Depends on: T278
+- Touches: work/Godot-Director: framework/.claude/hooks/guard-git.sh, selftest.sh
+- Done when: `cname_judge` skips both words after `--git-dir`, `--work-tree` and `--namespace`, as `var_segment` does, so with `git` written in tools/godot_bin.local, `G=$(cat tools/godot_bin.local); "$G" --work-tree . restore .` and `... --git-dir .git branch -D x` are blocked, with their cases; the same check in App-Director's and SaaSAllTheThings' hooks, fixed there too if they have it; the selftests pass (check) · following AGENTS.md › Project rules for framework work
+- Note: found in T278's review (finding 9); the Godot exception made the assignment from tools/godot_bin.local count as unset.
 - Brief: -
 
 ### B53 · A script piped to a shell, a path-qualified or `.exe` git or bash, a sudo option's value, cmd's %VAR% or a folder in another case passes the guard (A01:2025 Broken Access Control) · todo · S · agent · med
