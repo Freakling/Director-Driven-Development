@@ -38,6 +38,8 @@
 #      Select-String and sls, [IO.File]::ReadAll...), in any case, as it blocks cat (B27).
 #      A PowerShell backtick at a line's end continues the line, so a flag or read it splits is
 #      blocked; a Bash backtick, or an escaped one, doesn't continue a line (B28).
+#      A PowerShell backtick inside a word is an escape that leaves the character, so a reader or a name it splits
+#      is read as PowerShell reads it, and a quoted or path-qualified reader, or a StreamReader, is blocked too (B30).
 #      A Bash comment that ends in a backslash holds no continuation (B31): the line after it is a command of its
 #      own, and a continued command after such a comment is still read. The hang check reads a heredoc header
 #      joined to its delimiter line (B29).
@@ -796,6 +798,62 @@ else
     err "the guard hook reads a command after a Bash comment that ends in a backslash as hidden, or blocks a benign one (B31, B29):"
     printf '%s\n' "${git_fail#$'\n'}"
   else echo "ok: the guard hook reads the line after a Bash comment that ends in a backslash, and the command continued after it, as Bash does (B31, B29)"; fi
+
+  # A quoted or path-qualified reader, a backtick inside a word and a StreamReader (B30): the call operator with a
+  # quoted name (& 'Get-Content' .env.local), a reader by its path (/bin/cat, cat.exe, the Management module's
+  # Get-Content), a backtick escape that leaves a letter or a dot in a reader or a name (Get-Con`tent, .en`v.local),
+  # and the StreamReader constructors are read as the plain forms are. A reader in a string with a backtick-escaped
+  # quote, a template and an ordinary file pass. In PowerShell the escape also reaches the git flag rules (--fo`rce).
+  git_fail=""
+  if [ -f .claude/hooks/guard-commands.sh ]; then
+    for cmd in \
+        "& 'Get-Content' .env.local" \
+        '& "gc" .env.local' \
+        ". 'type' .env.local" \
+        "& 'Get-Content' -Path '.env.local'" \
+        "Get-Content '.env.local'" \
+        'Get-Con`tent .env.local' \
+        'gc .en`v.local' \
+        'type `.env.local' \
+        'C:\Git\usr\bin\cat.exe .env.local' \
+        'Microsoft.PowerShell.Management\Get-Content .env.local' \
+        '[System.IO.StreamReader]::new(".env.local")' \
+        "[IO.StreamReader]::new('.env')" \
+        "New-Object System.IO.StreamReader('.env.local')" \
+        'New-Object -TypeName System.IO.StreamReader -ArgumentList .env.local' \
+        'git push --fo`rce' \
+        'Write-Output x; & "gc" .env'; do
+      guard 2 "$cmd" PowerShell
+    done
+    for cmd in \
+        '/bin/cat .env.local' \
+        '/usr/bin/head -n 5 .env' \
+        "'/bin/cat' .env.local" \
+        '/usr/bin/tail -n 20 .env.production'; do
+      guard 2 "$cmd"
+    done
+    for cmd in \
+        "& 'Get-Content' README.md" \
+        "& 'Get-Content' '.env.example'" \
+        'Write-Output "say `"hi`" now"' \
+        'Write-Output "run `"gc README.md`" next"' \
+        "[System.IO.StreamReader]::new('docs/index.md')" \
+        "New-Object System.IO.StreamReader('README.md')" \
+        'Get-Con`tent README.md' \
+        'cat.exe README.md'; do
+      guard 0 "$cmd" PowerShell
+    done
+    for cmd in \
+        '/bin/cat README.md' \
+        '/usr/bin/head -n 5 .env.example' \
+        "'/bin/cat' README.md"; do
+      guard 0 "$cmd"
+    done
+  fi
+  if [ -n "$git_fail" ]; then
+    err "the guard hook misses a quoted or path-qualified reader, a backtick inside a word or a StreamReader of a credential file (B30):"
+    printf '%s\n' "${git_fail#$'\n'}"
+  else echo "ok: the guard hook blocks a quoted or path-qualified reader, a backtick-escaped word and a StreamReader of a credential file, and passes the same readers of ordinary files (B30)"; fi
 
   # The credential stores (B15): the Read tool may not open the gh CLI's token file, git's credentials or
   # ~/.ssh. The .env files with values (B21): .env.local and the other .env.<suffix> files the guard hook

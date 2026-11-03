@@ -40,6 +40,14 @@ bt='`'; jcr='\r'; jlf='\n'; x3=$'\x03'
 if [[ $tool == PowerShell ]]; then
   joined="${raw//"$bt$bt"/$x3}"
   joined="${joined//"$bt$jcr$jlf"/}"; joined="${joined//"$bt$jcr"/}"; joined="${joined//"$bt$jlf"/}"
+  # A backtick before a letter, digit or name punctuation is an escape that leaves that character (B30): Get-Con`tent
+  # is Get-Content, and .en`v.local names .env.local, so the reader and the name are read as PowerShell reads them. A
+  # backtick before a quote, a $, a space or a separator stays, since it escapes only that character and joins no name.
+  if [[ $joined == *"$bt"* ]]; then
+    for c in {a..z} {A..Z} {0..9} . _ / '\' : '*' '?' '~' % @ + = , '#' -; do
+      joined="${joined//"$bt$c"/"$c"}"
+    done
+  fi
   joined="${joined//$x3/$bt$bt}"
   [[ $joined != "$raw" ]] && raw="$raw;$joined"
 fi
@@ -136,7 +144,9 @@ block() {
 # considered compromised and rotated. This is a best-effort check on the command text; indirect
 # reads are not detected. The readers are Bash's (cat, head, tail, less, more, strings) and PowerShell's
 # (Get-Content, its aliases gc and type, Select-String and its alias sls, and [IO.File]::ReadAllText and
-# its siblings), matched in any case (B27). The check runs for every tool the hook is wired to.
+# its siblings), matched in any case (B27), by a path (/bin/cat), quoted (& 'Get-Content'), with .exe, or with a
+# backtick escape inside a word (Get-Con`tent, B30); [IO.StreamReader]::new and New-Object System.IO.StreamReader
+# are readers too (B30). The check runs for every tool the hook is wired to.
 cred_end="([[:space:]\"';&|)]|\$)"
 cred_store_re='\.ssh([/\\]|'"$cred_end"')|\.git-credentials|\.config[/\\]git[/\\]credentials|\.config[/\\]gh([/\\]|'"$cred_end"')|GitHub CLI([/\\]|'"$cred_end"')'
 # A name in a read's arguments is a whole word: .env, or .pem or .key ending a word, after a character that
@@ -165,23 +175,34 @@ reads_cred_file() {
   # C:\Users\V works, a tab is a space and a backslash-joined line is one line (B25).
   local cmd="${real//$nl/;}"
   # A reader is its command word after a space, a separator, an opening bracket, a quote (a -Command or -c
-  # string: powershell -Command "gc .env"), a backslash or a backtick, then its arguments up to the next ; & or |.
+  # string: powershell -Command "gc .env"), a backslash, a slash or a backtick, then its arguments up to the next ; & or |.
   # Every argument is tested, so the file may follow an option (tail -n 20 .env) or another file (cat README.md
   # .env.local), and a PowerShell -Path or -LiteralPath value is one too. type is a Bash builtin as well
-  # (type git), so only a credential name after it is blocked, as for cat.
+  # (type git), so only a credential name after it is blocked, as for cat. The name may be a path (/bin/cat, or
+  # Microsoft.PowerShell.Management\Get-Content), carry .exe (cat.exe), or be quoted (& 'Get-Content' .env.local, B30).
   local readers='(cat|head|tail|less|more|strings|type|gc|get-content|select-string|sls)'
-  local read_re='(^|[[:space:]|;&("'"'"'`\\])'"$readers"'[[:space:]]+([^;&|]*)'
+  local name_quote="['\"]*"
+  local read_re='(^|[[:space:]|;&("'"'"'`\\/])'"$readers"'(\.exe)?'"$name_quote"'[[:space:]]+([^;&|]*)'
   # [IO.File]::ReadAllText(...), and its ReadAllLines, ReadAllBytes and ReadLines: the arguments run to the next ; & or |.
   local file_re='(^|[^[:alnum:]_.-])\[(system\.)?io\.file\]::read(all)?(text|lines|bytes)[[:space:]]*\(([^;&|]*)'
+  # [IO.StreamReader]::new(...) and New-Object System.IO.StreamReader (-TypeName ... -ArgumentList ...), whose
+  # arguments run to the next ; & or | as well (B30).
+  local stream_re='(^|[^[:alnum:]_.-])(\[(system\.)?io\.streamreader\]::new|new-object[[:space:]]+(-typename[[:space:]]+)?(system\.)?io\.streamreader)([^;&|]*)'
   local rest="$cmd" args
   while [[ $rest =~ $read_re ]]; do
-    args="${BASH_REMATCH[3]}"
+    args="${BASH_REMATCH[4]}"
     rest="${rest#*"${BASH_REMATCH[0]}"}"
     cred_args "$args" && return 0
   done
   rest="$cmd"
   while [[ $rest =~ $file_re ]]; do
     args="${BASH_REMATCH[5]}"
+    rest="${rest#*"${BASH_REMATCH[0]}"}"
+    cred_args "$args" && return 0
+  done
+  rest="$cmd"
+  while [[ $rest =~ $stream_re ]]; do
+    args="${BASH_REMATCH[6]}"
     rest="${rest#*"${BASH_REMATCH[0]}"}"
     cred_args "$args" && return 0
   done
