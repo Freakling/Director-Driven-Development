@@ -67,9 +67,11 @@
 #      A quoted git name (and a quoted gh or credential subcommand) is read as the shell reads it; a heredoc body a shell runs
 #      is read by the file-writing flag rules, a backtick ends a flag in it, and a commit's or tag's message is not (B39).
 #      git branch with --delete and --force, git push --mirror, --delete, -d and a :ref refspec are blocked (B39).
-#      A heredoc body no shell runs is text: a commit's or tag's message, and a cat or tee body that nothing in the command
-#      runs (no shell, interpreter, ssh, chmod, make, ./ path, dot-source or .git folder). The destructive and file-writing rules
-#      skip it, and a body written to a file and run in the same command (cat > x.sh, then bash x.sh) is still read (B40).
+#      A heredoc body no shell runs is text: a commit's or tag's message, a gh pr, issue or release message with a quoted
+#      delimiter (its body from stdin, or from a $(cat <<'EOF') given to --body or --notes), and a cat or tee body that nothing
+#      in the command runs (no shell, interpreter, ssh, chmod, make, ./ path, dot-source or .git folder). The destructive,
+#      file-writing and variable rules skip it, and a body written to a file and run in the same command (cat > x.sh, then
+#      bash x.sh) is still read (B40, B48).
 #      A variable as a command's name is read as the value the command assigns it (G=git; $G push --force is git push
 #      --force); an unresolved one is blocked when the command sets that name another way or a git subcommand follows it,
 #      and the everyday forms pass. A shell's script, eval's argument or -Command that holds a variable the caller expands is
@@ -77,6 +79,8 @@
 #      A git command name is matched in any case, so GIT and Git are git (PowerShell finds a command case-insensitively, B46);
 #      git's subcommands and flags stay case-sensitive. A shell's name in a bash script path under tools/ is read the same way,
 #      quotes removed and in any case, so "bash", 'sh' and BASH are bash and sh, and a quoted or split path is read too (B47).
+#      A shell or PowerShell name right after echo, printf, Write-Output, Write-Host or write is text; anywhere else it starts a
+#      script, so a launcher's argument (ssh, find -exec, docker exec, Start-Process) is read (B48).
 #   9. The site builds in strict mode, which fails on broken internal links and anchors.
 #  10. The Content-Security-Policy in overrides/main.html allows every inline script the built site
 #      runs (its sha256 is in script-src), and no script runs before the policy's meta tag.
@@ -1546,7 +1550,6 @@ else
         'git branch -D "$b"' \
         'git grep "$p"' \
         $'bash <<\'EOF\'\ngit push $FLAG\nEOF' \
-        $'git commit -F - <<\'EOF\'\nfix git push $X handling\nEOF' \
         "\$X -c 'git push --force'" \
         '"$SHELL" -c "git push --force"' \
         'sudo "$X" -c "git push --force"' \
@@ -2022,6 +2025,85 @@ else
     err "the guard hook reads a commit's or tag's message, or a cat or tee body that nothing in the command runs, as a script (B40), or passes a body a shell runs:"
     printf '%s\n' "${git_fail#$'\n'}"
   else echo "ok: the guard hook passes a commit's or tag's message and a cat or tee body that the command doesn't run, and blocks a body written to a file and run in the same command (B40)"; fi
+
+  # A gh message with a quoted delimiter (B48): gh pr create and edit, issue create, edit and comment, and release create and edit
+  # take the body from stdin (--body-file -, -F -, --notes-file -) or from a $(cat <<'EOF') given to --body, -b, --notes or -n. That
+  # body is text no shell runs, as a commit's message is (B40), so the destructive rules skip it, and the variable rules (B37)
+  # skip it and a cat body nothing runs. A body a shell runs, an unquoted body with a substitution, a git command that goes on past
+  # the body, or a body piped to a shell is still read.
+  git_fail=""
+  if [ -f .claude/hooks/guard-commands.sh ]; then
+    for cmd in \
+        $'gh pr edit 5 --body-file - <<\'EOF\'\nfix: git push --force; done\nEOF' \
+        $'gh pr create --body "$(cat <<\'EOF\'\nfix: git push --force\nEOF\n)"' \
+        $'gh pr create --title t --body-file - <<\'EOF\'\nDo not run git push --force\nEOF' \
+        $'gh issue comment 5 -F - <<\'EOF\'\ngit reset --hard\nEOF' \
+        $'gh issue create -b "$(cat <<\'EOF\'\ngit branch -D x\nEOF\n)"' \
+        $'gh release create v1 --notes-file - <<\'EOF\'\ngit push --mirror\nEOF' \
+        $'gh release edit v1 -n "$(cat <<\'EOF\'\ngit push --delete origin x\nEOF\n)"' \
+        $'gh pr create --body-file=- <<\'EOF\'\ngit push --force\nEOF' \
+        $'GH pr create -F- <<\'EOF\'\ngit push --force\nEOF' \
+        $'gh pr create --body="$(cat <<\'EOF\'\ngit push --force\nEOF\n)"' \
+        $'gh pr edit 5 --body-file - <<\'EOF\'\ngit push --force\nEOF' \
+        $'gh pr create --body-file - <<\'EOF\'\nbash -c \'git push --force\'\nEOF' \
+        $'gh pr create --body-file - <<\'EOF\'\necho cmd /c "git push --force"\nEOF' \
+        $'gh pr edit 5 --body-file - <<\'EOF\'\nfix: git push $X handling\nEOF' \
+        $'git commit -q -F - <<\'EOF\'\nfix: git push $X handling\nEOF' \
+        $'git tag -a v1 -F - <<\'EOF\'\nfix: git push $X handling\nEOF' \
+        $'cat > notes.md <<\'EOF\'\nfix: git push $X handling\nEOF'; do
+      guard 0 "$cmd"
+    done
+    for cmd in \
+        $'gh pr edit 5 --body-file - <<\'EOF\' && git push --force\nmsg\nEOF' \
+        $'gh pr create --body-file - <<\'EOF\'\nmsg\nEOF\ngit push --force' \
+        $'gh pr create --body-file - <<\'EOF\' | bash\ngit push --force\nEOF' \
+        $'gh pr create --body-file - <<EOF\nfix: git push --force\nEOF' \
+        $'gh pr create --body "$(cat <<EOF\n$(git push --force)\nEOF\n)"' \
+        $'gh pr create --body "$(cat <<\'EOF\'\nmsg\nEOF\n)" --title "$(git push --force)"' \
+        $'bash <<\'EOF\'\ngit push $X\nEOF' \
+        $'cat > x.sh <<\'EOF\'\ngit push $X\nEOF\nbash x.sh'; do
+      guard 2 "$cmd"
+    done
+    # A shell or PowerShell name right after a word that only prints its words (echo, printf, Write-Output, Write-Host, write) is
+    # text (B48). Anywhere else it may run a script, so a launcher's argument stays read: ssh, find -exec, docker exec, Start-Process.
+    for cmd in \
+        "echo PowerShell 'bash tools/../x.sh'" \
+        "echo pwsh 'bash tools/../x.sh'" \
+        "echo bash -c 'git push --force'" \
+        'echo sh -c "git push --force"' \
+        $'printf sh -c \'git push --force\'' \
+        $'echo eval \'git push --force\'' \
+        'echo PowerShell -Command "git push --force"'; do
+      guard 0 "$cmd"
+    done
+    for cmd in \
+        'ssh host pwsh -c "git push --force"' \
+        'find . -exec pwsh -c "git push --force" \;' \
+        'docker exec ctr pwsh -c "git push --force"' \
+        'ssh host sh -c "git push --force"' \
+        'find . -exec sh -c "git push --force" \;' \
+        $'docker exec ctr bash -c \'git push --force\''; do
+      guard 2 "$cmd"
+    done
+    for cmd in \
+        'Write-Output PowerShell -Command "git push --force"' \
+        "Write-Output powershell 'bash tools/../x.sh'" \
+        "echo pwsh 'bash tools/../x.sh'" \
+        "Write-Host Pwsh.exe 'bash tools/../x.sh'"; do
+      guard 0 "$cmd" PowerShell
+    done
+    for cmd in \
+        "Start-Process powershell -ArgumentList 'git push --force'" \
+        'ssh host pwsh -c "git push --force"' \
+        'timeout 60 powershell -c "git push --force"'; do
+      guard 2 "$cmd" PowerShell
+    done
+  fi
+  guard_run
+  if [ -n "$git_fail" ]; then
+    err "the guard hook reads a gh message's body, or a variable in a message or a cat body nothing runs, as a command, passes a body a shell runs, or reads a word after echo, printf, Write-Output, Write-Host or write, or a launcher's argument, wrongly (B48):"
+    printf '%s\n' "${git_fail#$'\n'}"
+  else echo "ok: the guard hook passes a gh pr, issue or release message with a quoted delimiter, and a variable in a message or in a cat body nothing runs, and blocks a git command after a message, an unquoted message, a message piped to a shell, and a variable in a body a shell runs; a shell or PowerShell name after echo, printf, Write-Output, Write-Host or write is text, and one that a launcher passes a script to is read (B48)"; fi
 
   # The credential stores (B15): the Read tool may not open the gh CLI's token file, git's credentials or
   # ~/.ssh. The .env files with values (B21): .env.local and the other .env.<suffix> files the guard hook

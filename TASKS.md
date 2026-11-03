@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T279 · B54 · R7
+**Next IDs:** T279 · B55 · R7
 
 ## Milestones
 | Milestone | Status |
@@ -1157,9 +1157,10 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Found in: B39
 - Brief: -
 
-### B48 · A pull request body, a message naming a git command with a variable, or a word that only names PowerShell is blocked · todo · S · agent · low
+### B48 · A pull request body, a message naming a git command with a variable, or a word that only names PowerShell is blocked · done 2026-11-03 · S · agent · low
 - Touches: .claude/hooks/guard-commands.sh, selftest.sh (the guard is framework-owned: T276, T277 and T278 carry the fix)
 - Repro: 1. Feed the guard hook `gh pr edit 5 --body-file - <<'EOF'` or `gh pr create --body "$(cat <<'EOF' ... EOF)"` with a body naming `git push --force`; `git commit -q -F - <<'EOF'` with a body line `fix: git push $X handling`; or `echo PowerShell 'bash tools/../x.sh'`, where B34's wrapper reader takes any word PowerShell or pwsh as an interpreter. 2. Expected: passes: each body is a message no shell runs, as a quoted-delimiter commit message is since B39 and B40. Actual: exit 2: only `git commit` and `git tag` messages count as text, and B37's variable rule reads every heredoc body. Release notes passed to `gh pr edit` that name such a command would be blocked.
+- Note: a PowerShell, pwsh or shell name starts a script anywhere except right after echo, printf, Write-Output, Write-Host or write (the builder's option b, taken by the orchestrator: it keeps every launcher form blocked that was blocked before, such as ssh, find -exec, docker exec and Start-Process).
 - Found in: B40
 - Brief: -
 
@@ -1169,9 +1170,9 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Found in: B42
 - Brief: -
 
-### B50 · The hang check reads a commit message as commands · todo · XS · agent · low
+### B50 · The hang check reads a commit message or a pull request body as commands · todo · XS · agent · low
 - Touches: .claude/hooks/guard-commands.sh, selftest.sh (the guard is framework-owned: T276, T277 and T278 carry the fix)
-- Repro: 1. Feed the guard hook `git commit -q -F - -- a <<'EOF'` with a body line saying PowerShell's While loop with Start-Sleep is now seen. 2. Expected: passes: B40 made a quoted-delimiter message to git commit or git tag text for the git rules, and the hang rules should read it the same way. Actual: exit 2, "an until or while loop with sleep and no time limit": the hang rules read every heredoc body, and since B42 the loop rule matches in any case, so plain words in a message trip it. It blocked B42's own commit message.
+- Repro: 1. Feed the guard hook `git commit -q -F - -- a <<'EOF'` with a body line saying PowerShell's While loop with Start-Sleep is now seen. The same with a `gh pr edit 5 --body-file - <<'EOF'` body. 2. Expected: passes: B40 and B48 made a quoted-delimiter message to git commit, git tag or gh text for the git rules, and the hang rules should read it the same way. Actual: exit 2, "an until or while loop with sleep and no time limit": the hang rules read every heredoc body, and since B42 the loop rule matches in any case, so plain words in a message trip it. It blocked B42's own commit message.
 - Found in: B42
 - Brief: -
 
@@ -1267,6 +1268,12 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Touches: .claude/hooks/guard-commands.sh, selftest.sh (the guard is framework-owned: an item for each framework once it's built)
 - Repro: 1. Feed the guard hook `printf 'git push --force' | bash` or `echo 'git push --force' | sh`; `/usr/bin/git push --force` or `git.exe push --force` (so `G=/usr/bin/git; $G push --force` too); `sudo -u root "$G" push --force`; `cmd /c "%G% push --force"`; `cat > .GIT/hooks/pre-commit <<'EOF'` with `git push --force` in the body; `bash.exe tools/../x.sh`; or `bash TOOLS/../x.sh`. 2. Expected: each is blocked, as `git push --force` and a `.git/hooks` write are. Actual: exit 0: a shell reading its script from a pipe isn't read as a wrapper, the git test needs the bare name, an option's value before the command name isn't skipped, only `$` variables are read, a shell's name takes no `.exe`, and the `.git` and `tools/` folder tests are case-sensitive, while Windows folders aren't.
 - Found in: B45, B46, B47
+- Brief: -
+
+### B54 · A message that names `--no-verify` or `gh auth token` is blocked · todo · XS · agent · low
+- Touches: .claude/hooks/guard-commands.sh, selftest.sh (the guard is framework-owned: an item for each framework once it's built)
+- Repro: 1. Feed the guard hook `git commit -q -F - <<'EOF'` with a body line naming `--no-verify`, or `gh pr edit 5 --body-file - <<'EOF'` with a body naming `gh auth token`. 2. Expected: passes: each body is a message no shell runs (B39, B40, B48). Actual: exit 2: the no-verify check reads the raw text, and the credential-print rule reads decoded bodies, messages included.
+- Found in: B48
 - Brief: -
 
 ### T103 · /ui-design tells the director how to use Excalidraw · done 2026-10-20 · S · agent

@@ -30,6 +30,8 @@
 # A quoted script given to a shell or an interpreter (bash -c, sh -c, zsh -c, eval, powershell -Command, pwsh -c, cmd /c)
 # is a command of its own: each is read as one, and a script nested in one to four levels too (B34). See the section
 # "Shell wrappers" below. A wait loop in such a script is judged too, and a script under timeout 280 or less is bounded (B42).
+# A shell or PowerShell name starts a script anywhere except right after a word that only prints its words (echo, printf,
+# Write-Output, Write-Host, write): `echo PowerShell 'x'` is text, and `ssh host pwsh -c 'x'` is still read (B48).
 #
 # A variable in a git command's words holds a value the guard can't read (B37). A variable that the command assigns once,
 # to a plain value, is read as that value (FLAG=--force; git push $FLAG is git push --force). Any other variable in the words
@@ -54,12 +56,14 @@
 # PowerShell finds a command case-insensitively, and Windows finds GIT, so GIT and Git are git (B46). Only the name is
 # matched so: git's subcommands and flags stay case-sensitive, as git reads them, and the name is written [Gg][Ii][Tt].
 # The shell's name in the script-path rule is read the same way (B47): "bash", 'sh' and BASH are bash and sh.
-# A heredoc body a shell runs (any body but a commit's or tag's message) takes a backtick as the end of a flag, and its words and the file-writing flags
+# A heredoc body a shell runs (any body but a message, B40 and B48) takes a backtick as the end of a flag, and its words and the file-writing flags
 # are read there too; git branch with a delete and a force flag, git push --mirror, --delete and -d, and a :ref refspec are
 # blocked, and the credential-print rules read the decoded words (B39, where the git rules below read the bodies and the words).
-# A heredoc body that no shell runs is text (B40): a commit's or tag's message, and a cat or tee body that the command doesn't
-# run (no shell, interpreter, ssh, chmod, make or npm, call operator, ./ path, dot-source or .git folder names it). The destructive rules and
-# the file-writing flag rules skip such a body; the substitutions in it are still read (B32).
+# A heredoc body that no shell runs is text (B40, B48): a commit's or tag's message, a gh pr, issue or release message with a quoted
+# delimiter (its body from stdin, --body-file -, -F -, --notes-file -, or from a $(cat <<'EOF') given to --body, -b, --notes or -n), and
+# a cat or tee body that the command doesn't run (no shell, interpreter, ssh, chmod, make or npm, call operator, ./ path, dot-source or
+# .git folder names it). The destructive rules, the file-writing flag rules and the variable rules (B37) skip such a body; the
+# substitutions in it are still read (B32).
 
 IFS= read -r -d '' input || true
 re='"command"[[:space:]]*:[[:space:]]*"(([^"\\]|\\.)*)"'
@@ -728,6 +732,13 @@ wrap_gate='(^|[^[:alnum:]_-])((ba|z|da|k)?sh|eval|powershell|pwsh|cmd)(\.exe)?([
 # B39: a heredoc whose header (the text before <<, after its last ; & |) feeds a commit's or tag's message, and whose line
 # names no shell, is text no shell runs. A header that names a shell (bash, sh, eval, source...) feeds a script a shell runs.
 hmsg_re='(^|[^[:alnum:]_./-])[Gg][Ii][Tt][[:space:]]+([^;&|]*[[:space:]])?(commit|tag)([[:space:]]|$)'
+# B48: a gh message with a quoted delimiter, of the subcommands that take one: pr create and edit, issue create, edit and comment,
+# and release create and edit (gh's -b and --body, -F and --body-file, -n and --notes, --notes-file). Its body comes from stdin
+# (hmsg_in_re: --body-file -, -F -, --notes-file -, and =- or -F-), or from a $(cat <<'EOF') given to --body, -b, --notes or -n
+# (hmsg_cat_re, read on the header before its $(cat is removed). gh is matched in any case, as git is (B46).
+hmsg_gh_re='(^|[^[:alnum:]_./-])[Gg][Hh][[:space:]]+(pr[[:space:]]+(create|edit)|issue[[:space:]]+(create|edit|comment)|release[[:space:]]+(create|edit))([[:space:]]|$)'
+hmsg_in_re='(^|[[:space:]])(--body-file|--notes-file|-F)([[:space:]]*=?[[:space:]]*)-([[:space:]]|$)'
+hmsg_cat_re='(^|[[:space:]])(--body|--notes|-b|-n)([[:space:]]*=[[:space:]]*|[[:space:]]+)"?\$\(cat[[:space:]]*$'
 hshell_re='(^|[^[:alnum:]_./-])((ba|z|da|k)?sh|eval|source|exec)(\.exe)?([[:space:];&|()<>]|$)'
 # B40: a cat or tee body (hcat_re is the header's command) is text unless the command names something that runs it (hrun_re): a
 # shell or an interpreter, ssh, chmod, iex, a build tool that runs the file it reads (make, npm and its family), a call operator
@@ -893,12 +904,16 @@ tcov_before() {
 # wrap_cmd: the words of one command (wcmd). A word that names a shell, eval, PowerShell or cmd takes the script its
 # arguments give it. Returns 1 for PowerShell's -EncodedCommand, whose text is hidden.
 wrap_cmd() {
-  local m j n=${#wcmd[@]} w base p sc
+  local m j n=${#wcmd[@]} w base p sc pr
   for ((m = 0; m < n; m++)); do
     w="${wcmd[m]}"; base="${w##*/}"; base="${base##*\\}"
     wtc=0; tcov_before "$m" && wtc=1
     wpx=0; [[ $base =~ ^((ba|z|da|k)?sh)(\.exe)?$ || $base == eval ]] && wpx=1
-    if [[ $base =~ ^((ba|z|da|k)?sh)(\.exe)?$ ]]; then
+    # B48: a shell or PowerShell name right after a word that only prints its words (echo, printf, Write-Output, Write-Host, write) is
+    # text, as in echo PowerShell 'x'. Anywhere else it may run a script, so ssh host pwsh -c 'x', find -exec sh -c 'x' and
+    # Start-Process powershell -ArgumentList 'x' are read as before.
+    pr=0; ((m > 0)) && [[ ${wcmd[m - 1]} =~ ^(echo|printf|write-output|write-host|write)$ ]] && pr=1
+    if ((!pr)) && [[ $base =~ ^((ba|z|da|k)?sh)(\.exe)?$ ]]; then
       for ((j = m + 1; j < n; j++)); do
         case ${wcmd[j]} in
           --) break ;;
@@ -909,9 +924,9 @@ wrap_cmd() {
           *) break ;;
         esac
       done
-    elif [[ $base == eval ]]; then
+    elif ((!pr)) && [[ $base == eval ]]; then
       wrap_rest $((m + 1)); wrap_push "$sc"
-    elif [[ $base =~ ^(powershell|pwsh)(\.exe)?$ ]]; then
+    elif ((!pr)) && [[ $base =~ ^(powershell|pwsh)(\.exe)?$ ]]; then
       for ((j = m + 1; j < n; j++)); do
         w="${wcmd[j]}"; p="${w#[-/]}"
         if [[ $w == [-/]* && -n $p ]]; then
@@ -923,7 +938,7 @@ wrap_cmd() {
         [[ $w == *.ps1 ]] && break
         wrap_rest "$j"; wrap_push "$sc"; break
       done
-    elif [[ $base =~ ^cmd(\.exe)?$ ]]; then
+    elif ((!pr)) && [[ $base =~ ^cmd(\.exe)?$ ]]; then
       for ((j = m + 1; j < n; j++)); do
         if [[ ${wcmd[j]} =~ ^/[ck]$ ]]; then wrap_rest $((j + 1)); wrap_push "$sc"; break; fi
       done
@@ -1300,15 +1315,15 @@ sq1="'"
 # the body plain text; an unquoted one expands $(...) and backticks, so a body with those stays.
 # B40: a body is in hdc (the destructive rules' bodies) and hnm (the file-writing flag rules') only when a shell runs it. A commit's
 # or tag's message (hmsg) is text no shell runs, and so is a cat or tee body (hwr, collected in hwb) unless the command names a
-# runner (hrun_re, after the loop). Every body is in hall for the variable rules (B37), and an unquoted body's substitutions are
-# in gtext (B32). A shell body is collected in hsh.
+# runner (hrun_re, after the loop). A shell body is collected in hsh, and hall (the variable rules' bodies, B37) is hsh once the
+# cat and tee bodies that run are in it (B48), so a message or a cat body that nothing runs is no variable's text. An unquoted
+# body's substitutions are in gtext (B32).
 gtext=""; delim=""; hquote=""; body=""; hall=""; hsh=""; hwb=""; hdc=""; hnm=""; hmsg=0; hwr=0; hpre=""; hsubb=0
 while IFS= read -r line || [ -n "$line" ]; do
   if [ -n "$delim" ]; then
     if [ "${line#"${line%%[![:space:]]*}"}" = "$delim" ]; then
       delim=""
       [[ -n $hquote || ( $body != *'$('* && $body != *'`'* ) ]] || { gtext+="${body//[\'\"]/_}"; hsubb=1; }   # an unquoted body's quotes are text (B32), and its substitutions are read whole (B43)
-      hall+="$body"
       if ((hmsg)); then :
       elif ((hwr)); then hwb+="$body"
       else hsh+="$body"; fi
@@ -1319,17 +1334,19 @@ while IFS= read -r line || [ -n "$line" ]; do
   gtext+="$line$nl"
   if [[ $line =~ $hre ]]; then
     delim="${BASH_REMATCH[3]}"; hquote="${BASH_REMATCH[2]}"
-    # hmsg: the header's command, up to the << (after its last ; & |), is a commit's or tag's, and the line names no shell.
-    # A substitution in that command runs one, so only $(cat, which prints the message, keeps the body a message.
+    # hmsg: the header's command, up to the << (after its last ; & |), is a commit's or tag's (hmsg_re), or a gh message's with a
+    # quoted delimiter (B48), and the line names no shell. A substitution in that command runs one, so only $(cat, which prints the
+    # message, keeps the body a message. hcom is that test, shared by both message forms.
     hpre="${line%%<<*}"; hpre="${hpre##*[;&|]}"; hsub="${hpre//'$(cat'/}"
+    hcom=0; [[ $hsub != *'$('* && $hsub != *'<('* && $hsub != *'>('* && $hsub != *"$bt"* ]] && ! [[ $line =~ $hshell_re ]] && hcom=1
     hmsg=0
-    [[ $hpre =~ $hmsg_re && $hsub != *'$('* && $hsub != *'<('* && $hsub != *'>('* && $hsub != *"$bt"* && ! $line =~ $hshell_re ]] && hmsg=1
+    ((hcom)) && [[ $hpre =~ $hmsg_re ]] && hmsg=1
+    ((hcom)) && [[ -n $hquote && $hpre =~ $hmsg_gh_re && ( $hpre =~ $hmsg_in_re || $hpre =~ $hmsg_cat_re ) ]] && hmsg=1
     hwr=0; if ((!hmsg)) && [[ $hpre =~ $hcat_re ]]; then hwr=1; fi
   fi
 done <<<"$real"
 gtext+="$body"   # a heredoc that never closes keeps its text: a false block beats a miss
 [[ -n $body ]] && hsubb=1   # its text is read whole too, so the comment reading (B43) is off for it
-hall+="$body"    # every body, for the variable rules (B37): a body may be a script a shell runs
 hsh+="$body"
 # B40: a cat or tee body is read as a shell body when the command names a runner. The text is read with its quotes removed, so
 # "bash" x.sh names bash, and quoted text with a space in it is blanked, as decode_words blanks it, so a message that names bash
@@ -1345,6 +1362,7 @@ fi
 # B39: a backtick ends a flag in a body a shell runs, so hdc and hnm hold each backtick of such a body as a space. A backtick in a
 # message is read by B32 in gtext, where an unquoted body's substitutions are.
 hdc="${hsh//"$bt"/ }"; hnm="$hdc"
+hall="$hsh"   # B48: the variable rules read the bodies a shell runs, as the destructive rules do (B37, B40)
 
 # B32: the substitutions are read out of the command first (subst_cut), so the quote reading below sees placeholders, not
 # their text: a quote or a ) inside a substitution can't end a quoted string or the substitution early. Outside git's
