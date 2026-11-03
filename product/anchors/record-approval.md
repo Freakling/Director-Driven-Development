@@ -14,7 +14,7 @@ How to read it:
 | `<decision log>` | `product/decisions.md` | `design/decisions.md` | `product/decisions.md` |
 | `<open questions>` | brief › Open Questions | GDD › Open Questions | PRD › Open Questions |
 | `<written>` (what a summary lists) | file, line, item and story | file, line, item and story (stories only in a game with `User stories: on`) | file, line, item, story and ADR status |
-| the sessions that write records from a conversation | `design.md`, `research.md`, `next-task.md`, `drift-reset.md`, `ui-design.md`, `acceptance.md`, `align.md`, `ONBOARDING.md` | `design.md`, `research.md`, `next-task.md`, `drift-reset.md`, `ui-design.md`, `playtest.md`, `function-check.md`, `export.md`, `release.md`, `align.md`, `ONBOARDING.md` | `design.md`, `research.md`, `next-task.md`, `drift-reset.md`, `ui-design.md`, `acceptance.md`, `feedback.md`, `architect.md`, `integrate.md`, `assess.md`, `align.md`, `workshops/README.md`, the `saas-design-session` skill, `ONBOARDING.md` |
+| the sessions that write records from a conversation | `design.md`, `research.md`, `next-task.md`, `drift-reset.md`, `ui-design.md`, `acceptance.md`, `align.md`, `ONBOARDING.md` | `design.md`, `research.md`, `next-task.md`, `drift-reset.md`, `ui-design.md`, `playtest.md`, `function-check.md`, `export.md`, `release.md`, `align.md`, `ONBOARDING.md` | `design.md`, `research.md`, `next-task.md`, `drift-reset.md`, `ui-design.md`, `acceptance.md`, `feedback.md`, `architect.md`, `integrate.md`, `assess.md`, `roadmap.md`, `align.md`, `workshops/README.md`, the `saas-design-session` skill, `ONBOARDING.md` |
 
 `ONBOARDING.md` sits at the repository root in all three. The texts say "the human", as the procedures do; where the file being edited says "the director" (several SaaSAllTheThings files do), the builder uses that file's word.
 
@@ -47,6 +47,7 @@ How to read it:
 | SaaSAllTheThings: `architect.md` | Record, after Propose's wait | the ADR with its status, the exceptions, the TASKS.md items, the AGENTS.md lines and the compliance mapping rows |
 | SaaSAllTheThings: `integrate.md` | 2. Work out the contract | the contract, filled from the rounds' answers (held until then), with the TASKS.md items, AGENTS.md rows and PRD link |
 | SaaSAllTheThings: `assess.md` › Process workshop notes | before the first record | the PRD changes, ADR drafts with their status, the contract, stories, open questions, human items and the Processed line |
+| SaaSAllTheThings: `roadmap.md` | the step that writes Milestones and the stage's items | the Milestones rows and the items (in onboarding they join its summary) |
 | SaaSAllTheThings: `workshops/README.md`, `saas-design-session` skill | Notes, Writing it down | the notes file: decisions, stories, open questions, actions and ADR drafts |
 | Godot-Director: `export.md`, `release.md` | between the last round and "Write it down" | what "Write it down" will write |
 | Godot-Director: `design.md` › User stories | Turning them on, Turning them off | the `User stories` switch with the file, the GDD link and the items' `Stories:` lines |
