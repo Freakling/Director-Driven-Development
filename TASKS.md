@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T292 · B64 · R7
+**Next IDs:** T298 · B64 · R7
 
 ## Milestones
 | Milestone | Status |
@@ -1317,7 +1317,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Note: built 2026-11-03 as Godot-Director's T40. export.md and release.md got a Summary and approval step 3 (Write it down and Try it are 4 and 5), the playtest's machine review joins its summary, and onboarding's settings sections (facts, ownership, dev menu, model sizing) keep the install commit's approval as their gate, as in App-Director's T40. The builder also updated README.md, framework/playtesting/README.md and examples/scenarios.md.
 - Brief: Scope › Framework features
 
-### T283 · App-Director: the selftest runs in under five minutes · todo · S · agent
+### T283 · App-Director: the selftest runs in under five minutes · in-progress 2026-11-03 · S · agent
 - Depends on: T276
 - Touches: work/App-Director: selftest.sh
 - Done when: `bash selftest.sh` in work/App-Director finishes in under five minutes on this machine, with the same checks and output, measured before and after per section (check) · following AGENTS.md › Project rules for framework work
@@ -1373,10 +1373,12 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Brief: -
 
 ### T290 · SaaSAllTheThings: a quoted path with a space, or a backslash path, can't hide az, git or a Remove-Az cmdlet from the guard · in-progress 2026-11-03 · S · agent
+- PRs: SaaSAllTheThings #46 (open)
 - Depends on: T286
 - Touches: work/SaaSAllTheThings: framework/.claude/hooks/guard-commands.sh, selftest.sh
 - Done when: the guard blocks `& 'C:\Program Files\Az\Remove-AzResourceGroup' -Name rg`, `"C:\Program Files\Git\bin\git.exe" push --force`, `"C:\Program Files\Microsoft SDKs\Azure\CLI2\wbin\az.cmd" group delete -n rg` and `C:\bin\az.cmd group delete -n rg`, in the Bash and PowerShell tools, as it blocks the bare names, with their cases: a quoted command name with a space is read as a name, not blanked as text, and a backslash path keeps its last part for the az rule; the same check, read-only, in App-Director's and Godot-Director's hooks for the git form, with an item here for each that has the gap; the selftest passes (check) · following AGENTS.md › Project rules for framework work
 - Note: found in T286; all four pass on the hook before T286 too.
+- Note: built 2026-11-03 as SaaSAllTheThings' T40. App-Director's and Godot-Director's hooks pass both git payloads (T292, T293).
 - Brief: -
 
 ### T291 · Godot-Director: the selftest runs in under fifteen minutes · todo · M · agent
@@ -1384,6 +1386,48 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Touches: work/Godot-Director: selftest.sh
 - Done when: `bash selftest.sh <path to Godot>` in work/Godot-Director finishes in under fifteen minutes on this machine with nothing else running, with the same checks and output, measured before and after per section; the sections that take longest are named in the item's note (check) · following AGENTS.md › Project rules for framework work
 - Note: found in T282: the full run took 6006 s after T278 and 6324 s for T282 on 2026-11-03 (1041 and 1042 cases), with other builders and two stuck processes from other projects sharing the machine, so each Godot-Director item takes close to two hours to gate. T283 is App-Director's counterpart.
+- Brief: -
+
+### T292 · App-Director: a quoted path with a space, or a backslash path, can't hide git from the guard · todo · S · agent
+- Depends on: T285
+- Touches: work/App-Director: framework/.claude/hooks/guard-commands.sh, selftest.sh
+- Done when: the guard blocks `"C:\Program Files\Git\bin\git.exe" push --force`, `& 'C:\Program Files\Git\bin\git.exe' push --force` and `C:\Git\bin\git.exe push --force` in the Bash and PowerShell tools, as it blocks the bare name, with their cases, as SaaSAllTheThings' T290 does (a command name quoted with a space or a path, or an unquoted backslash path that starts with a drive, `.`, `..`, `~` or two backslashes, is read as its last part without `.exe`, `.cmd` or `.bat`); `& 'C:\Program Files\Git\bin\git.exe' status`, a commit message naming the path, and `c\at README.md` still pass; the selftest passes (check) · following AGENTS.md › Project rules for framework work
+- Note: found in T290; both payloads exit 0 on the hook at its bundle's head.
+- Brief: -
+
+### T293 · Godot-Director: a quoted path with a space, or a backslash path, can't hide git from the guard · todo · S · agent
+- Depends on: T278
+- Touches: work/Godot-Director: framework/.claude/hooks/guard-git.sh, selftest.sh
+- Done when: the guard blocks `"C:\Program Files\Git\bin\git.exe" push --force`, `& 'C:\Program Files\Git\bin\git.exe' push --force` and `C:\Git\bin\git.exe push --force` in the Bash and PowerShell tools, as it blocks the bare name, with their cases, as SaaSAllTheThings' T290 does (a command name quoted with a space or a path, or an unquoted backslash path that starts with a drive, `.`, `..`, `~` or two backslashes, is read as its last part without `.exe`, `.cmd` or `.bat`); `& 'C:\Program Files\Git\bin\git.exe' status`, a commit message naming the path, and `c\at README.md` still pass; the selftest passes (check) · following AGENTS.md › Project rules for framework work
+- Note: found in T290; both payloads exit 0 on the hook at its bundle's head.
+- Brief: -
+
+### T295 · Godot-Director: the Stop hook runs the check only for the session that changed the code · todo · M · agent
+- Depends on: T278
+- Touches: work/Godot-Director: framework/.claude/hooks/stop-check.sh, a new framework-owned PostToolUse hook in framework/.claude/hooks/, framework/.claude/settings.json, selftest.sh, the docs that describe the Stop hook, CHANGELOG.md
+- Done when: the Stop hook runs the project check only when this session itself wrote or edited a code, scene or data file (`.gd`, `.tscn`, `.scn`, `.tres`, `.res`, `.gdshader`, `.gdshaderinc`, `project.godot`) since its last passing check: a PostToolUse hook on Edit, Write, MultiEdit and NotebookEdit records the paths it touched in `.godot/godot-director/sessions/<session_id>.touched` (the hook input's `session_id`), and for Bash it compares the dirty files before and after the command (a PreToolUse snapshot, or a file list with modification times) and records the ones that changed; a session that touched only docs (design/, TASKS.md, `*.md`, assets) never triggers the check; the builder marker, the fingerprint (the same failure isn't reported twice), `GODOT_DIRECTOR_STOP_CHECK=0` and the exit 0 when tools/check.sh is missing keep working; the session's record is removed when the check passes, and records older than a day are ignored (check) · in a design session that edits only Markdown while another session has uncommitted a code, scene or data file (`.gd`, `.tscn`, `.scn`, `.tres`, `.res`, `.gdshader`, `.gdshaderinc`, `project.godot`) in the same folder, the Stop hook exits at once without running the check, tested with a scripted hook input; a session that edits a code, scene or data file (`.gd`, `.tscn`, `.scn`, `.tres`, `.res`, `.gdshader`, `.gdshaderinc`, `project.godot`) still gets the check and is blocked once on failure, tested; the release notes' upgrade section says what changed (check) · following AGENTS.md › Project rules for framework work
+- Note: asked for by the director on 2026-11-03: when two sessions share one working folder (a design session and a build session on the same checkout, no worktree), the build session's uncommitted code makes the hook run the check at the end of every turn of the design session too, which edited no code, waits minutes, and is sometimes blocked by failures it can't fix.
+- Brief: -
+
+### T296 · App-Director: the Stop hook runs the check only for the session that changed the code · todo · M · agent
+- Depends on: T276
+- Touches: work/App-Director: framework/.claude/hooks/stop-check.sh, a new framework-owned PostToolUse hook in framework/.claude/hooks/, framework/.claude/settings.json, selftest.sh, the docs that describe the Stop hook, CHANGELOG.md
+- Done when: the Stop hook runs the project check only when this session itself wrote or edited a source file (any file but `*.md` and `.app-director/state/`, the hook's present rule) since its last passing check: a PostToolUse hook on Edit, Write, MultiEdit and NotebookEdit records the paths it touched in `.app-director/state/sessions/<session_id>.touched` (the hook input's `session_id`), and for Bash it compares the dirty files before and after the command (a PreToolUse snapshot, or a file list with modification times) and records the ones that changed; a session that touched only docs (`*.md`, product/, TASKS.md) never triggers the check; the builder marker, the fingerprint (the same failure isn't reported twice), `APP_DIRECTOR_STOP_CHECK=0` and the exit 0 when tools/check.sh is missing keep working; the session's record is removed when the check passes, and records older than a day are ignored (check) · in a design session that edits only Markdown while another session has uncommitted a source file (any file but `*.md` and `.app-director/state/`, the hook's present rule) in the same folder, the Stop hook exits at once without running the check, tested with a scripted hook input; a session that edits a source file (any file but `*.md` and `.app-director/state/`, the hook's present rule) still gets the check and is blocked once on failure, tested; the release notes' upgrade section says what changed (check) · following AGENTS.md › Project rules for framework work
+- Note: asked for by the director on 2026-11-03: when two sessions share one working folder (a design session and a build session on the same checkout, no worktree), the build session's uncommitted code makes the hook run the check at the end of every turn of the design session too, which edited no code, waits minutes, and is sometimes blocked by failures it can't fix.
+- Brief: -
+
+### T297 · SaaSAllTheThings: the Stop hook runs the check only for the session that changed the code · in-progress 2026-11-03 · M · agent
+- Depends on: T277
+- Touches: work/SaaSAllTheThings: framework/.claude/hooks/stop-check.sh, a new framework-owned PostToolUse hook in framework/.claude/hooks/, framework/.claude/settings.json, selftest.sh, the docs that describe the Stop hook, CHANGELOG.md
+- Done when: the Stop hook runs the project check only when this session itself wrote or edited a source file (any file but `*.md`, with `adr/` counting as source, the hook's present rule) since its last passing check: a PostToolUse hook on Edit, Write, MultiEdit and NotebookEdit records the paths it touched in `.satt/state/sessions/<session_id>.touched` (the hook input's `session_id`), and for Bash it compares the dirty files before and after the command (a PreToolUse snapshot, or a file list with modification times) and records the ones that changed; a session that touched only docs (`*.md` outside `adr/`, product/, TASKS.md) never triggers the check; the builder marker, the fingerprint (the same failure isn't reported twice), `SATT_STOP_CHECK=0` and the exit 0 when tools/check.sh is missing keep working; the session's record is removed when the check passes, and records older than a day are ignored (check) · in a design session that edits only Markdown while another session has uncommitted a source file (any file but `*.md`, with `adr/` counting as source, the hook's present rule) in the same folder, the Stop hook exits at once without running the check, tested with a scripted hook input; a session that edits a source file (any file but `*.md`, with `adr/` counting as source, the hook's present rule) still gets the check and is blocked once on failure, tested; the release notes' upgrade section says what changed (check) · following AGENTS.md › Project rules for framework work
+- Note: asked for by the director on 2026-11-03: when two sessions share one working folder (a design session and a build session on the same checkout, no worktree), the build session's uncommitted code makes the hook run the check at the end of every turn of the design session too, which edited no code, waits minutes, and is sometimes blocked by failures it can't fix.
+- Brief: -
+
+### T294 · The three guards: a quoted or backslash path to git or a shell can't hide git's program flags or a wrapper's script · todo · S · agent
+- Depends on: T290, T292, T293
+- Touches: work/SaaSAllTheThings, work/App-Director, work/Godot-Director: each guard hook and selftest.sh
+- Done when: `"C:\Program Files\Git\bin\git.exe" -c core.pager=calc log` and `--upload-pack` with a quoted git path, and `"C:\Program Files\Git\bin\bash.exe" -c "git push --force"` and `C:\Git\bin\bash.exe -c ...`, are blocked as the bare names are, with their cases, in each framework's guard; the selftests pass (check) · following AGENTS.md › Project rules for framework work
+- Note: found in T290: the `-c` and program-flag rules and the shell wrapper gate read only a bare git or shell word.
 - Brief: -
 
 ### B53 · A script piped to a shell, a path-qualified or `.exe` git or bash, a sudo option's value, cmd's %VAR% or a folder in another case passes the guard (A01:2025 Broken Access Control) · todo · S · agent · med
