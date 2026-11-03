@@ -25,7 +25,8 @@
 # as a command's name it can be git. So the substitutions are read out of the command, each one's text is read as a
 # command of its own, and in a git command's words only a double-quoted one that starts with fixed text (or a commit's
 # or tag's -m value) passes, and only when its text is a plain read. In Bash a comment holds no substitution, and its quotes
-# open no string (B43). See the section "Substitutions" below.
+# open no string (B43). See the section "Substitutions" below. The word decoder reads each comment on its own line, so a quote
+# in a comment pairs with nothing after the line break, and a quoted flag or refspec after it is read (B51). See "Comments".
 #
 # A quoted script given to a shell or an interpreter (bash -c, sh -c, zsh -c, eval, powershell -Command, pwsh -c, cmd /c)
 # is a command of its own: each is read as one, and a script nested in one to four levels too (B34). See the section
@@ -1514,17 +1515,125 @@ if ((cnv)); then
   [[ $bare_r =~ (^|[^[:alnum:]_./-])[Gg][Ii][Tt]([[:space:]]|$) ]] && isgit=1
 fi
 
-# decode_words <text>: sets dec to the words the shell hands a command, as the rules read them (B26, B33). The quoted strings
-# are walked from the left. One with a space in it is message text, so it's blanked. One without a space is kept as a
-# word: a flag ("--force", '-D'), a refspec ("+main"), a path (".") or a subcommand ("drop") reads as it does to the
-# shell. A quoted string that is a flag by itself, or sits inside a word (--out"put"=x), keeps its spaces too. Inside a
-# kept string, ; & | < > ( ) and a line break are text, not separators: each is marked \x05, which no rule matches.
-# A "..." holding a substitution keeps its text, which has the placeholder, so the substitution's word is judged (B32).
+# --- Comments (B51) -------------------------------------------------------------------------------
+# A comment runs no command, but the rules still read its words, so an unquoted git command in one still blocks. What B51
+# changed is that a comment's quotes can't pair with a quote after its line break: "it's" and the 'x' on the next line
+# paired, so the refspec between them read as quoted text. cms and cme
+# get each comment's start and end: a # that starts a word outside quotes and ${...} (cmt_start, B43), up to the line
+# break. In Bash a backslash escapes the next character outside single quotes, $'...' escapes with a backslash, a $( is
+# passed over as sub_end (B43) reads it, and a backtick span runs to its closing backtick. In PowerShell a backtick
+# escapes the next character outside single quotes, quotes are doubled, and a # starts a comment after a blank, a line
+# break, ; & | or (. A joined PowerShell reading has lost the backtick before a #, so a # there is judged as text too.
+cms=(); cme=()
+# bt_end <text> <i>: sets bt_e to the backtick that closes the one at <i> (a backslash escapes the next character). 1 when none.
+bt_end() {
+  local s="$1" k=$(($2 + 1)) L=${#1}
+  while ((k < L)); do
+    case ${s:k:1} in
+      '\') ((k += 2)) ;;
+      '`') bt_e=$k; return 0 ;;
+      *) ((k++)) ;;
+    esac
+  done
+  return 1
+}
+# cmt_spans <text>: the Bash comments of the text, as cms and cme. A # in a quoted string, in a backtick span or in ${...}
+# isn't a comment, and a $( is passed over whole, so a comment inside it is found by sub_end (B43).
+cmt_spans() {
+  local s="$1" L=${#1} i=0 st=0 pb=0 c r k
+  local sesc='\'
+  cms=(); cme=()
+  [[ $s == *'#'* ]] || return 0
+  while ((i < L)); do
+    c="${s:i:1}"
+    case $st in
+      0)
+        case $c in
+          '\') ((i += 2)); continue ;;
+          "'") st=1 ;;
+          '"') st=2 ;;
+          '`') if bt_end "$s" "$i"; then i=$((bt_e + 1)); continue; fi ;;
+          '$')
+            r="${s:i+1:1}"
+            if [[ $r == "'" ]]; then st=3; ((i += 2)); continue
+            elif [[ $r == '(' ]] && sub_end "$s" $((i + 2)) 1; then i=$((sub_e + 1)); continue
+            elif [[ $r == '{' ]]; then pb=$((pb + 1)); ((i += 2)); continue; fi ;;
+          '}') ((pb > 0)) && ((pb--)) ;;
+          '#')
+            if ((pb == 0)) && cmt_start "$s" "$i"; then
+              r="${s:i}"; k="${r%%"$nl"*}"
+              cms+=("$i"); cme+=($((i + ${#k})))
+              ((i += ${#k})); continue
+            fi ;;
+        esac ;;
+      1) [[ $c == "'" ]] && st=0 ;;
+      2)
+        case $c in
+          '\') ((i += 2)); continue ;;
+          '"') st=0 ;;
+          '`') if bt_end "$s" "$i"; then i=$((bt_e + 1)); continue; fi ;;
+          '$') if [[ ${s:i+1:1} == '(' ]] && sub_end "$s" $((i + 2)) 1; then i=$((sub_e + 1)); continue; fi ;;
+        esac ;;
+      3)
+        case $c in
+          '\') ((i += 2)); continue ;;
+          "'") st=0 ;;
+        esac ;;
+    esac
+    ((i++))
+  done
+}
+# cmt_spans_ps <text>: the PowerShell comments of the text, as cms and cme (see above).
+cmt_spans_ps() {
+  local s="$1" L=${#1} i=0 st=0 pb=0 c p r k
+  cms=(); cme=()
+  [[ $s == *'#'* ]] || return 0
+  while ((i < L)); do
+    c="${s:i:1}"
+    case $st in
+      0)
+        case $c in
+          '`') ((i += 2)); continue ;;
+          "'") st=1 ;;
+          '"') st=2 ;;
+          '$') if [[ ${s:i+1:1} == '{' ]]; then pb=$((pb + 1)); ((i += 2)); continue; fi ;;
+          '}') ((pb > 0)) && ((pb--)) ;;
+          '#')
+            p=""; ((i > 0)) && p="${s:i-1:1}"
+            if ((pb == 0)) && [[ $p == '' || $p == ' ' || $p == $'\t' || $p == "$nl" || $p == [';&|('] ]]; then
+              r="${s:i}"; k="${r%%"$nl"*}"
+              cms+=("$i"); cme+=($((i + ${#k})))
+              ((i += ${#k})); continue
+            fi ;;
+        esac ;;
+      1) if [[ $c == "'" ]]; then
+           if [[ ${s:i+1:1} == "'" ]]; then ((i += 2)); continue; fi
+           st=0
+         fi ;;
+      2)
+        case $c in
+          '`') ((i += 2)); continue ;;
+          '"') if [[ ${s:i+1:1} == '"' ]]; then ((i += 2)); continue; fi; st=0 ;;
+        esac ;;
+    esac
+    ((i++))
+  done
+}
+
+# decode_words <text>: sets dec to the words the shell hands a command, as the rules read them (B26, B33). A comment (B51) is
+# decoded on its own, so its quotes pair with nothing after it, and the text between comments is decoded as one.
 x5=$'\x05'
 qre='^(([^"'$sq1'\\]|\\.)*)("(([^"\\]|\\.)*)"|'$sq1'([^'$sq1']*)'$sq1')'
-decode_words() {
-  local rest="$1" pre quoted inner word keep
-  dec=""
+lre='^(([^"'$sq1'\\]|\\.)*)(["'$sq1'])'
+# dec_seg <text> [1]: appends to dec the words of one stretch of a command, with the quoted strings walked from the left. One
+# with a space in it is message text, so it's blanked. One without a space is kept as a word: a flag ("--force", '-D'), a
+# refspec ("+main"), a path (".") or a subcommand ("drop") reads as it does to the shell. A quoted string that is a flag by
+# itself, or sits inside a word (--out"put"=x), keeps its spaces too. Inside a kept string, ; & | < > ( ) and a line break
+# are text, not separators: each is marked \x05, which no rule matches. A "..." holding a substitution keeps its text, which
+# has the placeholder, so the substitution's word is judged (B32). With the second argument 1 (a comment, B51) a quote that
+# never closes is text, and the quotes after it still pair within the comment.
+dec_seg() {
+  local rest="$1" lone="${2:-0}" pre quoted inner word keep
   while [[ $rest =~ $qre ]]; do
     pre="${BASH_REMATCH[1]}"; quoted="${BASH_REMATCH[3]}"; rest="${rest:${#BASH_REMATCH[0]}}"
     inner="${quoted:1:${#quoted}-2}"
@@ -1545,7 +1654,22 @@ decode_words() {
       dec+="$inner"
     else dec+=" Q "; fi
   done
+  if ((lone)) && [[ $rest =~ $lre ]]; then           # B51: a comment's quote that never closes is text
+    pre="${BASH_REMATCH[1]}"; rest="${rest:${#BASH_REMATCH[0]}}"
+    dec+="${pre//\\/}"; dec_seg "$rest" 1; return
+  fi
   rest="${rest//\\/}"; dec+="${rest//[\"$sq1]/}"   # a quote left over never closes
+}
+decode_words() {
+  local orig="$1" p=0 k
+  dec=""
+  if [[ $tool == PowerShell ]]; then cmt_spans_ps "$orig"; else cmt_spans "$orig"; fi
+  for ((k = 0; k < ${#cms[@]}; k++)); do
+    dec_seg "${orig:p:cms[k]-p}"
+    dec_seg "${orig:cms[k]:cme[k]-cms[k]}" 1
+    p=${cme[k]}
+  done
+  dec_seg "${orig:p}"
   dec="${dec//$nl/;}"; dec="${dec//>&/> }"; dec="${dec//&>/> }"
 }
 decode_words "$cut_out"; gcode="$dec"

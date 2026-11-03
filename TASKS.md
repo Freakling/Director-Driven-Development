@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T279 · B58 · R7
+**Next IDs:** T279 · B59 · R7
 
 ## Milestones
 | Milestone | Status |
@@ -1176,7 +1176,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Found in: B42
 - Brief: -
 
-### B51 · A quote in a Bash comment hides a quoted flag or refspec from the git rules (A01:2025 Broken Access Control) · todo · XS · agent · med
+### B51 · A quote in a Bash comment hides a quoted flag or refspec from the git rules (A01:2025 Broken Access Control) · done 2026-11-03 · XS · agent · med
 - Touches: .claude/hooks/guard-commands.sh, selftest.sh (the guard is framework-owned: T276, T277 and T278 carry the fix)
 - Repro: 1. Feed the guard hook a Bash payload whose first line is `# it's` and whose next line is `git push origin ':main'`. 2. Expected: blocked, as the second line alone is. Actual: exit 0: the decoded words pair the comment's quote with the next one, so the refspec reads as quoted text; B43 taught the substitution reader that a comment is text, but not the word decoder.
 - Found in: B43
@@ -1292,6 +1292,12 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Touches: .claude/hooks/guard-commands.sh, selftest.sh (the guard is framework-owned: an item for each framework once it's built)
 - Repro: 1. Feed the guard hook `bash -c 'echo hi' && git commit -q -m "wait: until done; do sleep 1; done"`. 2. Expected: passes: the -m value is a message. Actual: exit 2: with an unquoted `bash -c` in the command, the raw-text scan reads the -m value too.
 - Found in: B50
+- Brief: -
+
+### B58 · A PowerShell block comment, or an ANSI-C quoted escape before a `#`, hides a git flag (A01:2025 Broken Access Control) · todo · XS · agent · med
+- Touches: .claude/hooks/guard-commands.sh, selftest.sh (the guard is framework-owned: an item for each framework once it's built)
+- Repro: 1. Feed the guard hook a PowerShell payload with `<# it's #> git push origin ':main' 'x'`, or a Bash payload with `git push $'a\'b #' "$(printf '\055\055force')"`. 2. Expected: each is blocked. Actual: exit 0: B51 reads PowerShell's line comments but not its block comments, and B43's substitution reader takes the `#` after an ANSI-C quoted escape as a comment, so the substitution after it is never read.
+- Found in: B51
 - Brief: -
 
 ### T103 · /ui-design tells the director how to use Excalidraw · done 2026-10-20 · S · agent

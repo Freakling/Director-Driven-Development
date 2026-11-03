@@ -51,6 +51,8 @@
 #      A command substitution in a git command's words, or as its name, is blocked when it can print a flag or run
 #      a command the guard can't read; a quoted value after fixed text, a commit's -m value and a read pass (B32).
 #      In Bash a comment holds no substitution and opens no quoted string, so a backtick or $( in one passes (B43).
+#      A quote in a comment (Bash, or PowerShell's #) pairs with nothing after the comment's line break, so a quoted
+#      flag, refspec or credential command after it is blocked, and a quote that never closes in a comment is text (B51).
 #      A destructive git rule (a force push, a +refspec, reset --hard, clean -f, checkout or switch -f, stash drop,
 #      branch -D) reads the decoded words, so a quoted flag or refspec is blocked, and its flag ends at ; & | ) or a
 #      line break; a heredoc body a shell runs is read too, and a quoted message that names a rule passes (B33).
@@ -1272,6 +1274,67 @@ else
     err "the guard hook reads a backtick, \$( or quote in a Bash comment as a substitution or a string, or misses a substitution after one (B43):"
     printf '%s\n' "${git_fail#$'\n'}"
   else echo "ok: the guard hook reads a Bash comment as text, so a backtick, \$( or quote in it starts no substitution or string, and a substitution after a comment, an escaped blank or a # in a word is still read (B43)"; fi
+
+  # The word decoder (B51) reads a comment on its own line: a quote in it pairs with nothing after the line break, so the
+  # quoted flag, refspec or credential command after it is seen, in Bash, in a heredoc body a shell runs and in PowerShell
+  # (whose # starts a comment the same way). A quote in a comment that never closes is text, so the flags it names pass,
+  # and a quoted command in a comment passes as it did; a # inside a quoted string, an escaped #, ${#x} or $# starts no
+  # comment, so a flag after one is blocked.
+  git_fail=""
+  if [ -f .claude/hooks/guard-commands.sh ]; then
+    for cmd in \
+        $'# it\'s\ngit push origin \':main\'' \
+        $'# it\'s\ngit push "--force" \'x\'' \
+        $'# say "hi\ngit push "--force" "x"' \
+        $'# it\'s\ngit commit -q "-n" -m \'x\'' \
+        $'# it\'s\ngit push origin "+main" \'x\'' \
+        $'# say "hi\ngit push origin \':main\'' \
+        $'# say "hi\ngit commit -q "-n" -m "x"' \
+        $'git status\n# it\'s\ngit push "--force" \'x\'' \
+        $'echo \'a\'  # it\'s\ngit push "--force" \'x\'' \
+        $'# it\'s\n# don\'t\ngit push origin \':main\' \'x\'' \
+        $'bash <<\'EOF\'\n# it\'s\ngit push origin \':main\'\nEOF' \
+        $'bash <<\'EOF\'\n# it\'s\ngit push "--force" \'x\'\nEOF' \
+        $'# it\'s\ngit credential fill \'x\'' \
+        $'# note\\\ngit push --force' \
+        $'echo a\\ #b ; git push --force' \
+        $'echo "#" ; git push --force' \
+        $'git status ${x:- #} ; git push --force' \
+        $'echo "$(echo "a #") # b" ; git push --force'; do
+      guard 2 "$cmd"
+    done
+    for cmd in \
+        $'# it\'s\ngit status' \
+        $'# it\'s --force\ngit status' \
+        $'# it\'s "--force" -n :main\ngit status' \
+        $'# it\'s \':main\'\ngit log -1' \
+        $'# it\'s "git push --force"\ngit status' \
+        $'# say "--force" and "-n" and ":main"\ngit status' \
+        $'git status # it\'s --force\ngit log -1' \
+        $'git status\n# it\'s\ngit log --oneline -3' \
+        $'# it\'s -n\ngit push origin main' \
+        $'git commit -q -F - <<\'EOF\'\n# it\'s git push origin \':main\'\nEOF' \
+        $'bash <<\'EOF\'\n# it\'s --force\necho done\nEOF' \
+        $'git commit -m "fix #12 it\'s" -m "x"' \
+        $'git status "#" \'it\'' \
+        $'echo ;#x'; do
+      guard 0 "$cmd"
+    done
+    for cmd in \
+        $'# it\'s\ngit push "--force" \'x\'' \
+        $'# it\'s\ngit commit -q "-n" -m \'x\'' \
+        $'echo "a""b # " ; git push --force' \
+        'git push `#x --force'; do
+      guard 2 "$cmd" PowerShell
+    done
+    guard 0 $'# it\'s --force\ngit status' PowerShell
+    guard 0 $'# it\'s\ngit log -1' PowerShell
+  fi
+  guard_run
+  if [ -n "$git_fail" ]; then
+    err "the guard hook reads a quote in a comment as pairing with a quote after its line break, or blocks a comment that names a flag or quotes a command (B51):"
+    printf '%s\n' "${git_fail#$'\n'}"
+  else echo "ok: the guard hook reads a quote in a Bash or PowerShell comment as pairing with nothing after its line break, so a quoted flag, refspec or credential command after it is blocked, and a comment that names a flag or quotes a command passes (B51)"; fi
 
   # A destructive git rule (B33) reads the words as the shell hands them over: a quoted flag, refspec or path is seen, a flag
   # ends at ; & | ) or a line break as it does at a space, and a heredoc body a shell runs is read too. The rules are a force
