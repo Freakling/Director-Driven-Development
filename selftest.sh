@@ -48,6 +48,8 @@
 #      A destructive git rule (a force push, a +refspec, reset --hard, clean -f, checkout or switch -f, stash drop,
 #      branch -D) reads the decoded words, so a quoted flag or refspec is blocked, and its flag ends at ; & | ) or a
 #      line break; a heredoc body a shell runs is read too, and a quoted message that names a rule passes (B33).
+#      A quoted script given to bash -c, sh -c, zsh -c, eval, powershell -Command, pwsh -c or cmd /c is read as a
+#      command of its own, to four levels, and a command whose quoting the guard can't close is blocked (B34).
 #   9. The site builds in strict mode, which fails on broken internal links and anchors.
 #  10. The Content-Security-Policy in overrides/main.html allows every inline script the built site
 #      runs (its sha256 is in script-src), and no script runs before the policy's meta tag.
@@ -1035,6 +1037,106 @@ else
     err "the guard hook doesn't read a destructive git rule's flag, refspec or path as the shell does, or blocks a message that names one (B33):"
     printf '%s\n' "${git_fail#$'\n'}"
   else echo "ok: the guard hook blocks a force push, a +refspec, reset, clean, checkout, stash drop and branch -D that a quote, a line break, ; & | ) or a heredoc body hides, and passes the quoted messages (B33)"; fi
+
+  # A script a shell or an interpreter runs is a command of its own (B34): a quoted string given to bash -c, sh -c or
+  # zsh -c (with options before -c), eval, powershell -Command, pwsh -c or cmd /c is read by the same rules, to four levels
+  # of nesting, whatever the name is quoted or prefixed with. A comment, a heredoc body or a message in quotes that names
+  # one is text, and a read or a benign script passes. A command whose quoting the guard can't close, and PowerShell's
+  # -EncodedCommand, whose text is hidden, are blocked.
+  git_fail=""
+  if [ -f .claude/hooks/guard-commands.sh ]; then
+    for cmd in \
+        "bash -c 'git push --force'" \
+        'sh -c "git commit --no-verify -m x"' \
+        "eval 'git log --output=x'" \
+        'sh -c "git push $(echo --force)"' \
+        "sh -c 'git commit -n -m x'" \
+        "zsh -c 'git branch -D x'" \
+        "bash -lc 'git reset --hard'" \
+        "bash -o pipefail -c 'git push --force'" \
+        'eval "git push" --force' \
+        "bash -c \"git push '--force'\"" \
+        "timeout 240 bash -c 'git push --force'" \
+        "bash -c 'bash -c \"git push --force\"'" \
+        'sh -c "git commit -m \"x\" -n"' \
+        'powershell -NoProfile -Command "git push --force"' \
+        'cmd /c "git push --force"' \
+        '"bash" -c "git push --force"' \
+        "ba''sh -c 'git push --force'" \
+        "nice -n 5 bash -c 'git push --force'" \
+        "sudo sh -c 'git push --force'" \
+        "eval 'bash -c \"git push --force\"'" \
+        "bash -c \"\$(echo git push --force)\"" \
+        "bash -c 'git checkout .'" \
+        'bash -c "git push origin +main"' \
+        "/bin/bash -c 'git push --force'" \
+        "bash -c \$'git push --force'" \
+        "bash -c 'git commit -F /tmp/msg.txt'" \
+        "bash -c 'bash tools/stacks/../x.sh'" \
+        "bash -c 'sleep 300'" \
+        'sh -c "git status' \
+        'powershell -EncodedCommand ZwBpAHQAIABwAHUAcwBoAA==' \
+        $'# don\'t\nbash -c \'git push --force\'' \
+        $'cat <<\'EOF\'\nit\'s\nEOF\nbash -c \'git push --force\'' \
+        $'bash -c \'echo hi\' ; sh -c "git status\nbash -c \'git push --force\'"'; do
+      guard 2 "$cmd"
+    done
+    # Four wrappers nested (bash -c inside sh -c inside zsh -c inside bash -c) reach the git inside; a fifth is blocked.
+    wrap_esc() { local s="$1"; s="${s//\\/\\\\}"; s="${s//\"/\\\"}"; printf '%s' "$s"; }
+    nest="bash -c 'git push --force'"
+    for _ in 1 2 3; do nest="sh -c \"$(wrap_esc "$nest")\""; done
+    guard 2 "$nest"
+    nest="bash -c 'echo hi'"
+    for _ in 1 2 3; do nest="sh -c \"$(wrap_esc "$nest")\""; done
+    guard 0 "$nest"
+    nest="sh -c \"$(wrap_esc "$nest")\""
+    guard 2 "$nest"
+    for cmd in \
+        "bash -c 'git status'" \
+        'sh -c "echo hi"' \
+        "bash -c 'git log --oneline -3'" \
+        "sh -c \"git commit -m 'fix the --output handling'\"" \
+        'echo "bash -c '"'"'git push --force'"'"'"' \
+        'git commit -m "fix: sh -c '"'"'git push --force'"'"' now blocked"' \
+        $'git commit -q -F - <<\'EOF\'\nthe sh -c \'git push --force\' guard\nEOF' \
+        "timeout 240 bash -c 'until test -f x; do sleep 5; done'" \
+        '(timeout 4m bash -c "while true; do sleep 1; done")' \
+        'bash -c "echo $(date)"' \
+        'powershell -NoProfile -Command "Write-Output '"'"'hi'"'"'"' \
+        "bash -c 'cat README.md'" \
+        'eval "echo hi"' \
+        'git log --grep "bash -c git push --force"' \
+        "bash -c 'echo hi' git status" \
+        'echo sh -c' \
+        'git commit -m "run cmd /c later"' \
+        $'bash -c "git commit -F - <<\'EOF\'\nmsg\nEOF"' \
+        $'git commit -m "$(cat <<\'EOF\'\nmsg with sh -c \'git push --force\'\nEOF\n)"' \
+        'bash tools/check.sh'; do
+      guard 0 "$cmd"
+    done
+    # PowerShell (B34): the same wrappers in the PowerShell tool's payload, and a backtick that joins a flag.
+    for cmd in \
+        "pwsh -c 'git reset --hard'" \
+        'powershell -Command "git push --force"' \
+        'bash -c "git push --force"' \
+        'cmd /c "git push --force"' \
+        'powershell -EncodedCommand ZwBpAHQAIABwAHUAcwBoAA==' \
+        'powershell -c "git push --fo`rce"'; do
+      guard 2 "$cmd" PowerShell
+    done
+    for cmd in \
+        "pwsh -c 'git status'" \
+        'powershell -NoProfile -Command "Write-Output '"'"'hi'"'"'"' \
+        'cmd /c "echo hi"' \
+        'powershell -File tools/x.ps1 "git push --force"' \
+        'pwsh -c "Get-ChildItem | Select-Object Name"'; do
+      guard 0 "$cmd" PowerShell
+    done
+  fi
+  if [ -n "$git_fail" ]; then
+    err "the guard hook doesn't read a script a shell or an interpreter runs as a command of its own, or blocks a message that names one (B34):"
+    printf '%s\n' "${git_fail#$'\n'}"
+  else echo "ok: the guard hook reads a script given to bash -c, sh -c, zsh -c, eval, powershell -Command, pwsh -c or cmd /c as a command, to four levels, and passes the messages, heredocs and reads that name one (B34)"; fi
 
   # The credential stores (B15): the Read tool may not open the gh CLI's token file, git's credentials or
   # ~/.ssh. The .env files with values (B21): .env.local and the other .env.<suffix> files the guard hook

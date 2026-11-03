@@ -25,6 +25,10 @@
 # as a command's name it can be git. So the substitutions are read out of the command, each one's text is read as a
 # command of its own, and in a git command's words only a double-quoted one that starts with fixed text (or a commit's
 # or tag's -m value) passes, and only when its text is a plain read. See the section "Substitutions" below.
+#
+# A quoted script given to a shell or an interpreter (bash -c, sh -c, zsh -c, eval, powershell -Command, pwsh -c, cmd /c)
+# is a command of its own: each is read as one, and a script nested in one to four levels too (B34). See the section
+# "Shell wrappers" below.
 
 IFS= read -r -d '' input || true
 re='"command"[[:space:]]*:[[:space:]]*"(([^"\\]|\\.)*)"'
@@ -236,6 +240,197 @@ subst_segment() {
   done
 }
 
+# --- Shell wrappers (B34) -----------------------------------------------------------------------
+# A quoted string given to a shell or an interpreter is a script it runs: bash -c, sh -c and zsh -c (with any options before
+# -c), eval, powershell or pwsh -Command (or with no -File, the text itself) and cmd /c. Each such script is a view, read as a
+# command of its own, so the rules judge the git in it. A script nested in one is a view a level deeper, up to WRAP_MAX
+# levels; vdep holds each view's depth (0 for the command and its readings). wrap_read reads the command's words as the shell
+# does (quotes, escapes, substitutions, comments, and the heredoc bodies gtext leaves out), so a quoted name (ba''sh) or a
+# shell behind a prefix (nice -n 5 bash -c) is found too. A command whose quoting it can't close is blocked, and so is
+# PowerShell's -EncodedCommand, whose text is hidden from every rule.
+WRAP_MAX=4
+hre='(^|[^<])<<-?[[:space:]]*(\\?["'"'"']?)([A-Za-z_][A-Za-z0-9_]*)'
+wrap_gate='(^|[^[:alnum:]_-])((ba|z|da|k)?sh|eval|powershell|pwsh|cmd)(\.exe)?([[:space:];&|()<>]|$)'
+tab=$'\t'; cr=$'\r'
+MSG_WRAP="the guard can't read the quoting of this command, which may hold a script a shell or PowerShell runs (or an encoded PowerShell command)"
+MSG_DEEP="shell wrappers nest deeper than the guard reads (four levels, such as bash -c inside sh -c)"
+MSG_VIEWS="the command runs more scripts in shells than the guard reads in time"
+
+# jesc <text>: sets je to the text as the inside of a JSON string, the form a view is read in.
+jesc() {
+  je="$1"
+  je="${je//\\/\\\\}"; je="${je//\"/\\\"}"; je="${je//$nl/\\n}"; je="${je//$tab/\\t}"; je="${je//$cr/\\r}"
+}
+
+# wrap_word: the word of s at i (s, L, i, wv and sesc belong to wrap_read). Sets wv to its value, the quotes and escapes
+# removed and each substitution kept as text, and moves i past it. Returns 1 when a quote, a substitution or an ANSI-C
+# string doesn't close, or an ANSI-C string has a numeric escape, which can spell any character.
+wrap_word() {
+  local c n k
+  wv=""
+  while ((i < L)); do
+    c="${s:i:1}"
+    case $c in ' ' | $'\t' | "$nl" | ';' | '&' | '|' | '(' | ')') return 0 ;; esac
+    if [[ $c == "$sesc" ]]; then
+      n="${s:i+1:1}"; i=$((i + 2))
+      [[ $n == "$nl" || -z $n ]] || wv+="$n"   # an escaped line break continues the word
+      continue
+    fi
+    case $c in
+      "'")
+        k="${s:i+1}"; [[ $k == *"'"* ]] || return 1
+        k="${k%%"'"*}"; wv+="$k"; i=$((i + ${#k} + 2)) ;;
+      '"') wrap_dq || return 1 ;;
+      '`')
+        k="${s:i+1}"; [[ $k == *'`'* ]] || return 1
+        k="${k%%'`'*}"; wv+="\`$k\`"; i=$((i + ${#k} + 2)) ;;
+      '$')
+        n="${s:i+1:1}"
+        if [[ $n == '(' ]]; then
+          sub_end "$s" $((i + 2)) || return 1
+          wv+="${s:i:sub_e - i + 1}"; i=$((sub_e + 1))
+        elif [[ $n == "'" && $tool != PowerShell ]]; then
+          wrap_ansi || return 1
+        else wv+='$'; ((i++)); fi ;;
+      '<' | '>')
+        if [[ ${s:i+1:1} == '(' && $tool != PowerShell ]]; then
+          sub_end "$s" $((i + 2)) || return 1
+          wv+="${s:i:sub_e - i + 1}"; i=$((sub_e + 1))
+        else wv+="$c"; ((i++)); fi ;;
+      *) if [[ ${s:i} =~ $wrun_word ]]; then k="${BASH_REMATCH[0]}"; wv+="$k"; i=$((i + ${#k}))
+         else wv+="$c"; ((i++)); fi ;;
+    esac
+  done
+  return 0
+}
+
+# wrap_dq: the double-quoted string at i, read as the shell reads it (PowerShell's backtick and doubled quote too). Sets wv
+# and moves i past it. Returns 1 when it doesn't close, or a backtick or substitution inside it doesn't.
+wrap_dq() {
+  local c n k
+  i=$((i + 1))
+  while :; do
+    ((i < L)) || return 1
+    c="${s:i:1}"; n="${s:i+1:1}"
+    if [[ $c == '"' ]]; then
+      if [[ $tool == PowerShell && $n == '"' ]]; then wv+='"'; i=$((i + 2)); continue; fi
+      i=$((i + 1)); return 0
+    fi
+    if [[ $c == "$sesc" ]]; then
+      if [[ $tool == PowerShell ]]; then
+        [[ $n == "$nl" ]] || wv+="$n"; i=$((i + 2))
+      else
+        case $n in
+          '$' | '`' | '"' | "$sesc") wv+="$n"; i=$((i + 2)) ;;
+          "$nl") i=$((i + 2)) ;;
+          *) wv+="$c"; i=$((i + 1)) ;;
+        esac
+      fi
+      continue
+    fi
+    if [[ $c == '$' && $n == '(' ]]; then
+      sub_end "$s" $((i + 2)) || return 1
+      wv+="${s:i:sub_e - i + 1}"; i=$((sub_e + 1))
+    elif [[ $c == '`' ]]; then
+      k="${s:i+1}"; [[ $k == *'`'* ]] || return 1
+      k="${k%%'`'*}"; wv+="\`$k\`"; i=$((i + ${#k} + 2))
+    elif [[ ${s:i} =~ $wrun_dq ]]; then
+      k="${BASH_REMATCH[0]}"; wv+="$k"; i=$((i + ${#k}))
+    else
+      wv+="$c"; i=$((i + 1))
+    fi
+  done
+}
+
+# wrap_ansi: the $'...' string at i (its $). Sets wv to its text, escapes kept, and moves i past it.
+wrap_ansi() {
+  local j=$((i + 2)) c k
+  while ((j < L)); do
+    c="${s:j:1}"
+    if [[ $c == "$sesc" ]]; then ((j += 2)); continue; fi
+    [[ $c == "'" ]] && break
+    ((j++))
+  done
+  ((j < L)) || return 1
+  k="${s:i+2:j-i-2}"
+  [[ $k == *\\[xuU0-7]* ]] && return 1
+  wv+="$k"; i=$((j + 1))
+}
+
+# wrap_push <script>: a non-empty script goes to wscripts.
+wrap_push() { [[ -n $1 ]] && wscripts+=("$1"); return 0; }
+
+# wrap_rest <from>: sc is the words of wcmd from <from> on, joined by spaces, which is the text the command runs.
+wrap_rest() {
+  local x
+  sc=""
+  for ((x = $1; x < n; x++)); do sc+="${wcmd[x]} "; done
+  sc="${sc% }"
+}
+
+# wrap_cmd: the words of one command (wcmd). A word that names a shell, eval, PowerShell or cmd takes the script its
+# arguments give it. Returns 1 for PowerShell's -EncodedCommand, whose text is hidden.
+wrap_cmd() {
+  local m j n=${#wcmd[@]} w base p sc
+  for ((m = 0; m < n; m++)); do
+    w="${wcmd[m]}"; base="${w##*/}"; base="${base##*\\}"
+    if [[ $base =~ ^((ba|z|da|k)?sh)(\.exe)?$ ]]; then
+      for ((j = m + 1; j < n; j++)); do
+        case ${wcmd[j]} in
+          --) break ;;
+          --rcfile | --init-file | -o | +o | -O | +O) ((j++)) ;;
+          --*) ;;
+          [-+]*c*) ((j + 1 < n)) && wrap_push "${wcmd[j + 1]}"; break ;;
+          [-+]*) ;;
+          *) break ;;
+        esac
+      done
+    elif [[ $base == eval ]]; then
+      wrap_rest $((m + 1)); wrap_push "$sc"
+    elif [[ $base =~ ^(powershell|pwsh)(\.exe)?$ ]]; then
+      for ((j = m + 1; j < n; j++)); do
+        w="${wcmd[j]}"; p="${w#[-/]}"
+        if [[ $w == [-/]* && -n $p ]]; then
+          [[ command == "$p"* ]] && { wrap_rest $((j + 1)); wrap_push "$sc"; break; }
+          [[ file == "$p"* ]] && break
+          [[ encodedcommand == "$p"* ]] && return 1
+          continue
+        fi
+        [[ $w == *.ps1 ]] && break
+        wrap_rest "$j"; wrap_push "$sc"; break
+      done
+    elif [[ $base =~ ^cmd(\.exe)?$ ]]; then
+      for ((j = m + 1; j < n; j++)); do
+        if [[ ${wcmd[j]} =~ ^/[ck]$ ]]; then wrap_rest $((j + 1)); wrap_push "$sc"; break; fi
+      done
+    fi
+  done
+  return 0
+}
+
+# wrap_read <text>: the commands of the text, each one's words read as the shell reads them. wscripts gets the scripts the
+# shells run. Returns 1 when a quote or a substitution doesn't close, or a PowerShell command is encoded.
+wrap_read() {
+  local s="$1" L=${#1} i=0 c k wv="" wcmd=()
+  # The runs of ordinary characters (no quote, escape, substitution or separator) a word or a double-quoted string takes whole.
+  if [[ $tool == PowerShell ]]; then
+    sesc='`'; wrun_word='^[^[:space:];&|()<>$`'"'"'"]+'; wrun_dq='^[^"`$]+'
+  else
+    sesc='\'; wrun_word='^[^[:space:];&|()<>$`'"'"'"\\]+'; wrun_dq='^[^"\\$`]+'
+  fi
+  wscripts=()
+  while ((i < L)); do
+    c="${s:i:1}"
+    case $c in
+      ' ' | $'\t') ((i++)) ;;
+      "$nl" | ';' | '&' | '|' | '(' | ')') wrap_cmd || return 1; wcmd=(); ((i++)) ;;
+      '#') k="${s:i}"; k="${k%%"$nl"*}"; ((i += ${#k})) ;;
+      *) wrap_word || return 1; wcmd+=("$wv") ;;
+    esac
+  done
+  wrap_cmd
+}
+
 # A comment starts at a # that begins a word: after a blank, a line start or a metacharacter, as Bash reads it.
 cmt_re='(^|[[:blank:]|&;()<>])#'
 views=("$raw")
@@ -427,6 +622,7 @@ scan="${scan//\\n/$nl}"
 loop_re='(^|[^[:alnum:]_./-])(until|while)[[:space:]]'
 timeout_re="(^|[^[:alnum:]_./-])timeout[[:space:]]+(-[-[:alnum:]=]+[[:space:]]+)*([0-9]+)([sm]?)[[:space:]]+[^;&|$nl]*\$"
 rest="$scan"; before=""
+((${vdep[vi]:-0} == 0)) || rest=""   # a nested script (B34) is not scanned again: the command text above scans what bash -c runs
 while [[ $rest =~ $loop_re ]]; do
   before="$before${rest%%"${BASH_REMATCH[0]}"*}${BASH_REMATCH[1]}"
   rest="${rest#*"${BASH_REMATCH[0]}"}"
@@ -444,6 +640,40 @@ while [[ $rest =~ $loop_re ]]; do
   hang "an until or while loop with sleep and no time limit can run for ever, and a wait past five minutes lets the prompt cache expire." \
     "Put a limit on it: timeout 240 bash -c 'until ...; do sleep 5; done' (N of $limit_s or less), or start the work with run_in_background."
 done
+
+# B34: the scripts that the shells and interpreters in this text run become views, each a level deeper than this one. The
+# text is read only when a shell's name shows in it with its quotes removed, so a command that names none goes no further.
+wscripts=()
+shl="${raw//\\\\/$x1}"; shl="${shl//\\\"/\"}"; shl="${shl//\\n/$nl}"; shl="${shl//\\t/ }"; shl="${shl//\\r/}"; shl="${shl//$x1/$bs}"
+shopt -s nocasematch
+bare="${shl//[\"\'\\]/}"
+if [[ $bare =~ $wrap_gate ]]; then
+  # The heredoc bodies gtext leaves out (below) are left out here too, so a message that names a shell isn't read as a script.
+  wtext=""; wdelim=""; wq=""; wbody=""
+  while IFS= read -r line || [ -n "$line" ]; do
+    if [ -n "$wdelim" ]; then
+      if [ "${line#"${line%%[![:space:]]*}"}" = "$wdelim" ]; then
+        wdelim=""
+        [[ -n $wq || ( $wbody != *'$('* && $wbody != *'`'* ) ]] || wtext+="${wbody//[\'\"]/_}"
+        wbody=""
+      else wbody+="$line$nl"; fi
+      continue
+    fi
+    wtext+="$line$nl"
+    [[ $line =~ $hre ]] && { wdelim="${BASH_REMATCH[3]}"; wq="${BASH_REMATCH[2]}"; }
+  done <<<"$shl"
+  wtext+="$wbody"
+  bare="${wtext//[\"\'\\]/}"
+  if [[ $bare =~ $wrap_gate ]]; then
+    wrap_read "$wtext" || block "$MSG_WRAP"
+    for ws in "${wscripts[@]}"; do
+      ((${vdep[vi]:-0} < WRAP_MAX)) || block "$MSG_DEEP"
+      ((${#views[@]} < 64)) || block "$MSG_VIEWS"
+      jesc "$ws"; vdep[${#views[@]}]=$((${vdep[vi]:-0} + 1)); views+=("$je")
+    done
+  fi
+fi
+shopt -u nocasematch
 
 # --- git-specific rules --------------------------------------------------------------------------
 # A substitution's brackets are read as blanks, so $(echo git) counts as a git command (B32).
@@ -463,9 +693,8 @@ seg='[^;&|]*'   # the destructive git rules are below the decoding of the comman
 # Variables and $(...) outside quotes are not expanded, so this is a text match like the rest.
 sq1="'"
 
-# Cut out the heredoc bodies (git commit -F - <<'EOF' ...). A quoted delimiter makes the body plain
-# text; an unquoted one expands $(...) and backticks, so a body with those stays.
-hre='(^|[^<])<<-?[[:space:]]*(\\?["'"'"']?)([A-Za-z_][A-Za-z0-9_]*)'
+# Cut out the heredoc bodies (git commit -F - <<'EOF' ...; hre, the header's pattern, is set above). A quoted delimiter makes
+# the body plain text; an unquoted one expands $(...) and backticks, so a body with those stays.
 gtext=""; delim=""; hquote=""; body=""; hall=""
 while IFS= read -r line || [ -n "$line" ]; do
   if [ -n "$delim" ]; then
@@ -528,7 +757,7 @@ if ((isgit)); then
   for ((vn = 0; vn < ${#subc[@]}; vn++)); do
     ((${#views[@]} < 64)) || block "the command has more command substitutions than the guard reads in time"
     c="${subc[vn]}"; c="${c#"${c%%[![:space:]]*}"}"; c="${c%"${c##*[![:space:];]}"}"
-    views+=("$c")
+    vdep[${#views[@]}]=${vdep[vi]:-0}; views+=("$c")
   done
 fi
 
