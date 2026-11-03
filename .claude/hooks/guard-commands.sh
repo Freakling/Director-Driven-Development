@@ -44,12 +44,63 @@ if [[ $tool == PowerShell ]]; then
   [[ $joined != "$raw" ]] && raw="$raw;$joined"
 fi
 
+# The readings of the command (B31). A backslash at a line's end continues the command in Bash (B25), but a comment
+# holds its backslash: Bash ends a comment at the line break, so `# note\` is a comment and the next line is a command
+# of its own. Joining that line onto the comment would hide it. So each rule reads every reading in turn, and no
+# reading joins two lines that Bash keeps apart:
+#   as written: every line break kept, so a command after a comment shows on its own line;
+#   as joined: every continuation joined, as Bash reads a command that holds no comment;
+#   from each line after one that holds a comment marker and ends in a continuation: joined from that line on, since
+#     the comment may have ended that line (the joined reading glues `git` onto a comment's last word: `# a`, `git`).
+# A # inside a word (a#b) is no comment, so its continuation is joined in the joined reading, as Bash joins it.
+# x1 is a command backslash, x2 an escaped pair (two backslashes) and x4 a continuation's mark before a line break.
+bs='\'; x1=$'\x01'; x2=$'\x02'; x4=$'\x04'; nl=$'\n'
+view_of() {
+  local s="" k line jb=$'\x5c\x5c' jb4=$'\x5c\x5c\x5c\x5c' bsl=$'\x5c'
+  for ((k = $1; k < nphys; k++)); do
+    line="${phys[k]}"
+    if [[ $line == *"$x4" ]]; then
+      line="${line%"$x4"}"
+      if (($2)); then s+="$line"; continue; fi
+    fi
+    s+="$line"
+    if ((k < nphys - 1)); then s+="$nl"; fi
+  done
+  s="${s//$x2/"$jb4"}"; s="${s//$x1/"$jb"}"; s="${s//$nl/"$bsl"n}"
+  view="$s"
+}
+# A comment starts at a # that begins a word: after a blank, a line start or a metacharacter, as Bash reads it.
+cmt_re='(^|[[:blank:]|&;()<>])#'
+views=("$raw")
+if [[ $tool != PowerShell ]]; then
+  pl="${raw//\\\\/$x1}"; pl="${pl//$x1$x1/$x2}"; pl="${pl//$x1\\n/$x4$nl}"; pl="${pl//\\n/$nl}"
+  if [[ $pl == *"$x4"* ]]; then
+    phys=(); rest="$pl"
+    while [[ $rest == *"$nl"* ]]; do phys+=("${rest%%"$nl"*}"); rest="${rest#*"$nl"}"; done
+    phys+=("$rest"); nphys=${#phys[@]}
+    view_of 0 0; views=("$view")
+    view_of 0 1; views+=("$view")
+    for ((k = 1; k < nphys; k++)); do
+      [[ ${phys[k-1]} == *"$x4" && ${phys[k-1]} =~ $cmt_re ]] || continue
+      # Each such line costs a pass of the rules, so a command with very many can't run past the hook's time limit.
+      if ((${#views[@]} >= 64)); then
+        echo "App Director: blocked: the command has more lines that end in a backslash after a comment marker than the guard can read in time. If it's really needed, ask the human to run it." >&2
+        exit 2
+      fi
+      view_of "$k" 1; views+=("$view")
+    done
+  fi
+fi
+
+# Each reading goes through the rules below, one at a time, so a heredoc's state in one reading can't carry
+# into another. A command with no continuation has one reading, the command itself.
+for raw in "${views[@]}"; do
+
 # The command as the shell reads its line breaks and tabs: a JSON \n ends a command, as ; does, and \t
 # is a space. A real backslash (the pair \\) stays as it is, so \\n is text, not a line break. The early
 # tests read this text, so a git command on any line is seen (B23). A backslash at the end of a line
 # continues the command on the next line, as the shell does, so `git push \` with `--force` below is one
 # command (B25). Expansions only, so no process starts. x1 is one shell backslash, x2 an escaped pair (\\).
-bs='\'; x1=$'\x01'; x2=$'\x02'; nl=$'\n'
 detect="${raw//\\\\/$x1}"; detect="${detect//$x1$x1/$x2}"; detect="${detect//$x1\\n/}"
 detect="${detect//\\n/;}"; detect="${detect//\\t/ }"; detect="${detect//$x2/$x1$x1}"
 detect="${detect//$x1/$bs$bs}"
@@ -216,7 +267,7 @@ done
 # --- git-specific rules --------------------------------------------------------------------------
 isgit=0; [[ $detect =~ (^|[^[:alnum:]_./-])git([[:space:]]|$) ]] && isgit=1
 isbash=0; [[ $detect =~ (^|[^[:alnum:]_.-])(ba)?sh([[:space:]]|$) ]] && isbash=1
-((isgit || isbash)) || exit 0
+((isgit || isbash)) || continue
 
 seg='[^;&|]*'
 if ((isgit)); then
@@ -379,6 +430,7 @@ for gs in "${gsegs[@]}"; do
         fi
       done ;;
   esac
+done
 done
 
 exit 0

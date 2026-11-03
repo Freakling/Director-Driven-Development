@@ -38,6 +38,9 @@
 #      Select-String and sls, [IO.File]::ReadAll...), in any case, as it blocks cat (B27).
 #      A PowerShell backtick at a line's end continues the line, so a flag or read it splits is
 #      blocked; a Bash backtick, or an escaped one, doesn't continue a line (B28).
+#      A Bash comment that ends in a backslash holds no continuation (B31): the line after it is a command of its
+#      own, and a continued command after such a comment is still read. The hang check reads a heredoc header
+#      joined to its delimiter line (B29).
 #   9. The site builds in strict mode, which fails on broken internal links and anchors.
 #  10. The Content-Security-Policy in overrides/main.html allows every inline script the built site
 #      runs (its sha256 is in script-src), and no script runs before the policy's meta tag.
@@ -763,6 +766,36 @@ else
     err "the guard hook doesn't treat a PowerShell backtick at a line's end as a continuation, or treats a Bash or an escaped one as one (B28):"
     printf '%s\n' "${git_fail#$'\n'}"
   else echo "ok: the guard hook blocks a flag or a read that a PowerShell backtick continuation splits, and passes the benign continuations and the escaped and Bash backticks (B28)"; fi
+
+  # A Bash comment that ends in a backslash (B31): Bash ends the comment at the line break, so the line after it is a
+  # command of its own, and the guard reads it as written. A continued command after such a comment is read from its
+  # own line on. A # inside a word (a#b) is no comment, so its continuation is joined, as Bash joins it. The hang
+  # check reads a heredoc header joined to its delimiter (B29): python3 with - <<'EOF' on the next line and EOF after.
+  git_fail=""
+  if [ -f .claude/hooks/guard-commands.sh ]; then
+    for cmd in \
+        $'# note\\\ngit push --force' \
+        $'# note\\\ngit commit --no-verify -m x' \
+        $'git status # note\\\ngit push --force' \
+        $'# a\\\ngit commit \\\n-F /tmp/msg.txt' \
+        $'# a\\\ngit push \\\n--force' \
+        $'# a\\\n# b\\\ngit push \\\n--force' \
+        $'git push origin main#\\\n  --force' \
+        $'python3 \\\n- <<\'EOF\'\nEOF'; do
+      guard 2 "$cmd"
+    done
+    for cmd in \
+        $'# note\\\ngit status' \
+        $'git status # note\\\n-s' \
+        $'echo a#b\\\n--force' \
+        $'python3 \\\n- <<\'EOF\'\nprint(1)\nEOF'; do
+      guard 0 "$cmd"
+    done
+  fi
+  if [ -n "$git_fail" ]; then
+    err "the guard hook reads a command after a Bash comment that ends in a backslash as hidden, or blocks a benign one (B31, B29):"
+    printf '%s\n' "${git_fail#$'\n'}"
+  else echo "ok: the guard hook reads the line after a Bash comment that ends in a backslash, and the command continued after it, as Bash does (B31, B29)"; fi
 
   # The credential stores (B15): the Read tool may not open the gh CLI's token file, git's credentials or
   # ~/.ssh. The .env files with values (B21): .env.local and the other .env.<suffix> files the guard hook
