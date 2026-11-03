@@ -32,6 +32,8 @@
 # "Shell wrappers" below. A wait loop in such a script is judged too, and a script under timeout 280 or less is bounded (B42).
 # The hang check also reads a C-style for ((...)) loop, PowerShell's do { } while or until, Start-Sleep, cmd's timeout /t, and a
 # Bash command's substitutions, which run before a timeout above them starts, so the timeout doesn't bound them (B49).
+# The hang rules read the command without the bodies no shell runs (B50): a commit's, tag's or gh message, and a cat or tee
+# body nothing runs, are left out, so a message can name a loop, a pause or a timed wait.
 # A shell or PowerShell name starts a script anywhere except right after a word that only prints its words (echo, printf,
 # Write-Output, Write-Host, write): `echo PowerShell 'x'` is text, and `ssh host pwsh -c 'x'` is still read (B48).
 #
@@ -64,7 +66,8 @@
 # A heredoc body that no shell runs is text (B40, B48): a commit's or tag's message, a gh pr, issue or release message with a quoted
 # delimiter (its body from stdin, --body-file -, -F -, --notes-file -, or from a $(cat <<'EOF') given to --body, -b, --notes or -n), and
 # a cat or tee body that the command doesn't run (no shell, interpreter, ssh, chmod, make or npm, call operator, ./ path, dot-source or
-# .git folder names it). The destructive rules, the file-writing flag rules and the variable rules (B37) skip such a body; the
+# .git folder names it). The destructive rules, the file-writing flag rules, the variable rules (B37) and the hang rules (B50) skip
+# such a body; the
 # substitutions in it are still read (B32).
 
 IFS= read -r -d '' input || true
@@ -749,6 +752,23 @@ hshell_re='(^|[^[:alnum:]_./-])((ba|z|da|k)?sh|eval|source|exec)(\.exe)?([[:spac
 hcat_re='^[[:space:]]*(cat|tee)([[:space:]]|$)'
 hrun_re='(^|[^[:alnum:]_./-])((ba|z|da|k)?sh|eval|source|exec|pwsh|powershell|cmd|python3?|py|perl|ruby|node|ssh|chmod|iex|invoke-expression|make|npm|npx|yarn|pnpm)(\.exe)?([[:space:];&|()<>]|$)'
 hrun_re+="|(^|[[:space:];&|()])\\.\\.?[/\\\\]|(^|[[:space:];|()])&[[:space:]]|(^|[;&|()$nl][[:space:]]*)\\.[[:space:]]|\\.git[/\\\\]"
+# body_kind <header> <quoted>: sets bk to the kind of the heredoc body under a header line, which the classification below and the hang
+# rules read alike (B50). msg is a commit's or tag's message, or a gh message with a quoted delimiter (B40, B48): text no shell runs.
+# A substitution in the header's command runs one, so only $(cat, which prints the message, keeps the body a message (hcom). cat is a
+# cat or tee body, a script only when the command names a runner (hrun_re). sh is any other body, which a shell or interpreter may
+# run. <quoted> is the delimiter's quote, empty when it's unquoted.
+body_kind() {
+  local line="$1" q="$2" hpre hsub hcom=0
+  hpre="${line%%<<*}"; hpre="${hpre##*[;&|]}"; hsub="${hpre//'$(cat'/}"
+  [[ $hsub != *'$('* && $hsub != *'<('* && $hsub != *'>('* && $hsub != *"$bt"* ]] && ! [[ $line =~ $hshell_re ]] && hcom=1
+  bk=sh
+  if ((hcom)) && [[ $hpre =~ $hmsg_re ]]; then bk=msg
+  elif ((hcom)) && [[ -n $q && $hpre =~ $hmsg_gh_re && ( $hpre =~ $hmsg_in_re || $hpre =~ $hmsg_cat_re ) ]]; then bk=msg
+  elif [[ $hpre =~ $hcat_re ]]; then bk=cat
+  fi
+  return 0
+}
+
 tab=$'\t'; cr=$'\r'
 MSG_WRAP="the guard can't read the quoting of this command, which may hold a script a shell or PowerShell runs (or an encoded PowerShell command)"
 MSG_DEEP="shell wrappers nest deeper than the guard reads (four levels, such as bash -c inside sh -c)"
@@ -1025,12 +1045,8 @@ real="${raw//\\\\/$x1}"; real="${real//\\\"/\"}"; real="${real//$x1$x1/$x2}"; re
 real="${real//\\n/$nl}"; real="${real//\\t/ }"; real="${real//\\r/}"; real="${real//$x2/$x1$x1}"
 real="${real//$x1/$bs}"
 
-# Blank quoted strings so a commit message or filename can't trip flag tests.
-code="$detect"
-dq='\\"([^\\]|\\[^"])*\\"'
-while [[ $code =~ $dq ]]; do code="${code/"${BASH_REMATCH[0]}"/ Q }"; done
+# sq: a single-quoted string, blanked by the hang rules (hcode, B50) as the quoted text of a command is.
 sq="'[^']*'"
-while [[ $code =~ $sq ]]; do code="${code/"${BASH_REMATCH[0]}"/ Q }"; done
 
 block() {
   echo "App Director: blocked: $1. If it's really needed, ask the human to run it." >&2
@@ -1185,7 +1201,8 @@ git_print_re='(^|[^[:alnum:]_./-])[Gg][Ii][Tt][[:space:]]+([^;&|]*[[:space:]])?c
 # --- Hangs ---------------------------------------------------------------------------------------
 # A command that never returns, or runs past five minutes, lets the prompt cache expire, and the next
 # turn rewrites the whole context. So: no empty-heredoc probes, no unbounded wait loops, no long sleeps.
-# Text matching only: a loop built another way isn't seen. The guard is also wired to Monitor.
+# Text matching only: a loop built another way isn't seen. The guard is also wired to Monitor. The rules
+# read the command without the bodies no shell runs (B50, hang_strip), so a message can name them.
 hang() {
   echo "App Director: blocked: $1" >&2
   echo "              $2" >&2
@@ -1193,9 +1210,62 @@ hang() {
 }
 limit_s=280
 
+# hang_strip (B50): sets hbt, the text the hang rules read, and hst, the text whose substitutions the shell runs. Both are the command
+# as the shell reads it (real), with the bodies no shell runs left out: a commit's, tag's or gh message, and a cat or tee body that
+# nothing in the command runs (body_kind, the classification's reading). A body a shell or an interpreter may run stays, and so does
+# a body that never closes: a false block beats a miss. hst keeps the substitutions of an unquoted message or unrun cat body (the shell
+# expands them, as gtext does, with its quotes read as text), and drops a quoted one, which the shell doesn't expand.
+hang_strip() {
+  local line delim="" body="" q="" bk="" hk="" hs="" hgt="" hsp="" hrt="" hrk="" hrs="" hrun=0 k=0
+  local -a hcb=() hcm=()
+  if [[ $real != *'<<'* ]]; then hbt="$real"; hst="$real"; return 0; fi
+  while IFS= read -r line || [ -n "$line" ]; do
+    if [ -n "$delim" ]; then
+      if [ "${line#"${line%%[![:space:]]*}"}" = "$delim" ]; then
+        delim=""; hsp=""
+        [[ -z $q && ( $body == *'$('* || $body == *'`'* ) ]] && hsp="${body//[\'\"]/_}"
+        hgt+="$hsp"
+        case $bk in
+          sh) hk+="$body$line$nl"; hs+="$body$line$nl" ;;
+          msg) hs+="$hsp" ;;
+          cat) hk+=$'\x1d'"$k"$'\x1e'; hs+=$'\x1f'"$k"$'\x1f'; hcb+=("$body$line$nl"); hcm+=("$hsp"); k=$((k + 1)) ;;
+        esac
+      else body+="$line$nl"; fi
+      continue
+    fi
+    hk+="$line$nl"; hs+="$line$nl"; hgt+="$line$nl"
+    if [[ $line =~ $hre ]]; then
+      delim="${BASH_REMATCH[3]}"; q="${BASH_REMATCH[2]}"; body=""
+      body_kind "$line" "$q"
+    fi
+  done <<<"$real"
+  if [ -n "$delim" ]; then hk+="$body"; hs+="$body"; hgt+="$body"; fi
+  # The runner test reads the command without its bodies, as the classification does (its gtext and hrt)
+  hrt="$hgt"
+  while [[ $hrt == *'> '* ]]; do hrt="${hrt//'> '/'>'}"; done
+  while [[ $hrt =~ \"[^\"]*[[:space:]][^\"]*\" ]]; do hrt="${hrt/"${BASH_REMATCH[0]}"/ Q }"; done
+  while [[ $hrt =~ \'[^\']*[[:space:]][^\']*\' ]]; do hrt="${hrt/"${BASH_REMATCH[0]}"/ Q }"; done
+  hrt="${hrt//[\"\']/}"
+  [[ $hrt =~ $hrun_re ]] && hrun=1
+  for ((k = 0; k < ${#hcb[@]}; k++)); do
+    if ((hrun)); then hrk="${hcb[k]}"; hrs="${hcb[k]}"; else hrk=""; hrs="${hcm[k]}"; fi
+    hk="${hk//$'\x1d'"$k"$'\x1e'/"$hrk"}"
+    hs="${hs//$'\x1f'"$k"$'\x1f'/"$hrs"}"
+  done
+  hbt="$hk"; hst="$hs"
+  return 0
+}
+hang_strip
+
+# The text the rules read (B50) is hbt as code is detect: its quoted strings blanked, and its line breaks as ;.
+hcode="${hbt//$nl/;}"
+hdq='"[^"]*"'
+while [[ $hcode =~ $hdq ]]; do hcode="${hcode/"${BASH_REMATCH[0]}"/ Q }"; done
+while [[ $hcode =~ $sq ]]; do hcode="${hcode/"${BASH_REMATCH[0]}"/ Q }"; done
+
 # 1. `python - <<'EOF'` whose body is empty: Python waits for console input and never returns on
-#    Windows. Typically the "is Python here?" probe.
-text="${raw//\\r/}"; text="${text//\\n/$nl}"
+#    Windows. Typically the "is Python here?" probe. The probe reads hbt: an interpreter's body stays in it, and a message's doesn't.
+text="$hbt"
 heredoc_re='(^|[^[:alnum:]_./-])(python3?|py)(\.exe)?[[:space:]]+-[[:space:]]*<<-?[[:space:]]*\\?["'"'"']?([A-Za-z_][A-Za-z0-9_]*)'
 IFS=$'\n' read -r -d '' -a lines <<<"$text" || true
 for ((i = 0; i + 1 < ${#lines[@]}; i++)); do
@@ -1208,7 +1278,7 @@ done
 
 # 3. A lone sleep over 280 seconds.
 sleep_re='(^|[^[:alnum:]_./-])sleep[[:space:]]+([0-9]+)([smhd]?)([[:space:]]|$|[;&|)])'
-rest="$code"
+rest="$hcode"
 while [[ $rest =~ $sleep_re ]]; do
   n="${BASH_REMATCH[2]}"; unit="${BASH_REMATCH[3]}"; secs=$((10#$n))
   case "$unit" in m) secs=$((secs * 60)) ;; h) secs=$((secs * 3600)) ;; d) secs=$((secs * 86400)) ;; esac
@@ -1223,7 +1293,7 @@ done
 shopt -s nocasematch
 ps_sleep_re='(^|[^[:alnum:]_./-])((start-)?sleep)[[:space:]]+(-[sm][[:alpha:]]*:?[[:space:]]*)?([0-9]+)([[:space:]]|$|[;&|)}])'
 cmd_wait_re='(^|[^[:alnum:]_./-])timeout(\.exe)?[[:space:]]+/t[[:space:]]+(-?[0-9]+)([[:space:]]|$|[;&|)}])'
-rest="$code"
+rest="$hcode"
 while [[ $rest =~ $ps_sleep_re ]]; do
   m="${BASH_REMATCH[0]}"; p="${BASH_REMATCH[4]}"; n="${BASH_REMATCH[5]}"
   if [[ $p == -[mM]* ]]; then secs=$(((10#$n + 999) / 1000)); what="a sleep of $n milliseconds"
@@ -1232,7 +1302,7 @@ while [[ $rest =~ $ps_sleep_re ]]; do
     "Start the work with run_in_background and keep working until its completion notice, or wait in steps of $limit_s seconds or less."
   rest="${rest#*"$m"}"
 done
-rest="$code"
+rest="$hcode"
 while [[ $rest =~ $cmd_wait_re ]]; do
   m="${BASH_REMATCH[0]}"; n="${BASH_REMATCH[3]}"
   [[ $n == -* ]] && hang "timeout /t -1 waits for a key press for ever, and a wait past five minutes lets the prompt cache expire." \
@@ -1245,12 +1315,12 @@ done
 shopt -u nocasematch
 
 # 2. until/while loops that sleep: under `timeout N` (N <= 280), or ended by the exit line Claude Code
-#    appends to a background command's output. A loop quoted into `bash -c '...'` is read from the raw text.
+#    appends to a background command's output. A loop quoted into `bash -c '...'` is read from the text too (hbt, B50).
 #    B42: a script a shell or an interpreter runs (eval, -Command, cmd /c, a nested bash -c) is a view of its own, and its
 #    loops are read in its text as the sleep rule reads it. A view whose wrapper is under a timeout of 280 or less (vcov)
 #    is bounded whole, so its loops are not read. PowerShell's while and Start-Sleep are read in any case.
-scan="$code"; rawscan=0
-[[ $code =~ (bash|sh|zsh)[[:space:]]+-[a-z]*c[[:space:]] ]] && { scan="$raw"; rawscan=1; }
+scan="$hcode"; rawscan=0
+[[ $hcode =~ (bash|sh|zsh)[[:space:]]+-[a-z]*c[[:space:]] ]] && { scan="$hbt"; rawscan=1; }
 scan="${scan//\\n/$nl}"
 # B49: a C-style for (( loop is read as a loop, as while is; PowerShell's for is not read here.
 loop_re='(^|[^[:alnum:]_./-])((until|while)[[:space:]]|for[[:space:]]*\(\()'
@@ -1264,7 +1334,7 @@ while [[ $rest =~ $loop_re ]]; do
   rest="${rest#*"${BASH_REMATCH[0]}"}"
   loop="${rest%%[;[:space:]]done[;[:space:])\'\"]*}"
   [[ $loop =~ $sleep_loop_re ]] || continue
-  [[ $raw == *"exited with code"* || $raw == *"[killed]"* ]] && continue
+  [[ $hbt == *"exited with code"* || $hbt == *"[killed]"* ]] && continue
   covered=0
   if [[ $before =~ $timeout_re ]]; then
     secs=$((10#${BASH_REMATCH[3]})); [ "${BASH_REMATCH[4]}" = m ] && secs=$((secs * 60))
@@ -1289,7 +1359,7 @@ if ((${vcov[vi]:-0} == 0)); then
     dorest="${dorest#*"${BASH_REMATCH[0]}"}"
     [[ $dorest =~ \}[[:space:]]*(while|until)[[:space:]]*\( ]] || break
     body="${dorest%%"${BASH_REMATCH[0]}"*}"
-    if [[ $body =~ $sleep_loop_re ]] && [[ $raw != *"exited with code"* && $raw != *"[killed]"* ]]; then
+    if [[ $body =~ $sleep_loop_re ]] && [[ $hbt != *"exited with code"* && $hbt != *"[killed]"* ]]; then
       hang "a do ... while or until loop with sleep and no time limit can run for ever, and a wait past five minutes lets the prompt cache expire." \
         "Put a limit on it: timeout 240 bash -c '...' (N of $limit_s or less), or start the work with run_in_background."
     fi
@@ -1350,11 +1420,12 @@ cnv=0
 # B49: a command substitution runs before the command it's an argument of, so a timeout above it doesn't bound it: timeout 60
 # echo "$(until false; do sleep 1; done)" loops for ever. A Bash command that isn't git's has each substitution read as a view for
 # the hang rules alone (vhang): the gate below skips it, and it has the view's own bound (vcov), not the timeout in front of its
-# command. The command is read as it stands (real), so a substitution in a quoted heredoc body is read too, as the hang rules read
-# a body (B50). A PowerShell command's substitutions are not read here; git's are read in the git section (B32).
+# command. The text read is hst (B50): the command with the bodies no shell runs left out, so a quoted message's substitution, which
+# the shell doesn't expand, isn't read, and an unquoted message's is. A PowerShell command's substitutions are not read here; git's
+# are read in the git section (B32).
 if ((!isgit)) && [[ $tool != PowerShell && ( $real == *'$('* || $real == *'`'* || $real == *'<('* || $real == *'>('* ) ]]; then
   hsubb=0
-  if subst_cut "$real"; then
+  if subst_cut "$hst"; then
     for ((vn = 0; vn < sn; vn++)); do
       ((${#views[@]} < 64)) || break
       c="${subc[vn]}"; c="${c#"${c%%[![:space:]]*}"}"; c="${c%"${c##*[![:space:];]}"}"
@@ -1386,7 +1457,7 @@ sq1="'"
 # runner (hrun_re, after the loop). A shell body is collected in hsh, and hall (the variable rules' bodies, B37) is hsh once the
 # cat and tee bodies that run are in it (B48), so a message or a cat body that nothing runs is no variable's text. An unquoted
 # body's substitutions are in gtext (B32).
-gtext=""; delim=""; hquote=""; body=""; hall=""; hsh=""; hwb=""; hdc=""; hnm=""; hmsg=0; hwr=0; hpre=""; hsubb=0
+gtext=""; delim=""; hquote=""; body=""; hall=""; hsh=""; hwb=""; hdc=""; hnm=""; hmsg=0; hwr=0; hsubb=0
 while IFS= read -r line || [ -n "$line" ]; do
   if [ -n "$delim" ]; then
     if [ "${line#"${line%%[![:space:]]*}"}" = "$delim" ]; then
@@ -1402,15 +1473,10 @@ while IFS= read -r line || [ -n "$line" ]; do
   gtext+="$line$nl"
   if [[ $line =~ $hre ]]; then
     delim="${BASH_REMATCH[3]}"; hquote="${BASH_REMATCH[2]}"
-    # hmsg: the header's command, up to the << (after its last ; & |), is a commit's or tag's (hmsg_re), or a gh message's with a
-    # quoted delimiter (B48), and the line names no shell. A substitution in that command runs one, so only $(cat, which prints the
-    # message, keeps the body a message. hcom is that test, shared by both message forms.
-    hpre="${line%%<<*}"; hpre="${hpre##*[;&|]}"; hsub="${hpre//'$(cat'/}"
-    hcom=0; [[ $hsub != *'$('* && $hsub != *'<('* && $hsub != *'>('* && $hsub != *"$bt"* ]] && ! [[ $line =~ $hshell_re ]] && hcom=1
-    hmsg=0
-    ((hcom)) && [[ $hpre =~ $hmsg_re ]] && hmsg=1
-    ((hcom)) && [[ -n $hquote && $hpre =~ $hmsg_gh_re && ( $hpre =~ $hmsg_in_re || $hpre =~ $hmsg_cat_re ) ]] && hmsg=1
-    hwr=0; if ((!hmsg)) && [[ $hpre =~ $hcat_re ]]; then hwr=1; fi
+    # body_kind reads the header's kind of body (B40, B48, B50): a message no shell runs (hmsg), or a cat or tee body (hwr).
+    body_kind "$line" "$hquote"; hmsg=0; hwr=0
+    [[ $bk == msg ]] && hmsg=1
+    [[ $bk == cat ]] && hwr=1
   fi
 done <<<"$real"
 gtext+="$body"   # a heredoc that never closes keeps its text: a false block beats a miss

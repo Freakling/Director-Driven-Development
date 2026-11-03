@@ -58,7 +58,9 @@
 #      command of its own, to four levels, and a command whose quoting the guard can't close is blocked (B34). A wait
 #      loop (until or while) with sleep in such a script is blocked too, unless a timeout of 280 seconds or less bounds it (B42).
 #      The hang check also blocks a C-style for (( loop with sleep, PowerShell's do { } while or until with sleep, Start-Sleep and
-#      cmd's timeout /t over 280 seconds, and a Bash substitution that runs before a timeout above it (B49).
+#      cmd's timeout /t over 280 seconds, and a Bash substitution that runs before a timeout above it (B49). The hang check
+#      reads the command without a commit's, tag's or gh message and a cat or tee body nothing runs, so a message can name
+#      them; a body a shell, an interpreter or a runner executes is still read (B50).
 #      A variable in a git command's words is read as its value when the command assigns it once to a plain value
 #      (FLAG=--force; git push $FLAG). Any other unquoted variable there, or a quoted one a flag or a path could be, is
 #      blocked, and so is a variable as the subcommand or as a shell's name followed by -c; the everyday forms pass (B37).
@@ -1589,6 +1591,55 @@ EOF
     err "the guard hook doesn't block a for (( loop, a do ... while, Start-Sleep or timeout /t over 280 seconds, or a substitution before a timeout, or blocks a message or a bounded script that names one (B49):"
     printf '%s\n' "${git_fail#$'\n'}"
   else echo "ok: the guard hook blocks a for (( loop with sleep, a do ... while with sleep, Start-Sleep and timeout /t over 280 seconds, and a substitution that runs before a timeout, and passes a bounded script and a message that names them (B49)"; fi
+
+  # The hang check reads the command without the bodies no shell runs (B50): a commit's, tag's or gh message, and a cat or tee body
+  # nothing runs (the classification's reading, B40 and B48). So a message can name a loop, a pause or a timed wait, as plain text,
+  # in a C-style or a PowerShell loop, with a pause or a wait over five minutes. A body a shell, an interpreter or a runner executes
+  # is still read, and so is the empty-heredoc probe and a command after a message. An unquoted message's substitution is run, so it
+  # is read; a quoted one is text, and so are its backticks.
+  git_fail=""
+  if [ -f .claude/hooks/guard-commands.sh ]; then
+    for cmd in \
+        $'git commit -q -F - -- a <<\'EOF\'\nPowerShell\'s While loop with Start-Sleep is now seen.\nEOF' \
+        $'gh pr edit 5 --body-file - <<\'EOF\'\nPowerShell\'s While loop with Start-Sleep is now seen.\nEOF' \
+        $'git commit -q -F - <<\'EOF\'\nfix: for ((i = 0; i < 3; i++)); do sleep 600; done\nEOF' \
+        $'git commit -q -F - <<\'EOF\'\nwait: Start-Sleep -Seconds 600 before retry\nEOF' \
+        $'gh pr create --body-file - <<\'EOF\'\nUse cmd\'s timeout /t 600 to wait\nEOF' \
+        $'gh pr create --body-file - <<\'EOF\'\ndo { Start-Sleep 600 } while ($true)\nEOF' \
+        $'gh pr create --body-file - <<\'EOF\'\nuse `sleep 600` and `timeout /t 600` as examples\nEOF' \
+        $'gh pr create --body-file - <<\'EOF\'\n$(until false; do sleep 1; done)\nEOF' \
+        $'git commit -q -F - <<EOF\nwhile you wait, Start-Sleep 600 $(date +%F)\nEOF' \
+        $'git tag -a v1 -F - <<\'EOF\'\nwhile true; do sleep 600; done\nEOF' \
+        $'gh issue comment 5 -F - <<\'EOF\'\nfor ((;;)); do sleep 1; done\nEOF' \
+        $'gh release create v1 --notes-file - <<\'EOF\'\ndo { Start-Sleep 600 } until ($false)\nEOF' \
+        $'git commit -q -F - <<\'EOF\'\nfix: sleep 600\nEOF\ngit status' \
+        $'cat > notes.md <<\'EOF\'\nuntil false; do sleep 600; done\nEOF' \
+        $'cat > notes.md <<EOF\nuntil false; do sleep 600; done\nEOF' \
+        $'tee notes.md <<\'EOF\'\nStart-Sleep -Seconds 600\nEOF'; do
+      guard 0 "$cmd"
+    done
+    guard 0 'git commit -q -m "wait: Start-Sleep -Seconds 600"' PowerShell
+    for cmd in \
+        $'python3 - <<\'EOF\'\nEOF' \
+        $'bash <<\'EOF\'\nuntil false; do sleep 600; done\nEOF' \
+        $'cat > x.sh <<\'EOF\'\nwhile true; do sleep 1; done\nEOF\nbash x.sh' \
+        $'cat > x.sh <<\'EOF\'\nStart-Sleep -Seconds 600\nEOF\nsh x.sh' \
+        $'cat > x.sh <<\'EOF\'\nuntil false; do sleep 1; done\nEOF\n. ./x.sh' \
+        $'echo start; cat > x.sh <<\'EOF\'\nuntil false; do sleep 1; done\nEOF\nbash x.sh' \
+        $'git commit -q -F - <<\'EOF\'\nmsg\nEOF\nwhile true; do sleep 1; done' \
+        $'gh pr create --body-file - <<\'EOF\'\nmsg\nEOF\nsleep 600' \
+        $'git commit -q -F - <<EOF\n$(until false; do sleep 1; done)\nEOF' \
+        $'gh pr create --body-file - <<EOF\n$(sleep 600)\nEOF' \
+        $'git commit -q -F - <<EOF\n`until false; do sleep 1; done`\nEOF' \
+        $'cat > notes.md <<\'EOF\'\nmsg\nEOF\nbash -c "until false; do sleep 600; done"'; do
+      guard 2 "$cmd"
+    done
+  fi
+  guard_run
+  if [ -n "$git_fail" ]; then
+    err "the guard hook blocks a message or an unrun cat body that names a loop, a pause or a timed wait, or passes a body a shell, an interpreter or a runner executes (B50):"
+    printf '%s\n' "${git_fail#$'\n'}"
+  else echo "ok: the guard hook passes a commit's, tag's or gh message, and a cat or tee body nothing runs, that names a loop, a pause or a timed wait, and blocks a body a shell, an interpreter or a runner executes (B50)"; fi
 
   # A variable in a git command's words (B37): the guard can't read what it holds. A variable that the command assigns once,
   # to a plain value, is read as that value, so FLAG=--force; git push $FLAG is the force push it is. Any other unquoted

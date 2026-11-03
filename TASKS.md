@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T279 · B57 · R7
+**Next IDs:** T279 · B58 · R7
 
 ## Milestones
 | Milestone | Status |
@@ -1170,7 +1170,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Found in: B42
 - Brief: -
 
-### B50 · The hang check reads a commit message or a pull request body as commands · todo · XS · agent · low
+### B50 · The hang check reads a commit message or a pull request body as commands · done 2026-11-03 · XS · agent · low
 - Touches: .claude/hooks/guard-commands.sh, selftest.sh (the guard is framework-owned: T276, T277 and T278 carry the fix)
 - Repro: 1. Feed the guard hook `git commit -q -F - -- a <<'EOF'` with a body line saying PowerShell's While loop with Start-Sleep is now seen. The same with a `gh pr edit 5 --body-file - <<'EOF'` body. 2. Expected: passes: B40 and B48 made a quoted-delimiter message to git commit, git tag or gh text for the git rules, and the hang rules should read it the same way. Actual: exit 2, "an until or while loop with sleep and no time limit": the hang rules read every heredoc body, and since B42 the loop rule matches in any case, so plain words in a message trip it. It blocked B42's own commit message.
 - Found in: B42
@@ -1188,10 +1188,10 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Found in: B44
 - Brief: -
 
-### B55 · A PowerShell assignment, or `$true` in a script, is read as a variable command name and blocked · todo · XS · agent · med
+### B55 · An assignment (PowerShell's `$x = 1`, Bash's `x+=y`) or `$true` in a script is read as a variable command name and blocked · todo · XS · agent · med
 - Touches: .claude/hooks/guard-commands.sh, selftest.sh (the guard is framework-owned: T276, T277 and T278 carry the fix)
-- Repro: 1. Feed the guard hook a PowerShell payload with `$x = 1` or `$files = Get-ChildItem docs`, or a Bash payload with `powershell -Command 'while ($true) { Get-Date }'`. 2. Expected: passes: an assignment and a literal like `$true`, `$false` or `$null` run no command. Actual: exit 2: B45's rule reads a `$name` in command position as a variable command name. A regression from B45.
-- Found in: B49
+- Repro: 1. Feed the guard hook a PowerShell payload with `$x = 1` or `$files = Get-ChildItem docs`, a Bash payload with `powershell -Command 'while ($true) { Get-Date }'`, or a Bash payload with `c="${x:0:1}"; out+="$c"; echo hi`. 2. Expected: passes: an assignment and a literal like `$true`, `$false` or `$null` run no command. Actual: exit 2: B45's rule reads a `$name` in command position as a variable command name, and its assignment prefix has no `+=`. A regression from B45.
+- Found in: B49, B50
 - Brief: -
 
 ### T269 · Release App-Director 1.13.0 · done 2026-11-02 · S · agent
@@ -1286,6 +1286,12 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Touches: .claude/hooks/guard-commands.sh, selftest.sh (the guard is framework-owned: an item for each framework once it's built)
 - Repro: 1. Feed the guard hook a PowerShell payload with `for (;;) { Start-Sleep 1 }`, or with a double-quoted string holding a subexpression that waits ten minutes. 2. Expected: each is blocked, as the Bash forms are since B49. Actual: exit 0: the loop rule reads Bash's C-style loop only, and PowerShell subexpressions in double quotes aren't read.
 - Found in: B49
+- Brief: -
+
+### B57 · A `-m` message is read as commands when the same command also runs `bash -c` · todo · XS · agent · low
+- Touches: .claude/hooks/guard-commands.sh, selftest.sh (the guard is framework-owned: an item for each framework once it's built)
+- Repro: 1. Feed the guard hook `bash -c 'echo hi' && git commit -q -m "wait: until done; do sleep 1; done"`. 2. Expected: passes: the -m value is a message. Actual: exit 2: with an unquoted `bash -c` in the command, the raw-text scan reads the -m value too.
+- Found in: B50
 - Brief: -
 
 ### T103 · /ui-design tells the director how to use Excalidraw · done 2026-10-20 · S · agent
