@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T290 · B63 · R7
+**Next IDs:** T290 · B64 · R7
 
 ## Milestones
 | Milestone | Status |
@@ -1290,11 +1290,13 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Note: built 2026-11-03. Two calls taken by default, for the director to change: a standalone `/research` holds its note and R item until the summary is approved, as inside a design session; and a drift reset's analysis files (as-built, interpretations) are written without a summary, since starting the reset asks for them.
 - Brief: Scope › Framework features
 
-### T280 · App-Director: record only after the director approves a summary · todo · M · agent
+### T280 · App-Director: record only after the director approves a summary · in-progress 2026-11-03 · M · agent
+- PRs: App-Director #48 (open)
 - Depends on: T279
 - Touches: work/App-Director: framework/.app-director/rules.md, framework/.app-director/procedures/ (design.md, research.md, next-task.md, drift-reset.md, ui-design.md, acceptance.md, align.md), ONBOARDING.md, framework/.claude/skills/design/SKILL.md, selftest.sh
 - Done when: following the anchor (T279): rules.md › The human decides has the rule (A1); design.md holds answers in the conversation instead of recording each part (A2), gets a "Summary and approval" step before Record and a reworded Finish (A3), and holds the research note and its R item until the summary is approved (A4); the stories validation and the prototype harvest collect answers and summarise before writing (A5); next-task.md › Report `blocked` records only after the summary is approved (A6); drift-reset.md gives one summary with the decisions, the design diff and the rebuild plan before writing anything, TASKS items included (A7); ui-design.md process step 5 records once the director approves a summary of the spec, decisions, open questions and item (A8); acceptance.md shows a short summary of the B items, story rewrites and Processed line before writing (A9); ONBOARDING.md writes after the interview's summary is approved (A10); the design skill's description mentions the approval; the selftest passes (check) · following AGENTS.md › Project rules for framework work
 - Note: T279's anchor (`product/anchors/record-approval.md`) is the wording: its section 2 table names the step in each procedure, align.md included, and `ONBOARDING.md` is at the repository root.
+- Note: built 2026-11-03 as App-Director's T40. The drift reset's design and plan commits are now one, after one approval (the postmortem keeps its own); its analysis files are written when the analysis runs, as T279's note says; and onboarding's summary covers section 5's records in both modes, while the stack, AGENTS.md facts and ownership settings keep the install commit's approval as their gate.
 - Brief: Scope › Framework features
 
 ### T281 · SaaSAllTheThings: record only after the director approves a summary · todo · L · agent
@@ -1407,6 +1409,12 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Touches: .claude/hooks/guard-commands.sh, selftest.sh (the guard is framework-owned: an item for each framework once it's built)
 - Repro: 1. Feed the guard hook a PowerShell payload with `& ($args[0]) push --force`, `& $cmd` or `. $script` (unresolved); `echo "$(powershell -Command '& $args push --force')"`; or `$sb = [scriptblock]::Create('git push --force')` then `$sb.Invoke()`, or `$ExecutionContext.InvokeCommand.NewScriptBlock('...')`. 2. Expected: blocked, or blocked with a message that the guard can't judge what the variable runs. Actual: exit 0: a segment ends at `)`, B45 blocks a call only with a subcommand, a destructive flag, -c or an assignment, a non-git command's substitution gets only the hang and read rules, and a script block's literal isn't read as a script, since the `(` splits the words.
 - Found in: B55, B60
+- Brief: -
+
+### B63 · A redirect after `git diff` is read as a path outside the repository · todo · XS · agent · low
+- Touches: .claude/hooks/guard-commands.sh, selftest.sh (the guard is framework-owned: an item for each framework once it's built)
+- Repro: 1. Feed the guard hook `git diff > /tmp/x.diff` or `git -C work/App-Director diff > /tmp/x.diff`. 2. Expected: passes: the redirect writes git's output, and git reads no path outside the repository. Actual: exit 2, "git diff of a path outside the repository": the outside-path rule takes the redirect's target as a pathspec.
+- Found in: T280
 - Brief: -
 
 ### T103 · /ui-design tells the director how to use Excalidraw · done 2026-10-20 · S · agent
