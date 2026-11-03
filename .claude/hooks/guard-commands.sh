@@ -27,10 +27,21 @@ raw="${BASH_REMATCH[1]}"
 
 # The command as the shell reads its line breaks and tabs: a JSON \n ends a command, as ; does, and \t
 # is a space. A real backslash (the pair \\) stays as it is, so \\n is text, not a line break. The early
-# tests read this text, so a git command on any line is seen (B23). Expansions only, so no process starts.
-bs='\'
-detect="${raw//\\\\/$'\x01'}"; detect="${detect//\\n/;}"; detect="${detect//\\t/ }"
-detect="${detect//$'\x01'/$bs$bs}"
+# tests read this text, so a git command on any line is seen (B23). A backslash at the end of a line
+# continues the command on the next line, as the shell does, so `git push \` with `--force` below is one
+# command (B25). Expansions only, so no process starts. x1 is one shell backslash, x2 an escaped pair (\\).
+bs='\'; x1=$'\x01'; x2=$'\x02'; nl=$'\n'
+detect="${raw//\\\\/$x1}"; detect="${detect//$x1$x1/$x2}"; detect="${detect//$x1\\n/}"
+detect="${detect//\\n/;}"; detect="${detect//\\t/ }"; detect="${detect//$x2/$x1$x1}"
+detect="${detect//$x1/$bs$bs}"
+
+# The same command with its quotes decoded, for the rules that read words: the git flags below and the
+# reads of credential files. A line break that ends a command stays a newline; a continued line (B25) has
+# none. A pair of backslashes is an escaped backslash, so a newline after it still ends the command.
+# Expansions only.
+real="${raw//\\\\/$x1}"; real="${real//\\\"/\"}"; real="${real//$x1$x1/$x2}"; real="${real//$x1\\n/}"
+real="${real//\\n/$nl}"; real="${real//\\t/ }"; real="${real//\\r/}"; real="${real//$x2/$x1$x1}"
+real="${real//$x1/$bs}"
 
 # Blank quoted strings so a commit message or filename can't trip flag tests.
 code="$detect"
@@ -57,10 +68,9 @@ block() {
 cred_end="([[:space:]\"';&|)]|\$)"
 cred_store_re='\.ssh([/\\]|'"$cred_end"')|\.git-credentials|\.config[/\\]git[/\\]credentials|\.config[/\\]gh([/\\]|'"$cred_end"')|GitHub CLI([/\\]|'"$cred_end"')'
 reads_cred_file() {
-  # The command as the shell reads it: JSON escapes undone (\\ is one backslash, so C:\Users\V
-  # works) and the \n that separates commands becomes ;. Bash expansions only, so no process starts.
-  local cmd="${raw//\\\\/$'\x01'}" bs='\'
-  cmd="${cmd//\\\"/\"}"; cmd="${cmd//\\n/;}"; cmd="${cmd//$'\x01'/$bs}"
+  # The command as the shell reads it (real, above, with the line breaks that end a command as ;), so
+  # C:\Users\V works, a tab is a space and a backslash-joined line is one line (B25).
+  local cmd="${real//$nl/;}"
   # A store read: the command word, then a path that is a store, or has one after a character that
   # isn't part of a name, so ~/.ssh, $HOME/.ssh and "C:\...\.ssh" match, and x.ssh doesn't.
   local store_read_re='(^|[[:space:]|;&(])(cat|head|tail|less|more|strings)[[:space:]]+([^;&|]*[^[:alnum:]_.-])?('"$cred_store_re"')'
@@ -107,7 +117,6 @@ git_print_re='(^|[^[:alnum:]_./-])git[[:space:]]+([^;&|]*[[:space:]])?credential
 # A command that never returns, or runs past five minutes, lets the prompt cache expire, and the next
 # turn rewrites the whole context. So: no empty-heredoc probes, no unbounded wait loops, no long sleeps.
 # Text matching only: a loop built another way isn't seen. The guard is also wired to Monitor.
-nl=$'\n'
 hang() {
   echo "App Director: blocked: $1" >&2
   echo "              $2" >&2
@@ -196,9 +205,7 @@ fi
 # (--ext-diff). The command is read as the shell hands it to git: '--output=x', "--output"=x and
 # --out\put=x are the flag, while a flag named inside a quoted message or a heredoc body is not.
 # Variables and $(...) outside quotes are not expanded, so this is a text match like the rest.
-bs='\'; sq1="'"
-real="${raw//\\\\/$'\x01'}"; real="${real//\\\"/\"}"; real="${real//\\n/$nl}"
-real="${real//\\t/ }"; real="${real//\\r/}"; real="${real//$'\x01'/$bs}"
+sq1="'"
 
 # Cut out the heredoc bodies (git commit -F - <<'EOF' ...). A quoted delimiter makes the body plain
 # text; an unquoted one expands $(...) and backticks, so a body with those stays.
@@ -231,7 +238,7 @@ while [[ $rest =~ $qre ]]; do
     pre="${pre%?}"
     [[ $quoted == "'"* && $inner =~ \\[xuU0-7] ]] && block "ANSI-C quoting with a numeric escape (\$'\\055') can spell any flag past this check"
   fi
-  pre="${pre//\\$nl/}"; pre="${pre//\\/}"        # outside quotes a backslash only escapes the next character
+  pre="${pre//\\/}"        # outside quotes a backslash only escapes the next character (a joined line is already one line)
   gcode+="$pre"
   word="${gcode##*[[:space:];&|]}"               # the word so far
   if [[ $inner =~ ^--?[A-Za-z] ]]; then gcode+="$inner"
@@ -240,7 +247,7 @@ while [[ $rest =~ $qre ]]; do
   elif [[ $quoted == '"'* && ( $inner == *'$('* || $inner == *'`'* ) ]]; then rest="$inner $rest"
   else gcode+=" Q "; fi
 done
-rest="${rest//\\$nl/}"; rest="${rest//\\/}"; gcode+="${rest//[\"$sq1]/}"   # a quote left over never closes
+rest="${rest//\\/}"; gcode+="${rest//[\"$sq1]/}"   # a quote left over never closes
 gcode="${gcode//$nl/;}"; gcode="${gcode//>&/> }"; gcode="${gcode//&>/> }"
 
 gitre='(^|[^[:alnum:]_./-])git[[:space:]]'

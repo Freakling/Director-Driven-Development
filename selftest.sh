@@ -28,6 +28,8 @@
 #      hook blocks shell reads of them, while the committed templates stay readable (B21). The hook
 #      tests every argument of a read, so the file may follow an option or another file (B22). A git
 #      command on a later line, after a newline or a tab, is blocked as it is on its own line (B23).
+#      A backslash line continuation joins the lines the guard reads, and a tab is a space, so a
+#      git flag or a credential read split that way is blocked as the plain form is (B25).
 #      A git commit whose -n or --no-verify is quoted or split (B26) is blocked as the plain flag is.
 #      The PowerShell tool (B24) is wired the same way: the guard's matcher names it, each Bash deny
 #      rule has a PowerShell twin, the hook blocks the same commands in a PowerShell payload, and the
@@ -568,7 +570,23 @@ else
         'git commit "-n" -m x' \
         'git commit -""n -m x' \
         "git commit --no-ve''rify -m x" \
-        "git commit -m -- '-n'"; do
+        "git commit -m -- '-n'" \
+        $'git commit \\\n-n -m x' \
+        $'git push \\\n--force' \
+        $'git push origin \\\n+main' \
+        $'git reset \\\n--hard' \
+        $'git credential \\\nfill' \
+        $'git log \\\n--output=/tmp/probe.txt' \
+        $'cat \\\n.env.local' \
+        $'cat README.md \\\n.env.local' \
+        $'cat\t.env.local' \
+        $'head\t-n\t20\t.env' \
+        $'git\tpush --force' \
+        $'git\tcommit -n -m x' \
+        $'git\tlog --output=/tmp/probe.txt' \
+        $'echo a\\\\\ngit push --force' \
+        $'echo a\\\\\ngit commit -F /tmp/msg.txt' \
+        $'sleep \\\n300'; do
       guard 2 "$cmd"
     done
     for cmd in \
@@ -621,7 +639,14 @@ else
         $'git status\ngit log --oneline -3' \
         $'git status\ngit commit -q -F - <<\'EOF\'\nfix the --output and --no-index handling, not -F /tmp/x\nEOF' \
         $'git commit -q -F - <<\'EOF\'\nfix the -n flag, not a flag\nEOF' \
-        'echo x\\ngit branch -D y'; do
+        'echo x\\ngit branch -D y' \
+        $'git log \\\n--oneline -3' \
+        $'git status \\\n-s' \
+        $'git diff \\\nHEAD' \
+        $'echo a\\\\\nls' \
+        $'cat README.md \\\ndocs/x.md' \
+        $'cat\tREADME.md' \
+        $'git\tstatus'; do
       guard 0 "$cmd"
     done
     # PowerShell (B24): its input carries the command as tool_input.command, like Bash's, so the hook must
