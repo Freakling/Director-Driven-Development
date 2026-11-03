@@ -47,6 +47,9 @@
 # runs (any body but a commit's or tag's message) takes a backtick as the end of a flag, and its words and the file-writing flags
 # are read there too; git branch with a delete and a force flag, git push --mirror, --delete and -d, and a :ref refspec are
 # blocked, and the credential-print rules read the decoded words (B39, where the git rules below read the bodies and the words).
+# A heredoc body that no shell runs is text (B40): a commit's or tag's message, and a cat or tee body that the command doesn't
+# run (no shell, interpreter, ssh, chmod, make or npm, call operator, ./ path, dot-source or .git folder names it). The destructive rules and
+# the file-writing flag rules skip such a body; the substitutions in it are still read (B32).
 
 IFS= read -r -d '' input || true
 re='"command"[[:space:]]*:[[:space:]]*"(([^"\\]|\\.)*)"'
@@ -595,6 +598,13 @@ wrap_gate='(^|[^[:alnum:]_-])((ba|z|da|k)?sh|eval|powershell|pwsh|cmd)(\.exe)?([
 # names no shell, is text no shell runs. A header that names a shell (bash, sh, eval, source...) feeds a script a shell runs.
 hmsg_re='(^|[^[:alnum:]_./-])git[[:space:]]+([^;&|]*[[:space:]])?(commit|tag)([[:space:]]|$)'
 hshell_re='(^|[^[:alnum:]_./-])((ba|z|da|k)?sh|eval|source|exec)(\.exe)?([[:space:];&|()<>]|$)'
+# B40: a cat or tee body (hcat_re is the header's command) is text unless the command names something that runs it (hrun_re): a
+# shell or an interpreter, ssh, chmod, iex, a build tool that runs the file it reads (make, npm and its family), a call operator
+# (&), a ./, ../ or .\ path, a dot-source, or the .git folder (git runs its hooks from there). A quoted name is read with its
+# quotes removed (see the cat or tee rule below).
+hcat_re='^[[:space:]]*(cat|tee)([[:space:]]|$)'
+hrun_re='(^|[^[:alnum:]_./-])((ba|z|da|k)?sh|eval|source|exec|pwsh|powershell|cmd|python3?|py|perl|ruby|node|ssh|chmod|iex|invoke-expression|make|npm|npx|yarn|pnpm)(\.exe)?([[:space:];&|()<>]|$)'
+hrun_re+="|(^|[[:space:];&|()])\\.\\.?[/\\\\]|(^|[[:space:];|()])&[[:space:]]|(^|[;&|()$nl][[:space:]]*)\\.[[:space:]]|\\.git[/\\\\]"
 tab=$'\t'; cr=$'\r'
 MSG_WRAP="the guard can't read the quoting of this command, which may hold a script a shell or PowerShell runs (or an encoded PowerShell command)"
 MSG_DEEP="shell wrappers nest deeper than the guard reads (four levels, such as bash -c inside sh -c)"
@@ -1078,16 +1088,20 @@ sq1="'"
 
 # Cut out the heredoc bodies (git commit -F - <<'EOF' ...; hre, the header's pattern, is set above). A quoted delimiter makes
 # the body plain text; an unquoted one expands $(...) and backticks, so a body with those stays.
-gtext=""; delim=""; hquote=""; body=""; hall=""; hdc=""; hnm=""; hmsg=0; hpre=""
+# B40: a body is in hdc (the destructive rules' bodies) and hnm (the file-writing flag rules') only when a shell runs it. A commit's
+# or tag's message (hmsg) is text no shell runs, and so is a cat or tee body (hwr, collected in hwb) unless the command names a
+# runner (hrun_re, after the loop). Every body is in hall for the variable rules (B37), and an unquoted body's substitutions are
+# in gtext (B32). A shell body is collected in hsh.
+gtext=""; delim=""; hquote=""; body=""; hall=""; hsh=""; hwb=""; hdc=""; hnm=""; hmsg=0; hwr=0; hpre=""
 while IFS= read -r line || [ -n "$line" ]; do
   if [ -n "$delim" ]; then
     if [ "${line#"${line%%[![:space:]]*}"}" = "$delim" ]; then
       delim=""
       [[ -n $hquote || ( $body != *'$('* && $body != *'`'* ) ]] || gtext+="${body//[\'\"]/_}"   # an unquoted body's quotes are text (B32)
       hall+="$body"
-      # B39: a backtick ends a flag in a body a shell runs, so hdc (the destructive rules' bodies) and hnm (the flag rules' shell
-      # bodies) hold each backtick of such a body as a space. A message's body keeps its backticks, which B32 reads as text.
-      if ((hmsg)); then hdc+="$body"; else hdc+="${body//"$bt"/ }"; hnm+="${body//"$bt"/ }"; fi
+      if ((hmsg)); then :
+      elif ((hwr)); then hwb+="$body"
+      else hsh+="$body"; fi
       body=""
     else body+="$line$nl"; fi
     continue
@@ -1100,11 +1114,26 @@ while IFS= read -r line || [ -n "$line" ]; do
     hpre="${line%%<<*}"; hpre="${hpre##*[;&|]}"; hsub="${hpre//'$(cat'/}"
     hmsg=0
     [[ $hpre =~ $hmsg_re && $hsub != *'$('* && $hsub != *'<('* && $hsub != *'>('* && $hsub != *"$bt"* && ! $line =~ $hshell_re ]] && hmsg=1
+    hwr=0; if ((!hmsg)) && [[ $hpre =~ $hcat_re ]]; then hwr=1; fi
   fi
 done <<<"$real"
 gtext+="$body"   # a heredoc that never closes keeps its text: a false block beats a miss
 hall+="$body"    # every body, for the variable rules (B37): a body may be a script a shell runs
-if ((hmsg)); then hdc+="$body"; else hdc+="${body//"$bt"/ }"; hnm+="${body//"$bt"/ }"; fi
+hsh+="$body"
+# B40: a cat or tee body is read as a shell body when the command names a runner. The text is read with its quotes removed, so
+# "bash" x.sh names bash, and quoted text with a space in it is blanked, as decode_words blanks it, so a message that names bash
+# doesn't. A redirect's target (> ./x) is no run, so the space after > goes.
+if [[ -n $hwb ]]; then
+  rt="$gtext"
+  while [[ $rt == *'> '* ]]; do rt="${rt//'> '/'>'}"; done
+  while [[ $rt =~ \"[^\"]*[[:space:]][^\"]*\" ]]; do rt="${rt/"${BASH_REMATCH[0]}"/ Q }"; done
+  while [[ $rt =~ \'[^\']*[[:space:]][^\']*\' ]]; do rt="${rt/"${BASH_REMATCH[0]}"/ Q }"; done
+  rt="${rt//[\"\']/}"
+  [[ $rt =~ $hrun_re ]] && hsh+="$hwb"
+fi
+# B39: a backtick ends a flag in a body a shell runs, so hdc and hnm hold each backtick of such a body as a space. A backtick in a
+# message is read by B32 in gtext, where an unquoted body's substitutions are.
+hdc="${hsh//"$bt"/ }"; hnm="$hdc"
 
 # B32: the substitutions are read out of the command first (subst_cut), so the quote reading below sees placeholders, not
 # their text: a quote or a ) inside a substitution can't end a quoted string or the substitution early. Outside git's

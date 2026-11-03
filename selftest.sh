@@ -63,6 +63,9 @@
 #      A quoted git name (and a quoted gh or credential subcommand) is read as the shell reads it; a heredoc body a shell runs
 #      is read by the file-writing flag rules, a backtick ends a flag in it, and a commit's or tag's message is not (B39).
 #      git branch with --delete and --force, git push --mirror, --delete, -d and a :ref refspec are blocked (B39).
+#      A heredoc body no shell runs is text: a commit's or tag's message, and a cat or tee body that nothing in the command
+#      runs (no shell, interpreter, ssh, chmod, make, ./ path, dot-source or .git folder). The destructive and file-writing rules
+#      skip it, and a body written to a file and run in the same command (cat > x.sh, then bash x.sh) is still read (B40).
 #   9. The site builds in strict mode, which fails on broken internal links and anchors.
 #  10. The Content-Security-Policy in overrides/main.html allows every inline script the built site
 #      runs (its sha256 is in script-src), and no script runs before the policy's meta tag.
@@ -1637,6 +1640,60 @@ else
     err "the guard hook doesn't read a quoted git name, a heredoc body a shell runs, a long-form branch or push flag, a push refspec that deletes, or a quoted credential subcommand as the shell does, or blocks a message that names a plain form (B39):"
     printf '%s\n' "${git_fail#$'\n'}"
   else echo "ok: the guard hook blocks a quoted git name, a heredoc body a shell runs with a file-writing flag, a backtick flag or a destructive command, git branch --delete --force, git push --mirror, --delete or a :ref refspec, and a quoted credential subcommand, and passes the messages and reads that name them (B39)"; fi
+
+  # A heredoc body no shell runs is text (B40): a commit's or tag's message, and a cat or tee body that the command doesn't run (no
+  # shell, interpreter, ssh, chmod, make, a ./ path, a dot-source or the .git folder). The destructive rules and the file-writing flag
+  # rules skip such a body, so a message or a written file that names a destructive git command passes, and its substitutions are
+  # still read. A body written to a file and run in the same command (cat > x.sh, then bash x.sh, ./x.sh or . x.sh) is a script a
+  # shell runs, and is read as before. The guard reads command text, so a file written by an earlier command isn't judged.
+  git_fail=""
+  if [ -f .claude/hooks/guard-commands.sh ]; then
+    for cmd in \
+        $'git commit -q -F - <<\'EOF\'\nfix: git push --force; done\nEOF' \
+        $'git tag -a v1 -F - <<\'EOF\'\nfix: git push --delete origin x\nEOF' \
+        $'git commit -q -F - <<\'EOF\'\nmsg with `git push --force` in it\nEOF' \
+        $'git commit -m "$(cat <<\'EOF\'\nfix: git reset --hard\nEOF\n)"' \
+        $'git commit -q -F - <<\'EOF\'\nfix: git log --output=x in the docs\nEOF\nbash x.sh' \
+        $'cat > notes.md <<\'EOF\'\nsee git log --output=x\nEOF' \
+        $'cat > notes.md <<\'EOF\'\na backticked `git push --force` here\nEOF' \
+        $'tee notes.md <<\'EOF\'\ngit push --mirror\nEOF' \
+        $'cat <<\'EOF\' > notes.md\ngit reset --hard\nEOF' \
+        $'cat >> notes.md <<\'EOF\'\ngit branch -D x\nEOF' \
+        $'cat > notes.md <<\'EOF\'\ngit push --force\nEOF\ngit add notes.md && git status' \
+        $'cat > ./notes.md <<\'EOF\'\ngit grep -Oecho foo\nEOF' \
+        $'cat > notes.md <<\'EOF\'\nbash -c \'git push --force\'\nEOF' \
+        $'cat > notes.md <<EOF\nplain text, no git here\nEOF' \
+        $'cat > notes.md <<\'EOF\'\ngit push --force\nEOF\necho "run bash later"' \
+        $'cat > notes.md <<\'EOF\'\ngit push --force\nEOF\ngit commit -q -F - <<\'EOF2\'\nfix: git push --force\nEOF2'; do
+      guard 0 "$cmd"
+    done
+    for cmd in \
+        $'cat > x.sh <<EOF\ngit push --force\nEOF\nbash x.sh' \
+        $'cat > x.sh <<\'EOF\'\ngit push --force\nEOF\nbash x.sh' \
+        $'cat > x.sh <<\'EOF\'\ngit push --force\nEOF\nchmod +x x.sh && ./x.sh' \
+        $'cat > x.sh <<\'EOF\'\ngit reset --hard\nEOF && sh x.sh' \
+        $'cat > x.sh <<\'EOF\'\ngit log --output=/tmp/x\nEOF\nbash x.sh' \
+        $'cat > x.sh <<\'EOF\'\ngit push --force\nEOF\nsource x.sh' \
+        $'tee x.sh <<\'EOF\'\ngit push --force\nEOF\n. ./x.sh' \
+        $'cat > x.sh <<\'EOF\'\ngit push --force\nEOF\n"bash" x.sh' \
+        $'cat > x.sh <<\'EOF\'\ngit push --force\nEOF\npython3 x.sh' \
+        $'cat > x.sh <<\'EOF\'\ngit push --force\nEOF\nenv bash x.sh' \
+        $'cat > Makefile <<\'EOF\'\npush:\n\tgit push --force\nEOF\nmake push' \
+        $'cat > .git/hooks/pre-commit <<\'EOF\'\ngit push --force\nEOF\ngit commit -q -m x' \
+        $'cat > notes.md <<EOF\n$(git push --force)\nEOF' \
+        $'cat > notes.md <<EOF\n`git push --force`\nEOF' \
+        $'git commit -q -F - <<EOF\nfix `git push --force`\nEOF' \
+        $'cat <<\'EOF\' | bash\ngit push --force\nEOF' \
+        $'bash <<\'EOF\'\ngit push --force\nEOF'; do
+      guard 2 "$cmd"
+    done
+    guard 2 $'cat > x.ps1 <<\'EOF\'\ngit push --force\nEOF\n& ./x.ps1' PowerShell
+  fi
+  guard_run
+  if [ -n "$git_fail" ]; then
+    err "the guard hook reads a commit's or tag's message, or a cat or tee body that nothing in the command runs, as a script (B40), or passes a body a shell runs:"
+    printf '%s\n' "${git_fail#$'\n'}"
+  else echo "ok: the guard hook passes a commit's or tag's message and a cat or tee body that the command doesn't run, and blocks a body written to a file and run in the same command (B40)"; fi
 
   # The credential stores (B15): the Read tool may not open the gh CLI's token file, git's credentials or
   # ~/.ssh. The .env files with values (B21): .env.local and the other .env.<suffix> files the guard hook
