@@ -50,8 +50,10 @@
 # variable that names a program git runs (GIT_CONFIG_*, GIT_SSH_COMMAND, GIT_PAGER, EDITOR and the like) set on a git command is
 # blocked. See the section "Git configuration and program flags" below.
 #
-# The git name is read as the shell reads it, quotes removed, so "git", 'git' and g"it" are git (B39). A heredoc body a shell
-# runs (any body but a commit's or tag's message) takes a backtick as the end of a flag, and its words and the file-writing flags
+# The git name is read as the shell reads it, quotes removed, so "git", 'git' and g"it" are git (B39), in any case too:
+# PowerShell finds a command case-insensitively, and Windows finds GIT, so GIT and Git are git (B46). Only the name is
+# matched so: git's subcommands and flags stay case-sensitive, as git reads them, and the name is written [Gg][Ii][Tt].
+# A heredoc body a shell runs (any body but a commit's or tag's message) takes a backtick as the end of a flag, and its words and the file-writing flags
 # are read there too; git branch with a delete and a force flag, git push --mirror, --delete and -d, and a :ref refspec are
 # blocked, and the credential-print rules read the decoded words (B39, where the git rules below read the bodies and the words).
 # A heredoc body that no shell runs is text (B40): a commit's or tag's message, and a cat or tee body that the command doesn't
@@ -256,7 +258,7 @@ subst_cut() {
 subst_read() {
   local c="$1" c2
   c="${c#"${c%%[![:space:]]*}"}"; c="${c%"${c##*[![:space:];]}"}"
-  [[ $c =~ ^(git|date|cat|echo|printf)([[:space:]]|$) ]] || return 1
+  [[ $c =~ ^([Gg][Ii][Tt]|date|cat|echo|printf)([[:space:]]|$) ]] || return 1
   c2="${c//<</}"
   [[ $c2 == *'$('* || $c2 == *'`'* || $c2 == *[\;\&\|\<\>\(\)$nl]* ]] && return 1
   return 0
@@ -284,7 +286,7 @@ subst_segment() {
   local cw=0 gi=-1 j rest idx
   while ((cw < n)) && [[ ${w[cw]} =~ ^(([A-Za-z_][A-Za-z0-9_]*=.*)|\$|env|time|nohup|exec|command|sudo|if|then|else|elif|do|while|until|!)$ ]]; do ((cw++)); done
   [[ ${w[cw]:-} == *$'\x1a'* ]] && block "$MSG_CMD"
-  for ((j = 0; j < n; j++)); do [[ ${w[j]} == git ]] && { gi=$j; break; }; done
+  for ((j = 0; j < n; j++)); do [[ ${w[j]} == [Gg][Ii][Tt] ]] && { gi=$j; break; }; done
   ((gi < 0)) && return 0
   bsk=$((gi + 1))
   while ((bsk < n)); do case ${w[bsk]} in -C | -c) ((bsk += 2)) ;; -*) ((bsk++)) ;; *) break ;; esac; done
@@ -559,7 +561,7 @@ vtaker() {
 # option before it, after --, or as a push's branch after the remote (npos counts the words before it after the subcommand).
 var_segment() {
   local a=$1 b=$2 gi=-1 j sub si=-1 npos=0 prev="" w p
-  for ((j = a; j <= b; j++)); do [[ ${vbw[j]} == git ]] && { gi=$j; break; }; done
+  for ((j = a; j <= b; j++)); do [[ ${vbw[j]} == [Gg][Ii][Tt] ]] && { gi=$j; break; }; done
   ((gi < 0)) && return 0
   j=$((gi + 1))
   while ((j <= b)); do
@@ -624,7 +626,7 @@ MSG_CFGVAR="a variable as a git -c or --config-env key holds a name the guard ca
 MSG_CFGSUB="a command substitution as a git -c or --config-env key prints a name the guard can't read: write the key out"
 MSG_ENVRUN="a variable that names a program git runs (GIT_PAGER, GIT_EDITOR, GIT_SSH_COMMAND, GIT_CONFIG_*, EDITOR, PAGER and the like) is set on a git command, and the guard can't see which program runs"
 # cfg_pre: the words name a git command's global option (git -c, git -C) or a remote subcommand, where cfg_segment reads.
-cfg_pre='git[[:space:]]+-|(^|[^[:alnum:]_.-])(fetch|pull|push|clone|ls-remote|archive)([^[:alnum:]_.-]|$)'
+cfg_pre='[Gg][Ii][Tt][[:space:]]+-|(^|[^[:alnum:]_.-])(fetch|pull|push|clone|ls-remote|archive)([^[:alnum:]_.-]|$)'
 # The names above as they're set on a command's line: before git, after export or env, or as PowerShell's $env:NAME = value.
 env_run_re='(^|[^[:alnum:]_.-])(\$env:)?(GIT_(CONFIG|SSH|PAGER|EDITOR|SEQUENCE_EDITOR|EXTERNAL_DIFF|ASKPASS|PROXY_COMMAND|EXEC_PATH|ALLOW_PROTOCOL)[[:alnum:]_]*|EDITOR|VISUAL|PAGER)[[:space:]]*='
 
@@ -659,7 +661,7 @@ cfg_check() {
 # clone also takes -c and --config (checked as keys) and the short -u, which is its upload-pack.
 cfg_segment() {
   local a=$1 b=$2 gi=-1 j sub w name nxt cl c rest q
-  for ((j = a; j <= b; j++)); do [[ ${vbw[j]} == git ]] && { gi=$j; break; }; done
+  for ((j = a; j <= b; j++)); do [[ ${vbw[j]} == [Gg][Ii][Tt] ]] && { gi=$j; break; }; done
   ((gi < 0)) && return 0
   j=$((gi + 1))
   while ((j <= b)); do
@@ -724,7 +726,7 @@ hre='(^|[^<])<<-?[[:space:]]*(\\?["'"'"']?)([A-Za-z_][A-Za-z0-9_]*)'
 wrap_gate='(^|[^[:alnum:]_-])((ba|z|da|k)?sh|eval|powershell|pwsh|cmd)(\.exe)?([[:space:];&|()<>]|$)'
 # B39: a heredoc whose header (the text before <<, after its last ; & |) feeds a commit's or tag's message, and whose line
 # names no shell, is text no shell runs. A header that names a shell (bash, sh, eval, source...) feeds a script a shell runs.
-hmsg_re='(^|[^[:alnum:]_./-])git[[:space:]]+([^;&|]*[[:space:]])?(commit|tag)([[:space:]]|$)'
+hmsg_re='(^|[^[:alnum:]_./-])[Gg][Ii][Tt][[:space:]]+([^;&|]*[[:space:]])?(commit|tag)([[:space:]]|$)'
 hshell_re='(^|[^[:alnum:]_./-])((ba|z|da|k)?sh|eval|source|exec)(\.exe)?([[:space:];&|()<>]|$)'
 # B40: a cat or tee body (hcat_re is the header's command) is text unless the command names something that runs it (hrun_re): a
 # shell or an interpreter, ssh, chmod, iex, a build tool that runs the file it reads (make, npm and its family), a call operator
@@ -1160,7 +1162,7 @@ shopt -u nocasematch
 # gh auth token, gh auth status -t and git credential fill or get print a stored credential. Matched on the decoded words
 # (B39, rdec, below), so a quoted subcommand is seen; a commit message that names them has its quoted text blanked, so it isn't.
 gh_print_re='(^|[^[:alnum:]_./-])gh[[:space:]]+auth[[:space:]]+(token([[:space:]]|$|[;&|)])|status[^;&|]*[[:space:]](-[[:alpha:]]*t[[:alpha:]]*|--show-token)([[:space:]]|$|[;&|)]))'
-git_print_re='(^|[^[:alnum:]_./-])git[[:space:]]+([^;&|]*[[:space:]])?credential[[:space:]]+(fill|get)([[:space:]]|$|[;&|)])'
+git_print_re='(^|[^[:alnum:]_./-])[Gg][Ii][Tt][[:space:]]+([^;&|]*[[:space:]])?credential[[:space:]]+(fill|get)([[:space:]]|$|[;&|)])'
 
 # --- Hangs ---------------------------------------------------------------------------------------
 # A command that never returns, or runs past five minutes, lets the prompt cache expire, and the next
@@ -1271,7 +1273,7 @@ shopt -u nocasematch
 # A substitution's brackets are read as blanks, so $(echo git) counts as a git command (B32).
 # The git name is read as the shell reads it, quotes removed, so "git", 'git' and g"it" are git (B39).
 bare_g="${detect//$brackets/ }"; bare_g="${bare_g//[\"\'\\]/}"
-isgit=0; [[ $bare_g =~ (^|[^[:alnum:]_./-])git([[:space:]]|$) ]] && isgit=1
+isgit=0; [[ $bare_g =~ (^|[^[:alnum:]_./-])[Gg][Ii][Tt]([[:space:]]|$) ]] && isgit=1
 isbash=0; [[ $detect =~ (^|[^[:alnum:]_.-])(ba)?sh([[:space:]]|$) ]] && isbash=1
 # A gh command (quotes removed, as the shell reads it) is read for the gh auth token rule too (B39).
 gh_pre=0; [[ ${real//[\"\'\\]/} =~ (^|[^[:alnum:]_.-])gh[[:space:]] ]] && gh_pre=1
@@ -1355,7 +1357,7 @@ if ((cnv)); then
   cname_judge "$cut_out" 1
   [[ $hnm == *'$'* ]] && cname_judge "$hnm" 1
   bare_r="${cut_out//[\"\'\\]/}$nl${hnm//[\"\'\\]/}"
-  [[ $bare_r =~ (^|[^[:alnum:]_./-])git([[:space:]]|$) ]] && isgit=1
+  [[ $bare_r =~ (^|[^[:alnum:]_./-])[Gg][Ii][Tt]([[:space:]]|$) ]] && isgit=1
 fi
 
 # decode_words <text>: sets dec to the words the shell hands a command, as the rules read them (B26, B33). The quoted strings
@@ -1413,7 +1415,7 @@ dcode="$gcode;$bcode"
 # B39: the bodies a shell runs (hnm: any heredoc but a commit's or tag's message) that name git are read by the file-writing,
 # file-reading and program flags and by the words of a git command (fcode). A message isn't, so it passes as it did.
 ncode=""
-if [[ ${hnm//[\"\'\\]/} =~ git ]]; then bdecode "$hnm"; ncode="$dec"; fi
+if [[ ${hnm//[\"\'\\]/} =~ [Gg][Ii][Tt] ]]; then bdecode "$hnm"; ncode="$dec"; fi
 fcode="$gcode;$ncode"
 # B39: the credential-print rules read the command's decoded words, bodies included, with the quotes removed as the shell removes them.
 # The decode runs only when gh or credential is named in the quote-free text (it's the costly part for a long message).
@@ -1468,7 +1470,7 @@ if ((isgit)); then
   [[ $dcode =~ branch${seg}[[:space:]]-[a-zA-Z]*D[a-zA-Z]*$flag_end ]] && block "git branch -D deletes unmerged work"
 fi
 
-gitre='(^|[^[:alnum:]_./-])git[[:space:]]'
+gitre='(^|[^[:alnum:]_./-])[Gg][Ii][Tt][[:space:]]'
 gitflag() { [[ $fcode =~ $gitre($seg[[:space:]])?$1 ]]; }
 gitflag '--output([[:space:]=;&|]|$)' && block "--output writes a file to any path, such as one a later command runs"
 gitflag '--no-index([[:space:]=;&|]|$)' && block "--no-index reads any file on the machine"
@@ -1503,7 +1505,7 @@ for gs in "${gsegs[@]}"; do
     done
   fi
   k=0
-  while ((k < n)) && [[ ${w[k]} != git ]]; do ((k++)); done
+  while ((k < n)) && [[ ${w[k]} != [Gg][Ii][Tt] ]]; do ((k++)); done
   ((k++))
   while ((k < n)); do
     case ${w[k]} in -C|-c) ((k += 2)) ;; -*) ((k++)) ;; *) break ;; esac

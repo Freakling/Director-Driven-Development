@@ -74,6 +74,8 @@
 #      --force); an unresolved one is blocked when the command sets that name another way or a git subcommand follows it,
 #      and the everyday forms pass. A shell's script, eval's argument or -Command that holds a variable the caller expands is
 #      blocked, and so is a bash script path under tools/ with a variable in it (B45).
+#      A git command name is matched in any case, so GIT and Git are git (PowerShell finds a command case-insensitively, B46);
+#      git's subcommands and flags stay case-sensitive.
 #   9. The site builds in strict mode, which fails on broken internal links and anchors.
 #  10. The Content-Security-Policy in overrides/main.html allows every inline script the built site
 #      runs (its sha256 is in script-src), and no script runs before the policy's meta tag.
@@ -1671,6 +1673,51 @@ else
     err "the guard hook doesn't read a variable as a command's name, or a script or script path that a variable holds, or blocks an everyday form (B45):"
     printf '%s\n' "${git_fail#$'\n'}"
   else echo "ok: the guard hook reads a variable as a command's name as the value it assigns, blocks an unresolved one that the command sets another way or a git subcommand follows, blocks a shell's script, eval or -Command that a variable holds and a tools/ script path with a variable, and passes the everyday forms (B45)"; fi
+
+  # A git command name in another case (B46): PowerShell finds a command case-insensitively, and Windows finds GIT too, so GIT and
+  # Git are git in every git rule. Only the name is matched so: git's subcommands and flags stay case-sensitive, as git reads them.
+  # The git rules, the credential prints, a substitution in the words and a shell body that runs GIT block as their lowercase
+  # forms do, and the everyday forms and a quoted or heredoc message that names git in another case pass.
+  git_fail=""
+  if [ -f .claude/hooks/guard-commands.sh ]; then
+    for cmd in \
+        'GIT push --force origin main' \
+        'Git commit --no-verify -m x' \
+        'GIT reset --hard HEAD~1' \
+        'GIT log --output=/tmp/probe.txt' \
+        'Git diff --no-index a b' \
+        'GIT commit -F /tmp/msg.txt' \
+        'GIT grep -Oecho foo' \
+        'GIT push origin :main' \
+        'GIT branch -D x' \
+        'GIT credential fill' \
+        'Git credential get' \
+        'GIT -c core.pager=calc log' \
+        'Git push "$(echo --force)" origin main' \
+        $'bash <<\'EOF\'\nGIT push --force\nEOF'; do
+      guard 2 "$cmd" PowerShell
+    done
+    for cmd in 'GIT push --force origin main' 'Git commit --no-verify -m x'; do
+      guard 2 "$cmd"
+    done
+    for cmd in \
+        'GIT status' \
+        'Git log --oneline -5' \
+        'GIT diff HEAD' \
+        'GIT grep -n foo' \
+        'GIT tag -a v1 -m "see --force and -F"' \
+        'echo "Git push --force is blocked"' \
+        'echo "Git credential fill is blocked"' \
+        $'Git commit -q -F - <<\'EOF\'\nfix the --output and --no-index handling, not -F /tmp/x\nEOF'; do
+      guard 0 "$cmd" PowerShell
+    done
+    guard 0 'GIT status'
+  fi
+  guard_run
+  if [ -n "$git_fail" ]; then
+    err "the guard hook passes a git command name in another case, or blocks a message that names git in another case (B46):"
+    printf '%s\n' "${git_fail#$'\n'}"
+  else echo "ok: the guard hook blocks a git command name in any case (GIT, Git) as it blocks git, and passes the everyday forms and the messages that name git in another case (B46)"; fi
 
   # Git's configuration keys and program flags (B38). A -c key, or --config-env, that names a program git runs (an alias that
   # starts with !, the pager, the editor, the ssh command, a diff or credential helper, an include) is blocked, and so is a key a
