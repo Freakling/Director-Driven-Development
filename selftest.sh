@@ -167,7 +167,23 @@ else
   done
 fi
 
-field() { sed -n "s/^$1:[[:space:]]*['\"]\{0,1\}\([^'\"]*\).*/\1/p" "$2" | head -1; }
+# field <key> <file>: sets FIELD to the value on the first "<key>:" line of <file>. The value is read as the sed it
+# replaced read it: optional spaces, one optional quote, then the text up to the next quote. Bash reads the file, so
+# a folder of skills costs no process per file (B41).
+field() {
+  local line rest
+  FIELD=""
+  while IFS= read -r line || [ -n "$line" ]; do
+    case $line in
+      "$1:"*)
+        rest="${line#"$1:"}"; rest="${rest#"${rest%%[![:space:]]*}"}"
+        case $rest in \'*|\"*) rest="${rest:1}" ;; esac
+        FIELD="${rest%%[\'\"]*}"
+        return 0 ;;
+    esac
+  done < "$2"
+  return 1
+}
 
 # commands_of <folder>: one "<kind> <name>" line per command or skill a framework folder ships.
 # kind is "slash" for a /name command installed into projects, "skill" for an installer or
@@ -176,12 +192,15 @@ commands_of() {
   local f
   for f in "$1"/framework/.claude/skills/*/SKILL.md; do
     [ -f "$f" ] || continue
-    case "$(field description "$f")" in Deprecated*) continue ;; esac
-    echo "slash $(field name "$f")"
+    field description "$f"
+    case "$FIELD" in Deprecated*) continue ;; esac
+    field name "$f"
+    echo "slash $FIELD"
   done
   for f in "$1"/skills/*/SKILL.md; do
     [ -f "$f" ] || continue
-    echo "skill $(field name "$f")"
+    field name "$f"
+    echo "skill $FIELD"
   done
 }
 
@@ -193,16 +212,21 @@ skill_page() {
   esac
 }
 
-# The default branch of each repo, unpacked for the main-only check below.
+# The default branch of each repo, unpacked for the main-only check below, and the folder the guard cases run from (B41).
 main_tmp=$(mktemp -d 2>/dev/null) || main_tmp=""
-trap 'rm -rf "$main_tmp"' EXIT
+guard_dir=$(mktemp -d 2>/dev/null) || guard_dir=".app-director/state/guard-cases-$$"
+mkdir -p "$guard_dir"
+trap 'rm -rf "$main_tmp" "$guard_dir"' EXIT
 
 # main_copy <repo> <folder>: unpacks the default branch of <repo> from its cache into <folder>.
 # Fails when the cache doesn't hold it, as with a cache made before releases were followed.
 main_copy() {
-  local gd="$src/$1.git"
+  local gd="$src/$1.git" dirs
   [ -d "$gd" ] && git --git-dir="$gd" rev-parse -q --verify refs/remotes/github/main >/dev/null || return 1
-  mkdir -p "$2" && git --git-dir="$gd" archive refs/remotes/github/main | tar -x -C "$2"
+  # Only the skill folders are unpacked, since commands_of reads nothing else (B41: a whole tree takes seconds on Windows).
+  dirs=$(git --git-dir="$gd" ls-tree -d --name-only refs/remotes/github/main framework/.claude/skills skills)
+  mkdir -p "$2" || return 1
+  [ -z "$dirs" ] || git --git-dir="$gd" archive refs/remotes/github/main -- $dirs | tar -x -C "$2"
 }
 
 for pair in $repos; do
@@ -210,10 +234,11 @@ for pair in $repos; do
   [ -d "$src/$repo" ] || { err "$repo not found in $src"; continue; }
   [ -f "$page" ] || { err "$page is missing"; continue; }
   missing=""; count=0
+  page_text=$(cat "$page")   # read once: the names are matched in bash, not by a grep per name (B41)
   while read -r kind name; do
     count=$((count + 1))
     if [ "$kind" = slash ]; then
-      grep -qF "\`/$name" "$page" && continue
+      case $page_text in *"\`/$name"*) continue ;; esac
       cover=$(skill_page "$repo" "$name")
       if [ -n "$cover" ] && [ -f "$cover" ] && grep -qF "\`/$name" "$cover"; then
         echo "ok: /$name of $repo is covered by $cover"
@@ -221,7 +246,7 @@ for pair in $repos; do
       fi
       missing="$missing /$name"
     else
-      grep -qF "$name" "$page" || missing="$missing $name"
+      case $page_text in *"$name"*) ;; *) missing="$missing $name" ;; esac
     fi
   done < <(commands_of "$src/$repo")
   if [ -n "$missing" ]; then err "$page doesn't mention:$missing"
@@ -231,7 +256,7 @@ for pair in $repos; do
   if [ -n "$main_tmp" ] && main_copy "$repo" "$main_tmp/$repo"; then
     release_names=$(commands_of "$src/$repo" | cut -d' ' -f2)
     while read -r kind name; do
-      printf '%s\n' "$release_names" | grep -qxF "$name" && continue
+      case $'\n'"$release_names"$'\n' in *$'\n'"$name"$'\n'*) continue ;; esac
       label="$name"; [ "$kind" = slash ] && label="/$name"
       grep -rlE "\`/?$name([^a-z0-9-]|\$)" docs --include='*.md' 2>/dev/null | while IFS= read -r hit; do
         echo "warning: $hit describes $label, which the pinned release of $repo doesn't ship (main does)"
@@ -258,18 +283,35 @@ for pair in $repos; do
     err "$repo's copy isn't at its pin ${rel:-(none)}, so the links into it can't be checked; check out that tag"
     continue
   fi
+  # Each link is judged in its order (B41). A link to the pin names its path to one cat-file --batch-check, which
+  # answers "missing" for a path the pin lacks, one answer per path and in the same order, rather than a process per link.
+  kinds=(); msg_of=(); path_of=(); batch=""
   while IFS= read -r hit; do
     where=${hit%%:*}; rest=${hit#*:}; lineno=${rest%%:*}; link=${rest#*:}
     [[ $link =~ ^github\.com/Freakling/[^/]+/(tree|blob)/([^/]+)/(.*)$ ]] || continue
     ref=${BASH_REMATCH[2]}; path=${BASH_REMATCH[3]}
     if [ "$ref" != "$rel" ]; then
-      err "$where:$lineno links to $repo at $ref, not its pinned release $rel: $link"
-    elif git --git-dir="$gd" cat-file -e "$rel:$path" 2>/dev/null; then
-      ok_links=$((ok_links + 1))
+      kinds+=(ref); msg_of+=("$where:$lineno links to $repo at $ref, not its pinned release $rel: $link"); path_of+=("")
     else
-      err "$where:$lineno links to $path, which $repo's pinned release $rel doesn't have"
+      kinds+=(path); msg_of+=("$where:$lineno"); path_of+=("$path")
+      batch="$batch$rel:$path"$'\n'
     fi
   done <<< "$mine"
+  answers=""
+  [ -z "$batch" ] || answers=$(printf '%s' "$batch" | git --git-dir="$gd" cat-file --batch-check 2>/dev/null)
+  IFS=$'\n' read -r -d '' -a answer <<< "$answers" || true
+  a=0
+  for ((i = 0; i < ${#kinds[@]}; i++)); do
+    if [ "${kinds[i]}" = ref ]; then
+      err "${msg_of[i]}"
+      continue
+    fi
+    case ${answer[a]:-missing} in
+      *" missing") err "${msg_of[i]} links to ${path_of[i]}, which $repo's pinned release $rel doesn't have" ;;
+      *) ok_links=$((ok_links + 1)) ;;
+    esac
+    a=$((a + 1))
+  done
 done
 [ "$ok_links" -gt 0 ] && echo "ok: $ok_links links into the framework repos point at their pinned release"
 
@@ -363,14 +405,17 @@ else
   if [ "$screens_n" -eq 0 ]; then err "product/brief.md has no Screens rows with a page count"
   elif [ "$screens_fail" -eq 0 ]; then echo "ok: brief Screens page counts match mkdocs.yml's nav ($screens_n sections)"; fi
 
-  # missing_part <value>: prints the first part of a "Section › Sub" value that isn't a heading of
-  # the brief, and fails. A value is one or more parts; each part must be a heading (text only).
+  # missing_part <value>: sets bad to the first part of a "Section › Sub" value that isn't a heading of the brief, and
+  # fails. A value is one or more parts, split on " › "; each part must be a heading (text only). Bash splits and
+  # matches the parts, so a value costs no process (B41).
   missing_part() {
-    local part
-    while IFS= read -r part; do
+    local rest="$1" part
+    bad=""
+    while [ -n "$rest" ]; do
+      if [[ $rest == *" › "* ]]; then part="${rest%% › *}"; rest="${rest#*" › "}"; else part="$rest"; rest=""; fi
       [ -n "$part" ] || continue
-      grep -qxF -- "$part" <<< "$brief_heads" || { printf '%s' "$part"; return 1; }
-    done <<< "$(awk -v s="$1" 'BEGIN { n = split(s, a, " › "); for (i = 1; i <= n; i++) print a[i] }')"
+      case $'\n'"$brief_heads"$'\n' in *$'\n'"$part"$'\n'*) ;; *) bad="$part"; return 1 ;; esac
+    done
     return 0
   }
 
@@ -380,16 +425,16 @@ else
   while IFS= read -r hit; do
     [ -n "$hit" ] || continue
     lineno=${hit%%:*}; val=${hit#*:- Brief: }
-    val=$(printf '%s' "$val" | sed 's/[[:space:]]*$//')
+    val="${val%"${val##*[![:space:]]}"}"
     [ "$val" = "-" ] && continue
-    bad=$(missing_part "$val") || { err "TASKS.md:$lineno has Brief: \"$val\", and \"$bad\" isn't a heading in product/brief.md"; heads_fail=1; }
+    missing_part "$val" || { err "TASKS.md:$lineno has Brief: \"$val\", and \"$bad\" isn't a heading in product/brief.md"; heads_fail=1; }
   done <<< "$(grep -n '^- Brief: ' TASKS.md)"
   for f in tools/*.sh; do
     [ -f "$f" ] || continue
     while IFS= read -r hit; do
       [ -n "$hit" ] || continue
       lineno=${hit%%:*}; val=${hit#*BRIEF=\"}; val=${val%%\"*}
-      bad=$(missing_part "$val") || { err "$f:$lineno names brief heading \"$val\", and \"$bad\" isn't a heading in product/brief.md"; heads_fail=1; }
+      missing_part "$val" || { err "$f:$lineno names brief heading \"$val\", and \"$bad\" isn't a heading in product/brief.md"; heads_fail=1; }
     done <<< "$(grep -nE '^[[:space:]]*BRIEF="[^"]*"' "$f")"
   done
   [ "$heads_fail" -eq 0 ] && echo "ok: brief headings named in TASKS.md and tools/ are headings in product/brief.md"
@@ -431,17 +476,30 @@ fi
 # (/tree/v..., /blob/v..., /releases/tag/v...) is stripped first, and a line that names the Godot
 # engine, .NET, Node or gitleaks is skipped: their versions are not the frameworks'. "Godot Director"
 # (the framework) is not the engine.
+# One awk judges every hit (B41; a process per hit cost seconds): it strips the release-tag links and the framework's name
+# as the sed did, then keeps a line with a three-part number that isn't about the engine, .NET, Node or gitleaks. The
+# lines it keeps are the failures, printed as grep printed them.
 ver_fail=0
+ver_bad=$(grep -rnE --include='*.md' '[0-9]+\.[0-9]+\.[0-9]+' docs 2>/dev/null | awk '
+  index($0, "docs/assets/") == 1 { next }
+  {
+    where = $0; sub(/:.*$/, "", where)
+    rest = substr($0, length(where) + 2)
+    lineno = rest; sub(/:.*$/, "", lineno)
+    plain = substr(rest, length(lineno) + 2)
+    gsub(/[^ (]*\/(tree|blob)\/v[0-9][^ )"]*/, "", plain)
+    gsub(/[^ (]*\/releases\/tag\/v[0-9][^ )"]*/, "", plain)
+    gsub(/Godot[ -]Director/, "", plain)
+    if (plain !~ /(^|[^0-9.])[0-9]+\.[0-9]+\.[0-9]+([^0-9.]|$)/) next
+    if (plain ~ /(^|[^A-Za-z-])(Godot|\.NET|Node|gitleaks)([^-A-Za-z]|$)/) next
+    print
+  }')
 while IFS= read -r hit; do
   [ -n "$hit" ] || continue
   where=${hit%%:*}; rest=${hit#*:}; lineno=${rest%%:*}; text=${rest#*:}
-  plain=$(printf '%s' "$text" \
-    | sed -E 's#[^ (]*/(tree|blob)/v[0-9][^ )"]*##g; s#[^ (]*/releases/tag/v[0-9][^ )"]*##g; s#Godot[ -]Director##g')
-  printf '%s' "$plain" | grep -qE '(^|[^0-9.])[0-9]+\.[0-9]+\.[0-9]+([^0-9.]|$)' || continue
-  printf '%s' "$plain" | grep -qE '(^|[^A-Za-z-])(Godot|\.NET|Node|gitleaks)([^-A-Za-z]|$)' && continue
   err "$where:$lineno names a version number in prose (link a release tag instead, or drop it): $(printf '%s' "$text" | cut -c1-100)"
   ver_fail=1
-done <<< "$(grep -rnE --include='*.md' '[0-9]+\.[0-9]+\.[0-9]+' docs 2>/dev/null | grep -v '^docs/assets/' || true)"
+done <<< "$ver_bad"
 [ "$ver_fail" -eq 0 ] && echo "ok: no docs page names a version number in prose"
 
 # 8. Agent permissions ----------------------------------------------------------------------
@@ -486,7 +544,7 @@ else
   deny_needs '"Bash\(git grep \*\)"' 'Bash(git grep *--open*)' 'Bash(git grep *-O*)'
   deny_needs '"Bash\(git tag \*\)"' 'Bash(git tag *--file*)'
   deny_needs '"Bash\(bash tools/[^"]*\*' 'Bash(bash tools/*..*)'
-  # json_str <text>: the text as the inside of a JSON string, with \, ", a line break, a tab and a return escaped. (A ${//}
+  # json_str <text>: sets JSON_STR to the text as the inside of a JSON string, with \, ", a line break, a tab and a return escaped. (A ${//}
   # replacement left a backslash single and turned a line break into n, so a newline case reached the guard as a joined word.)
   json_str() {
     local s="$1" out="" i c
@@ -501,14 +559,37 @@ else
         *) out+="$c" ;;
       esac
     done
-    printf '%s' "$out"
+    JSON_STR="$out"
   }
+  # The guard cases (B41). guard queues a case: its JSON payload goes to a file, and its expected exit code, tool and text
+  # are kept. guard_run runs the queued cases, guard_jobs at a time, each as its own run of the hook with its own payload,
+  # then checks every exit code against that case's expected one, in the order the cases were queued, so a failure names
+  # its case and why exactly as before. Each block ends with guard_run, before it checks git_fail.
+  guard_jobs=$(nproc 2>/dev/null || echo 4); [ "$guard_jobs" -le 8 ] || guard_jobs=8
+  guard_cmds=(); guard_exps=(); guard_tools=()
   guard() { # guard <expected-exit> <command> [tool name: Bash by default, or PowerShell]
-    local got tool="${3:-Bash}"
-    printf '{"session_id":"s","tool_name":"%s","tool_input":{"command":"%s","description":"run"}}' "$tool" "$(json_str "$2")" \
-      | bash .claude/hooks/guard-commands.sh >/dev/null 2>&1
-    got=$?
-    [ "$got" -eq "$1" ] || git_fail="$git_fail"$'\n'"  guard exited $got, expected $1 ($tool): ${2//$'\n'/ NL }"
+    local n=${#guard_cmds[@]} tool="${3:-Bash}"
+    json_str "$2"
+    printf '{"session_id":"s","tool_name":"%s","tool_input":{"command":"%s","description":"run"}}' "$tool" "$JSON_STR" > "$guard_dir/$n.json"
+    guard_cmds+=("$2"); guard_exps+=("$1"); guard_tools+=("$tool")
+  }
+  guard_run() {
+    local n=${#guard_cmds[@]} first i k
+    local -a pid=() rc=()
+    for ((first = 0; first < n; first += guard_jobs)); do
+      for ((k = 0; k < guard_jobs && first + k < n; k++)); do
+        bash .claude/hooks/guard-commands.sh < "$guard_dir/$((first + k)).json" >/dev/null 2>&1 &
+        pid[k]=$!
+      done
+      for ((k = 0; k < guard_jobs && first + k < n; k++)); do
+        wait "${pid[k]}"; rc[first + k]=$?
+      done
+    done
+    for ((i = 0; i < n; i++)); do
+      [ "${rc[i]}" -eq "${guard_exps[i]}" ] || git_fail="$git_fail"$'\n'"  guard exited ${rc[i]}, expected ${guard_exps[i]} (${guard_tools[i]}): ${guard_cmds[i]//$'\n'/ NL }"
+    done
+    guard_cmds=(); guard_exps=(); guard_tools=()
+    rm -f "$guard_dir"/*.json
   }
   if [ ! -f .claude/hooks/guard-commands.sh ]; then
     git_fail="$git_fail"$'\n'"  .claude/hooks/guard-commands.sh is missing"
@@ -700,6 +781,7 @@ else
       guard 0 "$cmd" PowerShell
     done
   fi
+  guard_run
   if [ -n "$git_fail" ]; then
     err "git's file-writing, file-reading and external-command flags, and script paths outside tools/, are not all blocked:"
     printf '%s\n' "${git_fail#$'\n'}"
@@ -753,6 +835,7 @@ else
     guard 0 'type git'
     guard 0 'type README.md'
   fi
+  guard_run
   if [ -n "$git_fail" ]; then
     err "the guard hook doesn't block every read of a credential file, or blocks a read of an ordinary file (B27):"
     printf '%s\n' "${git_fail#$'\n'}"
@@ -787,6 +870,7 @@ else
     done
     guard 0 $'cat README.md `\n.env.local'
   fi
+  guard_run
   if [ -n "$git_fail" ]; then
     err "the guard hook doesn't treat a PowerShell backtick at a line's end as a continuation, or treats a Bash or an escaped one as one (B28):"
     printf '%s\n' "${git_fail#$'\n'}"
@@ -817,6 +901,7 @@ else
       guard 0 "$cmd"
     done
   fi
+  guard_run
   if [ -n "$git_fail" ]; then
     err "the guard hook reads a command after a Bash comment that ends in a backslash as hidden, or blocks a benign one (B31, B29):"
     printf '%s\n' "${git_fail#$'\n'}"
@@ -873,6 +958,7 @@ else
       guard 0 "$cmd"
     done
   fi
+  guard_run
   if [ -n "$git_fail" ]; then
     err "the guard hook misses a quoted or path-qualified reader, a backtick inside a word or a StreamReader of a credential file (B30):"
     printf '%s\n' "${git_fail#$'\n'}"
@@ -947,6 +1033,7 @@ else
     guard 0 'Write-Output "$(git status)"' PowerShell
     guard 0 $'git commit -m "$(cat <<\'EOF\'\nmsg\nEOF\n)" && git push origin main' PowerShell
   fi
+  guard_run
   if [ -n "$git_fail" ]; then
     err "the guard hook reads a command substitution in a git command's words, or as its name, as harmless, or blocks a plain read (B32):"
     printf '%s\n' "${git_fail#$'\n'}"
@@ -1033,6 +1120,7 @@ else
     guard 0 'Write-Output "git push --force"' PowerShell
     guard 0 'git push origin "HEAD:main"' PowerShell
   fi
+  guard_run
   if [ -n "$git_fail" ]; then
     err "the guard hook doesn't read a destructive git rule's flag, refspec or path as the shell does, or blocks a message that names one (B33):"
     printf '%s\n' "${git_fail#$'\n'}"
@@ -1133,6 +1221,7 @@ else
       guard 0 "$cmd" PowerShell
     done
   fi
+  guard_run
   if [ -n "$git_fail" ]; then
     err "the guard hook doesn't read a script a shell or an interpreter runs as a command of its own, or blocks a message that names one (B34):"
     printf '%s\n' "${git_fail#$'\n'}"

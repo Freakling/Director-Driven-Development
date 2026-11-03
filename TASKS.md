@@ -1079,7 +1079,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Found in: B31
 - Brief: -
 
-### B41 · The check takes over four minutes, most of it the selftest's guard cases · todo · S · agent · med
+### B41 · The check takes over four minutes, most of it the selftest's guard cases · done 2026-11-03 · S · agent · med
 - Touches: selftest.sh
 - Repro: 1. Run `bash tools/check.sh` after any change. 2. Expected: well under the five-minute limit every long command keeps to (rules.md › Commands that may run long), with room for the guard cases still to come. Actual: 255 s on 2026-11-03, after B24 to B34 added several hundred guard cases, each a separate run of the hook in a new bash process. Run the cases in parallel or in fewer processes, keeping each case's own exit code and message, and keep the selftest's output the same.
 - Found in: B34
