@@ -35,6 +35,13 @@
 # of a git subcommand whose flags the rules read is blocked when it's unquoted, or quoted where a flag or a path could be; a
 # variable as the subcommand, and a variable as a command's name followed by -c or -Command, are blocked too. See the
 # section "Variables" below.
+#
+# A git -c key, or --config-env, that names a program git runs (an alias that starts with !, core.pager, core.sshCommand,
+# diff.external, a credential helper) runs a command of the caller's choice, so the keys are an allow list: only the keys that
+# run nothing pass, and a key a variable holds is blocked (B38). The flags that name a program for a remote (--upload-pack,
+# --receive-pack, --exec, and clone's -u) are blocked on fetch, pull, push, clone, ls-remote and archive, abbreviations too. A
+# variable that names a program git runs (GIT_CONFIG_*, GIT_SSH_COMMAND, GIT_PAGER, EDITOR and the like) set on a git command is
+# blocked. See the section "Git configuration and program flags" below.
 
 IFS= read -r -d '' input || true
 re='"command"[[:space:]]*:[[:space:]]*"(([^"\\]|\\.)*)"'
@@ -450,8 +457,9 @@ var_segment() {
   done
 }
 
-# var_judge <text>: each segment of the text, judged by var_segment. Redirections are read as the shell reads them (>& and &>
-# are a redirection, not a separator), so a target such as git log > "$f" is no word of git's.
+# var_judge <text> [1]: each segment of the text, judged by var_segment. With a second argument of 1 each segment is also read by
+# cfg_segment (B38), so only the git command's own words are, not a heredoc body. Redirections are read as the shell reads them
+# (>& and &> are a redirection, not a separator), so a target such as git log > "$f" is no word of git's.
 var_judge() {
   local s="${1//>&/> }" a=0 b n
   s="${s//&>/> }"
@@ -461,7 +469,107 @@ var_judge() {
     b=$a
     while ((b + 1 < n && vbs[b + 1] == vbs[a])); do ((b++)); done
     var_segment "$a" "$b"
+    ((${2:-0})) && cfg_segment "$a" "$b"
     a=$((b + 1))
+  done
+}
+
+# --- Git configuration and program flags (B38) ----------------------------------------------------
+# git -c <key>=<value> sets a configuration key for one command, and a key can name a program git runs: an alias that starts
+# with !, the pager, the editor, the ssh command, a diff, merge or credential helper, a filter, an include. --config-env sets a
+# key from an environment variable, and clone takes -c and --config after its subcommand too. So a key passes only when it runs
+# nothing (cfg_ok), and a key that a variable or a substitution holds is blocked, since the guard can't read it (cfg_check). The
+# flags that name a program for a remote, --upload-pack, --receive-pack and --exec (clone's -u as well), are blocked on fetch,
+# pull, push, clone, ls-remote and archive, and so is a prefix of their names, which git accepts (cfg_segment). The variables
+# that name a program git runs are blocked on a git command's line (env_run_re, read in the git rules below).
+MSG_CFGVAR="a variable as a git -c or --config-env key holds a name the guard can't read, and that name can be a program git runs: write the key out"
+MSG_CFGSUB="a command substitution as a git -c or --config-env key prints a name the guard can't read: write the key out"
+MSG_ENVRUN="a variable that names a program git runs (GIT_PAGER, GIT_EDITOR, GIT_SSH_COMMAND, GIT_CONFIG_*, EDITOR, PAGER and the like) is set on a git command, and the guard can't see which program runs"
+# cfg_pre: the words name a git command's global option (git -c, git -C) or a remote subcommand, where cfg_segment reads.
+cfg_pre='git[[:space:]]+-|(^|[^[:alnum:]_.-])(fetch|pull|push|clone|ls-remote|archive)([^[:alnum:]_.-]|$)'
+# The names above as they're set on a command's line: before git, after export or env, or as PowerShell's $env:NAME = value.
+env_run_re='(^|[^[:alnum:]_.-])(\$env:)?(GIT_(CONFIG|SSH|PAGER|EDITOR|SEQUENCE_EDITOR|EXTERNAL_DIFF|ASKPASS|PROXY_COMMAND|EXEC_PATH|ALLOW_PROTOCOL)[[:alnum:]_]*|EDITOR|VISUAL|PAGER)[[:space:]]*='
+
+# cfg_ok <key> <value>: 0 when the key runs nothing, with the names read as git reads them (case-insensitive). pager.<cmd>
+# passes only as false, which turns the pager off.
+cfg_ok() {
+  local ok=1
+  shopt -s nocasematch
+  case $1 in
+    core.quotepath | core.autocrlf | core.safecrlf | core.eol | core.longpaths | core.symlinks | core.ignorecase | core.filemode \
+      | core.precomposeunicode | core.abbrev | color.* | advice.* | log.* | status.* | i18n.* | user.name | user.email) ok=0 ;;
+    pager.*) [[ $2 == false ]] && ok=0 ;;
+  esac
+  shopt -u nocasematch
+  return $ok
+}
+
+# cfg_check <word>: <word> is a git -c argument, key=value, or a --config-env argument, where the value is the name of an
+# environment variable. A variable or a substitution in the key is blocked, and so is a key that cfg_ok doesn't pass.
+cfg_check() {
+  local key="${1%%=*}" val=""
+  [[ $1 == *=* ]] && val="${1#*=}"
+  [[ $key == *$'\x07'* ]] && block "$MSG_CFGVAR"
+  [[ $key == *$'\x1a'* ]] && block "$MSG_CFGSUB"
+  cfg_ok "$key" "$val" && return 0
+  block "git sets the config key $key, which can run a program or change which one git runs (an alias that starts with !, the pager, the editor, the ssh command, a diff, merge or credential helper); the keys that run nothing pass: core.quotepath, core.autocrlf, color.*, advice.*, log.*, status.*, i18n.*, user.name, user.email and pager.<cmd>=false"
+}
+
+# cfg_segment <first word> <last word>: the git command in one segment, found as var_segment finds it. Before its subcommand,
+# -c and --config-env give a key, and -C, --git-dir, --work-tree, --namespace and --super-prefix take a value (so that value
+# isn't taken for the subcommand). After a remote subcommand, its options before -- are read: a program flag is blocked, and
+# clone also takes -c and --config (checked as keys) and the short -u, which is its upload-pack.
+cfg_segment() {
+  local a=$1 b=$2 gi=-1 j sub w name nxt cl c rest q
+  for ((j = a; j <= b; j++)); do [[ ${vbw[j]} == git ]] && { gi=$j; break; }; done
+  ((gi < 0)) && return 0
+  j=$((gi + 1))
+  while ((j <= b)); do
+    w="${vbw[j]}"
+    case $w in
+      -c | --config-env)
+        nxt=""; ((j + 1 <= b)) && nxt="${vbw[j + 1]}"
+        cfg_check "$nxt"; j=$((j + 2)) ;;
+      --config-env=*) cfg_check "${w#--config-env=}"; j=$((j + 1)) ;;
+      -C | --git-dir | --work-tree | --namespace | --super-prefix) j=$((j + 2)) ;;
+      -*) j=$((j + 1)) ;;
+      *) break ;;
+    esac
+  done
+  ((j <= b)) || return 0
+  sub="${vbw[j]}"
+  case $sub in fetch | pull | push | clone | ls-remote | archive) ;; *) return 0 ;; esac
+  for ((j = j + 1; j <= b; j++)); do
+    w="${vbw[j]}"
+    [[ $w == -- ]] && break
+    if [[ $w == --* ]]; then
+      name="${w%%=*}"; name="${name#--}"
+      [[ -n $name ]] || continue
+      shopt -s nocasematch
+      if [[ upload-pack == "$name"* || receive-pack == "$name"* || exec == "$name"* ]]; then
+        block "git $sub --$name names a program that git runs, and the guard can't judge which one"
+      fi
+      if [[ $sub == clone && config == "$name"* ]]; then
+        shopt -u nocasematch
+        if [[ $w == *=* ]]; then cfg_check "${w#*=}"
+        else nxt=""; ((j + 1 <= b)) && nxt="${vbw[j + 1]}"; cfg_check "$nxt"; j=$((j + 1)); fi
+        continue
+      fi
+      shopt -u nocasematch
+    elif [[ $sub == clone && $w == -?* ]]; then
+      cl="${w#-}"
+      for ((q = 0; q < ${#cl}; q++)); do
+        c="${cl:q:1}"; rest="${cl:q + 1}"
+        case $c in
+          u) block "git clone -u names a program that git runs on the remote end, and the guard can't judge which one" ;;
+          c)
+            if [[ -n $rest ]]; then cfg_check "$rest"
+            else nxt=""; ((j + 1 <= b)) && nxt="${vbw[j + 1]}"; cfg_check "$nxt"; j=$((j + 1)); fi
+            break ;;
+          b | o | j) [[ -n $rest ]] || j=$((j + 1)); break ;;
+        esac
+      done
+    fi
   done
 }
 
@@ -1023,9 +1131,18 @@ if ((isgit)); then
     c="${subc[vn]}"; c="${c#"${c%%[![:space:]]*}"}"; c="${c%"${c##*[![:space:];]}"}"
     vdep[${#views[@]}]=${vdep[vi]:-0}; views+=("$c")
   done
-  # B37: a variable left in a git command's words, or in a body a shell runs, is judged where it stands (var_judge).
-  [[ $cut_out == *'$'* ]] && var_judge "$cut_out"
+  # B37: a variable left in a git command's words, or in a body a shell runs, is judged where it stands (var_judge). B38: the
+  # command's own words are also read for their configuration keys and program flags (cfg_segment), never a heredoc body. That
+  # read is about 0.2 s for a 3 KB message, so it runs only when cfg_pre finds a git option or a remote subcommand in the words
+  # (quotes and $ removed, so "git" -c and $'-c' are found too) or a variable is there for B37 to judge.
+  cbare="${cut_out//[\"\'\\\$]/}"
+  if [[ $cut_out == *'$'* || $cbare =~ $cfg_pre ]]; then var_judge "$cut_out" 1; fi
   [[ $hall == *'$'* ]] && var_judge "$hall"
+  # B38: a variable that names a program git runs, set on the command's line. gcode has the quotes decoded, so a quoted message
+  # doesn't count, and a heredoc body isn't in it.
+  shopt -s nocasematch
+  [[ $gcode =~ $env_run_re ]] && block "$MSG_ENVRUN"
+  shopt -u nocasematch
 fi
 
 # --- git: destructive rules (B33) ------------------------------------------------------------------

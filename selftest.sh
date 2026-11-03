@@ -56,6 +56,10 @@
 #      A variable in a git command's words is read as its value when the command assigns it once to a plain value
 #      (FLAG=--force; git push $FLAG). Any other unquoted variable there, or a quoted one a flag or a path could be, is
 #      blocked, and so is a variable as the subcommand or as a shell's name followed by -c; the everyday forms pass (B37).
+#      A git -c key, or --config-env, that names a program git runs (an alias, the pager, the ssh command, a diff or a credential
+#      helper) or a key a variable holds is blocked; the keys that run nothing pass. A flag that names a program for a remote
+#      (--upload-pack, --receive-pack, --exec, clone's -u) is blocked, abbreviations too, and so is a GIT_CONFIG_*, GIT_PAGER or
+#      EDITOR variable set on a git command (B38).
 #   9. The site builds in strict mode, which fails on broken internal links and anchors.
 #  10. The Content-Security-Policy in overrides/main.html allows every inline script the built site
 #      runs (its sha256 is in script-src), and no script runs before the policy's meta tag.
@@ -1429,6 +1433,118 @@ else
     err "the guard hook reads a variable in a git command's words as a value it can't see, or blocks a plain form (B37):"
     printf '%s\n' "${git_fail#$'\n'}"
   else echo "ok: the guard hook reads a variable a git command assigns once as its value, blocks an unquoted or flag-capable variable in a git command's words, a variable as a subcommand or as a shell's name followed by -c, and passes the everyday forms (B37)"; fi
+
+  # Git's configuration keys and program flags (B38). A -c key, or --config-env, that names a program git runs (an alias that
+  # starts with !, the pager, the editor, the ssh command, a diff or credential helper, an include) is blocked, and so is a key a
+  # variable holds; the keys that run nothing pass (core.quotepath, color.*, advice.*, log.*, user.name, pager.<cmd>=false). The
+  # flags that name a program for a remote (--upload-pack, --receive-pack, --exec, and clone's -u), abbreviations included, are
+  # blocked on fetch, pull, push, clone, ls-remote and archive, and a plain fetch, push -u and clone -b pass. A variable that names
+  # a program git runs (GIT_CONFIG_*, GIT_SSH_COMMAND, GIT_PAGER, GIT_EDITOR, EDITOR) set on a git command is blocked too.
+  git_fail=""
+  if [ -f .claude/hooks/guard-commands.sh ]; then
+    for cmd in \
+        'git -c alias.x="!echo hi" x' \
+        "git -c 'alias.x=!echo hi' x" \
+        'git -c "alias.x=!echo hi" x' \
+        'git -c core.pager="sh -c x" log' \
+        'git -c core.sshCommand=x fetch' \
+        'git -c diff.external=x diff' \
+        'git -c "$k=v" log' \
+        'git -c Alias.X=y x' \
+        'git -c core.quotepath=false -c alias.x=y x' \
+        'git -c color.ui=always -c core.pager=x log' \
+        'git -c sequence.editor=x rebase -i HEAD~2' \
+        "git -c credential.helper='!x' fetch origin" \
+        'git -c protocol.ext.allow=always fetch origin' \
+        'git -c include.path=/tmp/x log' \
+        'git -c "core.$(echo pager)=x" log' \
+        'git -c pager.log=less log' \
+        'git --config-env=core.pager=PAGER_VAR log' \
+        'git --git-dir .git -c alias.x=y x' \
+        "git -c \$'alias.x=!echo hi' x" \
+        "git -c 'alias.x=y' x" \
+        'git -c "alias.x" x' \
+        'git -c "a""lias.x=!echo" x' \
+        'git -c "core.pager"=sh x' \
+        'k=core.pager; git -c "$k=sh" log' \
+        $'git \\\n-c core.pager=x log' \
+        'git clone -c core.sshCommand=x https://example.com/r.git d' \
+        'git clone --config=alias.x=y https://example.com/r.git d' \
+        'git clone --config alias.x=y https://example.com/r.git d' \
+        'git clone -c alias.x=y https://example.com/r.git d' \
+        'git clone -u "sh -c x" https://example.com/r.git d' \
+        'git clone --upload-pack="sh -c x" https://example.com/r.git d' \
+        'git clone -qu "sh -c x" https://example.com/r.git d' \
+        'git fetch --upload-pack x origin' \
+        'git fetch --upl=x origin' \
+        'git fetch --upload-pack="$(echo x)" origin' \
+        'git fetch "--$(echo upload-pack)=x" origin' \
+        'git pull --upload-pack=x' \
+        'git push --receive-pack=x origin main' \
+        'git push --receive-pack x origin main' \
+        'git push --exec=x origin main' \
+        'git push origin main --receive=x' \
+        'git ls-remote --upload-pack=x origin' \
+        'git archive --remote=origin --exec=x HEAD' \
+        'GIT_CONFIG_COUNT=1 GIT_CONFIG_KEY_0=core.pager GIT_CONFIG_VALUE_0=x git log' \
+        'GIT_SSH_COMMAND=x git fetch' \
+        'GIT_PAGER=x git log' \
+        'GIT_EXTERNAL_DIFF=x git log -p' \
+        'env GIT_EDITOR=x git commit' \
+        'export GIT_PAGER=x; git log' \
+        'EDITOR=x git commit -a'; do
+      guard 2 "$cmd"
+    done
+    for cmd in 'git -c core.pager=x log' 'git -c "$k=v" log' 'git fetch --upload-pack=x' 'git -c alias.x=!echo x' \
+        '$env:GIT_PAGER="x"; git log'; do
+      guard 2 "$cmd" PowerShell
+    done
+    for cmd in \
+        'git -c core.quotePath=false status --porcelain --untracked-files=all' \
+        'git -c core.quotepath=off log --oneline -3' \
+        'git -c color.ui=never log --oneline' \
+        'git -c user.name=selftest -c user.email=selftest@localhost commit -m x' \
+        "git -c 'user.name=A B' commit -m x" \
+        'git -c advice.detachedHead=false checkout HEAD~1' \
+        'git -c log.showSignature=false log -1' \
+        'git -c pager.log=false log --oneline' \
+        'git -c "color.ui=always" diff --stat' \
+        'k=color.ui; git -c "$k=always" log --oneline' \
+        'git -C work/App-Director fetch' \
+        'git -c core.quotepath=false -C work/App-Director status' \
+        'git clone -b main https://example.com/r.git d' \
+        'git clone -q --depth 1 https://example.com/r.git d' \
+        'git clone -c core.quotepath=false https://example.com/r.git d' \
+        'git fetch origin' \
+        'git fetch --unshallow origin' \
+        'git push -u origin "$branch"' \
+        'git push origin main' \
+        'git push --recurse-submodules=check origin main' \
+        'git ls-remote origin' \
+        'git archive --format=tar HEAD' \
+        'git pull --rebase origin main' \
+        'git log -c' \
+        'git commit -c HEAD' \
+        'git commit -m "--upload-pack=x fix"' \
+        'git commit -m "alias.x=!echo hi"' \
+        'git tag -a v1 -m "-c alias.x=y"' \
+        'git commit -m "set EDITOR=vim and GIT_PAGER=x"' \
+        'GIT_AUTHOR_NAME=x git commit -m y' \
+        'FOO=1 git status' \
+        'EDITORCONFIG=x git status' \
+        $'git commit -q -F - <<\'EOF\'\nGIT_PAGER=x and EDITOR=vim in a message\nEOF' \
+        $'git \\\n-c core.quotepath=false status'; do
+      guard 0 "$cmd"
+    done
+    guard 0 'git -c user.email=a@b.c commit -m x' PowerShell
+    guard 0 'git -c color.ui=always status' PowerShell
+    guard 0 'git push -u origin main' PowerShell
+  fi
+  guard_run
+  if [ -n "$git_fail" ]; then
+    err "the guard hook passes a git -c key or a program flag that runs a command, or a variable that names one, or blocks a plain form (B38):"
+    printf '%s\n' "${git_fail#$'\n'}"
+  else echo "ok: the guard hook blocks a git -c key that names a program (an alias, the pager, the ssh command, a diff or credential helper), a key a variable holds, a program flag for a remote (--upload-pack, --receive-pack, --exec, clone's -u), and a GIT_CONFIG_*, GIT_PAGER or EDITOR variable on a git command; the keys that run nothing and the plain forms pass (B38)"; fi
 
   # The credential stores (B15): the Read tool may not open the gh CLI's token file, git's credentials or
   # ~/.ssh. The .env files with values (B21): .env.local and the other .env.<suffix> files the guard hook
