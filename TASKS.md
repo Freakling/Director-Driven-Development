@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T290 · B64 · R7
+**Next IDs:** T291 · B64 · R7
 
 ## Milestones
 | Milestone | Status |
@@ -1308,7 +1308,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Note: built 2026-11-03 as SaaSAllTheThings' T37, reviewed, and the review's fixes built. roadmap.md also records from a conversation, so it got the pointer and the anchor names it; onboarding's Both step (the roadmap) now comes before its summary. The builder also updated framework/validation/README.md, README.md and examples/scenarios.md, which described the old behaviour.
 - Brief: Scope › Framework features
 
-### T282 · Godot-Director: record only after the director approves a summary · todo · M · agent
+### T282 · Godot-Director: record only after the director approves a summary · in-progress 2026-11-03 · M · agent
 - Depends on: T279
 - Touches: work/Godot-Director: framework/.godot-director/rules.md, framework/.godot-director/procedures/ (design.md, research.md, next-task.md, drift-reset.md, ui-design.md, playtest.md, function-check.md, export.md, release.md, align.md), ONBOARDING.md, framework/.claude/skills/design/SKILL.md, selftest.sh
 - Done when: following the anchor (T279), the same changes as T280's A1 to A10 in Godot-Director's files (the GDD in place of the brief; the "Still right?" ticks collected and summarised; playtest.md step 4 drops "straight away"), and: export.md › Set up exports and release.md › Set up release put a summary and its approval between the rounds and "Write it down" (C1); design.md › User stories puts the on and off switch in the summary (C2); the selftest passes (check) · following AGENTS.md › Project rules for framework work
@@ -1337,7 +1337,8 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Note: found in T277 and T278; SaaSAllTheThings' framework hook on its bundle (its T36) has the first three, and Godot-Director's (its T39) the loop reader.
 - Brief: -
 
-### T286 · SaaSAllTheThings: the Azure delete rule covers the Az PowerShell module · todo · S · agent
+### T286 · SaaSAllTheThings: the Azure delete rule covers the Az PowerShell module · in-progress 2026-11-03 · S · agent
+- PRs: SaaSAllTheThings #46 (open)
 - Depends on: T277
 - Touches: work/SaaSAllTheThings: framework/.claude/hooks/guard-commands.sh, framework/.claude/settings.json, selftest.sh
 - Done when: the guard blocks the Az PowerShell module's deletes (`Remove-AzResourceGroup`, `Remove-AzResource` and the other `Remove-Az*` cmdlets) as it blocks `az ... delete`, in any case and through every reading, and the settings have the matching ask or deny rules for the PowerShell tool; the selftest passes (check) · following AGENTS.md › Project rules for framework work
@@ -1363,6 +1364,13 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Touches: work/Godot-Director: framework/.claude/hooks/guard-git.sh, selftest.sh
 - Done when: `cname_judge` skips both words after `--git-dir`, `--work-tree` and `--namespace`, as `var_segment` does, so with `git` written in tools/godot_bin.local, `G=$(cat tools/godot_bin.local); "$G" --work-tree . restore .` and `... --git-dir .git branch -D x` are blocked, with their cases; the same check in App-Director's and SaaSAllTheThings' hooks, fixed there too if they have it; the selftests pass (check) · following AGENTS.md › Project rules for framework work
 - Note: found in T278's review (finding 9); the Godot exception made the assignment from tools/godot_bin.local count as unset.
+- Brief: -
+
+### T290 · SaaSAllTheThings: a quoted path with a space, or a backslash path, can't hide az, git or a Remove-Az cmdlet from the guard · todo · S · agent
+- Depends on: T286
+- Touches: work/SaaSAllTheThings: framework/.claude/hooks/guard-commands.sh, selftest.sh
+- Done when: the guard blocks `& 'C:\Program Files\Az\Remove-AzResourceGroup' -Name rg`, `"C:\Program Files\Git\bin\git.exe" push --force`, `"C:\Program Files\Microsoft SDKs\Azure\CLI2\wbin\az.cmd" group delete -n rg` and `C:\bin\az.cmd group delete -n rg`, in the Bash and PowerShell tools, as it blocks the bare names, with their cases: a quoted command name with a space is read as a name, not blanked as text, and a backslash path keeps its last part for the az rule; the same check in App-Director's and Godot-Director's hooks for the git form, fixed there too if they have it; the selftests pass (check) · following AGENTS.md › Project rules for framework work
+- Note: found in T286; all four pass on the hook before T286 too.
 - Brief: -
 
 ### B53 · A script piped to a shell, a path-qualified or `.exe` git or bash, a sudo option's value, cmd's %VAR% or a folder in another case passes the guard (A01:2025 Broken Access Control) · todo · S · agent · med
