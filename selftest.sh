@@ -40,6 +40,9 @@
 #      blocked; a Bash backtick, or an escaped one, doesn't continue a line (B28).
 #      A PowerShell backtick inside a word is an escape that leaves the character, so a reader or a name it splits
 #      is read as PowerShell reads it, and a quoted or path-qualified reader, or a StreamReader, is blocked too (B30).
+#      The common file readers (grep, sed, awk, sort, base64, xxd and the rest) are blocked on a credential file, a
+#      reader or a name split by quotes is read as the shell runs it, and [IO.File]::OpenText, OpenRead and Open are
+#      readers too; a pattern is an argument as well, so grep "\.env" is blocked (B36).
 #      A Bash comment that ends in a backslash holds no continuation (B31): the line after it is a command of its
 #      own, and a continued command after such a comment is still read. The hang check reads a heredoc header
 #      joined to its delimiter line (B29). A PowerShell comment that ends in a backtick is read the same way (B35).
@@ -981,6 +984,90 @@ else
     err "the guard hook misses a quoted or path-qualified reader, a backtick inside a word or a StreamReader of a credential file (B30):"
     printf '%s\n' "${git_fail#$'\n'}"
   else echo "ok: the guard hook blocks a quoted or path-qualified reader, a backtick-escaped word and a StreamReader of a credential file, and passes the same readers of ordinary files (B30)"; fi
+
+  # The common file readers (B36): grep, sed, awk, sort, base64, xxd and the rest of the list in the hook print a
+  # credential file as cat does, in Bash and in a PowerShell payload; a reader or a name split by quotes (ca''t, c"a"t)
+  # is read as the shell runs it; [IO.File]::OpenText, OpenRead and Open read one. A pattern is an argument as well
+  # (B27), so grep "\.env" and git grep .env are blocked, and the templates and ordinary files pass. A commit message
+  # that names a reader, with no credential file after it, passes.
+  git_fail=""
+  if [ -f .claude/hooks/guard-commands.sh ]; then
+    for cmd in \
+        'grep x .env.local' \
+        'awk 1 .env' \
+        'sed -n p .env.local' \
+        'base64 .env.local' \
+        'xxd .env.local' \
+        'egrep x .env' \
+        'fgrep -i x .env.production' \
+        'rg x .env.local' \
+        'gawk "{print}" .env.staging' \
+        'sort .env.local' \
+        'uniq .env' \
+        'cut -d= -f2 .env.local' \
+        'nl .env' \
+        'tac .env.local' \
+        'rev .env' \
+        'od -c .env' \
+        'hexdump -C .env.local' \
+        'diff .env.local .env.example' \
+        'cmp .env .env.example' \
+        '/usr/bin/grep x .env.local' \
+        'grep -rn "\.env" docs/' \
+        'git grep .env' \
+        "ca''t .env.local" \
+        'c"a"t .env.local' \
+        "'ca'\"t\" .env" \
+        'g""rep x .env' \
+        'ba"se"64 .env.local' \
+        'cat .en'"''"'v.local' \
+        'c'"'"'a'"'"'t .env.local'; do
+      guard 2 "$cmd"
+    done
+    for cmd in \
+        "[System.IO.File]::OpenText('.env.local')" \
+        '[IO.File]::OpenRead(".env")' \
+        "[System.IO.File]::Open('.env.local', 'Open', 'Read')" \
+        '[io.file]::opentext("certs/server.pem")' \
+        '[IO.File]::OpenRead("$HOME\.ssh\id_rsa")' \
+        '& "Get-Content" .env.local' \
+        'Select-String -Path .env -Pattern x'; do
+      guard 2 "$cmd" PowerShell
+    done
+    for cmd in \
+        'grep x .env.example' \
+        'sed -n p .env.sample' \
+        'awk 1 .env.template' \
+        'base64 .env.dist' \
+        'xxd .env.example' \
+        'ca""t .env.example' \
+        'c"a"t config/.env.sample' \
+        'grep -n "DATABASE_URL" src/' \
+        'sed -n 1,5p docs/index.md' \
+        'awk 1 docs/index.md' \
+        'sort README.md' \
+        'cut -c1-3 README.md' \
+        'diff README.md docs/index.md' \
+        'git grep TODO' \
+        'git diff README.md' \
+        'git commit -m "fix: sort the docs and grep notes"' \
+        'git commit -m "docs: sed, awk and diff notes" -- docs/index.md' \
+        'rev-parse --show-toplevel'; do
+      guard 0 "$cmd"
+    done
+    for cmd in \
+        "[System.IO.File]::OpenText('docs/index.md')" \
+        '[IO.File]::OpenRead("README.md")' \
+        "[System.IO.File]::Open('docs/index.md', 'Open')" \
+        "[IO.File]::OpenText('.env.example')"; do
+      guard 0 "$cmd" PowerShell
+    done
+  fi
+  guard_run
+  if [ -n "$git_fail" ]; then
+    err "the guard hook misses a common file reader, a reader or a name split by quotes, or an IO.File Open method of a credential file, or blocks an ordinary read (B36):"
+    printf '%s\n' "${git_fail#$'\n'}"
+  else echo "ok: the guard hook blocks grep, sed, awk, sort, base64, xxd and the other common readers, a reader or name split by quotes, and [IO.File]::OpenText, OpenRead and Open of a credential file, and passes the same readers of templates and ordinary files (B36)"; fi
 
   # A command substitution in a git command's words (B32): what it prints can be a flag, and the text it runs is a command
   # the guard can't see. The repro (git push $(echo --force) and its backtick form) is blocked as the plain flag is, in Bash

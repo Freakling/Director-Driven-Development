@@ -512,11 +512,13 @@ block() {
 # stored credential are blocked as well (gh auth token, gh auth status -t, git credential fill or get).
 # These files may hold live credentials. Any credential read in a conversation context must be
 # considered compromised and rotated. This is a best-effort check on the command text; indirect
-# reads are not detected. The readers are Bash's (cat, head, tail, less, more, strings) and PowerShell's
-# (Get-Content, its aliases gc and type, Select-String and its alias sls, and [IO.File]::ReadAllText and
-# its siblings), matched in any case (B27), by a path (/bin/cat), quoted (& 'Get-Content'), with .exe, or with a
-# backtick escape inside a word (Get-Con`tent, B30); [IO.StreamReader]::new and New-Object System.IO.StreamReader
-# are readers too (B30). The check runs for every tool the hook is wired to.
+# reads are not detected. The readers are Bash's (cat, head, tail, less, more, strings, and the common file readers:
+# grep, egrep, fgrep, rg, sed, awk, gawk, sort, uniq, cut, nl, tac, rev, od, xxd, hexdump, base64, diff and cmp, B36)
+# and PowerShell's (Get-Content, its aliases gc and type, Select-String and its alias sls, and [IO.File]::ReadAllText
+# and its siblings, OpenText, OpenRead and Open, B36), matched in any case (B27), by a path (/bin/cat), quoted
+# (& 'Get-Content'), with .exe, or with a backtick escape inside a word (Get-Con`tent, B30); quotes inside a reader's
+# or a name's word are removed as the shell removes them (ca''t, c"a"t, B36); [IO.StreamReader]::new and New-Object
+# System.IO.StreamReader are readers too (B30). The check runs for every tool the hook is wired to.
 cred_end="([[:space:]\"';&|)]|\$)"
 cred_store_re='\.ssh([/\\]|'"$cred_end"')|\.git-credentials|\.config[/\\]git[/\\]credentials|\.config[/\\]gh([/\\]|'"$cred_end"')|GitHub CLI([/\\]|'"$cred_end"')'
 # A name in a read's arguments is a whole word: .env, or .pem or .key ending a word, after a character that
@@ -550,31 +552,43 @@ reads_cred_file() {
   # .env.local), and a PowerShell -Path or -LiteralPath value is one too. type is a Bash builtin as well
   # (type git), so only a credential name after it is blocked, as for cat. The name may be a path (/bin/cat, or
   # Microsoft.PowerShell.Management\Get-Content), carry .exe (cat.exe), or be quoted (& 'Get-Content' .env.local, B30).
-  local readers='(cat|head|tail|less|more|strings|type|gc|get-content|select-string|sls)'
+  # The common file readers (B36) print a file's content too: search (grep, egrep, fgrep, rg, sed, awk, gawk), sort,
+  # uniq, cut, nl, tac and rev, dump (od, xxd, hexdump, base64) and compare (diff, cmp). A pattern is an argument
+  # as well, so grep "\.env" is blocked as Select-String's pattern is (B27): the arguments can't tell a pattern from a
+  # path. cp, mv and scp copy a file without printing it, and wc prints only counts, so none of them is in the list.
+  local readers='(cat|head|tail|less|more|strings|type|gc|get-content|select-string|sls|grep|egrep|fgrep|rg|sed|awk|gawk|sort|uniq|cut|nl|tac|rev|od|xxd|hexdump|base64|diff|cmp)'
   local name_quote="['\"]*"
   local read_re='(^|[[:space:]|;&("'"'"'`\\/])'"$readers"'(\.exe)?'"$name_quote"'[[:space:]]+([^;&|]*)'
   # [IO.File]::ReadAllText(...), and its ReadAllLines, ReadAllBytes and ReadLines: the arguments run to the next ; & or |.
-  local file_re='(^|[^[:alnum:]_.-])\[(system\.)?io\.file\]::read(all)?(text|lines|bytes)[[:space:]]*\(([^;&|]*)'
+  # OpenText, OpenRead and Open open a file to read it (B36).
+  local file_re='(^|[^[:alnum:]_.-])\[(system\.)?io\.file\]::(readtext|readlines|readbytes|readalltext|readalllines|readallbytes|opentext|openread|open)[[:space:]]*\(([^;&|]*)'
   # [IO.StreamReader]::new(...) and New-Object System.IO.StreamReader (-TypeName ... -ArgumentList ...), whose
   # arguments run to the next ; & or | as well (B30).
   local stream_re='(^|[^[:alnum:]_.-])(\[(system\.)?io\.streamreader\]::new|new-object[[:space:]]+(-typename[[:space:]]+)?(system\.)?io\.streamreader)([^;&|]*)'
-  local rest="$cmd" args
-  while [[ $rest =~ $read_re ]]; do
-    args="${BASH_REMATCH[4]}"
-    rest="${rest#*"${BASH_REMATCH[0]}"}"
-    cred_args "$args" && return 0
-  done
-  rest="$cmd"
-  while [[ $rest =~ $file_re ]]; do
-    args="${BASH_REMATCH[5]}"
-    rest="${rest#*"${BASH_REMATCH[0]}"}"
-    cred_args "$args" && return 0
-  done
-  rest="$cmd"
-  while [[ $rest =~ $stream_re ]]; do
-    args="${BASH_REMATCH[6]}"
-    rest="${rest#*"${BASH_REMATCH[0]}"}"
-    cred_args "$args" && return 0
+  # A name or a reader split by quotes (ca''t, c"a"t, .en''v.local) is read as the shell runs it: the quotes are removed,
+  # and the same tests run on that text too (B36). A command with no quote is tested once.
+  local -a texts=("$cmd")
+  [[ $cmd == *[\"\']* ]] && texts+=("${cmd//[\"\']/}")
+  local t rest args
+  for t in "${texts[@]}"; do
+    rest="$t"
+    while [[ $rest =~ $read_re ]]; do
+      args="${BASH_REMATCH[4]}"
+      rest="${rest#*"${BASH_REMATCH[0]}"}"
+      cred_args "$args" && return 0
+    done
+    rest="$t"
+    while [[ $rest =~ $file_re ]]; do
+      args="${BASH_REMATCH[4]}"
+      rest="${rest#*"${BASH_REMATCH[0]}"}"
+      cred_args "$args" && return 0
+    done
+    rest="$t"
+    while [[ $rest =~ $stream_re ]]; do
+      args="${BASH_REMATCH[6]}"
+      rest="${rest#*"${BASH_REMATCH[0]}"}"
+      cred_args "$args" && return 0
+    done
   done
   return 1
 }
