@@ -52,7 +52,8 @@
 #      branch -D) reads the decoded words, so a quoted flag or refspec is blocked, and its flag ends at ; & | ) or a
 #      line break; a heredoc body a shell runs is read too, and a quoted message that names a rule passes (B33).
 #      A quoted script given to bash -c, sh -c, zsh -c, eval, powershell -Command, pwsh -c or cmd /c is read as a
-#      command of its own, to four levels, and a command whose quoting the guard can't close is blocked (B34).
+#      command of its own, to four levels, and a command whose quoting the guard can't close is blocked (B34). A wait
+#      loop (until or while) with sleep in such a script is blocked too, unless a timeout of 280 seconds or less bounds it (B42).
 #      A variable in a git command's words is read as its value when the command assigns it once to a plain value
 #      (FLAG=--force; git push $FLAG). Any other unquoted variable there, or a quoted one a flag or a path could be, is
 #      blocked, and so is a variable as the subcommand or as a shell's name followed by -c; the everyday forms pass (B37).
@@ -1344,6 +1345,63 @@ else
     err "the guard hook doesn't read a script a shell or an interpreter runs as a command of its own, or blocks a message that names one (B34):"
     printf '%s\n' "${git_fail#$'\n'}"
   else echo "ok: the guard hook reads a script given to bash -c, sh -c, zsh -c, eval, powershell -Command, pwsh -c or cmd /c as a command, to four levels, and passes the messages, heredocs and reads that name one (B34)"; fi
+
+  # A wait loop in a script a shell or an interpreter runs (B42): the hang check reads each such script as it reads the command,
+  # so an until, while true or while : loop with sleep is blocked under eval, bash -c, sh -c, powershell -Command and cmd /c.
+  # A timeout of 280 seconds or less above the wrapper bounds the whole script, as it bounds a loop the command runs itself,
+  # and a loop with no sleep, or in a message that names one, passes.
+  git_fail=""
+  if [ -f .claude/hooks/guard-commands.sh ]; then
+    for cmd in \
+        "eval 'until false; do sleep 1; done'" \
+        "eval 'while true; do sleep 1; done'" \
+        "eval 'while :; do sleep 1; done'" \
+        "sh -c 'until false; do sleep 1; done'" \
+        "eval \"until false; do sleep 1; done\"" \
+        "eval 'bash -c \"until false; do sleep 1; done\"'" \
+        "eval 'eval \"while true; do sleep 1; done\"'" \
+        "sh -c \"eval 'while : ; do sleep 1; done'\"" \
+        "timeout 9999 eval 'until false; do sleep 1; done'" \
+        "timeout 0 eval 'until false; do sleep 1; done'" \
+        "timeout 5m eval 'until false; do sleep 1; done'" \
+        'cmd /c "until false; do sleep 1; done"' \
+        'cmd /c "while true; do sleep 1; done"' \
+        'powershell -Command "while ($true) { Start-Sleep 1 }"' \
+        'powershell -NoProfile -Command "while ($true) { sleep 1 }"'; do
+      guard 2 "$cmd"
+    done
+    for cmd in \
+        'while ($true) { Start-Sleep 1 }' \
+        'While ($true) { Start-Sleep -Seconds 5 }' \
+        'WHILE ($true) { start-sleep 2 }'; do
+      guard 2 "$cmd" PowerShell
+    done
+    for cmd in \
+        "timeout 60 eval 'until false; do sleep 1; done'" \
+        "timeout 4m eval 'until false; do sleep 1; done'" \
+        "timeout 240s eval 'until false; do sleep 1; done'" \
+        'timeout 60 cmd /c "until false; do sleep 1; done"' \
+        "timeout 60 bash -c \"eval 'until false; do sleep 1; done'\"" \
+        "sh -c \"timeout 60 eval 'until false; do sleep 1; done'\"" \
+        "eval 'timeout 60 bash -c \"until false; do sleep 1; done\"'" \
+        "eval 'until false; do echo hi; done'" \
+        "eval 'sleep 1'" \
+        "eval 'git commit -m \"until false; do sleep 1; done\"'" \
+        'cmd /c "echo until"' \
+        'powershell -Command "Write-Output (Get-Date)"'; do
+      guard 0 "$cmd"
+    done
+    for cmd in \
+        'while ($true) { Get-Date }' \
+        'timeout 60 powershell -Command "while ($true) { Start-Sleep 1 }"'; do
+      guard 0 "$cmd" PowerShell
+    done
+  fi
+  guard_run
+  if [ -n "$git_fail" ]; then
+    err "the guard hook doesn't block a wait loop in a script a shell or an interpreter runs, or blocks one a timeout bounds (B42):"
+    printf '%s\n' "${git_fail#$'\n'}"
+  else echo "ok: the guard hook blocks an until or while loop with sleep in a script given to eval, bash -c, sh -c, powershell -Command or cmd /c, and passes one under a timeout of 280 seconds or less (B42)"; fi
 
   # A variable in a git command's words (B37): the guard can't read what it holds. A variable that the command assigns once,
   # to a plain value, is read as that value, so FLAG=--force; git push $FLAG is the force push it is. Any other unquoted

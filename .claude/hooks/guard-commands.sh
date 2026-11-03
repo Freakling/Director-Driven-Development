@@ -28,7 +28,7 @@
 #
 # A quoted script given to a shell or an interpreter (bash -c, sh -c, zsh -c, eval, powershell -Command, pwsh -c, cmd /c)
 # is a command of its own: each is read as one, and a script nested in one to four levels too (B34). See the section
-# "Shell wrappers" below.
+# "Shell wrappers" below. A wait loop in such a script is judged too, and a script under timeout 280 or less is bounded (B42).
 #
 # A variable in a git command's words holds a value the guard can't read (B37). A variable that the command assigns once,
 # to a plain value, is read as that value (FLAG=--force; git push $FLAG is git push --force). Any other variable in the words
@@ -711,8 +711,8 @@ wrap_ansi() {
   wv+="$k"; i=$((j + 1))
 }
 
-# wrap_push <script>: a non-empty script goes to wscripts.
-wrap_push() { [[ -n $1 ]] && wscripts+=("$1"); return 0; }
+# wrap_push <script>: a non-empty script goes to wscripts, and wtc (1 when its wrapper runs it under a timeout, B42) to wscov.
+wrap_push() { [[ -n $1 ]] && { wscripts+=("$1"); wscov+=("$wtc"); }; return 0; }
 
 # wrap_rest <from>: sc is the words of wcmd from <from> on, joined by spaces, which is the text the command runs.
 wrap_rest() {
@@ -722,12 +722,29 @@ wrap_rest() {
   sc="${sc% }"
 }
 
+# tcov_before <m>: 0 when a timeout of 280 seconds or less comes before word <m> of wcmd, the word of a shell, an interpreter or
+# cmd that runs a script, so the whole script is bounded (B42). It's read as the hang check reads timeout N (options before the
+# number, s or m). A timeout of 0 is no limit in GNU timeout, so it doesn't count.
+tcov_before() {
+  local m=$1 j k secs
+  for ((j = 0; j < m; j++)); do
+    [[ ${wcmd[j]} == timeout || ${wcmd[j]} == timeout.exe ]] || continue
+    k=$((j + 1))
+    while ((k < m)) && [[ ${wcmd[k]} =~ ^-[-[:alnum:]=]+$ ]]; do ((k++)); done
+    ((k < m)) && [[ ${wcmd[k]} =~ ^([0-9]+)([sm]?)$ ]] || continue
+    secs=$((10#${BASH_REMATCH[1]})); [[ ${BASH_REMATCH[2]} == m ]] && secs=$((secs * 60))
+    ((secs >= 1 && secs <= limit_s)) && return 0
+  done
+  return 1
+}
+
 # wrap_cmd: the words of one command (wcmd). A word that names a shell, eval, PowerShell or cmd takes the script its
 # arguments give it. Returns 1 for PowerShell's -EncodedCommand, whose text is hidden.
 wrap_cmd() {
   local m j n=${#wcmd[@]} w base p sc
   for ((m = 0; m < n; m++)); do
     w="${wcmd[m]}"; base="${w##*/}"; base="${base##*\\}"
+    wtc=0; tcov_before "$m" && wtc=1
     if [[ $base =~ ^((ba|z|da|k)?sh)(\.exe)?$ ]]; then
       for ((j = m + 1; j < n; j++)); do
         case ${wcmd[j]} in
@@ -772,7 +789,7 @@ wrap_read() {
   else
     sesc='\'; wrun_word='^[^[:space:];&|()<>$`'"'"'"\\]+'; wrun_dq='^[^"\\$`]+'
   fi
-  wscripts=()
+  wscripts=(); wscov=()
   while ((i < L)); do
     c="${s:i:1}"
     case $c in
@@ -1005,18 +1022,23 @@ done
 
 # 2. until/while loops that sleep: under `timeout N` (N <= 280), or ended by the exit line Claude Code
 #    appends to a background command's output. A loop quoted into `bash -c '...'` is read from the raw text.
+#    B42: a script a shell or an interpreter runs (eval, -Command, cmd /c, a nested bash -c) is a view of its own, and its
+#    loops are read in its text as the sleep rule reads it. A view whose wrapper is under a timeout of 280 or less (vcov)
+#    is bounded whole, so its loops are not read. PowerShell's while and Start-Sleep are read in any case.
 scan="$code"
 [[ $code =~ (bash|sh|zsh)[[:space:]]+-[a-z]*c[[:space:]] ]] && scan="$raw"
 scan="${scan//\\n/$nl}"
 loop_re='(^|[^[:alnum:]_./-])(until|while)[[:space:]]'
+sleep_loop_re='(^|[^[:alnum:]_./-])((start-)?sleep)[[:space:]]'
 timeout_re="(^|[^[:alnum:]_./-])timeout[[:space:]]+(-[-[:alnum:]=]+[[:space:]]+)*([0-9]+)([sm]?)[[:space:]]+[^;&|$nl]*\$"
 rest="$scan"; before=""
-((${vdep[vi]:-0} == 0)) || rest=""   # a nested script (B34) is not scanned again: the command text above scans what bash -c runs
+((${vcov[vi]:-0} == 0)) || rest=""   # under a timeout of 280 seconds or less: bounded whole (B42)
+shopt -s nocasematch
 while [[ $rest =~ $loop_re ]]; do
   before="$before${rest%%"${BASH_REMATCH[0]}"*}${BASH_REMATCH[1]}"
   rest="${rest#*"${BASH_REMATCH[0]}"}"
   loop="${rest%%[;[:space:]]done[;[:space:])\'\"]*}"
-  [[ $loop =~ (^|[^[:alnum:]_./-])sleep[[:space:]] ]] || continue
+  [[ $loop =~ $sleep_loop_re ]] || continue
   [[ $raw == *"exited with code"* || $raw == *"[killed]"* ]] && continue
   covered=0
   if [[ $before =~ $timeout_re ]]; then
@@ -1029,6 +1051,7 @@ while [[ $rest =~ $loop_re ]]; do
   hang "an until or while loop with sleep and no time limit can run for ever, and a wait past five minutes lets the prompt cache expire." \
     "Put a limit on it: timeout 240 bash -c 'until ...; do sleep 5; done' (N of $limit_s or less), or start the work with run_in_background."
 done
+shopt -u nocasematch
 
 # B34: the scripts that the shells and interpreters in this text run become views, each a level deeper than this one. The
 # text is read only when a shell's name shows in it with its quotes removed, so a command that names none goes no further.
@@ -1055,10 +1078,12 @@ if [[ $bare =~ $wrap_gate ]]; then
   bare="${wtext//[\"\'\\]/}"
   if [[ $bare =~ $wrap_gate ]]; then
     wrap_read "$wtext" || block "$MSG_WRAP"
-    for ws in "${wscripts[@]}"; do
+    for ((wk = 0; wk < ${#wscripts[@]}; wk++)); do
       ((${vdep[vi]:-0} < WRAP_MAX)) || block "$MSG_DEEP"
       ((${#views[@]} < 64)) || block "$MSG_VIEWS"
-      jesc "$ws"; vdep[${#views[@]}]=$((${vdep[vi]:-0} + 1)); views+=("$je")
+      jesc "${wscripts[wk]}"; vdep[${#views[@]}]=$((${vdep[vi]:-0} + 1))
+      vcov[${#views[@]}]=$((${vcov[vi]:-0} | ${wscov[wk]:-0}))   # bounded by a timeout above it, or by its own (B42)
+      views+=("$je")
     done
   fi
 fi
@@ -1211,7 +1236,7 @@ if ((isgit)); then
   for ((vn = 0; vn < ${#subc[@]}; vn++)); do
     ((${#views[@]} < 64)) || block "the command has more command substitutions than the guard reads in time"
     c="${subc[vn]}"; c="${c#"${c%%[![:space:]]*}"}"; c="${c%"${c##*[![:space:];]}"}"
-    vdep[${#views[@]}]=${vdep[vi]:-0}; views+=("$c")
+    vdep[${#views[@]}]=${vdep[vi]:-0}; vcov[${#views[@]}]=${vcov[vi]:-0}; views+=("$c")
   done
   # B37: a variable left in a git command's words, or in a body a shell runs, is judged where it stands (var_judge). B38: the
   # command's own words are also read for their configuration keys and program flags (cfg_segment), never a heredoc body. That

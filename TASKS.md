@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T279 · B49 · R7
+**Next IDs:** T279 · B51 · R7
 
 ## Milestones
 | Milestone | Status |
@@ -1121,7 +1121,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Found in: B33
 - Brief: -
 
-### B42 · A wait loop inside `eval`, `-Command` or `cmd /c` passes the hang check · todo · XS · agent · low
+### B42 · A wait loop inside `eval`, `-Command` or `cmd /c` passes the hang check · done 2026-11-03 · XS · agent · low
 - Touches: .claude/hooks/guard-commands.sh, selftest.sh (the guard is framework-owned: T276, T277 and T278 carry the fix)
 - Repro: 1. Feed the guard hook `eval 'until false; do sleep 1; done'`. 2. Expected: blocked, as the same loop on its own is. Actual: exit 0: B34 made the hang rules read a nested script's long sleep, but the loop rule doesn't read nested scripts.
 - Found in: B34
@@ -1161,6 +1161,18 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Touches: .claude/hooks/guard-commands.sh, selftest.sh (the guard is framework-owned: T276, T277 and T278 carry the fix)
 - Repro: 1. Feed the guard hook `gh pr edit 5 --body-file - <<'EOF'` or `gh pr create --body "$(cat <<'EOF' ... EOF)"` with a body naming `git push --force`; or `git commit -q -F - <<'EOF'` with a body line `fix: git push $X handling`. 2. Expected: passes: each body is a message no shell runs, as a quoted-delimiter commit message is since B39 and B40. Actual: exit 2: only `git commit` and `git tag` messages count as text, and B37's variable rule reads every heredoc body. Release notes passed to `gh pr edit` that name such a command would be blocked.
 - Found in: B40
+- Brief: -
+
+### B49 · A `for ((;;))` or `do ... while` loop, a PowerShell or cmd sleep, or a substitution before `timeout` passes the hang check · todo · XS · agent · low
+- Touches: .claude/hooks/guard-commands.sh, selftest.sh (the guard is framework-owned: T276, T277 and T278 carry the fix)
+- Repro: 1. Feed the guard hook `for ((;;)); do sleep 1; done`; a PowerShell payload with `do { Start-Sleep 1 } while ($true)`; `powershell -Command "Start-Sleep -Seconds 600"` or `cmd /c "timeout /t 300"`; or `timeout 60 echo "$(until false; do sleep 1; done)"`. 2. Expected: each is blocked, as `while true; do sleep 1; done` and `sleep 600` are. Actual: exit 0: the loop rule reads only `until` and `while ... do`, the lone-sleep rule only `sleep N`, and a `timeout` in front is read as covering a substitution that runs before it starts.
+- Found in: B42
+- Brief: -
+
+### B50 · The hang check reads a commit message as commands · todo · XS · agent · low
+- Touches: .claude/hooks/guard-commands.sh, selftest.sh (the guard is framework-owned: T276, T277 and T278 carry the fix)
+- Repro: 1. Feed the guard hook `git commit -q -F - -- a <<'EOF'` with a body line saying PowerShell's While loop with Start-Sleep is now seen. 2. Expected: passes: B40 made a quoted-delimiter message to git commit or git tag text for the git rules, and the hang rules should read it the same way. Actual: exit 2, "an until or while loop with sleep and no time limit": the hang rules read every heredoc body, and since B42 the loop rule matches in any case, so plain words in a message trip it. It blocked B42's own commit message.
+- Found in: B42
 - Brief: -
 
 ### T269 · Release App-Director 1.13.0 · done 2026-11-02 · S · agent
@@ -1219,23 +1231,23 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Brief: Scope › Framework features
 
 ### T276 · App-Director: the guard and the deny rules reach the PowerShell tool, and a continuation, a tab or a PowerShell read can't hide from it · todo · S · agent
-- Depends on: B25, B27 to B40, B42 to B48
+- Depends on: B25, B27 to B40, B42 to B50
 - Touches: work/App-Director: framework/.claude/settings.json, framework/.claude/hooks/guard-commands.sh, selftest.sh
-- Done when: the guard hook's matcher names PowerShell and every Bash deny and ask rule has a PowerShell twin, with no PowerShell allow rule, as B24 did here; the guard closes the gaps B25, B27 to B40 and B42 to B48 closed here, ported with their selftest cases, including the readings of a continued command (as written, as joined, and joined from each line after a comment: B28, B31); the selftest passes (check) · following AGENTS.md › Project rules for framework work
+- Done when: the guard hook's matcher names PowerShell and every Bash deny and ask rule has a PowerShell twin, with no PowerShell allow rule, as B24 did here; the guard closes the gaps B25, B27 to B40 and B42 to B50 closed here, ported with their selftest cases, including the readings of a continued command (as written, as joined, and joined from each line after a comment: B28, B31); the selftest passes (check) · following AGENTS.md › Project rules for framework work
 - Note: found in B24: framework/.claude/settings.json has the same `Bash|Monitor` matcher and eight Bash deny rules, and its selftest pins the matcher.
 - Brief: -
 
 ### T277 · SaaSAllTheThings: the guard and the deny rules reach the PowerShell tool, and a continuation, a tab or a PowerShell read can't hide from it · todo · S · agent
-- Depends on: B25, B27 to B40, B42 to B48
+- Depends on: B25, B27 to B40, B42 to B50
 - Touches: work/SaaSAllTheThings: framework/.claude/settings.json, framework/.claude/hooks/guard-commands.sh, selftest.sh
-- Done when: the guard hook's matcher names PowerShell and every Bash deny and ask rule has a PowerShell twin, with no PowerShell allow rule, as B24 did here; the guard closes the gaps B25, B27 to B40 and B42 to B48 closed here, ported with their selftest cases, including the readings of a continued command (as written, as joined, and joined from each line after a comment: B28, B31); the selftest passes (check) · following AGENTS.md › Project rules for framework work
+- Done when: the guard hook's matcher names PowerShell and every Bash deny and ask rule has a PowerShell twin, with no PowerShell allow rule, as B24 did here; the guard closes the gaps B25, B27 to B40 and B42 to B50 closed here, ported with their selftest cases, including the readings of a continued command (as written, as joined, and joined from each line after a comment: B28, B31); the selftest passes (check) · following AGENTS.md › Project rules for framework work
 - Note: found in B24: framework/.claude/settings.json has the same `Bash|Monitor` matcher plus Bash ask and deny rules, and its selftest pins the matcher.
 - Brief: -
 
 ### T278 · Godot-Director: the guard and the deny rules reach the PowerShell tool, and a continuation, a tab or a PowerShell read can't hide from it · todo · S · agent
-- Depends on: B25, B27 to B40, B42 to B48
+- Depends on: B25, B27 to B40, B42 to B50
 - Touches: work/Godot-Director: framework/.claude/settings.json, framework/.claude/hooks/, selftest.sh
-- Done when: the guard hook's matcher names PowerShell and every Bash deny and ask rule has a PowerShell twin, with no PowerShell allow rule, as B24 did here; the guard closes the gaps B25, B27 to B40 and B42 to B48 closed here (the read fixes where its guard checks credential reads), ported with their selftest cases, including the readings of a continued command (as written, as joined, and joined from each line after a comment: B28, B31); the selftest passes (check) · following AGENTS.md › Project rules for framework work
+- Done when: the guard hook's matcher names PowerShell and every Bash deny and ask rule has a PowerShell twin, with no PowerShell allow rule, as B24 did here; the guard closes the gaps B25, B27 to B40 and B42 to B50 closed here (the read fixes where its guard checks credential reads), ported with their selftest cases, including the readings of a continued command (as written, as joined, and joined from each line after a comment: B28, B31); the selftest passes (check) · following AGENTS.md › Project rules for framework work
 - Note: found in B24: framework/.claude/settings.json wires guard-git.sh with separate `Bash` and `Monitor` matchers plus Bash ask and deny rules.
 - Brief: -
 
