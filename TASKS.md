@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T279 · B63 · R7
+**Next IDs:** T283 · B63 · R7
 
 ## Milestones
 | Milestone | Status |
@@ -1249,32 +1249,60 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: `frameworks.lock` and every framework link move to v1.13.0, v0.15.0 and v4.9.0; the site describes user stories (why each thing is built, the stories file, `Stories:` on items, drafted in design, written from the code for an existing app, validated in design, on a cadence, in the acceptance check or playtest and in align; optional in Godot-Director) and the prototype routine (`/prototype`, its own worktree and session outside the build loop, the gates that stay on, the harvest, never merged; no deploy in SaaSAllTheThings, gitleaks required in Godot-Director), and covers every new command the releases ship, each checked against the releases and without overclaiming; the brief's Planned framework changes bullets move to Framework features; the selftest passes with no WARN (check)
 - Brief: Scope › Framework features
 
-### T275 · The three frameworks record only after the director approves a summary · todo · M · agent
+### T275 · The three frameworks record only after the director approves a summary · done 2026-11-03 · M · agent
 - Depends on: -
 - Touches: work/App-Director, work/SaaSAllTheThings, work/Godot-Director, read only: every procedure that writes records from a conversation with the director (design, ADRs in SaaSAllTheThings, drift reset, align, assessments and workshops, research, acceptance and playtests, /ui-design, the prototype harvest, the stories validation) and each `rules.md`; TASKS.md here
 - Done when: each framework's procedures are checked against the rule (nothing is written without the director's explicit approval; a chat message or an "Other" answer during the session is a scope change or modification, so the session re-assesses the options on it and restarts or continues; once everything is chosen, a summary of what will be written is approved, then written and committed), and every difference becomes an item here for that framework's clone, naming the procedure, the step and the change it needs, reported to the director (check)
 - Brief: Scope › Framework features
 
-### T276 · App-Director: the guard and the deny rules reach the PowerShell tool, and a continuation, a tab or a PowerShell read can't hide from it · todo · S · agent
+### T276 · App-Director: the guard and the deny rules reach the PowerShell tool, and a continuation, a tab or a PowerShell read can't hide from it · todo · M · agent
 - Depends on: B25, B27 to B40, B42 to B52, B55, B60
 - Touches: work/App-Director: framework/.claude/settings.json, framework/.claude/hooks/guard-commands.sh, selftest.sh
 - Done when: the guard hook's matcher names PowerShell and every Bash deny and ask rule has a PowerShell twin, with no PowerShell allow rule, as B24 did here; the guard closes the gaps B25, B27 to B40, B42 to B52, B55 and B60 closed here, ported with their selftest cases, including the readings of a continued command (as written, as joined, and joined from each line after a comment: B28, B31); the selftest passes (check) · following AGENTS.md › Project rules for framework work
+- Note: re-sized from S to M on 2026-11-03: the item now ports every guard fix from B25 to B60, not one.
 - Note: found in B24: framework/.claude/settings.json has the same `Bash|Monitor` matcher and eight Bash deny rules, and its selftest pins the matcher.
 - Brief: -
 
-### T277 · SaaSAllTheThings: the guard and the deny rules reach the PowerShell tool, and a continuation, a tab or a PowerShell read can't hide from it · todo · S · agent
+### T277 · SaaSAllTheThings: the guard and the deny rules reach the PowerShell tool, and a continuation, a tab or a PowerShell read can't hide from it · todo · M · agent
 - Depends on: B25, B27 to B40, B42 to B52, B55, B60
 - Touches: work/SaaSAllTheThings: framework/.claude/settings.json, framework/.claude/hooks/guard-commands.sh, selftest.sh
 - Done when: the guard hook's matcher names PowerShell and every Bash deny and ask rule has a PowerShell twin, with no PowerShell allow rule, as B24 did here; the guard closes the gaps B25, B27 to B40, B42 to B52, B55 and B60 closed here, ported with their selftest cases, including the readings of a continued command (as written, as joined, and joined from each line after a comment: B28, B31); the selftest passes (check) · following AGENTS.md › Project rules for framework work
+- Note: re-sized from S to M on 2026-11-03: the item now ports every guard fix from B25 to B60, not one.
 - Note: found in B24: framework/.claude/settings.json has the same `Bash|Monitor` matcher plus Bash ask and deny rules, and its selftest pins the matcher.
 - Brief: -
 
-### T278 · Godot-Director: the guard and the deny rules reach the PowerShell tool, and a continuation, a tab or a PowerShell read can't hide from it · todo · S · agent
+### T278 · Godot-Director: the guard and the deny rules reach the PowerShell tool, and a continuation, a tab or a PowerShell read can't hide from it · todo · L · agent
 - Depends on: B25, B27 to B40, B42 to B52, B55, B60
 - Touches: work/Godot-Director: framework/.claude/settings.json, framework/.claude/hooks/, selftest.sh
 - Done when: the guard hook's matcher names PowerShell and every Bash deny and ask rule has a PowerShell twin, with no PowerShell allow rule, as B24 did here; the guard closes the gaps B25, B27 to B40, B42 to B52, B55 and B60 closed here (the read fixes where its guard checks credential reads), ported with their selftest cases, including the readings of a continued command (as written, as joined, and joined from each line after a comment: B28, B31); the selftest passes (check) · following AGENTS.md › Project rules for framework work
+- Note: re-sized from S to L on 2026-11-03: the item now ports every guard fix from B25 to B60, not one.
 - Note: found in B24: framework/.claude/settings.json wires guard-git.sh with separate `Bash` and `Monitor` matchers plus Bash ask and deny rules.
 - Brief: -
+
+### T279 · Anchor: the director approves a summary before anything is recorded · todo · M · agent
+- Depends on: T275
+- Touches: product/anchors/record-approval.md (new, in the format of product/anchors/align.md)
+- Done when: the anchor states the rule in one wording for all three frameworks (nothing is written without the director's explicit approval; a chat message or an "Other" answer during a session is a scope change or modification that re-opens the options, so the session re-assesses and restarts or continues; once everything is chosen, a summary of every file, line, item, story and ADR status to be written is approved, then everything is written and committed in one change), with a placeholders table (the design document: brief, GDD or PRD; the decision log; the session procedures), the three texts (the rules.md paragraph, a design.md "Summary and approval" step with the reworded wait and Finish, and the one-line pointer other procedures use), SaaSAllTheThings' ADR sentence (an ADR is accepted only by approving the summary that lists it) and Godot-Director's export, release and stories-switch sentence, and a part B listing what the audit compares (check) · align's mechanical fixes are part of the summary, and in a live group workshop the room's read-back at the end is the summary the room approves (check)
+- Note: from T275's check of App-Director 8f21d37, SaaSAllTheThings 7e5918f and Godot-Director bf19815: no procedure in any framework has the rule; approval gates only the commit, after the files are written, and nothing treats a chat message or an "Other" answer as a scope change.
+- Brief: Scope › Framework features
+
+### T280 · App-Director: record only after the director approves a summary · todo · M · agent
+- Depends on: T279
+- Touches: work/App-Director: framework/.app-director/rules.md, framework/.app-director/procedures/ (design.md, research.md, next-task.md, drift-reset.md, ui-design.md, acceptance.md), framework/ONBOARDING.md, framework/.claude/skills/design/SKILL.md, selftest.sh
+- Done when: following the anchor (T279): rules.md › The human decides has the rule (A1); design.md holds answers in the conversation instead of recording each part (A2), gets a "Summary and approval" step before Record and a reworded Finish (A3), and holds the research note and its R item until the summary is approved (A4); the stories validation and the prototype harvest collect answers and summarise before writing (A5); next-task.md › Report `blocked` records only after the summary is approved (A6); drift-reset.md gives one summary with the decisions, the design diff and the rebuild plan before writing anything, TASKS items included (A7); ui-design.md process step 5 records once the director approves a summary of the spec, decisions, open questions and item (A8); acceptance.md shows a short summary of the B items, story rewrites and Processed line before writing (A9); ONBOARDING.md writes after the interview's summary is approved (A10); the design skill's description mentions the approval; the selftest passes (check) · following AGENTS.md › Project rules for framework work
+- Brief: Scope › Framework features
+
+### T281 · SaaSAllTheThings: record only after the director approves a summary · todo · L · agent
+- Depends on: T279
+- Touches: work/SaaSAllTheThings: framework/.satt/rules.md, framework/.satt/procedures/ (design.md, research.md, next-task.md, drift-reset.md, ui-design.md, acceptance.md, feedback.md, architect.md, integrate.md, assess.md), framework/.satt/workshops/README.md, framework/ONBOARDING.md, the saas-design-session skill (edit framework/.satt/ and run bundle.sh: references/ is a generated copy), selftest.sh
+- Done when: following the anchor (T279), the same changes as T280's A1 to A10 in SaaSAllTheThings' files (feedback.md step 3 drops "straight away"; ONBOARDING.md's ADR-1 is accepted by the summary's approval, not "since the human just decided"), and: architect.md writes the ADR, exceptions, TASKS, AGENTS.md and compliance mapping rows only after the director approves a summary that lists them, so an ADR is accepted only by that approval, with the hook's confirmation kept (B1); integrate.md holds each round's answers and fills contract.md after the summary (B2); assess.md › Process workshop notes shows a summary of the PRD, ADR drafts, contract, stories, questions and human items before writing (B3); next-task.md › blocked: architecture points to B1's summary (B4); the design-session skill writes a one-to-one session's notes after the approved summary, and a live group workshop's read-back is the room's summary (B5); the selftest passes (check) · following AGENTS.md › Project rules for framework work
+- Brief: Scope › Framework features
+
+### T282 · Godot-Director: record only after the director approves a summary · todo · M · agent
+- Depends on: T279
+- Touches: work/Godot-Director: framework/.godot-director/rules.md, framework/.godot-director/procedures/ (design.md, research.md, next-task.md, drift-reset.md, ui-design.md, playtest.md, function-check.md, export.md, release.md), framework/ONBOARDING.md, selftest.sh
+- Done when: following the anchor (T279), the same changes as T280's A1 to A10 in Godot-Director's files (the GDD in place of the brief; the "Still right?" ticks collected and summarised; playtest.md step 4 drops "straight away"), and: export.md › Set up exports and release.md › Set up release put a summary and its approval between the rounds and "Write it down" (C1); design.md › User stories puts the on and off switch in the summary (C2); the selftest passes (check) · following AGENTS.md › Project rules for framework work
+- Brief: Scope › Framework features
 
 ### B53 · A script piped to a shell, a path-qualified or `.exe` git or bash, a sudo option's value, cmd's %VAR% or a folder in another case passes the guard (A01:2025 Broken Access Control) · todo · S · agent · med
 - Touches: .claude/hooks/guard-commands.sh, selftest.sh (the guard is framework-owned: an item for each framework once it's built)
