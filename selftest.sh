@@ -57,6 +57,8 @@
 #      A quoted script given to bash -c, sh -c, zsh -c, eval, powershell -Command, pwsh -c or cmd /c is read as a
 #      command of its own, to four levels, and a command whose quoting the guard can't close is blocked (B34). A wait
 #      loop (until or while) with sleep in such a script is blocked too, unless a timeout of 280 seconds or less bounds it (B42).
+#      The hang check also blocks a C-style for (( loop with sleep, PowerShell's do { } while or until with sleep, Start-Sleep and
+#      cmd's timeout /t over 280 seconds, and a Bash substitution that runs before a timeout above it (B49).
 #      A variable in a git command's words is read as its value when the command assigns it once to a plain value
 #      (FLAG=--force; git push $FLAG). Any other unquoted variable there, or a quoted one a flag or a path could be, is
 #      blocked, and so is a variable as the subcommand or as a shell's name followed by -c; the everyday forms pass (B37).
@@ -1513,6 +1515,80 @@ else
     err "the guard hook doesn't block a wait loop in a script a shell or an interpreter runs, or blocks one a timeout bounds (B42):"
     printf '%s\n' "${git_fail#$'\n'}"
   else echo "ok: the guard hook blocks an until or while loop with sleep in a script given to eval, bash -c, sh -c, powershell -Command or cmd /c, and passes one under a timeout of 280 seconds or less (B42)"; fi
+
+  # The hang check's other forms (B49): a C-style for (( loop with sleep and no time limit; a PowerShell do { } while or until with a
+  # sleep in its body; Start-Sleep and its alias sleep with -Seconds, -s or -Milliseconds over 280 seconds; cmd's timeout /t N over 280
+  # seconds, or -1, which waits for a key press for ever (cmd's timeout is a wait, not a time limit); and a Bash substitution, which
+  # runs before a timeout above it starts, so the timeout doesn't bound it. A substitution in single quotes, or escaped, is the
+  # script's own, so a timeout above a script bounds it. A message that names one of these passes (the quoted text is blanked).
+  git_fail=""
+  if [ -f .claude/hooks/guard-commands.sh ]; then
+    for cmd in \
+        'for ((;;)); do sleep 1; done' \
+        'for (( ; ; )); do sleep 1; done' \
+        'for ((i = 0; i < 3; i++)); do sleep 1; done' \
+        'timeout 60 echo "$(until false; do sleep 1; done)"' \
+        'timeout 60 echo $(until false; do sleep 1; done)' \
+        'timeout 60 bash -c "echo $(until false; do sleep 1; done)"' \
+        'timeout 60 echo "$(bash -c "until false; do sleep 1; done")"' \
+        'echo "$(sleep 600)"' \
+        'echo "$(cmd /c "timeout /t 600")"' \
+        'powershell -Command "Start-Sleep -Seconds 600"' \
+        'powershell -Command "Start-Sleep -Milliseconds 300001"' \
+        'cmd /c "timeout /t 300"' \
+        'cmd /c "timeout /t -1"' \
+        'timeout 60 cmd /c "timeout /t 600"' \
+        'timeout 60 echo $(cat <<'"'"'EOF'"'"'
+x
+EOF
+) ; while true; do sleep 1; done'; do
+      guard 2 "$cmd"
+    done
+    for cmd in \
+        'do { Start-Sleep 1 } while ($true)' \
+        'do { Start-Sleep 1 } until ($false)' \
+        'DO { START-SLEEP -S 600 } WHILE ($true)' \
+        'Start-Sleep -Seconds 600' \
+        'Start-Sleep -s 600' \
+        'Start-Sleep -Milliseconds 280001' \
+        'sleep -Seconds 300' \
+        'timeout 60 Write-Output $(while ($true) { Start-Sleep 1 })' \
+        'powershell -Command "do { Start-Sleep 1 } while ($true)"'; do
+      guard 2 "$cmd" PowerShell
+    done
+    for cmd in \
+        "timeout 60 bash -c 'echo \$(until false; do sleep 1; done)'" \
+        'timeout 240 bash -c "echo \$(until test -f x; do sleep 5; done)"' \
+        "timeout 240 bash -c 'for ((i = 0; i < 3; i++)); do sleep 1; done'" \
+        'echo "$(date +%s)"' \
+        'echo $(sleep 280)' \
+        'bash -c "echo $(date)"' \
+        'timeout 60 cmd /c "timeout /t 60"' \
+        'cmd /c "timeout /t 280"' \
+        "echo '\$(until false; do sleep 1; done)'" \
+        'git commit -m "wait: Start-Sleep 600 and for ((;;)) and do { x } while (y)"' \
+        'git log --format="%h $(date +%F)" -3' \
+        'echo "$(git log --oneline -3)"' \
+        'for i in 1 2 3; do echo $i; done' \
+        'for ((i = 0; i < 3; i++)); do echo $i; done'; do
+      guard 0 "$cmd"
+    done
+    for cmd in \
+        'timeout 60 powershell -Command "do { Start-Sleep 1 } while ($true)"' \
+        'timeout 240 powershell -Command "Start-Sleep -Seconds 240"' \
+        'Start-Sleep -Seconds 280' \
+        'Start-Sleep -Milliseconds 280000' \
+        'Start-Sleep 5' \
+        'do { Get-Date } while ($false)' \
+        "Write-Output 'do { Start-Sleep 1 } while (\$true)'"; do
+      guard 0 "$cmd" PowerShell
+    done
+  fi
+  guard_run
+  if [ -n "$git_fail" ]; then
+    err "the guard hook doesn't block a for (( loop, a do ... while, Start-Sleep or timeout /t over 280 seconds, or a substitution before a timeout, or blocks a message or a bounded script that names one (B49):"
+    printf '%s\n' "${git_fail#$'\n'}"
+  else echo "ok: the guard hook blocks a for (( loop with sleep, a do ... while with sleep, Start-Sleep and timeout /t over 280 seconds, and a substitution that runs before a timeout, and passes a bounded script and a message that names them (B49)"; fi
 
   # A variable in a git command's words (B37): the guard can't read what it holds. A variable that the command assigns once,
   # to a plain value, is read as that value, so FLAG=--force; git push $FLAG is the force push it is. Any other unquoted

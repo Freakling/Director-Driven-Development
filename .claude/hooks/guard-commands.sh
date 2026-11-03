@@ -30,6 +30,8 @@
 # A quoted script given to a shell or an interpreter (bash -c, sh -c, zsh -c, eval, powershell -Command, pwsh -c, cmd /c)
 # is a command of its own: each is read as one, and a script nested in one to four levels too (B34). See the section
 # "Shell wrappers" below. A wait loop in such a script is judged too, and a script under timeout 280 or less is bounded (B42).
+# The hang check also reads a C-style for ((...)) loop, PowerShell's do { } while or until, Start-Sleep, cmd's timeout /t, and a
+# Bash command's substitutions, which run before a timeout above them starts, so the timeout doesn't bound them (B49).
 # A shell or PowerShell name starts a script anywhere except right after a word that only prints its words (echo, printf,
 # Write-Output, Write-Host, write): `echo PowerShell 'x'` is text, and `ssh host pwsh -c 'x'` is still read (B48).
 #
@@ -1215,17 +1217,45 @@ while [[ $rest =~ $sleep_re ]]; do
   rest="${rest#*"${BASH_REMATCH[0]}"}"
 done
 
+# 3b. B49: PowerShell's Start-Sleep (and its alias sleep) with a count of seconds (positional, or -Seconds or -s) or of milliseconds
+#     (-Milliseconds or -m, rounded up to whole seconds), and cmd's timeout /t N, which waits N seconds (-1 waits for a key press for
+#     ever). cmd's timeout is a wait, not a time limit: coreutils' timeout N cmd is one, read in the loop rule below.
+shopt -s nocasematch
+ps_sleep_re='(^|[^[:alnum:]_./-])((start-)?sleep)[[:space:]]+(-[sm][[:alpha:]]*:?[[:space:]]*)?([0-9]+)([[:space:]]|$|[;&|)}])'
+cmd_wait_re='(^|[^[:alnum:]_./-])timeout(\.exe)?[[:space:]]+/t[[:space:]]+(-?[0-9]+)([[:space:]]|$|[;&|)}])'
+rest="$code"
+while [[ $rest =~ $ps_sleep_re ]]; do
+  m="${BASH_REMATCH[0]}"; p="${BASH_REMATCH[4]}"; n="${BASH_REMATCH[5]}"
+  if [[ $p == -[mM]* ]]; then secs=$(((10#$n + 999) / 1000)); what="a sleep of $n milliseconds"
+  else secs=$((10#$n)); what="a sleep of $n seconds"; fi
+  [ "$secs" -gt "$limit_s" ] && hang "$what is longer than $limit_s seconds, and a wait past five minutes lets the prompt cache expire." \
+    "Start the work with run_in_background and keep working until its completion notice, or wait in steps of $limit_s seconds or less."
+  rest="${rest#*"$m"}"
+done
+rest="$code"
+while [[ $rest =~ $cmd_wait_re ]]; do
+  m="${BASH_REMATCH[0]}"; n="${BASH_REMATCH[3]}"
+  [[ $n == -* ]] && hang "timeout /t -1 waits for a key press for ever, and a wait past five minutes lets the prompt cache expire." \
+    "Start the work with run_in_background, or wait in steps of $limit_s seconds or less."
+  secs=$((10#$n))
+  [ "$secs" -gt "$limit_s" ] && hang "timeout /t $secs waits $secs seconds, and a wait past five minutes lets the prompt cache expire." \
+    "Start the work with run_in_background and keep working until its completion notice, or wait in steps of $limit_s seconds or less."
+  rest="${rest#*"$m"}"
+done
+shopt -u nocasematch
+
 # 2. until/while loops that sleep: under `timeout N` (N <= 280), or ended by the exit line Claude Code
 #    appends to a background command's output. A loop quoted into `bash -c '...'` is read from the raw text.
 #    B42: a script a shell or an interpreter runs (eval, -Command, cmd /c, a nested bash -c) is a view of its own, and its
 #    loops are read in its text as the sleep rule reads it. A view whose wrapper is under a timeout of 280 or less (vcov)
 #    is bounded whole, so its loops are not read. PowerShell's while and Start-Sleep are read in any case.
-scan="$code"
-[[ $code =~ (bash|sh|zsh)[[:space:]]+-[a-z]*c[[:space:]] ]] && scan="$raw"
+scan="$code"; rawscan=0
+[[ $code =~ (bash|sh|zsh)[[:space:]]+-[a-z]*c[[:space:]] ]] && { scan="$raw"; rawscan=1; }
 scan="${scan//\\n/$nl}"
-loop_re='(^|[^[:alnum:]_./-])(until|while)[[:space:]]'
+# B49: a C-style for (( loop is read as a loop, as while is; PowerShell's for is not read here.
+loop_re='(^|[^[:alnum:]_./-])((until|while)[[:space:]]|for[[:space:]]*\(\()'
 sleep_loop_re='(^|[^[:alnum:]_./-])((start-)?sleep)[[:space:]]'
-timeout_re="(^|[^[:alnum:]_./-])timeout[[:space:]]+(-[-[:alnum:]=]+[[:space:]]+)*([0-9]+)([sm]?)[[:space:]]+[^;&|$nl]*\$"
+timeout_re="(^|[^[:alnum:]_./-])timeout[[:space:]]+(-[-[:alnum:]=]+[[:space:]]+)*([0-9]+)([sm]?)[[:space:]]+([^;&|$nl]*)\$"
 rest="$scan"; before=""
 ((${vcov[vi]:-0} == 0)) || rest=""   # under a timeout of 280 seconds or less: bounded whole (B42)
 shopt -s nocasematch
@@ -1238,14 +1268,33 @@ while [[ $rest =~ $loop_re ]]; do
   covered=0
   if [[ $before =~ $timeout_re ]]; then
     secs=$((10#${BASH_REMATCH[3]})); [ "${BASH_REMATCH[4]}" = m ] && secs=$((secs * 60))
-    [ "$secs" -le "$limit_s" ] && covered=1
+    ttail="${BASH_REMATCH[5]}"
+    # B49: a substitution after the timeout in the command's own text runs before the timeout starts, so it covers nothing. A
+    # script read raw (rawscan) is quoted text the shell runs under the timeout, so the timeout covers its substitutions too.
+    if ((rawscan)) || [[ $ttail != *'('* && $ttail != *'`'* ]]; then
+      [ "$secs" -le "$limit_s" ] && covered=1
+    fi
   fi
   [ "$covered" -eq 1 ] && continue
   [[ $loop == *tasks/*.output* ]] && hang "this loop reads a background command's output without waiting for the line Claude Code appends when it ends, so it can wait forever." \
     "Wait for \"exited with code\" or \"[killed]\" in the output file, or wrap the loop in: timeout 240 bash -c '...'"
-  hang "an until or while loop with sleep and no time limit can run for ever, and a wait past five minutes lets the prompt cache expire." \
+  hang "an until, while or for (( loop with sleep and no time limit can run for ever, and a wait past five minutes lets the prompt cache expire." \
     "Put a limit on it: timeout 240 bash -c 'until ...; do sleep 5; done' (N of $limit_s or less), or start the work with run_in_background."
 done
+# B49: PowerShell's do { ... } while (...) or until (...) runs its body before the keyword, so a sleep in the body comes first. The body is
+# the text from the do { to the } that the keyword follows. A view under a timeout of 280 seconds or less (vcov) is bounded whole.
+if ((${vcov[vi]:-0} == 0)); then
+  dorest="$scan"
+  while [[ $dorest =~ (^|[^[:alnum:]_./-])do[[:space:]]*\{ ]]; do
+    dorest="${dorest#*"${BASH_REMATCH[0]}"}"
+    [[ $dorest =~ \}[[:space:]]*(while|until)[[:space:]]*\( ]] || break
+    body="${dorest%%"${BASH_REMATCH[0]}"*}"
+    if [[ $body =~ $sleep_loop_re ]] && [[ $raw != *"exited with code"* && $raw != *"[killed]"* ]]; then
+      hang "a do ... while or until loop with sleep and no time limit can run for ever, and a wait past five minutes lets the prompt cache expire." \
+        "Put a limit on it: timeout 240 bash -c '...' (N of $limit_s or less), or start the work with run_in_background."
+    fi
+  done
+fi
 shopt -u nocasematch
 
 # B34: the scripts that the shells and interpreters in this text run become views, each a level deeper than this one. The
@@ -1278,7 +1327,7 @@ if [[ $bare =~ $wrap_gate ]]; then
       ((${#views[@]} < 64)) || block "$MSG_VIEWS"
       jesc "${wscripts[wk]//$x6/$dl}"; vdep[${#views[@]}]=$((${vdep[vi]:-0} + 1))   # x6 restores the script's own $ (B45)
       vcov[${#views[@]}]=$((${vcov[vi]:-0} | ${wscov[wk]:-0}))   # bounded by a timeout above it, or by its own (B42)
-      vpx[${#views[@]}]=${wsposix[wk]:-0}                       # a script a POSIX shell runs is Bash text (B44)
+      vpx[${#views[@]}]=${wsposix[wk]:-0}; vhang[${#views[@]}]=${vhang[vi]:-0}   # a script a POSIX shell runs is Bash text (B44); B49: a script in a substitution's view is one too
       views+=("$je")
     done
   fi
@@ -1297,7 +1346,26 @@ gh_pre=0; [[ ${real//[\"\'\\]/} =~ (^|[^[:alnum:]_.-])gh[[:space:]] ]] && gh_pre
 # B45: a variable as a command's name runs what it holds, so a command that has one is read too (cname_judge, mode 0).
 cnv=0
 [[ $real =~ $cn_pre_re || $real =~ $cn_exec_re ]] && cname_judge "$real" 0
-((isgit || isbash || gh_pre || cnv)) || continue
+
+# B49: a command substitution runs before the command it's an argument of, so a timeout above it doesn't bound it: timeout 60
+# echo "$(until false; do sleep 1; done)" loops for ever. A Bash command that isn't git's has each substitution read as a view for
+# the hang rules alone (vhang): the gate below skips it, and it has the view's own bound (vcov), not the timeout in front of its
+# command. The command is read as it stands (real), so a substitution in a quoted heredoc body is read too, as the hang rules read
+# a body (B50). A PowerShell command's substitutions are not read here; git's are read in the git section (B32).
+if ((!isgit)) && [[ $tool != PowerShell && ( $real == *'$('* || $real == *'`'* || $real == *'<('* || $real == *'>('* ) ]]; then
+  hsubb=0
+  if subst_cut "$real"; then
+    for ((vn = 0; vn < sn; vn++)); do
+      ((${#views[@]} < 64)) || break
+      c="${subc[vn]}"; c="${c#"${c%%[![:space:]]*}"}"; c="${c%"${c##*[![:space:];]}"}"
+      vdep[${#views[@]}]=${vdep[vi]:-0}; vcov[${#views[@]}]=${vcov[vi]:-0}; vpx[${#views[@]}]=${vpx[vi]:-0}; vhang[${#views[@]}]=1
+      views+=("$c")
+    done
+  fi
+fi
+
+# B49: a view of a substitution in a command that isn't git's (vhang) is read by the hang rules only; no rule below judges it.
+((${vhang[vi]:-0} == 0)) && ((isgit || isbash || gh_pre || cnv)) || continue
 
 seg='[^;&|]*'   # the destructive git rules are below the decoding of the command (B33)
 
