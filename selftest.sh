@@ -45,6 +45,9 @@
 #      joined to its delimiter line (B29).
 #      A command substitution in a git command's words, or as its name, is blocked when it can print a flag or run
 #      a command the guard can't read; a quoted value after fixed text, a commit's -m value and a read pass (B32).
+#      A destructive git rule (a force push, a +refspec, reset --hard, clean -f, checkout or switch -f, stash drop,
+#      branch -D) reads the decoded words, so a quoted flag or refspec is blocked, and its flag ends at ; & | ) or a
+#      line break; a heredoc body a shell runs is read too, and a quoted message that names a rule passes (B33).
 #   9. The site builds in strict mode, which fails on broken internal links and anchors.
 #  10. The Content-Security-Policy in overrides/main.html allows every inline script the built site
 #      runs (its sha256 is in script-src), and no script runs before the policy's meta tag.
@@ -481,10 +484,26 @@ else
   deny_needs '"Bash\(git grep \*\)"' 'Bash(git grep *--open*)' 'Bash(git grep *-O*)'
   deny_needs '"Bash\(git tag \*\)"' 'Bash(git tag *--file*)'
   deny_needs '"Bash\(bash tools/[^"]*\*' 'Bash(bash tools/*..*)'
+  # json_str <text>: the text as the inside of a JSON string, with \, ", a line break, a tab and a return escaped. (A ${//}
+  # replacement left a backslash single and turned a line break into n, so a newline case reached the guard as a joined word.)
+  json_str() {
+    local s="$1" out="" i c
+    for ((i = 0; i < ${#s}; i++)); do
+      c="${s:i:1}"
+      case $c in
+        '\') out+='\\' ;;
+        '"') out+='\"' ;;
+        $'\n') out+='\n' ;;
+        $'\t') out+='\t' ;;
+        $'\r') out+='\r' ;;
+        *) out+="$c" ;;
+      esac
+    done
+    printf '%s' "$out"
+  }
   guard() { # guard <expected-exit> <command> [tool name: Bash by default, or PowerShell]
-    local esc="${2//\\/\\\\}" got tool="${3:-Bash}"
-    esc="${esc//\"/\\\"}"; esc="${esc//$'\n'/\\n}"; esc="${esc//$'\r'/\\r}"; esc="${esc//$'\t'/\\t}"
-    printf '{"session_id":"s","tool_name":"%s","tool_input":{"command":"%s","description":"run"}}' "$tool" "$esc" \
+    local got tool="${3:-Bash}"
+    printf '{"session_id":"s","tool_name":"%s","tool_input":{"command":"%s","description":"run"}}' "$tool" "$(json_str "$2")" \
       | bash .claude/hooks/guard-commands.sh >/dev/null 2>&1
     got=$?
     [ "$got" -eq "$1" ] || git_fail="$git_fail"$'\n'"  guard exited $got, expected $1 ($tool): ${2//$'\n'/ NL }"
@@ -930,6 +949,92 @@ else
     err "the guard hook reads a command substitution in a git command's words, or as its name, as harmless, or blocks a plain read (B32):"
     printf '%s\n' "${git_fail#$'\n'}"
   else echo "ok: the guard hook blocks a command substitution that can print a git flag or run a command the guard can't read, in git's words or as a command name, and passes the quoted values, messages and reads the procedures use (B32)"; fi
+
+  # A destructive git rule (B33) reads the words as the shell hands them over: a quoted flag, refspec or path is seen, a flag
+  # ends at ; & | ) or a line break as it does at a space, and a heredoc body a shell runs is read too. The rules are a force
+  # push, a +refspec, reset --hard, clean -f, checkout or switch -f, checkout or restore of ".", stash drop or clear, and
+  # branch -D. A quoted message that names one passes, and so does a quoted word that isn't a flag.
+  git_fail=""
+  if [ -f .claude/hooks/guard-commands.sh ]; then
+    for cmd in \
+      $'git push --force\necho done' \
+      'git push --force;echo done' \
+      'git push --force&&echo done' \
+      'git push --force|cat' \
+      '(git push --force)' \
+      'git push "--force"' \
+      "git push '--force'" \
+      'git push "--force-with-lease=origin/main"' \
+      'git push --fo"rce"' \
+      'git push -f;echo done' \
+      'git push origin "+main"' \
+      "git push origin '+main'" \
+      'git pu"sh" --force' \
+      'git status && git push --force' \
+      $'git status\ngit push "--force"' \
+      'git checkout "."' \
+      'git checkout -- "."' \
+      'git restore "."' \
+      'git checkout .;echo done' \
+      'git checkout -f;echo done' \
+      'git checkout "-f" main' \
+      'git checkout -qf main' \
+      'git switch "--discard-changes" main' \
+      'git reset "--hard"' \
+      'git reset --hard;echo done' \
+      'git clean "-f"' \
+      'git stash "drop"' \
+      'git stash drop;echo done' \
+      'git branch "-D" x' \
+      'git branch -D x;echo done' \
+      'git branch -vD x' \
+      'git commit -n;echo done' \
+      'git commit -m "-x;y" -F /tmp/msg.txt' \
+      'git diff "/etc/passwd"' \
+      'bash "tools/../x.sh"' \
+      $'bash <<\'EOF\'\ngit push --force\nEOF' \
+      $'bash <<\'EOF\'\ngit push "--force"\nEOF' \
+      $'bash <<\'EOF\'\ngit push origin "+main"\nEOF' \
+      $'bash <<\'EOF\'\ngit checkout "."\nEOF' \
+      $'bash <<\'EOF\'\ngit commit -n -m x\nEOF' \
+      $'sh <<EOF\ngit reset --hard\nEOF'; do
+      guard 2 "$cmd"
+    done
+    for cmd in \
+      'git push origin main' \
+      'git push origin "HEAD:refs/heads/main"' \
+      'git push "origin" main' \
+      'git push origin main;git status' \
+      'git push -u origin "ddd/bundle-$(date +%F)"' \
+      'git commit -m "stop git push --force;"' \
+      'git commit -m "reset --hard" -m "checkout ."' \
+      'git commit -m "stash drop"' \
+      'git commit -m "-x" -F -' \
+      'git checkout -b "feature/x"' \
+      'git checkout "main"' \
+      'git branch -d x' \
+      'git branch -vv' \
+      'git log --grep "push --force"' \
+      'git log --oneline "--grep=push"' \
+      'git stash show "drop"' \
+      'git tag -a v1 -m "push --force note"' \
+      'echo "git push --force"' \
+      'git status && echo "reset --hard"' \
+      $'git status\ngit log --oneline -3' \
+      $'git commit -q -F - <<\'EOF\'\nStop "git push --force" in the hook, and "git reset --hard".\nEOF' \
+      $'git commit -q -F - <<\'EOF\'\nfix the --output and --no-index handling, not -F /tmp/x\nEOF'; do
+      guard 0 "$cmd"
+    done
+    for cmd in 'git push "--force"' 'git push origin "+main"' 'git checkout "."' 'git push --force;echo done' 'git reset "--hard"'; do
+      guard 2 "$cmd" PowerShell
+    done
+    guard 0 'Write-Output "git push --force"' PowerShell
+    guard 0 'git push origin "HEAD:main"' PowerShell
+  fi
+  if [ -n "$git_fail" ]; then
+    err "the guard hook doesn't read a destructive git rule's flag, refspec or path as the shell does, or blocks a message that names one (B33):"
+    printf '%s\n' "${git_fail#$'\n'}"
+  else echo "ok: the guard hook blocks a force push, a +refspec, reset, clean, checkout, stash drop and branch -D that a quote, a line break, ; & | ) or a heredoc body hides, and passes the quoted messages (B33)"; fi
 
   # The credential stores (B15): the Read tool may not open the gh CLI's token file, git's credentials or
   # ~/.ssh. The .env files with values (B21): .env.local and the other .env.<suffix> files the guard hook

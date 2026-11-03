@@ -451,23 +451,7 @@ isgit=0; [[ ${detect//$brackets/ } =~ (^|[^[:alnum:]_./-])git([[:space:]]|$) ]] 
 isbash=0; [[ $detect =~ (^|[^[:alnum:]_.-])(ba)?sh([[:space:]]|$) ]] && isbash=1
 ((isgit || isbash)) || continue
 
-seg='[^;&|]*'
-if ((isgit)); then
-  shopt -s nocasematch
-  [[ $raw =~ core\.hookspath ]] && block "changing core.hooksPath switches the pre-commit hook off"
-  shopt -u nocasematch
-
-  [[ $raw =~ --no-veri ]] && block "--no-verify skips the project check"
-  [[ $code =~ commit${seg}[[:space:]]-[a-mo-zA-Z]*n[a-zA-Z]*([[:space:]]|$) ]] && block "git commit -n skips the project check"
-  [[ $code =~ push${seg}[[:space:]](--force|--force-with-lease|--force-if-includes|-[a-zA-Z]*f[a-zA-Z]*)([[:space:]=]|$) ]] && block "force-push rewrites shared history"
-  [[ $code =~ push${seg}[[:space:]]\+[^[:space:]] ]] && block "a +refspec force-pushes"
-  [[ $code =~ reset${seg}[[:space:]]--ha ]] && block "git reset --hard discards uncommitted work"
-  [[ $code =~ clean${seg}[[:space:]](-[a-zA-Z]*f|--force) ]] && block "git clean -f deletes untracked files"
-  [[ $code =~ (checkout|switch)${seg}[[:space:]](-f|--force|--discard-changes)([[:space:]]|$) ]] && block "this discards uncommitted changes"
-  [[ $code =~ (checkout|restore)${seg}[[:space:]](--[[:space:]]+)?\.([[:space:]]|$) ]] && block "this discards every uncommitted change"
-  [[ $code =~ stash[[:space:]]+(drop|clear) ]] && block "this deletes stashed work"
-  [[ $code =~ branch${seg}[[:space:]]-D([[:space:]]|$) ]] && block "git branch -D deletes unmerged work"
-fi
+seg='[^;&|]*'   # the destructive git rules are below the decoding of the command (B33)
 
 # --- git: flags that write a file, read outside the repository or run a configured command --------
 # settings.json allows `git diff *`, `git log *`, `git show *`, `git commit *` and `git stash *` without
@@ -482,13 +466,13 @@ sq1="'"
 # Cut out the heredoc bodies (git commit -F - <<'EOF' ...). A quoted delimiter makes the body plain
 # text; an unquoted one expands $(...) and backticks, so a body with those stays.
 hre='(^|[^<])<<-?[[:space:]]*(\\?["'"'"']?)([A-Za-z_][A-Za-z0-9_]*)'
-gtext=""; delim=""; hquote=""; body=""
+gtext=""; delim=""; hquote=""; body=""; hall=""
 while IFS= read -r line || [ -n "$line" ]; do
   if [ -n "$delim" ]; then
     if [ "${line#"${line%%[![:space:]]*}"}" = "$delim" ]; then
       delim=""
       [[ -n $hquote || ( $body != *'$('* && $body != *'`'* ) ]] || gtext+="${body//[\'\"]/_}"   # an unquoted body's quotes are text (B32)
-      body=""
+      hall+="$body"; body=""
     else body+="$line$nl"; fi
     continue
   fi
@@ -496,6 +480,7 @@ while IFS= read -r line || [ -n "$line" ]; do
   [[ $line =~ $hre ]] && { delim="${BASH_REMATCH[3]}"; hquote="${BASH_REMATCH[2]}"; }
 done <<<"$real"
 gtext+="$body"   # a heredoc that never closes keeps its text: a false block beats a miss
+hall+="$body"    # every body, for the destructive rules (B33): a body may be a script a shell runs
 
 # B32: the substitutions are read out of the command first (subst_cut), so the quote reading below sees placeholders, not
 # their text: a quote or a ) inside a substitution can't end a quoted string or the substitution early. Outside git's
@@ -503,30 +488,41 @@ gtext+="$body"   # a heredoc that never closes keeps its text: a false block bea
 subc=(); subk=(); sn=0
 subst_cut "$gtext" || { ((isgit)) && block "$MSG_UNREAD"; cut_out="$gtext"; subc=(); subk=(); sn=0; }
 
-# Walk the quoted strings from the left. One that is a flag by itself ('--output=x') or sits inside
-# a word (--out"put"=x) is unquoted so the flag shows; any other is message text and is blanked. A "..." holding a
-# substitution keeps its text, which has the placeholder, so the substitution's word is judged (see subst_cut).
+# decode_words <text>: sets dec to the words the shell hands a command, as the rules read them (B26, B33). The quoted strings
+# are walked from the left. One with a space in it is message text, so it's blanked. One without a space is kept as a
+# word: a flag ("--force", '-D'), a refspec ("+main"), a path (".") or a subcommand ("drop") reads as it does to the
+# shell. A quoted string that is a flag by itself, or sits inside a word (--out"put"=x), keeps its spaces too. Inside a
+# kept string, ; & | < > ( ) and a line break are text, not separators: each is marked \x05, which no rule matches.
+# A "..." holding a substitution keeps its text, which has the placeholder, so the substitution's word is judged (B32).
+x5=$'\x05'
 qre='^(([^"'$sq1'\\]|\\.)*)("(([^"\\]|\\.)*)"|'$sq1'([^'$sq1']*)'$sq1')'
-glued='^[^[:space:];&|<>)]'
-gcode=""; rest="$cut_out"
-while [[ $rest =~ $qre ]]; do
-  pre="${BASH_REMATCH[1]}"; quoted="${BASH_REMATCH[3]}"; rest="${rest:${#BASH_REMATCH[0]}}"
-  inner="${quoted:1:${#quoted}-2}"
-  if [[ $pre == *'$' && $pre != *'\$' ]]; then   # $'...' and $"...": drop the $
-    pre="${pre%?}"
-    [[ $quoted == "'"* && $inner =~ \\[xuU0-7] ]] && block "ANSI-C quoting with a numeric escape (\$'\\055') can spell any flag past this check"
-  fi
-  pre="${pre//\\/}"        # outside quotes a backslash only escapes the next character (a joined line is already one line)
-  gcode+="$pre"
-  if [[ $inner == *$'\x1a'* ]]; then gcode+="${inner//\\/}"; continue; fi   # a double-quoted substitution (B32)
-  word="${gcode##*[[:space:];&|]}"               # the word so far
-  if [[ $inner =~ ^--?[A-Za-z] ]]; then gcode+="$inner"
-  elif [[ $inner != *[[:space:]]* && ( -n $word || $rest =~ $glued ) ]]; then gcode+="$inner"
-  elif [[ -n $word && $word =~ ^--[^=]*$ ]]; then gcode+="$inner"
-  else gcode+=" Q "; fi
-done
-rest="${rest//\\/}"; gcode+="${rest//[\"$sq1]/}"   # a quote left over never closes
-gcode="${gcode//$nl/;}"; gcode="${gcode//>&/> }"; gcode="${gcode//&>/> }"
+decode_words() {
+  local rest="$1" pre quoted inner word keep
+  dec=""
+  while [[ $rest =~ $qre ]]; do
+    pre="${BASH_REMATCH[1]}"; quoted="${BASH_REMATCH[3]}"; rest="${rest:${#BASH_REMATCH[0]}}"
+    inner="${quoted:1:${#quoted}-2}"
+    if [[ $pre == *'$' && $pre != *'\$' ]]; then   # $'...' and $"...": drop the $
+      pre="${pre%?}"
+      [[ $quoted == "'"* && $inner =~ \\[xuU0-7] ]] && block "ANSI-C quoting with a numeric escape (\$'\\055') can spell any flag past this check"
+    fi
+    pre="${pre//\\/}"        # outside quotes a backslash only escapes the next character (a joined line is already one line)
+    dec+="$pre"
+    if [[ $inner == *$'\x1a'* ]]; then dec+="${inner//\\/}"; continue; fi   # a double-quoted substitution (B32)
+    word="${dec##*[[:space:];&|]}"               # the word so far
+    keep=0
+    if [[ $inner =~ ^--?[A-Za-z] ]]; then keep=1
+    elif [[ $inner != *[[:space:]]* ]]; then keep=1
+    elif [[ -n $word && $word =~ ^--[^=]*$ ]]; then keep=1; fi
+    if ((keep)); then
+      inner="${inner//[;&|<>()]/$x5}"; inner="${inner//$nl/$x5}"
+      dec+="$inner"
+    else dec+=" Q "; fi
+  done
+  rest="${rest//\\/}"; dec+="${rest//[\"$sq1]/}"   # a quote left over never closes
+  dec="${dec//$nl/;}"; dec="${dec//>&/> }"; dec="${dec//&>/> }"
+}
+decode_words "$cut_out"; gcode="$dec"
 # B32: each substitution's text is read as a command of its own (a view), so git's rules judge the git inside it.
 if ((isgit)); then
   for ((vn = 0; vn < ${#subc[@]}; vn++)); do
@@ -534,6 +530,43 @@ if ((isgit)); then
     c="${subc[vn]}"; c="${c#"${c%%[![:space:]]*}"}"; c="${c%"${c##*[![:space:];]}"}"
     views+=("$c")
   done
+fi
+
+# --- git: destructive rules (B33) ------------------------------------------------------------------
+# These read dcode: the words as gcode decodes them (decode_words, B26), so a quoted flag or refspec is seen and a quoted
+# message is not, plus the heredoc bodies that name one of the subcommands below. A body is text a shell may run
+# (bash <<'EOF' with a force push in it), so the cut that keeps a message body out of the flag rules doesn't apply here.
+# A flag ends at a space, a separator, a bracket, a redirect or =, or at the end of the command (flag_end), so one
+# followed by ; & | ) or a line break is found too.
+flag_end='([[:space:];&|()<>=]|$)'
+if ((isgit)); then
+  # A body without one of those subcommands can't match a rule, so only a body with one is read. The test runs on the body
+  # with its quotes and backslashes removed, so a subcommand split by them (pu"sh") is still found. A body up to 4 KB is
+  # decoded as the command is. A longer one keeps every word a quote or a backslash hid, which costs one pass over the text
+  # rather than one per quote (a 300-line body with a quote on each line took seconds); exposing a word can't hide a flag.
+  bcode=""
+  if [[ ${hall//[\"\'\\]/} =~ push|reset|clean|checkout|switch|restore|stash|branch|commit ]]; then
+    if ((${#hall} <= 4096)); then decode_words "$hall"; bcode="$dec"
+    else
+      bcode="${hall//[\"\'\\]/}"; bcode="${bcode//$nl/;}"; bcode="${bcode//>&/> }"; bcode="${bcode//&>/> }"
+    fi
+  fi
+  dcode="$gcode;$bcode"
+  shopt -s nocasematch
+  [[ $raw =~ core\.hookspath ]] && block "changing core.hooksPath switches the pre-commit hook off"
+  shopt -u nocasematch
+
+  [[ $raw =~ --no-veri ]] && block "--no-verify skips the project check"
+  # git commit -n in a body: the flags of a commit are read from its words below (B26), where -- ends the options.
+  [[ $bcode =~ commit${seg}[[:space:]]-[a-mo-zA-Z]*n[a-zA-Z]*$flag_end ]] && block "git commit -n skips the project check"
+  [[ $dcode =~ push${seg}[[:space:]](--force|--force-with-lease|--force-if-includes|-[a-zA-Z]*f[a-zA-Z]*)$flag_end ]] && block "force-push rewrites shared history"
+  [[ $dcode =~ push${seg}[[:space:]]\+[^[:space:]] ]] && block "a +refspec force-pushes"
+  [[ $dcode =~ reset${seg}[[:space:]]--ha ]] && block "git reset --hard discards uncommitted work"
+  [[ $dcode =~ clean${seg}[[:space:]](-[a-zA-Z]*f|--force) ]] && block "git clean -f deletes untracked files"
+  [[ $dcode =~ (checkout|switch)${seg}[[:space:]](-[a-zA-Z]*f[a-zA-Z]*|--force|--discard-changes)$flag_end ]] && block "this discards uncommitted changes"
+  [[ $dcode =~ (checkout|restore)${seg}[[:space:]](--[[:space:]]+)?\.$flag_end ]] && block "this discards every uncommitted change"
+  [[ $dcode =~ stash[[:space:]]+(drop|clear) ]] && block "this deletes stashed work"
+  [[ $dcode =~ branch${seg}[[:space:]]-[a-zA-Z]*D[a-zA-Z]*$flag_end ]] && block "git branch -D deletes unmerged work"
 fi
 
 gitre='(^|[^[:alnum:]_./-])git[[:space:]]'

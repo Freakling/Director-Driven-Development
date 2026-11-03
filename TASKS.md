@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T279 · B39 · R7
+**Next IDs:** T279 · B41 · R7
 
 ## Milestones
 | Milestone | Status |
@@ -1067,7 +1067,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Found in: B28
 - Brief: -
 
-### B33 · A force push before a line break or `;`, or with the flag quoted, passes the guard (A01:2025 Broken Access Control) · todo · S · agent · med
+### B33 · A force push before a line break or `;`, or with the flag quoted, passes the guard (A01:2025 Broken Access Control) · done 2026-11-03 · S · agent · med
 - Touches: .claude/hooks/guard-commands.sh, selftest.sh (the guard is framework-owned: T276, T277 and T278 carry the fix)
 - Repro: 1. Feed the guard hook `git push --force` with `echo done` on the next line, `git push --force;echo done`, `git push "--force"`, `git push '--force'` or `git push "--force-with-lease=origin/main"`. 2. Expected: each is blocked, as `git push --force` alone is. Actual: exit 0: the force rule's terminator `([[:space:]=]|$)` doesn't include `;`, `&`, `|` or `)`, and the rule reads the text with quotes blanked (B26 covered only `-n`).
 - Found in: B31
@@ -1101,6 +1101,18 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Touches: .claude/hooks/guard-commands.sh, selftest.sh (the guard is framework-owned: T276, T277 and T278 carry the fix)
 - Repro: 1. Feed the guard hook `git -c alias.x="!echo hi" x`, `git -c core.pager="sh -c x" log`, `git -c core.sshCommand=x fetch` or `git -c diff.external=x diff`. 2. Expected: blocked, as `--ext-diff` and `-O` are, since each runs a command of the caller's choice. Actual: exit 0: the guard doesn't read `-c` configuration keys.
 - Found in: B32
+- Brief: -
+
+### B39 · A quoted git, a heredoc a shell runs, a long-form flag, a quoted credential subcommand or a backtick after a flag passes the git rules (A01:2025 Broken Access Control) · todo · S · agent · med
+- Touches: .claude/hooks/guard-commands.sh, selftest.sh (the guard is framework-owned: T276, T277 and T278 carry the fix)
+- Repro: 1. Feed the guard hook `"git" push --force`; `bash <<'EOF'` with `git log --output=/tmp/x` in the body; `git branch --delete --force x`, `git push --mirror` or `git push --delete origin x`; `git credential "fill"`; or a body a shell runs with a flag in backticks. 2. Expected: each is blocked, as its plain form is. Actual: exit 0: the git test reads unquoted text, the flag rules read text with heredoc bodies cut, the long forms have no rule, the credential-print rules read the blanked text, and a backtick isn't a flag terminator.
+- Found in: B33
+- Brief: -
+
+### B40 · A commit message that names a destructive git command is blocked · todo · XS · agent · low
+- Touches: .claude/hooks/guard-commands.sh, selftest.sh (the guard is framework-owned: T276, T277 and T278 carry the fix)
+- Repro: 1. Feed the guard hook `git commit -F - <<'EOF'` with a body line `fix: git push --force; done`. 2. Expected: passes: a body with a quoted delimiter given to `git commit -F -` or `git tag -F -` is a message no shell runs. Actual: exit 2: the rules read every heredoc body as commands (B33 added `;`, `&`, `|` and `)` to the terminators that a space already was).
+- Found in: B33
 - Brief: -
 
 ### T269 · Release App-Director 1.13.0 · done 2026-11-02 · S · agent
@@ -1159,23 +1171,23 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Brief: Scope › Framework features
 
 ### T276 · App-Director: the guard and the deny rules reach the PowerShell tool, and a continuation, a tab or a PowerShell read can't hide from it · todo · S · agent
-- Depends on: B25, B27 to B38
+- Depends on: B25, B27 to B40
 - Touches: work/App-Director: framework/.claude/settings.json, framework/.claude/hooks/guard-commands.sh, selftest.sh
-- Done when: the guard hook's matcher names PowerShell and every Bash deny and ask rule has a PowerShell twin, with no PowerShell allow rule, as B24 did here; the guard closes the gaps B25 and B27 to B38 closed here, ported with their selftest cases, including the readings of a continued command (as written, as joined, and joined from each line after a comment: B28, B31); the selftest passes (check) · following AGENTS.md › Project rules for framework work
+- Done when: the guard hook's matcher names PowerShell and every Bash deny and ask rule has a PowerShell twin, with no PowerShell allow rule, as B24 did here; the guard closes the gaps B25 and B27 to B40 closed here, ported with their selftest cases, including the readings of a continued command (as written, as joined, and joined from each line after a comment: B28, B31); the selftest passes (check) · following AGENTS.md › Project rules for framework work
 - Note: found in B24: framework/.claude/settings.json has the same `Bash|Monitor` matcher and eight Bash deny rules, and its selftest pins the matcher.
 - Brief: -
 
 ### T277 · SaaSAllTheThings: the guard and the deny rules reach the PowerShell tool, and a continuation, a tab or a PowerShell read can't hide from it · todo · S · agent
-- Depends on: B25, B27 to B38
+- Depends on: B25, B27 to B40
 - Touches: work/SaaSAllTheThings: framework/.claude/settings.json, framework/.claude/hooks/guard-commands.sh, selftest.sh
-- Done when: the guard hook's matcher names PowerShell and every Bash deny and ask rule has a PowerShell twin, with no PowerShell allow rule, as B24 did here; the guard closes the gaps B25 and B27 to B38 closed here, ported with their selftest cases, including the readings of a continued command (as written, as joined, and joined from each line after a comment: B28, B31); the selftest passes (check) · following AGENTS.md › Project rules for framework work
+- Done when: the guard hook's matcher names PowerShell and every Bash deny and ask rule has a PowerShell twin, with no PowerShell allow rule, as B24 did here; the guard closes the gaps B25 and B27 to B40 closed here, ported with their selftest cases, including the readings of a continued command (as written, as joined, and joined from each line after a comment: B28, B31); the selftest passes (check) · following AGENTS.md › Project rules for framework work
 - Note: found in B24: framework/.claude/settings.json has the same `Bash|Monitor` matcher plus Bash ask and deny rules, and its selftest pins the matcher.
 - Brief: -
 
 ### T278 · Godot-Director: the guard and the deny rules reach the PowerShell tool, and a continuation, a tab or a PowerShell read can't hide from it · todo · S · agent
-- Depends on: B25, B27 to B38
+- Depends on: B25, B27 to B40
 - Touches: work/Godot-Director: framework/.claude/settings.json, framework/.claude/hooks/, selftest.sh
-- Done when: the guard hook's matcher names PowerShell and every Bash deny and ask rule has a PowerShell twin, with no PowerShell allow rule, as B24 did here; the guard closes the gaps B25 and B27 to B38 closed here (the read fixes where its guard checks credential reads), ported with their selftest cases, including the readings of a continued command (as written, as joined, and joined from each line after a comment: B28, B31); the selftest passes (check) · following AGENTS.md › Project rules for framework work
+- Done when: the guard hook's matcher names PowerShell and every Bash deny and ask rule has a PowerShell twin, with no PowerShell allow rule, as B24 did here; the guard closes the gaps B25 and B27 to B40 closed here (the read fixes where its guard checks credential reads), ported with their selftest cases, including the readings of a continued command (as written, as joined, and joined from each line after a comment: B28, B31); the selftest passes (check) · following AGENTS.md › Project rules for framework work
 - Note: found in B24: framework/.claude/settings.json wires guard-git.sh with separate `Bash` and `Monitor` matchers plus Bash ask and deny rules.
 - Brief: -
 
