@@ -740,7 +740,8 @@ wrap_ansi() {
 }
 
 # wrap_push <script>: a non-empty script goes to wscripts, and wtc (1 when its wrapper runs it under a timeout, B42) to wscov.
-wrap_push() { [[ -n $1 ]] && { wscripts+=("$1"); wscov+=("$wtc"); }; return 0; }
+# wpx is 1 when the wrapper is a POSIX shell or eval, whose script is Bash text (B44), and wsposix gets it with each script.
+wrap_push() { [[ -n $1 ]] && { wscripts+=("$1"); wscov+=("$wtc"); wsposix+=("$wpx"); }; return 0; }
 
 # wrap_rest <from>: sc is the words of wcmd from <from> on, joined by spaces, which is the text the command runs.
 wrap_rest() {
@@ -773,6 +774,7 @@ wrap_cmd() {
   for ((m = 0; m < n; m++)); do
     w="${wcmd[m]}"; base="${w##*/}"; base="${base##*\\}"
     wtc=0; tcov_before "$m" && wtc=1
+    wpx=0; [[ $base =~ ^((ba|z|da|k)?sh)(\.exe)?$ || $base == eval ]] && wpx=1
     if [[ $base =~ ^((ba|z|da|k)?sh)(\.exe)?$ ]]; then
       for ((j = m + 1; j < n; j++)); do
         case ${wcmd[j]} in
@@ -817,7 +819,7 @@ wrap_read() {
   else
     sesc='\'; wrun_word='^[^[:space:];&|()<>$`'"'"'"\\]+'; wrun_dq='^[^"\\$`]+'
   fi
-  wscripts=(); wscov=()
+  wscripts=(); wscov=(); wsposix=()
   while ((i < L)); do
     c="${s:i:1}"
     case $c in
@@ -924,7 +926,8 @@ fi
 # and PowerShell's (Get-Content, its aliases gc and type, Select-String and its alias sls, and [IO.File]::ReadAllText
 # and its siblings, OpenText, OpenRead and Open, B36), matched in any case (B27), by a path (/bin/cat), quoted
 # (& 'Get-Content'), with .exe, or with a backtick escape inside a word (Get-Con`tent, B30); quotes inside a reader's
-# or a name's word are removed as the shell removes them (ca''t, c"a"t, B36); [IO.StreamReader]::new and New-Object
+# or a name's word are removed as the shell removes them (ca''t, c"a"t, B36), and in Bash a backslash that escapes an ordinary
+# character is removed the same way (c\at, .en\v.local, B44); [IO.StreamReader]::new and New-Object
 # System.IO.StreamReader are readers too (B30). The check runs for every tool the hook is wired to.
 cred_end="([[:space:]\"';&|)]|\$)"
 cred_store_re='\.ssh([/\\]|'"$cred_end"')|\.git-credentials|\.config[/\\]git[/\\]credentials|\.config[/\\]gh([/\\]|'"$cred_end"')|GitHub CLI([/\\]|'"$cred_end"')'
@@ -948,6 +951,22 @@ cred_args() {
     args="${args#*"${BASH_REMATCH[0]}"}"
   done
   return 1
+}
+# bs_unescape <text>: sets bsout to the text with each backslash that escapes an ordinary character removed, as Bash removes it
+# outside quotes (B44): c\at is cat, and .en\v.local is .env.local. A pair (\\) is one backslash, as the shell reads it, and a
+# backslash before a space, a separator or a quote stays. nocasematch is off for the substitutions, since it would match \A
+# against \a in the list below.
+bs_unescape() {
+  local t="$1" c ncm=0
+  shopt -q nocasematch && ncm=1
+  shopt -u nocasematch
+  t="${t//\\\\/$x1}"
+  for c in {a..z} {A..Z} {0..9} . _ / : '~' = , + @ % '*' '?' '#' -; do
+    t="${t//"\\$c"/"$c"}"
+  done
+  bsout="${t//$x1/$bs}"
+  ((ncm)) && shopt -s nocasematch
+  return 0
 }
 reads_cred_file() {
   # The command as the shell reads it (real, above, with the line breaks that end a command as ;), so
@@ -976,6 +995,16 @@ reads_cred_file() {
   # and the same tests run on that text too (B36). A command with no quote is tested once.
   local -a texts=("$cmd")
   [[ $cmd == *[\"\']* ]] && texts+=("${cmd//[\"\']/}")
+  # B44: in Bash an unquoted backslash that escapes an ordinary character is removed by the shell, so each text is read again with
+  # those removed (c\at is cat). PowerShell's escape is the backtick (B30), so a PowerShell command's text is read as it is; a
+  # script that a POSIX shell runs inside it (vpx, set in the wrapper reading) is Bash text.
+  if [[ ( $tool != PowerShell || ${vpx[vi]:-0} == 1 ) && $cmd == *\\* ]]; then
+    local nt=${#texts[@]} k
+    for ((k = 0; k < nt; k++)); do
+      bs_unescape "${texts[k]}"
+      [[ $bsout == "${texts[k]}" ]] || texts+=("$bsout")
+    done
+  fi
   local t rest args
   for t in "${texts[@]}"; do
     rest="$t"
@@ -1111,6 +1140,7 @@ if [[ $bare =~ $wrap_gate ]]; then
       ((${#views[@]} < 64)) || block "$MSG_VIEWS"
       jesc "${wscripts[wk]}"; vdep[${#views[@]}]=$((${vdep[vi]:-0} + 1))
       vcov[${#views[@]}]=$((${vcov[vi]:-0} | ${wscov[wk]:-0}))   # bounded by a timeout above it, or by its own (B42)
+      vpx[${#views[@]}]=${wsposix[wk]:-0}                       # a script a POSIX shell runs is Bash text (B44)
       views+=("$je")
     done
   fi
@@ -1265,7 +1295,7 @@ if ((isgit)); then
   for ((vn = 0; vn < ${#subc[@]}; vn++)); do
     ((${#views[@]} < 64)) || block "the command has more command substitutions than the guard reads in time"
     c="${subc[vn]}"; c="${c#"${c%%[![:space:]]*}"}"; c="${c%"${c##*[![:space:];]}"}"
-    vdep[${#views[@]}]=${vdep[vi]:-0}; vcov[${#views[@]}]=${vcov[vi]:-0}; views+=("$c")
+    vdep[${#views[@]}]=${vdep[vi]:-0}; vcov[${#views[@]}]=${vcov[vi]:-0}; vpx[${#views[@]}]=${vpx[vi]:-0}; views+=("$c")
   done
   # B37: a variable left in a git command's words, or in a body a shell runs, is judged where it stands (var_judge). B38: the
   # command's own words are also read for their configuration keys and program flags (cfg_segment), never a heredoc body. That

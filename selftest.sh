@@ -43,6 +43,8 @@
 #      The common file readers (grep, sed, awk, sort, base64, xxd and the rest) are blocked on a credential file, a
 #      reader or a name split by quotes is read as the shell runs it, and [IO.File]::OpenText, OpenRead and Open are
 #      readers too; a pattern is an argument as well, so grep "\.env" is blocked (B36).
+#      In Bash a backslash that escapes an ordinary character is removed as the shell removes it, so c\at .env.local and
+#      .en\v.local are blocked as cat is; Windows paths, the templates and PowerShell's backslash (not an escape) pass (B44).
 #      A Bash comment that ends in a backslash holds no continuation (B31): the line after it is a command of its
 #      own, and a continued command after such a comment is still read. The hang check reads a heredoc header
 #      joined to its delimiter line (B29). A PowerShell comment that ends in a backtick is read the same way (B35).
@@ -1083,6 +1085,54 @@ else
     err "the guard hook misses a common file reader, a reader or a name split by quotes, or an IO.File Open method of a credential file, or blocks an ordinary read (B36):"
     printf '%s\n' "${git_fail#$'\n'}"
   else echo "ok: the guard hook blocks grep, sed, awk, sort, base64, xxd and the other common readers, a reader or name split by quotes, and [IO.File]::OpenText, OpenRead and Open of a credential file, and passes the same readers of templates and ordinary files (B36)"; fi
+
+  # A backslash that escapes an ordinary character in a Bash command is removed by the shell (B44): c\at is cat, and .en\v.local
+  # is .env.local, so the reader and the name are read as the shell runs them. An escaped backslash (\\) is one backslash, and a
+  # backslash before a space stays, as the shell keeps the name one word. Windows paths and the templates pass, and PowerShell's
+  # escape is the backtick (B30), so a backslash in a PowerShell payload is a path separator, not an escape.
+  git_fail=""
+  if [ -f .claude/hooks/guard-commands.sh ]; then
+    for cmd in \
+        'c\at .env.local' \
+        'he\ad .env' \
+        'cat .en\v.local' \
+        'cat .env\.local' \
+        'cat .e\nv.local' \
+        'c\a\t .env.local' \
+        'ca\t .en\v.local' \
+        'sed -n p .en\v.local' \
+        'C\AT .env.local' \
+        'c\at "config/.en\v.local"' \
+        'cat ~/.s\sh/id_rsa' \
+        'cat C:\Users\V\.env' \
+        'cat .\pem'; do
+      guard 2 "$cmd"
+    done
+    for cmd in \
+        'c\\at .env.local' \
+        'cat .en\\v.local' \
+        'cat .en\v.example' \
+        'cat .en\v.sample' \
+        'cat .env\ .example' \
+        'c\at README.md' \
+        'cat C:\Users\V\README.md' \
+        'cat C:\Users\V\docs\index.md' \
+        'cat C:\repo\.env.example' \
+        'git commit -m "docs: c\at notes"'; do
+      guard 0 "$cmd"
+    done
+    guard 0 'c\at .env.local' PowerShell
+    guard 0 "bash -c 'c\at README.md'" PowerShell
+    guard 0 "powershell -c \"c\at .env.local\"" PowerShell
+    guard 2 "bash -c 'c\at .env.local'" PowerShell
+    guard 2 'bash -c "cat .en\v.local"' PowerShell
+    guard 2 'type C:\x\.env' PowerShell
+  fi
+  guard_run
+  if [ -n "$git_fail" ]; then
+    err "the guard hook misses a backslash that escapes a character in a Bash credential read, or blocks an ordinary read or a PowerShell backslash (B44):"
+    printf '%s\n' "${git_fail#$'\n'}"
+  else echo "ok: the guard hook blocks a Bash credential read whose reader or name has a backslash that escapes a character (c\\at, .en\\v.local), and passes the templates, Windows paths and a PowerShell backslash (B44)"; fi
 
   # A command substitution in a git command's words (B32): what it prints can be a flag, and the text it runs is a command
   # the guard can't see. The repro (git push $(echo --force) and its backtick form) is blocked as the plain flag is, in Bash
