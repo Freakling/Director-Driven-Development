@@ -1194,7 +1194,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Found in: B49, B50
 - Brief: -
 
-### B60 · PowerShell's `Invoke-Expression` or `iex` with a variable passes the guard (A01:2025 Broken Access Control) · todo · XS · agent · med
+### B60 · PowerShell's `Invoke-Expression` or `iex` with a variable passes the guard (A01:2025 Broken Access Control) · done 2026-11-03 · XS · agent · med
 - Touches: .claude/hooks/guard-commands.sh, selftest.sh (the guard is framework-owned: T276, T277 and T278 carry the fix)
 - Repro: 1. Feed the guard hook a PowerShell payload with `$x = 'git push --force'; iex $x`, `Invoke-Expression $x` or `iex "$x"`. 2. Expected: blocked, as `eval $CMD` is since B45, or read through the resolved assignment. Actual: exit 0: no rule reads Invoke-Expression; the first form was blocked before B55 only because the assignment was read as a command name.
 - Found in: B55
@@ -1314,14 +1314,14 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 
 ### B61 · A PowerShell pipeline from a variable, an `if` or `foreach` inside `-Command`, or a case-sensitive operator is blocked · todo · XS · agent · low
 - Touches: .claude/hooks/guard-commands.sh, selftest.sh (the guard is framework-owned: an item for each framework once it's built)
-- Repro: 1. Feed the guard hook a PowerShell payload with `$files = Get-ChildItem; $files | Measure-Object`, `$x = "$(git status)"; $x`, or `$x -ceq 1`; or `powershell -Command 'if ($x) { Get-Date }'` or a `foreach ($f in $files)` script. 2. Expected: passes: none runs a command named by a variable. Actual: exit 2: the assignment test matches any `$name =` in the command, a segment starts at `(`, and B37's `-c` rule reads `-ceq` and `-cgt`.
-- Found in: B55
+- Repro: 1. Feed the guard hook a PowerShell payload with `$files = Get-ChildItem; $files | Measure-Object`, `$x = "$(git status)"; $x`, or `$x -ceq 1`; `powershell -Command 'if ($x) { Get-Date }'` or a `foreach ($f in $files)` script; or `powershell -ExecutionPolicy Bypass -File` with a path holding `$`. 2. Expected: passes: none runs a command named by a variable. Actual: exit 2: the assignment test matches any `$name =` in the command, a segment starts at `(`, B37's `-c` rule reads `-ceq` and `-cgt`, and the value of `-ExecutionPolicy` is read as the start of a `-Command` script.
+- Found in: B55, B60
 - Brief: -
 
 ### B62 · A PowerShell call operator on a variable, or a wrapper inside a non-git command's substitution, passes the guard (A01:2025 Broken Access Control) · todo · XS · agent · med
 - Touches: .claude/hooks/guard-commands.sh, selftest.sh (the guard is framework-owned: an item for each framework once it's built)
-- Repro: 1. Feed the guard hook a PowerShell payload with `& ($args[0]) push --force`, `& $cmd` or `. $script` (unresolved); or `echo "$(powershell -Command '& $args push --force')"`. 2. Expected: blocked, or blocked with a message that the guard can't judge what the variable runs. Actual: exit 0: a segment ends at `)`, B45 blocks a call only with a subcommand, a destructive flag, -c or an assignment, and a non-git command's substitution gets only the hang and read rules.
-- Found in: B55
+- Repro: 1. Feed the guard hook a PowerShell payload with `& ($args[0]) push --force`, `& $cmd` or `. $script` (unresolved); `echo "$(powershell -Command '& $args push --force')"`; or `$sb = [scriptblock]::Create('git push --force')` then `$sb.Invoke()`, or `$ExecutionContext.InvokeCommand.NewScriptBlock('...')`. 2. Expected: blocked, or blocked with a message that the guard can't judge what the variable runs. Actual: exit 0: a segment ends at `)`, B45 blocks a call only with a subcommand, a destructive flag, -c or an assignment, a non-git command's substitution gets only the hang and read rules, and a script block's literal isn't read as a script, since the `(` splits the words.
+- Found in: B55, B60
 - Brief: -
 
 ### T103 · /ui-design tells the director how to use Excalidraw · done 2026-10-20 · S · agent

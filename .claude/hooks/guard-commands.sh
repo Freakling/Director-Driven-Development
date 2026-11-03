@@ -54,6 +54,10 @@
 # A PowerShell assignment ($x = 1, $x += 1, $env:X = 'y'), a constant ($true, $false, $null) or an automatic value ($_, $args) that
 # no call operator (& or .) runs is no command name, and a Bash NAME+=value is an assignment prefix (B55).
 #
+# PowerShell's Invoke-Expression (iex) runs its one string argument as a script, as eval does (B60). That argument is read as a
+# script of its own, and a variable the command assigns once to a plain literal before the call is read as its value. A pipeline
+# into it, no argument, or an expression or a second argument the guard can't read is blocked. See "Invoke-Expression" below.
+#
 # A git -c key, or --config-env, that names a program git runs (an alias that starts with !, core.pager, core.sshCommand,
 # diff.external, a credential helper) runs a command of the caller's choice, so the keys are an allow list: only the keys that
 # run nothing pass, and a key a variable holds is blocked (B38). The flags that name a program for a remote (--upload-pack,
@@ -815,6 +819,7 @@ x6=$'\x0e'; dl='$'
 outer_re='\$[A-Za-z_{@*#?!0-9^-]'
 MSG_SHSCRIPT="a shell's script, eval's argument or PowerShell's -Command holds a variable that the calling shell expands, so the guard can't read what runs: write the script out"
 MSG_SHPATH="a bash script path under tools/ holds a variable, which can add a .. the guard can't see: write the path out"
+MSG_IEX="Invoke-Expression runs a script the guard can't read unless it's one string argument: write the script out as one string, not as pipeline input, an expression or a second argument"
 
 # jesc <text>: sets je to the text as the inside of a JSON string, the form a view is read in.
 jesc() {
@@ -958,15 +963,151 @@ tcov_before() {
   return 1
 }
 
+# --- Invoke-Expression (B60) ---------------------------------------------------------------------
+# PowerShell's Invoke-Expression, and its alias iex, runs its one string argument as a script in the caller's scope, as eval runs
+# its argument. That argument is read as a script of its own (PowerShell text, wps), and a $name in it is resolved when the view's
+# text sets the name exactly once, with a plain quoted literal, in a command that runs before the call (pt_n, pt_v, straight-line
+# code only: a branch may skip the assignment). Anything else that holds a $name the guard can't resolve is blocked by wrap_push,
+# as B45 blocks a shell's script. A pipeline into the call, no argument, or an argument that isn't one string (a concatenation, a
+# second argument, a splat, or a double-quoted $( the caller expands first) is blocked (MSG_IEX).
+# psb_ok is 0 when the text can set a variable the table can't see: a Set-Variable or its kin, [ref], a dot-source, a module or a
+# script file (ps_unsafe_re, which may set a global), or a branch or a chain (braces, parentheses, && and ||). A pipeline is no
+# branch, but the assignment in one isn't recorded (psb_record). iex glued to a quote (iex'x') is one command name, as PowerShell reads it.
+iex_gate='(^|[^[:alnum:]_-])(iex|invoke-expression)([[:space:];&|()<>]|$)'
+brace_pat='[{}]'
+ps_unsafe_re='(^|[^[:alnum:]_-])(set-variable|sv|new-variable|nv|get-variable|gv|set-item|si|set-content|sc|clear-variable|remove-variable|rv|psvariable|sessionstate|import-module|ipmo|using|variable:)([^[:alnum:]_-]|$)|\[ref\]|\.psm?1([^[:alnum:]_-]|$)|(^|[;[:space:]])\.[[:space:]]'
+psb_asg_re='\$\{?(global:|script:|local:|private:)?([A-Za-z_][A-Za-z0-9_]*)\}?(\[[^]]*\])?[[:space:]]*(\+|-|\*|/|%|\?\?)?=([^=]|$)'
+
+# psb_lit <source>: 0 when the source is one plain quoted literal, 'text' or "text", with no $, backtick or quote in its text. psb_l
+# is that text.
+psb_lit() {
+  local t="$1" q="${1:0:1}"
+  { [[ $q == "'" || $q == '"' ]] && ((${#t} >= 2)) && [[ ${t: -1} == "$q" ]]; } || return 1
+  psb_l="${t:1:${#t}-2}"
+  case $psb_l in *"'"* | *'"'* | *'$'* | *'`'*) return 1 ;; esac
+  return 0
+}
+
+# psb_prep: sets psb_ok and psb_asg (the lowercased name of each assignment in the view's text, as psb_asg_re finds them, so a name
+# set twice appears twice). Run once per view, when an Invoke-Expression needs them.
+psb_prep() {
+  local rest="$psb_text" ncm=0
+  psb_prepped=1; psb_ok=1; psb_asg=()
+  case $psb_text in *'{'* | *'}'* | *'('* | *')'* | *'&&'* | *'||'*) psb_ok=0 ;; esac
+  shopt -q nocasematch && ncm=1
+  shopt -s nocasematch
+  [[ $psb_text =~ $ps_unsafe_re ]] && psb_ok=0
+  while [[ $rest =~ $psb_asg_re ]]; do
+    psb_asg+=("${BASH_REMATCH[2],,}")
+    rest="${rest#*"${BASH_REMATCH[0]}"}"
+  done
+  ((ncm)) || shopt -u nocasematch
+  return 0
+}
+
+# psb_value <name>: sets psb_v to the value the name holds at this point, and returns 0, when the view's text assigns it exactly once,
+# with a plain literal, in a command already read (pt_n, pt_v). Otherwise it returns 1.
+psb_value() {
+  local nm="${1,,}" a c=0 k found=-1
+  ((psb_prepped)) || psb_prep
+  ((psb_ok)) || return 1
+  for a in "${psb_asg[@]}"; do [[ $a == "$nm" ]] && c=$((c + 1)); done
+  ((c == 1)) || return 1
+  for ((k = 0; k < ${#pt_n[@]}; k++)); do [[ ${pt_n[k]} == "$nm" ]] && found=$k; done
+  ((found >= 0)) || return 1
+  psb_v="${pt_v[found]}"
+  return 0
+}
+
+# psb_sub <text>: sets psb_s to the text with each $name that psb_value resolves replaced by its value. Any other $ stays, and
+# wrap_push blocks a script that still holds one (B45).
+psb_sub() {
+  local s="$1" nm orig out="" ok
+  while [[ $s == *'$'* ]]; do
+    out+="${s%%\$*}"; s="${s#*\$}"
+    if [[ $s =~ ^\{([A-Za-z_][A-Za-z0-9_]*)\} ]]; then orig="${BASH_REMATCH[0]}"; nm="${BASH_REMATCH[1]}"
+    elif [[ $s =~ ^([A-Za-z_][A-Za-z0-9_]*) ]]; then orig="${BASH_REMATCH[1]}"; nm="$orig"
+    else out+='$'; continue; fi
+    # A reference that a member, an index or an operator follows ($x[0], $x.Substring(0), "$x"-f) is part of an expression, not the
+    # value, so it stays and is blocked.
+    ok=0
+    case ${s:${#orig}:1} in
+      '[' | '.' | ':' | '-' | '+' | '*' | '/' | '%' | '?' | '(' | '{' | '&' | '=' | '!' | '<' | '>') ;;
+      *) psb_value "$nm" && ok=1 ;;
+    esac
+    if ((ok)); then out+="$psb_v"; else out+="\$$orig"; fi
+    s="${s:${#orig}}"
+  done
+  psb_s="$out$s"
+}
+
+# psb_record: a PowerShell command that is one plain assignment, $x = 'text' or $x='text', is recorded in pt_n and pt_v, so the
+# Invoke-Expressions after it in the view can read the value. Any other command records nothing.
+psb_record() {
+  local n=${#wcmd[@]} nm
+  # A pipeline on either side of the assignment makes its value the pipeline's output, not the literal, so it isn't recorded.
+  if ((wpipe)) || [[ $wsep == '|' ]]; then return 0; fi
+  if ((n == 3)) && [[ ${wsrc[0]} =~ ^\$([A-Za-z_][A-Za-z0-9_]*)$ && ${wsrc[1]} == '=' ]] && psb_lit "${wsrc[2]}"; then
+    nm="${BASH_REMATCH[1]}"
+  elif ((n == 1)) && [[ ${wsrc[0]} =~ ^\$([A-Za-z_][A-Za-z0-9_]*)=(.*)$ ]]; then
+    nm="${BASH_REMATCH[1]}"
+    psb_lit "${BASH_REMATCH[2]}" || return 0
+  else return 0; fi
+  pt_n+=("${nm,,}"); pt_v+=("$psb_l")
+  return 0
+}
+
+# ps_iex <m>: the script of the Invoke-Expression or iex at word <m> of wcmd, into isc: its one string argument, with the variables
+# psb_sub resolves. A -Command word (or -Command:value) is its parameter name, and a common parameter (-Verbose) is no argument. Any
+# argument count but one, an unquoted @ (a splat or an array), and a double-quoted $( or @( (the caller expands it first) block (MSG_IEX).
+ps_iex() {
+  local m=$1 j n=${#wcmd[@]} w a=() asrc=() ncm=0
+  shopt -q nocasematch && ncm=1
+  shopt -s nocasematch
+  for ((j = m + 1; j < n; j++)); do
+    w="${wcmd[j]}"
+    # A quoted word is always a value, as PowerShell reads it; a bare -word is a parameter, and a bare brace ends the block.
+    if [[ ${wsrc[j]} != [\'\"]* && $w =~ ^-(c|co|com|comm|comma|comman|command)(:(.*))?$ ]]; then
+      if [[ -n ${BASH_REMATCH[3]} ]]; then a+=("${BASH_REMATCH[3]}"); asrc+=("${wsrc[j]}"); fi
+    elif [[ ${wsrc[j]} == [\'\"]* || ( $w != -* && $w != '{' && $w != '}' ) ]]; then
+      a+=("$w"); asrc+=("${wsrc[j]}")
+    fi
+  done
+  ((ncm)) || shopt -u nocasematch
+  ((${#a[@]} == 1)) || block "$MSG_IEX"
+  local v="${a[0]}" trail
+  # A brace glued after the argument's closing quote ends a script block (ForEach-Object {iex 'x'}), so it isn't the script's text.
+  trail="${asrc[0]##*[\'\"]}"
+  if [[ -n $trail && -z ${trail//$brace_pat/} ]]; then v="${v%"$trail"}"; fi
+  # An unquoted @ is a splat or an array, and a double-quoted $( or @( is expanded by the caller: the value isn't the text the guard reads.
+  if [[ ${asrc[0]} != [\'\"]* && $v == @* ]]; then block "$MSG_IEX"; fi
+  if [[ $v == *'$('* || $v == *'@('* ]] && [[ ${asrc[0]} != "'"* ]]; then block "$MSG_IEX"; fi
+  psb_sub "$v"
+  isc="$psb_s"
+  return 0
+}
+
 # wrap_cmd: the words of one command (wcmd). A word that names a shell, eval, PowerShell or cmd takes the script its
 # arguments give it. Returns 1 for PowerShell's -EncodedCommand, whose text is hidden.
 wrap_cmd() {
-  local m j n=${#wcmd[@]} w base p sc pr
+  local m j n=${#wcmd[@]} w base p sc pr iw
+  ((${vps[vi]:-0})) && psb_record
   for ((m = 0; m < n; m++)); do
     w="${wcmd[m]}"; base="${w##*/}"; base="${base##*\\}"
     wtc=0; tcov_before "$m" && wtc=1
     wpx=0; [[ $base =~ ^((ba|z|da|k)?sh)(\.exe)?$ || $base == eval ]] && wpx=1
     wps=0; [[ $base =~ ^(powershell|pwsh)(\.exe)?$ ]] && wps=1
+    # B60: Invoke-Expression or iex (PowerShell names are case-insensitive, and a module may name them) in PowerShell text is a
+    # wrapper when it starts a command, or follows a { (a script block, glued or not); an iex that is only an argument is text.
+    # Its input is its argument: a pipeline into it (the command after a |) is blocked, as is any argument count but one (ps_iex).
+    iw="${w##*\\}"; iw="${iw##*/}"; iw="${iw##*$brace_pat}"; iw="${iw%%$brace_pat*}"; iw="${iw,,}"
+    if ((${vps[vi]:-0})) && [[ $iw == iex || $iw == invoke-expression ]] \
+        && { ((m == 0)) || [[ $w == *'{'* || ${wcmd[m - 1]} == *'{' ]]; }; then
+      ((m == 0 && wpipe)) && block "$MSG_IEX"
+      ps_iex "$m"
+      wtc=0; tcov_before "$m" && wtc=1; wpx=0; wps=1
+      wrap_push "$isc"
+    fi
     # B48: a shell or PowerShell name right after a word that only prints its words (echo, printf, Write-Output, Write-Host, write) is
     # text, as in echo PowerShell 'x'. Anywhere else it may run a script, so ssh host pwsh -c 'x', find -exec sh -c 'x' and
     # Start-Process powershell -ArgumentList 'x' are read as before.
@@ -1008,7 +1149,7 @@ wrap_cmd() {
 # wrap_read <text>: the commands of the text, each one's words read as the shell reads them. wscripts gets the scripts the
 # shells run. Returns 1 when a quote or a substitution doesn't close, or a PowerShell command is encoded.
 wrap_read() {
-  local s="$1" L=${#1} i=0 c k wv="" wcmd=()
+  local s="$1" L=${#1} i=0 c k i0 wv="" wcmd=() wsrc=() wpipe=0 wsep=""
   # The runs of ordinary characters (no quote, escape, substitution or separator) a word or a double-quoted string takes whole.
   if [[ $tool == PowerShell ]]; then
     sesc='`'; wrun_word='^[^[:space:];&|()<>$`'"'"'"]+'; wrun_dq='^[^"`$]+'
@@ -1016,16 +1157,18 @@ wrap_read() {
     sesc='\'; wrun_word='^[^[:space:];&|()<>$`'"'"'"\\]+'; wrun_dq='^[^"\\$`]+'
   fi
   wscripts=(); wscov=(); wsposix=(); wsps=()
+  # B60: the table of a PowerShell view's plain assignments (pt_n, pt_v), and the view's text for the checks psb_prep makes.
+  pt_n=(); pt_v=(); psb_prepped=0; psb_text="$s"
   while ((i < L)); do
     c="${s:i:1}"
     case $c in
       ' ' | $'\t') ((i++)) ;;
-      "$nl" | ';' | '&' | '|' | '(' | ')') wrap_cmd || return 1; wcmd=(); ((i++)) ;;
+      "$nl" | ';' | '&' | '|' | '(' | ')') wsep="$c"; wrap_cmd || return 1; wpipe=0; [[ $c == '|' ]] && wpipe=1; wcmd=(); wsrc=(); ((i++)) ;;
       '#') k="${s:i}"; k="${k%%"$nl"*}"; ((i += ${#k})) ;;
-      *) wrap_word || return 1; wcmd+=("$wv") ;;
+      *) i0=$i; wrap_word || return 1; wcmd+=("$wv"); wsrc+=("${s:i0:i-i0}") ;;   # wsrc: each word as written (B60)
     esac
   done
-  wrap_cmd
+  wsep=""; wrap_cmd
 }
 
 # A comment starts at a # that begins a word: after a blank, a line start or a metacharacter, as Bash reads it. PowerShell's
@@ -1494,7 +1637,9 @@ wscripts=()
 shl="${raw//\\\\/$x1}"; shl="${shl//\\\"/\"}"; shl="${shl//\\n/$nl}"; shl="${shl//\\t/ }"; shl="${shl//\\r/}"; shl="${shl//$x1/$bs}"
 shopt -s nocasematch
 bare="${shl//[\"\'\\]/}"
-if [[ $bare =~ $wrap_gate ]]; then
+# B60: a PowerShell view that names iex or Invoke-Expression is read too (no Bash view does: iex isn't a Bash command). shl keeps
+# the backslash of a module-qualified name (Microsoft.PowerShell.Utility\Invoke-Expression), which bare drops.
+if [[ $bare =~ $wrap_gate ]] || { ((${vps[vi]:-0})) && { [[ $bare =~ $iex_gate ]] || [[ $shl =~ $iex_gate ]]; }; }; then
   # The heredoc bodies gtext leaves out (below) are left out here too, so a message that names a shell isn't read as a script.
   wtext=""; wdelim=""; wq=""; wbody=""
   while IFS= read -r line || [ -n "$line" ]; do
@@ -1511,7 +1656,7 @@ if [[ $bare =~ $wrap_gate ]]; then
   done <<<"$shl"
   wtext+="$wbody"
   bare="${wtext//[\"\'\\]/}"
-  if [[ $bare =~ $wrap_gate ]]; then
+  if [[ $bare =~ $wrap_gate ]] || { ((${vps[vi]:-0})) && { [[ $bare =~ $iex_gate ]] || [[ $wtext =~ $iex_gate ]]; }; }; then
     wrap_read "$wtext" || block "$MSG_WRAP"
     for ((wk = 0; wk < ${#wscripts[@]}; wk++)); do
       ((${vdep[vi]:-0} < WRAP_MAX)) || block "$MSG_DEEP"

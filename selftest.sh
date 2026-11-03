@@ -87,6 +87,9 @@
 #      blocked, and so is a bash script path under tools/ with a variable in it (B45).
 #      A PowerShell assignment, a constant or automatic value that no call operator runs, and a Bash NAME+=value are no command
 #      name, so they pass; the call operators and the prefixed variables that run git are still blocked (B55).
+#      PowerShell's Invoke-Expression and iex run their one string argument as a script: a literal is read as one, and a
+#      variable the command assigns once to a plain literal before the call is read as its value. A pipeline into it, no
+#      argument, an argument that isn't one string, and a variable that can't be resolved are blocked (B60).
 #      A git command name is matched in any case, so GIT and Git are git (PowerShell finds a command case-insensitively, B46);
 #      git's subcommands and flags stay case-sensitive. A shell's name in a bash script path under tools/ is read the same way,
 #      quotes removed and in any case, so "bash", 'sh' and BASH are bash and sh, and a quoted or split path is read too (B47).
@@ -1989,6 +1992,90 @@ EOF
     err "the guard hook reads an assignment or a constant as a variable command name, or passes a call operator or a NAME+=value prefix that runs a git command (B55):"
     printf '%s\n' "${git_fail#$'\n'}"
   else echo "ok: the guard hook passes a PowerShell assignment, a constant and an automatic value that runs nothing, and a Bash NAME+=value assignment, and blocks a call operator or a prefixed variable that runs git (B55)"; fi
+
+  # PowerShell's Invoke-Expression and iex (B60) run their one string argument as a script, as eval does. A literal argument is read as
+  # a script of its own, and a variable the command assigns once to a plain literal before the call is read as its value. A pipeline into
+  # the call, no argument, an argument that isn't one string (a concatenation, a second argument, a double-quoted $( the caller expands),
+  # and a variable that can't be resolved (one set another way, in a branch, or after the call) are blocked. The benign forms pass.
+  git_fail=""
+  if [ -f .claude/hooks/guard-commands.sh ]; then
+    for cmd in \
+        "iex 'git push --force'" \
+        "Invoke-Expression 'git push --force'" \
+        "Invoke-Expression -Command 'git push --force'" \
+        "iex -Command:'git push --force'" \
+        "IEX \"git push --force\"" \
+        "iex 'git push --force' -Verbose" \
+        "iex -Verbose 'git push --force'" \
+        "iex '-Verbose git push --force'" \
+        "Microsoft.PowerShell.Utility\\Invoke-Expression 'git push --force'" \
+        "& iex 'git push --force'" \
+        "ForEach-Object { iex 'git push --force' }" \
+        "ForEach-Object {iex 'git push --force'}" \
+        "\$x = 'git push --force'; iex \$x" \
+        "\$x='git push --force'; iex \$x" \
+        "\$x = 'git push --force'; Invoke-Expression \$x" \
+        "\$x = 'git push --force'; iex \"\$x\"" \
+        "\$x = \"git push --force\"; iex \$x" \
+        "\$x = 'git push --force'; iex \${x}" \
+        "\$x = 'git push --force'; iex \$x -Verbose" \
+        "\$x = 'git push --force'; iex \$x | Out-Null" \
+        "\$x = 'git'; iex \"\$x push --force\"" \
+        "iex \$x" \
+        "iex \"\$x\"" \
+        "iex" \
+        "iex \$x; \$x = 'git push --force'" \
+        "\$x = 'git push --force' | Out-Null; iex \$x" \
+        "\$x = 'ls'; iex \"\$x\" \"--force\"" \
+        "\$x = 'ls'; iex \"\$x\"-f ''" \
+        "\$x = 'ls'; iex \$x \$y" \
+        "\$x = 'ls'; Set-Variable x 'git push --force'; iex \$x" \
+        "\$x = 'ls'; . ./evil.ps1; iex \$x" \
+        "\$x = 'ls'; Import-Module ./m.psm1; iex \$x" \
+        "if (\$true) { \$x = 'ls' }; iex \$x" \
+        "\$x = 'git push --force'; iex \$x[0]" \
+        "\$x = 'ls'; \$x[0] = 'git push --force'; iex \$x" \
+        "\$x = 'ls'; \$x += 'git push --force'; iex \$x" \
+        "\$y = '\$x = ''git push --force'''; iex \$y; iex \$x" \
+        "\$x = 'ls'; \$y = '\$x = ''git push --force'''; iex \$y; iex \$x" \
+        "\$x = 'git push --force'; \$y = \$x; iex \$y" \
+        "iex \"\$(Get-Content x.txt)\"" \
+        "iex @args" \
+        "\$x = 'Get-Date'; iex @x" \
+        "iex ('git push' + ' --force')" \
+        "iex 'git pu' + 'sh --force'" \
+        "iex \"git push\" + \" --force\"" \
+        "'git push --force' | iex" \
+        "Get-Content x.ps1 | iex"; do
+      guard 2 "$cmd" PowerShell
+    done
+    guard 2 "powershell -Command \"iex 'git push --force'\"" PowerShell
+    for cmd in \
+        "\$x = 'Get-Date'; iex \$x" \
+        "\$x = 'Get-Date'; iex \"\$x\"" \
+        "\$x = 'git status'; iex \$x" \
+        "\$x = 'Get-Date'; \$y = 'git status'; iex \$x; iex \$y" \
+        "\$x = 'git push --force'" \
+        "\$x = 'git push --force'; iex 'Get-Date'" \
+        "iex 'Get-Date'" \
+        "iex 'Get-Date' -Verbose" \
+        "Invoke-Expression -Command 'Get-Date' -Verbose" \
+        "iex 'Write-Output \$x'" \
+        "iex '\$x = 1'" \
+        "iex \$true" \
+        "iex 'Get-Date' | Out-Null" \
+        "ForEach-Object { iex 'Get-Date' }" \
+        "Get-Help Invoke-Expression" \
+        "Get-Command iex" \
+        "Write-Output 'iex git push --force'"; do
+      guard 0 "$cmd" PowerShell
+    done
+  fi
+  guard_run
+  if [ -n "$git_fail" ]; then
+    err "the guard hook doesn't read an Invoke-Expression or iex script as a command, or passes one it can't read (B60):"
+    printf '%s\n' "${git_fail#$'\n'}"
+  else echo "ok: the guard hook reads the string argument of Invoke-Expression and iex as a script, resolves a variable the command assigns once to a plain literal, blocks a pipeline into it, an argument that isn't one string and an unresolved variable, and passes the benign forms (B60)"; fi
 
   # A git command name in another case (B46): PowerShell finds a command case-insensitively, and Windows finds GIT too, so GIT and
   # Git are git in every git rule. Only the name is matched so: git's subcommands and flags stay case-sensitive, as git reads them.
