@@ -1333,10 +1333,12 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Brief: -
 
 ### T285 · App-Director: the guard takes SaaSAllTheThings' and Godot-Director's port fixes · in-progress 2026-11-03 · M · agent
+- PRs: App-Director #48 (open)
 - Depends on: T276, T277, T278
 - Touches: work/App-Director: framework/.claude/hooks/guard-commands.sh, selftest.sh
 - Done when: App-Director's guard has the three fixes T277 made while porting, with their cases: a path-qualified or `.exe` git (`/usr/bin/git push --force`, `git.exe push --force`) is git; an empty-heredoc probe reads its body line by line, so a heredoc of blank lines isn't read as empty and `/usr/bin/python3` counts as `python3`; and in the PowerShell tool a backslash at a line's end is a path separator, not a continuation, so `# c\` followed by `gh auth token` is blocked; and the loop reader ends a loop at the `done` that closes a command (T278), so `until [ -f done ]; do sleep 5; done` is a wait loop; and the fixes T278's review brought to Godot-Director's guard: a wait loop with a nested loop is read to its own `done` (do and done counted), a pause with a fraction (`sleep 600.5`) is a pause, the view flags (vdep, vcov, vpx, vhang) start empty so the environment can't set them, and the per-character walk skips the bodies nothing runs, PowerShell here-strings included, so a 30 KB heredoc or here-string of `$Node.method()` lines is judged well within the hook's 10 s limit (SaaSAllTheThings' hook took 41 s on the here-string), with a timed case for each shell; and the credential-print rules read the text without message bodies, so a message may name `gh auth token`; the selftest passes (check) · following AGENTS.md › Project rules for framework work
 - Note: found in T277 and T278; SaaSAllTheThings' framework hook on its bundle (its T36) has the first three, and Godot-Director's (its T39) the loop reader.
+- Note: built 2026-11-03 as App-Director's T41: the 30 KB heredoc and here-string went from about 27 s to about 2 s, and a path-qualified git is read in the substitution, variable and `-c` readings too. Left open: a backslash-path git (`C:\Git\bin\git.exe push --force`, T290's class) and `sleep 1e3`, which GNU sleep reads as 1000 seconds.
 - Brief: -
 
 ### T286 · SaaSAllTheThings: the Azure delete rule covers the Az PowerShell module · in-progress 2026-11-03 · S · agent
