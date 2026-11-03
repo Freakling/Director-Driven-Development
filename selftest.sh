@@ -42,7 +42,7 @@
 #      is read as PowerShell reads it, and a quoted or path-qualified reader, or a StreamReader, is blocked too (B30).
 #      A Bash comment that ends in a backslash holds no continuation (B31): the line after it is a command of its
 #      own, and a continued command after such a comment is still read. The hang check reads a heredoc header
-#      joined to its delimiter line (B29).
+#      joined to its delimiter line (B29). A PowerShell comment that ends in a backtick is read the same way (B35).
 #      A command substitution in a git command's words, or as its name, is blocked when it can print a flag or run
 #      a command the guard can't read; a quoted value after fixed text, a commit's -m value and a read pass (B32).
 #      A destructive git rule (a force push, a +refspec, reset --hard, clean -f, checkout or switch -f, stash drop,
@@ -906,6 +906,24 @@ else
     err "the guard hook reads a command after a Bash comment that ends in a backslash as hidden, or blocks a benign one (B31, B29):"
     printf '%s\n' "${git_fail#$'\n'}"
   else echo "ok: the guard hook reads the line after a Bash comment that ends in a backslash, and the command continued after it, as Bash does (B31, B29)"; fi
+
+  # A PowerShell comment that ends in a backtick (B35): PowerShell ends the comment at the line break too, so the line after it
+  # is a command of its own, and a continued command after it is read from its own line on, as for a Bash comment (B31). A CRLF
+  # break is the same. A comment that ends in a backtick, followed by a plain command, passes.
+  git_fail=""
+  if [ -f .claude/hooks/guard-commands.sh ]; then
+    for cmd in \
+        $'# note`\ngit commit `\n-F x' \
+        $'# note`\r\ngit commit `\r\n-F x'; do
+      guard 2 "$cmd" PowerShell
+    done
+    guard 0 $'# note`\ngit status' PowerShell
+  fi
+  guard_run
+  if [ -n "$git_fail" ]; then
+    err "the guard hook doesn't read a command after a PowerShell comment that ends in a backtick, or blocks a plain one (B35):"
+    printf '%s\n' "${git_fail#$'\n'}"
+  else echo "ok: the guard hook reads the command after a PowerShell comment that ends in a backtick, and the command continued after it, as PowerShell does (B35)"; fi
 
   # A quoted or path-qualified reader, a backtick inside a word and a StreamReader (B30): the call operator with a
   # quoted name (& 'Get-Content' .env.local), a reader by its path (/bin/cat, cat.exe, the Management module's

@@ -35,43 +35,27 @@ re='"command"[[:space:]]*:[[:space:]]*"(([^"\\]|\\.)*)"'
 [[ $input =~ $re ]] || exit 0
 raw="${BASH_REMATCH[1]}"
 
-# The tool's name (B28): only PowerShell reads a backtick at a line's end as a continuation, so the join
-# below is for it alone. The name is a JSON string, matched as the command is.
+# The tool's name (B28): only PowerShell reads a backtick at a line's end as a continuation, and the readings below
+# depend on it. The name is a JSON string, matched as the command is.
 tre='"tool_name"[[:space:]]*:[[:space:]]*"([^"]*)"'
 tool=""; [[ $input =~ $tre ]] && tool="${BASH_REMATCH[1]}"
 
-# PowerShell (B28): a backtick that ends a line continues it, as a backslash does in Bash (B25). PowerShell's
+# PowerShell (B28, B35): a backtick that ends a line continues it, as a backslash does in Bash (B25). PowerShell's
 # parser agrees when the backtick isn't escaped: an odd run of backticks before the line break joins it, so
 # `` (an escaped backtick) keeps the break, and a backtick followed by spaces doesn't continue. In Bash a
-# backtick is command substitution, so the text stays. The rules read the command as written, then as joined,
-# with ; between the two. Where PowerShell ends a comment at the line break (# note`), the join would glue
-# the next line onto the comment's last word and hide it; the text as written still shows it.
-bt='`'; jcr='\r'; jlf='\n'; x3=$'\x03'
-if [[ $tool == PowerShell ]]; then
-  joined="${raw//"$bt$bt"/$x3}"
-  joined="${joined//"$bt$jcr$jlf"/}"; joined="${joined//"$bt$jcr"/}"; joined="${joined//"$bt$jlf"/}"
-  # A backtick before a letter, digit or name punctuation is an escape that leaves that character (B30): Get-Con`tent
-  # is Get-Content, and .en`v.local names .env.local, so the reader and the name are read as PowerShell reads them. A
-  # backtick before a quote, a $, a space or a separator stays, since it escapes only that character and joins no name.
-  if [[ $joined == *"$bt"* ]]; then
-    for c in {a..z} {A..Z} {0..9} . _ / '\' : '*' '?' '~' % @ + = , '#' -; do
-      joined="${joined//"$bt$c"/"$c"}"
-    done
-  fi
-  joined="${joined%"$bt"}"   # a backtick at the very end escapes nothing, so `git push `echo --force` reads as git push echo --force (B32)
-  joined="${joined//$x3/$bt$bt}"
-  [[ $joined != "$raw" ]] && raw="$raw;$joined"
-fi
+# backtick is command substitution, so the text stays. Its readings are made below with Bash's (B31).
+bt='`'; x3=$'\x03'
 
-# The readings of the command (B31). A backslash at a line's end continues the command in Bash (B25), but a comment
+# The readings of the command (B31, B35). A backslash at a line's end continues the command in Bash (B25), but a comment
 # holds its backslash: Bash ends a comment at the line break, so `# note\` is a comment and the next line is a command
-# of its own. Joining that line onto the comment would hide it. So each rule reads every reading in turn, and no
-# reading joins two lines that Bash keeps apart:
+# of its own. Joining that line onto the comment would hide it. PowerShell's backtick does the same (B28, B35), since it
+# ends its comment at the line break too. So each rule reads every reading in turn, and no reading joins two lines that
+# the shell keeps apart:
 #   as written: every line break kept, so a command after a comment shows on its own line;
-#   as joined: every continuation joined, as Bash reads a command that holds no comment;
+#   as joined: every continuation joined, as the shell reads a command that holds no comment (PowerShell's escapes too);
 #   from each line after one that holds a comment marker and ends in a continuation: joined from that line on, since
 #     the comment may have ended that line (the joined reading glues `git` onto a comment's last word: `# a`, `git`).
-# A # inside a word (a#b) is no comment, so its continuation is joined in the joined reading, as Bash joins it.
+# A # inside a word (a#b) is no comment, so its continuation is joined in the joined reading, as the shell joins it.
 # x1 is a command backslash, x2 an escaped pair (two backslashes) and x4 a continuation's mark before a line break.
 bs='\'; x1=$'\x01'; x2=$'\x02'; x4=$'\x04'; nl=$'\n'
 view_of() {
@@ -87,6 +71,29 @@ view_of() {
   done
   s="${s//$x2/"$jb4"}"; s="${s//$x1/"$jb"}"; s="${s//$nl/"$bsl"n}"
   view="$s"
+}
+
+# ps_clean <view>: sets joined to a joined view as PowerShell reads it (B28, B30): a backtick before a letter, digit or name
+# punctuation is an escape that leaves that character, so Get-Con`tent is Get-Content, and .en`v.local names .env.local. A
+# backtick before a quote, a $, a space or a separator stays, since it escapes only that character and joins no name.
+# A doubled backtick is an escaped one, so it's set aside first.
+ps_clean() {
+  local c t="$1"
+  t="${t//"$bt$bt"/$x3}"
+  if [[ $t == *"$bt"* ]]; then
+    for c in {a..z} {A..Z} {0..9} . _ / '\' : '*' '?' '~' % @ + = , '#' -; do
+      t="${t//"$bt$c"/"$c"}"
+    done
+  fi
+  t="${t%"$bt"}"   # a backtick at the very end escapes nothing, so `git push `echo --force` reads as git push echo --force (B32)
+  joined="${t//$x3/$bt$bt}"
+}
+
+# reading_of <k> <join>: sets view to the reading view_of makes from line k (0 for the whole command), joined when <join>
+# is 1. A joined reading of PowerShell is read with its escapes removed as PowerShell reads them (ps_clean).
+reading_of() {
+  view_of "$1" "$2"
+  if (($2)) && [[ $tool == PowerShell ]]; then ps_clean "$view"; view="$joined"; fi
 }
 
 # --- Substitutions (B32) -------------------------------------------------------------------------
@@ -431,27 +438,35 @@ wrap_read() {
   wrap_cmd
 }
 
-# A comment starts at a # that begins a word: after a blank, a line start or a metacharacter, as Bash reads it.
+# A comment starts at a # that begins a word: after a blank, a line start or a metacharacter, as Bash reads it. PowerShell's
+# comment starts the same way and ends at the line break (B35).
 cmt_re='(^|[[:blank:]|&;()<>])#'
 views=("$raw")
-if [[ $tool != PowerShell ]]; then
+if [[ $tool == PowerShell ]]; then
+  # PowerShell's line breaks are CR LF, CR and LF (B35). A backtick before a line break continues the line unless it's
+  # escaped (``), which keeps the break; each continuation is marked x4 as a Bash backslash is below.
+  pl="${raw//\\\\/$x1}"; pl="${pl//$x1$x1/$x2}"; pl="${pl//\\r\\n/$nl}"; pl="${pl//\\r/$nl}"; pl="${pl//\\n/$nl}"
+  pl="${pl//"$bt$bt"/$x3}"; pl="${pl//"$bt$nl"/$x4$nl}"; pl="${pl//$x3/$bt$bt}"
+else
   pl="${raw//\\\\/$x1}"; pl="${pl//$x1$x1/$x2}"; pl="${pl//$x1\\n/$x4$nl}"; pl="${pl//\\n/$nl}"
-  if [[ $pl == *"$x4"* ]]; then
-    phys=(); rest="$pl"
-    while [[ $rest == *"$nl"* ]]; do phys+=("${rest%%"$nl"*}"); rest="${rest#*"$nl"}"; done
-    phys+=("$rest"); nphys=${#phys[@]}
-    view_of 0 0; views=("$view")
-    view_of 0 1; views+=("$view")
-    for ((k = 1; k < nphys; k++)); do
-      [[ ${phys[k-1]} == *"$x4" && ${phys[k-1]} =~ $cmt_re ]] || continue
-      # Each such line costs a pass of the rules, so a command with very many can't run past the hook's time limit.
-      if ((${#views[@]} >= 64)); then
-        echo "App Director: blocked: the command has more lines that end in a backslash after a comment marker than the guard can read in time. If it's really needed, ask the human to run it." >&2
-        exit 2
-      fi
-      view_of "$k" 1; views+=("$view")
-    done
-  fi
+fi
+# The readings: as written, as joined, and joined from each line after one that holds a comment marker and ends in a
+# continuation (B31). A command with no continuation (and no PowerShell escape to read) has one reading.
+if [[ $tool == PowerShell || $pl == *"$x4"* ]]; then
+  phys=(); rest="$pl"
+  while [[ $rest == *"$nl"* ]]; do phys+=("${rest%%"$nl"*}"); rest="${rest#*"$nl"}"; done
+  phys+=("$rest"); nphys=${#phys[@]}
+  view_of 0 0; views=("$view")
+  reading_of 0 1; [[ $view == "${views[0]}" ]] || views+=("$view")
+  for ((k = 1; k < nphys; k++)); do
+    [[ ${phys[k-1]} == *"$x4" && ${phys[k-1]} =~ $cmt_re ]] || continue
+    # Each such line costs a pass of the rules, so a command with very many can't run past the hook's time limit.
+    if ((${#views[@]} >= 64)); then
+      echo "App Director: blocked: the command has more lines that end in a continuation (a backslash, or a backtick in PowerShell) after a comment marker than the guard can read in time. If it's really needed, ask the human to run it." >&2
+      exit 2
+    fi
+    reading_of "$k" 1; views+=("$view")
+  done
 fi
 
 # Each reading goes through the rules below, one at a time, so a heredoc's state in one reading can't carry
