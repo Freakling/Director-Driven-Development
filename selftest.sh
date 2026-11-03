@@ -34,6 +34,8 @@
 #      The PowerShell tool (B24) is wired the same way: the guard's matcher names it, each Bash deny
 #      rule has a PowerShell twin, the hook blocks the same commands in a PowerShell payload, and the
 #      allow list names no PowerShell command, so PowerShell runs nothing without a prompt.
+#      The hook also blocks the PowerShell readers of a credential file (Get-Content and gc, type,
+#      Select-String and sls, [IO.File]::ReadAll...), in any case, as it blocks cat (B27).
 #   9. The site builds in strict mode, which fails on broken internal links and anchors.
 #  10. The Content-Security-Policy in overrides/main.html allows every inline script the built site
 #      runs (its sha256 is in script-src), and no script runs before the policy's meta tag.
@@ -672,6 +674,59 @@ else
     err "git's file-writing, file-reading and external-command flags, and script paths outside tools/, are not all blocked:"
     printf '%s\n' "${git_fail#$'\n'}"
   else echo "ok: the wildcard rules deny, and the guard hook blocks, git's file-writing, file-reading and external-command flags and script paths outside tools/"; fi
+
+  # The PowerShell readers of credential files (B27): Get-Content and its aliases gc and type, Select-String
+  # and sls, and [IO.File]::ReadAll... block a credential file in any case, as cat does, and so does a reader
+  # inside a -Command or -c string. The same readers of ordinary files pass, and the checks run for the Bash
+  # tool too, since the hook reads every tool's command the same way.
+  git_fail=""
+  if [ -f .claude/hooks/guard-commands.sh ]; then
+    for reader in 'Get-Content' 'gc' 'type' 'GET-CONTENT' 'Select-String -Pattern x' 'sls x' \
+        'Get-Content -Path' 'Get-Content -LiteralPath'; do
+      for target in '.env.local' '.env' '.env*' 'certs/server.pem' '~/.ssh/id_ed25519' \
+          '$HOME\.ssh\id_rsa' '~/.config/gh/hosts.yml' '"$env:APPDATA\GitHub CLI\hosts.yml"'; do
+        guard 2 "$reader $target" PowerShell
+      done
+    done
+    for cmd in \
+        "[IO.File]::ReadAllText('.env.local')" \
+        '[System.IO.File]::ReadAllLines(".env")' \
+        '[io.file]::readallbytes("certs/server.pem")' \
+        '[IO.File]::ReadLines("$HOME\.ssh\id_rsa")' \
+        'Get-Content .env.example; Get-Content .env.local' \
+        'powershell -NoProfile -Command "Get-Content .env.local"' \
+        'powershell -c "gc .env"' \
+        'cmd /c "type .env.local"' \
+        "bash -c 'cat .env.local'" \
+        'bash -c "cat .env.local"' \
+        'cat .env*' \
+        '\cat .env.local' \
+        'echo `cat .env.local`' \
+        'type .env.local' \
+        'gc .env.local'; do
+      guard 2 "$cmd"
+    done
+    for cmd in \
+        'Get-Content README.md' \
+        'gc docs/index.md' \
+        'Get-Content -Path docs/index.md' \
+        'Get-Content -LiteralPath README.md' \
+        'Select-String -Path docs/index.md -Pattern title' \
+        'Get-Content .env.example' \
+        'gc config/.env.sample' \
+        '[IO.File]::ReadAllText("docs/index.md")' \
+        'Get-ChildItem ~/.ssh' \
+        'powershell -NoProfile -Command "Get-Content README.md"' \
+        'type git'; do
+      guard 0 "$cmd" PowerShell
+    done
+    guard 0 'type git'
+    guard 0 'type README.md'
+  fi
+  if [ -n "$git_fail" ]; then
+    err "the guard hook doesn't block every read of a credential file, or blocks a read of an ordinary file (B27):"
+    printf '%s\n' "${git_fail#$'\n'}"
+  else echo "ok: the guard hook blocks the PowerShell and Bash readers of credential files, in any case, and passes the readers of ordinary files and templates"; fi
 
   # The credential stores (B15): the Read tool may not open the gh CLI's token file, git's credentials or
   # ~/.ssh. The .env files with values (B21): .env.local and the other .env.<suffix> files the guard hook
