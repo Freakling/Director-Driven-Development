@@ -43,6 +43,8 @@
 #      A Bash comment that ends in a backslash holds no continuation (B31): the line after it is a command of its
 #      own, and a continued command after such a comment is still read. The hang check reads a heredoc header
 #      joined to its delimiter line (B29).
+#      A command substitution in a git command's words, or as its name, is blocked when it can print a flag or run
+#      a command the guard can't read; a quoted value after fixed text, a commit's -m value and a read pass (B32).
 #   9. The site builds in strict mode, which fails on broken internal links and anchors.
 #  10. The Content-Security-Policy in overrides/main.html allows every inline script the built site
 #      runs (its sha256 is in script-src), and no script runs before the policy's meta tag.
@@ -854,6 +856,80 @@ else
     err "the guard hook misses a quoted or path-qualified reader, a backtick inside a word or a StreamReader of a credential file (B30):"
     printf '%s\n' "${git_fail#$'\n'}"
   else echo "ok: the guard hook blocks a quoted or path-qualified reader, a backtick-escaped word and a StreamReader of a credential file, and passes the same readers of ordinary files (B30)"; fi
+
+  # A command substitution in a git command's words (B32): what it prints can be a flag, and the text it runs is a command
+  # the guard can't see. The repro (git push $(echo --force) and its backtick form) is blocked as the plain flag is, in Bash
+  # and PowerShell, and so is a substitution as the command name, or one that runs a non-reading command. A double-quoted
+  # value that starts with fixed text, a commit's or tag's -m value and a read (git, date, cat, echo, printf) pass, as the
+  # procedures use them. The text of a substitution is judged as a command of its own.
+  git_fail=""
+  if [ -f .claude/hooks/guard-commands.sh ]; then
+    for cmd in \
+        'git push $(echo --force)' \
+        'git push `echo --force`' \
+        'git push "$(echo --force)"' \
+        'git log $(echo --output=/tmp/x)' \
+        'git log "$(echo --output=/tmp/x)"' \
+        'git log "--output=$(echo /tmp/x)"' \
+        'git log "--since=$(rm -rf x)"' \
+        'git log -1 "$(date +%F)"' \
+        'git log "x$(git push --force)"' \
+        'git push $(git push --force)' \
+        'git status && echo $(git push --force)' \
+        'echo "$(git push --force)"' \
+        'git log > >(git push --force)' \
+        '$(echo git) push --force' \
+        'git log $(echo git) push' \
+        'git commit -m x "$(cat x)"' \
+        'git commit -m "$(echo $(rm -rf x))"' \
+        $'git commit -c -m "$(cat <<\'EOF\'\n--file=/tmp/x\nEOF\n)"' \
+        $'git commit -m -m "$(cat <<\'EOF\'\n--file=/tmp/x\nEOF\n)"' \
+        $'git commit -m "$(cat <<EOF\n$(git push --force)\nEOF\n)"' \
+        $'git commit -m "$(cat x; git push --force)"' \
+        $'git log \\\n$(echo --output=/tmp/x)' \
+        'git push "--force"$(echo x)'; do
+      guard 2 "$cmd"
+    done
+    for cmd in \
+        'git push $(echo --force)' \
+        'git push `echo --force`' \
+        'git push "$(echo --force)"' \
+        'git push (echo --force)' \
+        'git push @(echo --force)' \
+        '$(echo git) push --force' \
+        'git log -- $(echo --output=/tmp/x)' \
+        'git log "$(git push --force)"'; do
+      guard 2 "$cmd" PowerShell
+    done
+    for cmd in \
+        $'git commit -m "$(cat <<\'EOF\'\nfix the --output handling, and -F /tmp/x\nEOF\n)"' \
+        $'git commit -a -m "$(cat <<\'EOF\'\nmsg one\n\nBody with `ticks` and $(vars) text\nEOF\n)" -- docs/index.md' \
+        $'git commit -m "$(cat <<\'EOF\'\nmsg `git push --force` in a quoted heredoc\nEOF\n)" -- x' \
+        $'git commit -m "$(cat <<EOF\nplain body\nEOF\n)"' \
+        'git commit -m "$(git log -1 --format=%s)"' \
+        'git commit -m "$(echo --file=/tmp/x)"' \
+        'git tag -a "v$(cat VERSION)" -m "release"' \
+        'git checkout -q -b "ddd/bundle-$(date +%F)" origin/main' \
+        'git ls-remote --heads origin "ddd/bundle-$(date +%F)*"' \
+        "git log --since=\"\$(date -d '7 days ago' +%F)\" --oneline" \
+        'git log --format=%h -n 1 -- "docs/$(echo index).md"' \
+        'test -z "$(git status --porcelain)"' \
+        'echo "$r $(git -C work/$r describe --tags)"' \
+        'for f in $(git diff --name-only); do echo "$f"; done' \
+        'K=$(git rev-parse HEAD); echo $K' \
+        'cd "$(git rev-parse --show-toplevel)" && git status' \
+        'git status; echo $(date)' \
+        'git log -1 --format=%h \$(echo --output)' \
+        'echo `date`'; do
+      guard 0 "$cmd"
+    done
+    guard 0 'Write-Output "$(git status)"' PowerShell
+    guard 0 $'git commit -m "$(cat <<\'EOF\'\nmsg\nEOF\n)" && git push origin main' PowerShell
+  fi
+  if [ -n "$git_fail" ]; then
+    err "the guard hook reads a command substitution in a git command's words, or as its name, as harmless, or blocks a plain read (B32):"
+    printf '%s\n' "${git_fail#$'\n'}"
+  else echo "ok: the guard hook blocks a command substitution that can print a git flag or run a command the guard can't read, in git's words or as a command name, and passes the quoted values, messages and reads the procedures use (B32)"; fi
 
   # The credential stores (B15): the Read tool may not open the gh CLI's token file, git's credentials or
   # ~/.ssh. The .env files with values (B21): .env.local and the other .env.<suffix> files the guard hook

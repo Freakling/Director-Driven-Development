@@ -19,6 +19,12 @@
 # credential (gh auth token, gh auth status -t, git credential fill or get). This is a guardrail, not a
 # guarantee: complex pipelines or indirect reads are not detected. The Read-tool deny rules in settings.json
 # cover the most common path.
+#
+# A command substitution ($(...), `...`, <(...), >(...); PowerShell's $(...), @(...) and (...)) runs a command the
+# guard can't see, and what it prints is text the rules can't read (B32). In a git command's words it can be a flag, and
+# as a command's name it can be git. So the substitutions are read out of the command, each one's text is read as a
+# command of its own, and in a git command's words only a double-quoted one that starts with fixed text (or a commit's
+# or tag's -m value) passes, and only when its text is a plain read. See the section "Substitutions" below.
 
 IFS= read -r -d '' input || true
 re='"command"[[:space:]]*:[[:space:]]*"(([^"\\]|\\.)*)"'
@@ -48,6 +54,7 @@ if [[ $tool == PowerShell ]]; then
       joined="${joined//"$bt$c"/"$c"}"
     done
   fi
+  joined="${joined%"$bt"}"   # a backtick at the very end escapes nothing, so `git push `echo --force` reads as git push echo --force (B32)
   joined="${joined//$x3/$bt$bt}"
   [[ $joined != "$raw" ]] && raw="$raw;$joined"
 fi
@@ -77,6 +84,158 @@ view_of() {
   s="${s//$x2/"$jb4"}"; s="${s//$x1/"$jb"}"; s="${s//$nl/"$bsl"n}"
   view="$s"
 }
+
+# --- Substitutions (B32) -------------------------------------------------------------------------
+# A command substitution runs a command the guard can't see, and what it prints is text the rules can't read. In a git
+# command's words it can be a flag (git push "$(echo --force)"), and as a command's name it can be git ($(echo git) push).
+# subst_cut reads every substitution out of the command, before the quote reading below: each becomes a placeholder
+# \x1a<n>\x1b in cut_out, its text goes to subc[n] (the quoted strings inside it are skipped as the shell skips them, so
+# its end is the shell's), and its kind to subk[n]: u when unquoted, or, inside double quotes, the kind of its word: d
+# when the word starts with fixed text that isn't a dash (or the word is --name=<value>), m when -m or --message is the
+# word before it, x otherwise. Each text is also read as a command of its own (a view), so git's rules judge the git in it.
+brackets='[(){}`]'
+MSG_CMD="a command substitution is the command name, so the guard can't tell which command runs"
+MSG_POS="a command substitution in a git command's words prints text the guard can't read, and that text can be a flag; write the value out, or put it in double quotes after fixed text, such as ddd/bundle-\$(date +%F)"
+MSG_MSG="a command substitution is a commit's or tag's message only as the value of -m, with no option before -m that takes a value"
+MSG_READ="a command substitution in a git command's words runs a command the guard can't judge; only git, date, cat, echo and printf are read there"
+MSG_UNREAD="the guard can't read a command substitution here: it's unclosed, or it holds a backtick, or a double-quoted string with a substitution"
+
+# sub_end <text> <start>: sub_e is the index of the ) that closes a substitution whose text starts at <start>. Quoted strings
+# and escapes are skipped, so a ) inside them doesn't count. Returns 1 when it doesn't close, or when a double-quoted string
+# in it holds a substitution or a backtick.
+sub_end() {
+  local s="$1" j=$2 L=${#s} depth=1 c k
+  while ((j < L)); do
+    c="${s:j:1}"
+    if [[ $c == "$sesc" ]]; then ((j += 2)); continue; fi
+    case $c in
+      "'")
+        k="${s:j+1}"; [[ $k == *"'"* ]] || return 1
+        k="${k%%"'"*}"; ((j += ${#k} + 2)); continue ;;
+      '"')
+        k=$((j + 1))
+        while ((k < L)) && [[ ${s:k:1} != '"' ]]; do
+          if [[ ${s:k:1} == "$sesc" ]]; then ((k++))
+          elif [[ ${s:k:1} == '`' || ${s:k:2} == '$(' ]]; then return 1; fi
+          ((k++))
+        done
+        ((k < L)) || return 1
+        j=$((k + 1)); continue ;;
+      '`') return 1 ;;
+      '(') ((depth++)) ;;
+      ')')
+        ((depth--))
+        if ((depth == 0)); then sub_e=$j; return 0; fi ;;
+    esac
+    ((j++))
+  done
+  return 1
+}
+
+# subst_cut <text>: cut_out is the text with each substitution as a placeholder, and subc and subk are set (above). A
+# single quote starts a quoted string outside double quotes and is skipped whole, so a substitution inside it isn't one.
+# Returns 1 when a substitution can't be read (see MSG_UNREAD).
+subst_cut() {
+  local s="$1" i=0 L ch nx t st e txt kind start wsf lit before pwd dqkind="" indq=0 dqpos=0
+  if [[ $tool == PowerShell ]]; then sesc='`'; else sesc='\'; fi
+  L=${#s}; cut_out=""; sn=0; subc=(); subk=()
+  while ((i < L)); do
+    ch="${s:i:1}"; nx="${s:i+1:1}"
+    if [[ $ch == "$sesc" ]]; then cut_out+="${s:i:2}"; ((i += 2)); continue; fi
+    if ((indq)); then
+      if [[ $ch == '"' ]]; then indq=0; cut_out+='"'; ((i++)); continue; fi
+    elif [[ $ch == "'" ]]; then
+      t="${s:i+1}"; [[ $t == *"'"* ]] || { cut_out+="${s:i}"; break; }
+      t="${t%%"'"*}"; cut_out+="'$t'"; ((i += ${#t} + 2)); continue
+    elif [[ $ch == '"' ]]; then
+      indq=1; dqpos=${#cut_out}; dqkind=""; cut_out+='"'; ((i++)); continue
+    fi
+    st=0
+    if [[ $ch == '$' && $nx == '(' ]]; then st=$((i + 2))
+    elif ((!indq)) && [[ $tool == PowerShell && $ch == '(' ]]; then st=$((i + 1))
+    elif ((!indq)) && [[ $tool != PowerShell && ( $ch == '<' || $ch == '>' ) && $nx == '(' ]]; then st=$((i + 2))
+    fi
+    if ((st > 0)); then
+      sub_end "$s" "$st" || return 1
+      e=$sub_e; txt="${s:st:e-st}"
+    elif [[ $ch == '`' && $tool != PowerShell ]]; then
+      t="${s:i+1}"; [[ $t == *'`'* ]] || return 1
+      txt="${t%%\`*}"; e=$((i + ${#txt} + 1))
+    else
+      cut_out+="$ch"; ((i++)); continue
+    fi
+    kind=u
+    if ((indq)); then
+      if [[ -z $dqkind ]]; then
+        before="${cut_out:0:dqpos}"; lit="${cut_out:dqpos+1}"; lit="${lit//\\/}"
+        wsf="${before##*[[:space:];&|]}"
+        start="$wsf$lit"; start="${start%%$'\x1a'*}"
+        t="${before%"${before##*[![:space:]]}"}"; pwd="${t##*[[:space:];&|]}"
+        if [[ $wsf == *[\'\"\\]* ]]; then dqkind=x
+        elif [[ -n $start && ( $start != -* || $start == --*=* ) ]]; then dqkind=d
+        elif [[ $before == *[[:space:]] && ( $pwd =~ ^-[[:alpha:]]*m$ || $pwd == --message ) ]]; then dqkind=m
+        else dqkind=x; fi
+      fi
+      kind=$dqkind
+    fi
+    subc[sn]="$txt"; subk[sn]=$kind
+    cut_out+=$'\x1a'"$sn"$'\x1b'; ((sn++))
+    i=$((e + 1))
+  done
+  return 0
+}
+
+# subst_read <text>: the text a substitution runs is a read the guard judges: git (as a command of its own, in a view),
+# date, cat, echo or printf, with no separator, no redirect and no nested substitution.
+subst_read() {
+  local c="$1" c2
+  c="${c#"${c%%[![:space:]]*}"}"; c="${c%"${c##*[![:space:];]}"}"
+  [[ $c =~ ^(git|date|cat|echo|printf)([[:space:]]|$) ]] || return 1
+  c2="${c//<</}"
+  [[ $c2 == *'$('* || $c2 == *'`'* || $c2 == *[\;\&\|\<\>\(\)$nl]* ]] && return 1
+  return 0
+}
+
+# walk_msg <j>: word j is a placeholder that's the value of a commit's or tag's -m. -m must be the word before it, and
+# every option between the subcommand and -m must take no value, since one that does would take -m as its value.
+walk_msg() {
+  local j=$1 i
+  case $bsub in commit | tag) ;; *) return 1 ;; esac
+  ((j - 1 > bsk)) || return 1
+  [[ ${w[j - 1]} =~ ^-[aqsvefiSo]*m$ || ${w[j - 1]} == --message ]] || return 1
+  for ((i = bsk + 1; i < j - 1; i++)); do
+    case ${w[i]} in
+      --amend | --all | --quiet | --verbose | --signoff | --no-edit | --edit | --allow-empty | --include | --only) continue ;;
+      -*) [[ ${w[i]} =~ ^-[aqsvefiSo]+$ ]] || return 1 ;;
+    esac
+  done
+  return 0
+}
+
+# subst_segment: the substitutions among one segment's words (w, n). A command name can't be one. In a git command's
+# words (bsk is its subcommand's index, bsub the subcommand) only a d or m value passes, and only when its text is a read.
+subst_segment() {
+  local cw=0 gi=-1 j rest idx
+  while ((cw < n)) && [[ ${w[cw]} =~ ^(([A-Za-z_][A-Za-z0-9_]*=.*)|\$|env|time|nohup|exec|command|sudo|if|then|else|elif|do|while|until|!)$ ]]; do ((cw++)); done
+  [[ ${w[cw]:-} == *$'\x1a'* ]] && block "$MSG_CMD"
+  for ((j = 0; j < n; j++)); do [[ ${w[j]} == git ]] && { gi=$j; break; }; done
+  ((gi < 0)) && return 0
+  bsk=$((gi + 1))
+  while ((bsk < n)); do case ${w[bsk]} in -C | -c) ((bsk += 2)) ;; -*) ((bsk++)) ;; *) break ;; esac; done
+  bsub="${w[bsk]:-}"
+  for ((j = gi + 1; j < n; j++)); do
+    rest="${w[j]}"
+    while [[ $rest == *$'\x1a'* ]]; do
+      idx="${rest#*$'\x1a'}"; idx="${idx%%$'\x1b'*}"; rest="${rest#*$'\x1b'}"
+      case ${subk[idx]} in
+        d) subst_read "${subc[idx]}" || block "$MSG_READ" ;;
+        m) walk_msg "$j" || block "$MSG_MSG"; subst_read "${subc[idx]}" || block "$MSG_READ" ;;
+        *) block "$MSG_POS" ;;
+      esac
+    done
+  done
+}
+
 # A comment starts at a # that begins a word: after a blank, a line start or a metacharacter, as Bash reads it.
 cmt_re='(^|[[:blank:]|&;()<>])#'
 views=("$raw")
@@ -102,7 +261,8 @@ fi
 
 # Each reading goes through the rules below, one at a time, so a heredoc's state in one reading can't carry
 # into another. A command with no continuation has one reading, the command itself.
-for raw in "${views[@]}"; do
+for ((vi = 0; vi < ${#views[@]}; vi++)); do
+raw="${views[vi]}"
 
 # The command as the shell reads its line breaks and tabs: a JSON \n ends a command, as ; does, and \t
 # is a space. A real backslash (the pair \\) stays as it is, so \\n is text, not a line break. The early
@@ -286,7 +446,8 @@ while [[ $rest =~ $loop_re ]]; do
 done
 
 # --- git-specific rules --------------------------------------------------------------------------
-isgit=0; [[ $detect =~ (^|[^[:alnum:]_./-])git([[:space:]]|$) ]] && isgit=1
+# A substitution's brackets are read as blanks, so $(echo git) counts as a git command (B32).
+isgit=0; [[ ${detect//$brackets/ } =~ (^|[^[:alnum:]_./-])git([[:space:]]|$) ]] && isgit=1
 isbash=0; [[ $detect =~ (^|[^[:alnum:]_.-])(ba)?sh([[:space:]]|$) ]] && isbash=1
 ((isgit || isbash)) || continue
 
@@ -326,7 +487,7 @@ while IFS= read -r line || [ -n "$line" ]; do
   if [ -n "$delim" ]; then
     if [ "${line#"${line%%[![:space:]]*}"}" = "$delim" ]; then
       delim=""
-      [[ -n $hquote || ( $body != *'$('* && $body != *'`'* ) ]] || gtext+="$body"
+      [[ -n $hquote || ( $body != *'$('* && $body != *'`'* ) ]] || gtext+="${body//[\'\"]/_}"   # an unquoted body's quotes are text (B32)
       body=""
     else body+="$line$nl"; fi
     continue
@@ -336,12 +497,18 @@ while IFS= read -r line || [ -n "$line" ]; do
 done <<<"$real"
 gtext+="$body"   # a heredoc that never closes keeps its text: a false block beats a miss
 
+# B32: the substitutions are read out of the command first (subst_cut), so the quote reading below sees placeholders, not
+# their text: a quote or a ) inside a substitution can't end a quoted string or the substitution early. Outside git's
+# reading (no git in the command) an unreadable substitution is left as it is.
+subc=(); subk=(); sn=0
+subst_cut "$gtext" || { ((isgit)) && block "$MSG_UNREAD"; cut_out="$gtext"; subc=(); subk=(); sn=0; }
+
 # Walk the quoted strings from the left. One that is a flag by itself ('--output=x') or sits inside
-# a word (--out"put"=x) is unquoted so the flag shows; any other is message text and is blanked.
-# A "..." holding $(...) or backticks runs a command, so its text stays and is read again.
+# a word (--out"put"=x) is unquoted so the flag shows; any other is message text and is blanked. A "..." holding a
+# substitution keeps its text, which has the placeholder, so the substitution's word is judged (see subst_cut).
 qre='^(([^"'$sq1'\\]|\\.)*)("(([^"\\]|\\.)*)"|'$sq1'([^'$sq1']*)'$sq1')'
 glued='^[^[:space:];&|<>)]'
-gcode=""; rest="$gtext"
+gcode=""; rest="$cut_out"
 while [[ $rest =~ $qre ]]; do
   pre="${BASH_REMATCH[1]}"; quoted="${BASH_REMATCH[3]}"; rest="${rest:${#BASH_REMATCH[0]}}"
   inner="${quoted:1:${#quoted}-2}"
@@ -351,15 +518,23 @@ while [[ $rest =~ $qre ]]; do
   fi
   pre="${pre//\\/}"        # outside quotes a backslash only escapes the next character (a joined line is already one line)
   gcode+="$pre"
+  if [[ $inner == *$'\x1a'* ]]; then gcode+="${inner//\\/}"; continue; fi   # a double-quoted substitution (B32)
   word="${gcode##*[[:space:];&|]}"               # the word so far
   if [[ $inner =~ ^--?[A-Za-z] ]]; then gcode+="$inner"
   elif [[ $inner != *[[:space:]]* && ( -n $word || $rest =~ $glued ) ]]; then gcode+="$inner"
   elif [[ -n $word && $word =~ ^--[^=]*$ ]]; then gcode+="$inner"
-  elif [[ $quoted == '"'* && ( $inner == *'$('* || $inner == *'`'* ) ]]; then rest="$inner $rest"
   else gcode+=" Q "; fi
 done
 rest="${rest//\\/}"; gcode+="${rest//[\"$sq1]/}"   # a quote left over never closes
 gcode="${gcode//$nl/;}"; gcode="${gcode//>&/> }"; gcode="${gcode//&>/> }"
+# B32: each substitution's text is read as a command of its own (a view), so git's rules judge the git inside it.
+if ((isgit)); then
+  for ((vn = 0; vn < ${#subc[@]}; vn++)); do
+    ((${#views[@]} < 64)) || block "the command has more command substitutions than the guard reads in time"
+    c="${subc[vn]}"; c="${c#"${c%%[![:space:]]*}"}"; c="${c%"${c##*[![:space:];]}"}"
+    views+=("$c")
+  done
+fi
 
 gitre='(^|[^[:alnum:]_./-])git[[:space:]]'
 gitflag() { [[ $gcode =~ $gitre($seg[[:space:]])?$1 ]]; }
@@ -378,12 +553,12 @@ gitflag '--ext' && block "--ext-diff runs a configured external command"
 # path outside tools/ matches no allow rule, so it asks the human anyway.
 outre='^(/|~|[A-Za-z]:|\$[A-Za-z_{])|(^|/)\.\.(/|$)'
 dotsre='(^|/)\.\.(/|$)'
-brackets='[(){}`]'
 IFS=';&|' read -r -d '' -a gsegs <<<"$gcode" || true
 for gs in "${gsegs[@]}"; do
   gs="${gs//$brackets/ }"
   read -ra w <<<"$gs"
   n=${#w[@]}; k=0
+  ((isgit)) && subst_segment
   # bash or sh as the command word (after VAR=x, env, time, nohup, exec, command and sudo)
   while ((k < n)) && [[ ${w[k]} =~ ^([A-Za-z_][A-Za-z0-9_]*=.*|\$|env|time|nohup|exec|command|sudo)$ ]]; do ((k++)); done
   if ((k < n)) && [[ ${w[k]} =~ (^|/)(ba)?sh$ ]]; then
