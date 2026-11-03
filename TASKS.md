@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T285 · B63 · R7
+**Next IDs:** T287 · B63 · R7
 
 ## Milestones
 | Milestone | Status |
@@ -1264,7 +1264,8 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Note: found in B24: framework/.claude/settings.json has the same `Bash|Monitor` matcher and eight Bash deny rules, and its selftest pins the matcher.
 - Brief: -
 
-### T277 · SaaSAllTheThings: the guard and the deny rules reach the PowerShell tool, and a continuation, a tab or a PowerShell read can't hide from it · todo · M · agent
+### T277 · SaaSAllTheThings: the guard and the deny rules reach the PowerShell tool, and a continuation, a tab or a PowerShell read can't hide from it · in-progress 2026-11-03 · M · agent
+- PRs: SaaSAllTheThings #46 (open)
 - Depends on: B25, B27 to B40, B42 to B52, B55, B60
 - Touches: work/SaaSAllTheThings: framework/.claude/settings.json, framework/.claude/hooks/guard-commands.sh, selftest.sh
 - Done when: the guard hook's matcher names PowerShell and every Bash deny and ask rule has a PowerShell twin, with no PowerShell allow rule, as B24 did here; the guard closes the gaps B25, B27 to B40, B42 to B52, B55 and B60 closed here, ported with their selftest cases, including the readings of a continued command (as written, as joined, and joined from each line after a comment: B28, B31); the selftest passes (check) · following AGENTS.md › Project rules for framework work
@@ -1313,16 +1314,30 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Brief: -
 
 ### T284 · This repo's guard gets App-Director's own rules and bash 3.2 forms · todo · S · agent
-- Depends on: T276
+- Depends on: T276, T285
 - Touches: .claude/hooks/guard-commands.sh, selftest.sh
-- Done when: this repo's guard matches App-Director's merged hook from T276 (branch `-M` and `-C` and a forced move or copy, worktree `remove --force` and `add -B` or `-f`, brace expansion and `$IFS` in a git command, a commit option's value not read as a flag, git's value-taking global options in every subcommand finder, and the bash 3.2 forms: the `lower` and `str_swap` helpers, no `${x,,}` or negative offsets), with App-Director's cases for them in the selftest, which passes (check)
+- Done when: this repo's guard matches App-Director's merged hook from T276 (branch `-M` and `-C` and a forced move or copy, worktree `remove --force` and `add -B` or `-f`, brace expansion and `$IFS` in a git command, a commit option's value not read as a flag, git's value-taking global options in every subcommand finder, and the bash 3.2 forms: the `lower` and `str_swap` helpers, no `${x,,}` or negative offsets) and T277's three fixes (T285), with their cases in the selftest, which passes (check)
 - Note: found in T276. The hook is framework-owned, so the next App-Director upgrade here brings the same file; this item keeps the two equal until then, so a guard fix built here next starts from the merged hook.
+- Brief: -
+
+### T285 · App-Director: the guard takes SaaSAllTheThings' port fixes · todo · S · agent
+- Depends on: T276, T277
+- Touches: work/App-Director: framework/.claude/hooks/guard-commands.sh, selftest.sh
+- Done when: App-Director's guard has the three fixes T277 made while porting, with their cases: a path-qualified or `.exe` git (`/usr/bin/git push --force`, `git.exe push --force`) is git; an empty-heredoc probe reads its body line by line, so a heredoc of blank lines isn't read as empty and `/usr/bin/python3` counts as `python3`; and in the PowerShell tool a backslash at a line's end is a path separator, not a continuation, so `# c\` followed by `gh auth token` is blocked; the selftest passes (check) · following AGENTS.md › Project rules for framework work
+- Note: found in T277; SaaSAllTheThings' framework hook on its bundle (its T36) has them.
+- Brief: -
+
+### T286 · SaaSAllTheThings: the Azure delete rule covers the Az PowerShell module · todo · S · agent
+- Depends on: T277
+- Touches: work/SaaSAllTheThings: framework/.claude/hooks/guard-commands.sh, framework/.claude/settings.json, selftest.sh
+- Done when: the guard blocks the Az PowerShell module's deletes (`Remove-AzResourceGroup`, `Remove-AzResource` and the other `Remove-Az*` cmdlets) as it blocks `az ... delete`, in any case and through every reading, and the settings have the matching ask or deny rules for the PowerShell tool; the selftest passes (check) · following AGENTS.md › Project rules for framework work
+- Note: found in T277.
 - Brief: -
 
 ### B53 · A script piped to a shell, a path-qualified or `.exe` git or bash, a sudo option's value, cmd's %VAR% or a folder in another case passes the guard (A01:2025 Broken Access Control) · todo · S · agent · med
 - Touches: .claude/hooks/guard-commands.sh, selftest.sh (the guard is framework-owned: an item for each framework once it's built)
-- Repro: 1. Feed the guard hook `printf 'git push --force' | bash` or `echo 'git push --force' | sh`; `/usr/bin/git push --force` or `git.exe push --force` (so `G=/usr/bin/git; $G push --force` too); `sudo -u root "$G" push --force`; `cmd /c "%G% push --force"`; `cat > .GIT/hooks/pre-commit <<'EOF'` with `git push --force` in the body; `bash.exe tools/../x.sh`; or `bash TOOLS/../x.sh`. 2. Expected: each is blocked, as `git push --force` and a `.git/hooks` write are. Actual: exit 0: a shell reading its script from a pipe isn't read as a wrapper, the git test needs the bare name, an option's value before the command name isn't skipped, only `$` variables are read, a shell's name takes no `.exe`, and the `.git` and `tools/` folder tests are case-sensitive, while Windows folders aren't.
-- Found in: B45, B46, B47
+- Repro: 1. Feed the guard hook `printf 'git push --force' | bash` or `echo 'git push --force' | sh`; `/usr/bin/git push --force` or `git.exe push --force` (so `G=/usr/bin/git; $G push --force` too); `sudo -u root "$G" push --force`; `cmd /c "%G% push --force"`; `cat > .GIT/hooks/pre-commit <<'EOF'` with `git push --force` in the body; `bash.exe tools/../x.sh`; or `bash TOOLS/../x.sh`. 2. Expected: each is blocked, as `git push --force` and a `.git/hooks` write are. Actual: exit 0: a shell reading its script from a pipe isn't read as a wrapper, the git test needs the bare name, an option's value before the command name isn't skipped, only `$` variables are read, a shell's name takes no `.exe`, and the `.git` and `tools/` folder tests are case-sensitive, while Windows folders aren't. T285 and T284 bring T277's path-qualified git to the generic and flag rules here; the `-c` key, variable and credential readings still need it, in all three frameworks.
+- Found in: B45, B46, B47, T277
 - Brief: -
 
 ### B54 · A message that names `--no-verify` or `gh auth token` is blocked · todo · XS · agent · low
