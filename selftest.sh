@@ -53,6 +53,9 @@
 #      line break; a heredoc body a shell runs is read too, and a quoted message that names a rule passes (B33).
 #      A quoted script given to bash -c, sh -c, zsh -c, eval, powershell -Command, pwsh -c or cmd /c is read as a
 #      command of its own, to four levels, and a command whose quoting the guard can't close is blocked (B34).
+#      A variable in a git command's words is read as its value when the command assigns it once to a plain value
+#      (FLAG=--force; git push $FLAG). Any other unquoted variable there, or a quoted one a flag or a path could be, is
+#      blocked, and so is a variable as the subcommand or as a shell's name followed by -c; the everyday forms pass (B37).
 #   9. The site builds in strict mode, which fails on broken internal links and anchors.
 #  10. The Content-Security-Policy in overrides/main.html allows every inline script the built site
 #      runs (its sha256 is in script-src), and no script runs before the policy's meta tag.
@@ -1331,6 +1334,101 @@ else
     err "the guard hook doesn't read a script a shell or an interpreter runs as a command of its own, or blocks a message that names one (B34):"
     printf '%s\n' "${git_fail#$'\n'}"
   else echo "ok: the guard hook reads a script given to bash -c, sh -c, zsh -c, eval, powershell -Command, pwsh -c or cmd /c as a command, to four levels, and passes the messages, heredocs and reads that name one (B34)"; fi
+
+  # A variable in a git command's words (B37): the guard can't read what it holds. A variable that the command assigns once,
+  # to a plain value, is read as that value, so FLAG=--force; git push $FLAG is the force push it is. Any other unquoted
+  # variable in the words of a git subcommand the rules read is blocked, and so is a quoted one that a flag or a path could
+  # be, a fixed text that starts a flag (--$X), a variable as the subcommand, and a variable as a command's name followed by
+  # -c or -Command. The everyday forms pass: a quoted variable as the value of -m, -e, -b or -C, after --, after fixed text
+  # that doesn't start a flag, as a push's branch after its remote, and in a subcommand the rules don't read (git status).
+  git_fail=""
+  if [ -f .claude/hooks/guard-commands.sh ]; then
+    for cmd in \
+        'FLAG=--force; git push $FLAG' \
+        'FLAG=-f; git push ${FLAG} origin' \
+        'export ST=-f && git push $ST origin' \
+        'FLAG=--force; git push "$FLAG"' \
+        'FLAG=ok; FLAG=--force; git push $FLAG' \
+        'FLAG=ok; read FLAG; git push $FLAG' \
+        'NV=--no-verify; git commit $NV -m x' \
+        'git commit $NV -m x' \
+        "git commit \"\$NV\" -m x" \
+        'git push $FLAG' \
+        'git push "$FLAG"' \
+        'git push origin $BR' \
+        'git push --$X' \
+        'git push "--$X"' \
+        'git push -$F origin' \
+        'git log $X' \
+        'git log --output="$X"' \
+        'git diff "$f"' \
+        'git -C $d log' \
+        'git $CMD --force' \
+        'git commit -nm"$x" -- a' \
+        'git commit -m$msg' \
+        'git checkout -b $name' \
+        'git reset --hard $REF' \
+        'git branch -D "$b"' \
+        'git grep "$p"' \
+        $'bash <<\'EOF\'\ngit push $FLAG\nEOF' \
+        $'git commit -F - <<\'EOF\'\nfix git push $X handling\nEOF' \
+        "\$X -c 'git push --force'" \
+        '"$SHELL" -c "git push --force"' \
+        'sudo "$X" -c "git push --force"' \
+        'env FOO=1 $X -c x' \
+        'timeout 240 "$X" -c x' \
+        'echo ok && $X -c x' \
+        '"$EDITOR" -c x'; do
+      guard 2 "$cmd"
+    done
+    for cmd in 'git commit $NV -m x' 'git push "$FLAG"' 'git push -u origin $BR' '$X -c "git push --force"' \
+        '& $X -c "git push --force"'; do
+      guard 2 "$cmd" PowerShell
+    done
+    for cmd in \
+        'for r in A B C; do git -C work/$r status --short; done' \
+        'git -C "work/$r" log --oneline -1' \
+        'git -C "$repo" fetch' \
+        'git -C $d status' \
+        'git status $X' \
+        'git add $FILE' \
+        'git log --since="$since"' \
+        'git commit -m "$msg" -- a' \
+        'git commit -m"$msg" -- a' \
+        'git commit -am "$msg"' \
+        'git commit -C "$c"' \
+        'git push -u origin "$branch"' \
+        'git push origin "$a" "$b"' \
+        'git checkout -b "ddd/bundle-$day"' \
+        'git checkout -b "ddd/bundle-$day" origin/main' \
+        'git switch -c "$b"' \
+        'git grep -e "$p"' \
+        'git tag -a "v$VER" -m "release"' \
+        'git log --format="%h $X"' \
+        'git log -- $X' \
+        'git commit -m "$msg" -- $X' \
+        'git log > "$out"' \
+        'git log >"$out" --oneline' \
+        'FLAG=ok; git push $FLAG' \
+        'FLAG=--force; echo $FLAG' \
+        'MSG=--force; git commit -m "$MSG"' \
+        'a=1; git push $a' \
+        'echo $X -c x' \
+        'echo -n $X -c x' \
+        'echo "$X -c y"' \
+        '"$EDITOR" notes.txt' \
+        'git commit -m "& $X -c y" -- a' \
+        $'git commit -q -F - <<\'EOF\'\nfix the $X handling\nEOF'; do
+      guard 0 "$cmd"
+    done
+    guard 0 'git push -u origin "$branch"' PowerShell
+    guard 0 'git commit -m "$msg" -- a' PowerShell
+  fi
+  guard_run
+  if [ -n "$git_fail" ]; then
+    err "the guard hook reads a variable in a git command's words as a value it can't see, or blocks a plain form (B37):"
+    printf '%s\n' "${git_fail#$'\n'}"
+  else echo "ok: the guard hook reads a variable a git command assigns once as its value, blocks an unquoted or flag-capable variable in a git command's words, a variable as a subcommand or as a shell's name followed by -c, and passes the everyday forms (B37)"; fi
 
   # The credential stores (B15): the Read tool may not open the gh CLI's token file, git's credentials or
   # ~/.ssh. The .env files with values (B21): .env.local and the other .env.<suffix> files the guard hook

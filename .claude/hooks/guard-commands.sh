@@ -29,6 +29,12 @@
 # A quoted script given to a shell or an interpreter (bash -c, sh -c, zsh -c, eval, powershell -Command, pwsh -c, cmd /c)
 # is a command of its own: each is read as one, and a script nested in one to four levels too (B34). See the section
 # "Shell wrappers" below.
+#
+# A variable in a git command's words holds a value the guard can't read (B37). A variable that the command assigns once,
+# to a plain value, is read as that value (FLAG=--force; git push $FLAG is git push --force). Any other variable in the words
+# of a git subcommand whose flags the rules read is blocked when it's unquoted, or quoted where a flag or a path could be; a
+# variable as the subcommand, and a variable as a command's name followed by -c or -Command, are blocked too. See the
+# section "Variables" below.
 
 IFS= read -r -d '' input || true
 re='"command"[[:space:]]*:[[:space:]]*"(([^"\\]|\\.)*)"'
@@ -244,6 +250,218 @@ subst_segment() {
         *) block "$MSG_POS" ;;
       esac
     done
+  done
+}
+
+# --- Variables (B37) ----------------------------------------------------------------------------
+# A variable in a git command's words holds a value the guard can't read, and that value can be a flag (git push $FLAG
+# with FLAG=--force) or a path outside the repository. var_resolve first replaces each variable the command assigns once,
+# to a plain value (letters, digits and - _ . / : = + @ % , ~), with that value wherever it's used, as the shell expands
+# it, so the rules above judge what git gets. A name set another way (read, for, +=), set twice, or to any other value
+# stays a variable. var_judge then judges each variable left in a git command's words, and in a body a shell runs: an
+# unquoted one is blocked, since the shell splits it into several words, and a quoted one is blocked where its value could
+# be a flag or a path. It passes as the value of an option that takes the next word whole (-m, -e, -b, -C and the like),
+# after -- (paths), as a push's branch after its remote, and after fixed text that doesn't start a flag ("ddd/bundle-$day",
+# "--since=$since"). A variable as the subcommand is blocked. Only the subcommands in vb_scope are judged: those whose flags a
+# rule reads (--output, -F, -O, -D and the like). A variable in another subcommand's words, such as git status or git add,
+# passes, since no rule reads the flags they take.
+vb_scope=" archive commit diff format-patch grep log show tag stash branch checkout switch restore reset clean push "
+MSG_VAR="a variable in a git command's words holds a value the guard can't read, and it can be a flag or a path: write the value out, quote it as the value of -m, -e or -b, or put it after --"
+MSG_SUB="a variable as a git command's subcommand holds a value the guard can't read"
+MSG_SHVAR="a variable as a command's name, followed by -c or -Command, runs a shell or an interpreter the guard can't tell apart"
+vsh_pre_re='\$[^[:space:]]*[[:space:]]+-[a-zA-Z]*[cC]'
+vsh_prefix_re='^([A-Za-z_][A-Za-z0-9_]*=.*|env|exec|command|sudo|nohup|time|timeout|nice|ionice|stdbuf|-.*|[0-9.]+[smhd]?)$'
+vsh_opt_re='^-[a-zA-Z]*[cC]'
+
+# var_sub <text>: sets vbout to the text with each reference to a name in kn replaced by its value in kv (the other
+# references stay as they are).
+var_sub() {
+  local s="$1" nm orig k
+  vbout=""
+  while [[ $s == *'$'* ]]; do
+    vbout+="${s%%\$*}"; s="${s#*\$}"
+    if [[ $s =~ ^\{([A-Za-z_][A-Za-z0-9_]*)\} ]]; then orig="${BASH_REMATCH[0]}"; nm="${BASH_REMATCH[1]}"
+    elif [[ $s =~ ^([A-Za-z_][A-Za-z0-9_]*) ]]; then orig="${BASH_REMATCH[1]}"; nm="$orig"
+    else vbout+='$'; continue; fi
+    for ((k = 0; k < ${#kn[@]}; k++)); do [[ ${kn[k]} == "$nm" ]] && break; done
+    if ((k < ${#kn[@]})); then vbout+="${kv[k]}"; else vbout+="\$$orig"; fi
+    s="${s:${#orig}}"
+  done
+  vbout+="$s"
+}
+
+# var_resolve: a name the command assigns once, with a plain value, is replaced by that value in cut_out and hall (the
+# bodies a shell runs). The name must occur once as a word that isn't a reference, and that occurrence must be the
+# assignment NAME=value at a word's start, with its value ending at a space or a separator. kn and kv get the names.
+var_resolve() {
+  local all="$cut_out"$'\n'"$hall"$'\n'"${subc[*]}" rest n w t re cnt seen=" " cand_re
+  local -a cand=()
+  cand_re='(^|[[:space:];&|()])([A-Za-z_][A-Za-z0-9_]*)\+?='
+  rest="$all"
+  while [[ $rest =~ $cand_re ]]; do
+    cand+=("${BASH_REMATCH[2]}")
+    rest="${rest#*"${BASH_REMATCH[0]}"}"
+  done
+  kn=(); kv=()
+  for n in "${cand[@]}"; do
+    [[ $seen == *" $n "* ]] && continue
+    seen+="$n "
+    t="${all//"\${$n}"/ }"; t="${t//"\$$n"/ }"; t="${t//[^[:alnum:]_]/ }"
+    cnt=0
+    for w in $t; do [[ $w == "$n" ]] && cnt=$((cnt + 1)); done
+    ((cnt == 1)) || continue
+    re="(^|[[:space:];&|()])${n}=([-A-Za-z0-9_./:=+@%,~]*)([[:space:];&|()<>]|\$)"
+    [[ $all =~ $re ]] || continue
+    kn+=("$n"); kv+=("${BASH_REMATCH[2]}")
+  done
+  ((${#kn[@]})) || return 0
+  if [[ $cut_out == *'$'* ]]; then var_sub "$cut_out"; cut_out="$vbout"; fi
+  if [[ $hall == *'$'* ]]; then var_sub "$hall"; hall="$vbout"; fi
+  return 0
+}
+
+# vend, vref and var_walk: var_walk reads the words of a text as the shell does (quotes removed, and a line break or ; & |
+# ( ) ends a segment). Each variable reference is \x07 in its word. vbs, vbw and vbu get each word's segment, its text and
+# whether a reference in it is unquoted (a double-quoted one is only a marker). A redirect's target is no word here. vend,
+# vref and var_walk share their locals, which is how vend and vref see the word being read (bash's dynamic scope).
+vend() {
+  if ((st)); then
+    if ((skipnext)); then skipnext=0
+    else vbs+=("$seg"); vbw+=("$w"); vbu+=("$uq"); fi
+  fi
+  st=0; w=""; uq=0
+}
+vref() { # at a $ (s[i]): a variable reference adds \x07 to the word and moves past itself; returns 1 when there is none
+  local rest="${s:i}"
+  if [[ $rest =~ ^\$\{[^}]*\} || $rest =~ ^\$[A-Za-z_][A-Za-z0-9_]* || $rest =~ ^\$[0-9@*#?!$-] ]]; then
+    i=$((i + ${#BASH_REMATCH[0]})); w+=$'\x07'; st=1
+    ((inq)) || uq=1
+    return 0
+  fi
+  return 1
+}
+var_walk() {
+  local s="$1" L=${#1} i=0 c n ch k content w="" uq=0 st=0 seg=0 skipnext=0 inq=0
+  local sesc='\'
+  [[ $tool == PowerShell ]] && sesc='`'
+  vbs=(); vbw=(); vbu=()
+  while ((i < L)); do
+    c="${s:i:1}"; n="${s:i+1:1}"
+    if ((inq)); then
+      if [[ $c == '"' ]]; then
+        if [[ $tool == PowerShell && $n == '"' ]]; then w+='"'; ((i += 2)); continue; fi
+        inq=0; ((i++)); continue
+      fi
+      if [[ $c == "$sesc" ]]; then
+        if [[ $tool == PowerShell ]]; then
+          [[ -n $n && $n != "$nl" ]] && w+="$n"; ((i += 2)); continue
+        fi
+        case $n in
+          '$' | '"' | "$sesc" | '`') w+="$n"; ((i += 2)); continue ;;
+          "$nl") ((i += 2)); continue ;;
+        esac
+      fi
+      if [[ $c == '$' ]] && vref; then continue; fi
+      w+="$c"; ((i++)); continue
+    fi
+    case $c in
+      ' ' | $'\t') vend; ((i++)) ;;
+      "$nl" | ';' | '&' | '|' | '(' | ')') vend; skipnext=0; ((seg++)); ((i++)) ;;
+      '<' | '>') vend; skipnext=1; ((i++)) ;;
+      '#')
+        if ((st)); then w+='#'; ((i++))
+        else k="${s:i}"; k="${k%%"$nl"*}"; ((i += ${#k})); fi ;;
+      "$sesc")
+        if [[ -z $n ]]; then ((i++))
+        elif [[ $n == "$nl" ]]; then ((i += 2))
+        else w+="$n"; st=1; ((i += 2)); fi ;;
+      "'")
+        k=$((i + 1)); content=""
+        while ((k < L)); do
+          ch="${s:k:1}"
+          if [[ $ch == "'" ]]; then
+            if [[ $tool == PowerShell && ${s:k+1:1} == "'" ]]; then content+="'"; ((k += 2)); continue; fi
+            break
+          fi
+          content+="$ch"; ((k++))
+        done
+        w+="$content"; st=1; i=$((k + 1)) ;;
+      '"') inq=1; st=1; ((i++)) ;;
+      '$')
+        if [[ $tool != PowerShell && ( $n == "'" || $n == '"' ) ]]; then ((i++))   # $'...' and $"...": the quote follows
+        elif vref; then :
+        else w+='$'; st=1; ((i++)); fi ;;
+      *) w+="$c"; st=1; ((i++)) ;;
+    esac
+  done
+  vend
+}
+
+# vtaker <subcommand> <word>: the word is an option that takes its value from the next word, or attached to it.
+vtaker() {
+  case $1 in
+    commit) [[ $2 =~ ^-[aqsvefiSo]*[mCc]$ || $2 == --message ]] ;;
+    tag) [[ $2 =~ ^-[aqsvefiSo]*m$ || $2 == --message ]] ;;
+    checkout | switch) [[ $2 =~ ^-[a-zA-Z]*[bBcC]$ ]] ;;
+    grep) [[ $2 =~ ^-[a-zA-Z]*e$ ]] ;;
+    *) false ;;
+  esac
+}
+
+# var_segment <first word> <last word>: the git command in one segment, if it has one, and its subcommand. In its words a
+# variable is blocked when it is unquoted, a subcommand, or a quoted one that a flag or a path could be: a quoted variable
+# alone, a fixed text that starts a flag without =, or no text before it. A quoted variable passes as a value taken by the
+# option before it, after --, or as a push's branch after the remote (npos counts the words before it after the subcommand).
+var_segment() {
+  local a=$1 b=$2 gi=-1 j sub si=-1 npos=0 prev="" w p
+  for ((j = a; j <= b; j++)); do [[ ${vbw[j]} == git ]] && { gi=$j; break; }; done
+  ((gi < 0)) && return 0
+  j=$((gi + 1))
+  while ((j <= b)); do
+    case ${vbw[j]} in
+      -C | -c) j=$((j + 2)) ;;
+      -*) j=$((j + 1)) ;;
+      *) break ;;
+    esac
+  done
+  ((j <= b)) || return 0
+  si=$j; sub="${vbw[j]}"
+  [[ $sub == *$'\x07'* ]] && block "$MSG_SUB"
+  [[ " $vb_scope " == *" $sub "* ]] || return 0
+  for ((j = gi + 1; j <= b; j++)); do
+    w="${vbw[j]}"
+    [[ $w == -- ]] && break
+    if ((j < si)) && [[ $prev == -[Cc] ]]; then   # the value of -C or -c, before the subcommand
+      ((vbu[j])) && block "$MSG_VAR"
+      prev="$w"; continue
+    fi
+    if ((j == si)); then prev="$w"; continue; fi
+    if [[ $w == *$'\x07'* ]]; then
+      ((vbu[j])) && block "$MSG_VAR"
+      p="${w%%$'\x07'*}"
+      if vtaker "$sub" "$prev" || vtaker "$sub" "$p"; then :
+      elif [[ $w == $'\x07' ]]; then
+        [[ $sub == push ]] && ((npos >= 1)) || block "$MSG_VAR"
+      elif [[ -z $p || ( $p == -* && $p != *=* ) ]]; then block "$MSG_VAR"
+      fi
+    fi
+    if ((j > si)) && [[ $w != -* ]] && ! vtaker "$sub" "$prev"; then npos=$((npos + 1)); fi
+    prev="$w"
+  done
+}
+
+# var_judge <text>: each segment of the text, judged by var_segment. Redirections are read as the shell reads them (>& and &>
+# are a redirection, not a separator), so a target such as git log > "$f" is no word of git's.
+var_judge() {
+  local s="${1//>&/> }" a=0 b n
+  s="${s//&>/> }"
+  var_walk "$s"
+  n=${#vbw[@]}
+  while ((a < n)); do
+    b=$a
+    while ((b + 1 < n && vbs[b + 1] == vbs[a])); do ((b++)); done
+    var_segment "$a" "$b"
+    a=$((b + 1))
   done
 }
 
@@ -503,6 +721,21 @@ block() {
   exit 2
 }
 
+# B37: a variable as a command's name, followed by -c or -Command, runs a shell or an interpreter the guard can't tell apart.
+# The words are read as the shell reads them (a quoted "& $X -c" is text, a quoted "$SHELL" is a name), and a precheck
+# keeps the common command from the walk. Only the words before the name may be assignments or wrappers (env, sudo, ...).
+if [[ $real == *'$'* && $real =~ $vsh_pre_re ]]; then
+  var_walk "$real"
+  for ((vk = 0; vk + 1 < ${#vbw[@]}; vk++)); do
+    [[ ${vbw[vk]} == *$'\x07'* ]] || continue
+    vq=$vk; vok=1
+    while ((vq > 0 && vbs[vq - 1] == vbs[vk])); do
+      ((vq--)); [[ ${vbw[vq]} =~ $vsh_prefix_re ]] || { vok=0; break; }
+    done
+    ((vok && vbs[vk + 1] == vbs[vk])) && [[ ${vbw[vk + 1]} =~ $vsh_opt_re ]] && block "$MSG_SHVAR"
+  done
+fi
+
 # --- Credential file reads ------------------------------------------------------------------------
 # Block direct shell reads of .env and .env.<suffix> (not the templates .env.example, .env.sample,
 # .env.template and .env.dist), of *.pem and *.key, and of the credential stores: ~/.ssh (any key,
@@ -745,6 +978,8 @@ hall+="$body"    # every body, for the destructive rules (B33): a body may be a 
 # reading (no git in the command) an unreadable substitution is left as it is.
 subc=(); subk=(); sn=0
 subst_cut "$gtext" || { ((isgit)) && block "$MSG_UNREAD"; cut_out="$gtext"; subc=(); subk=(); sn=0; }
+# B37: a variable the command assigns once, to a plain value, is read as that value before the rules below (var_resolve).
+((isgit)) && [[ $cut_out$hall == *'$'* ]] && var_resolve
 
 # decode_words <text>: sets dec to the words the shell hands a command, as the rules read them (B26, B33). The quoted strings
 # are walked from the left. One with a space in it is message text, so it's blanked. One without a space is kept as a
@@ -788,6 +1023,9 @@ if ((isgit)); then
     c="${subc[vn]}"; c="${c#"${c%%[![:space:]]*}"}"; c="${c%"${c##*[![:space:];]}"}"
     vdep[${#views[@]}]=${vdep[vi]:-0}; views+=("$c")
   done
+  # B37: a variable left in a git command's words, or in a body a shell runs, is judged where it stands (var_judge).
+  [[ $cut_out == *'$'* ]] && var_judge "$cut_out"
+  [[ $hall == *'$'* ]] && var_judge "$hall"
 fi
 
 # --- git: destructive rules (B33) ------------------------------------------------------------------
