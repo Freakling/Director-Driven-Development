@@ -53,6 +53,7 @@
 # The git name is read as the shell reads it, quotes removed, so "git", 'git' and g"it" are git (B39), in any case too:
 # PowerShell finds a command case-insensitively, and Windows finds GIT, so GIT and Git are git (B46). Only the name is
 # matched so: git's subcommands and flags stay case-sensitive, as git reads them, and the name is written [Gg][Ii][Tt].
+# The shell's name in the script-path rule is read the same way (B47): "bash", 'sh' and BASH are bash and sh.
 # A heredoc body a shell runs (any body but a commit's or tag's message) takes a backtick as the end of a flag, and its words and the file-writing flags
 # are read there too; git branch with a delete and a force flag, git push --mirror, --delete and -d, and a :ref refspec are
 # blocked, and the credential-print rules read the decoded words (B39, where the git rules below read the bodies and the words).
@@ -1274,7 +1275,8 @@ shopt -u nocasematch
 # The git name is read as the shell reads it, quotes removed, so "git", 'git' and g"it" are git (B39).
 bare_g="${detect//$brackets/ }"; bare_g="${bare_g//[\"\'\\]/}"
 isgit=0; [[ $bare_g =~ (^|[^[:alnum:]_./-])[Gg][Ii][Tt]([[:space:]]|$) ]] && isgit=1
-isbash=0; [[ $detect =~ (^|[^[:alnum:]_.-])(ba)?sh([[:space:]]|$) ]] && isbash=1
+# The shell's name is read as the git name is (B47): quotes removed, and in any case, so "bash", 'sh' and BASH are a shell.
+isbash=0; [[ $bare_g =~ (^|[^[:alnum:]_.-])([Bb][Aa])?[Ss][Hh]([[:space:]]|$) ]] && isbash=1
 # A gh command (quotes removed, as the shell reads it) is read for the gh auth token rule too (B39).
 gh_pre=0; [[ ${real//[\"\'\\]/} =~ (^|[^[:alnum:]_.-])gh[[:space:]] ]] && gh_pre=1
 # B45: a variable as a command's name runs what it holds, so a command that has one is read too (cname_judge, mode 0).
@@ -1484,7 +1486,8 @@ gitflag '--ext' && block "--ext-diff runs a configured external command"
 # And bash or sh: a script path under tools/, the first word that isn't an option, must not leave it
 # with a .. segment. `Bash(bash tools/stacks/*.sh*)` matches `bash tools/stacks/../../x.sh`, and a * in
 # a permission rule matches any characters, so the rule alone doesn't keep a script inside tools/. A
-# path outside tools/ matches no allow rule, so it asks the human anyway.
+# path outside tools/ matches no allow rule, so it asks the human anyway. The command word is read
+# with its quotes removed and in any case, as the shell runs it: "bash", 'sh' and BASH are bash and sh (B47).
 outre='^(/|~|[A-Za-z]:|\$[A-Za-z_{])|(^|/)\.\.(/|$)'
 dotsre='(^|/)\.\.(/|$)'
 IFS=';&|' read -r -d '' -a gsegs <<<"$fcode" || true
@@ -1495,7 +1498,7 @@ for gs in "${gsegs[@]}"; do
   ((isgit)) && subst_segment
   # bash or sh as the command word (after VAR=x, env, time, nohup, exec, command and sudo)
   while ((k < n)) && [[ ${w[k]} =~ ^([A-Za-z_][A-Za-z0-9_]*=.*|\$|env|time|nohup|exec|command|sudo)$ ]]; do ((k++)); done
-  if ((k < n)) && [[ ${w[k]} =~ (^|/)(ba)?sh$ ]]; then
+  if ((k < n)) && [[ ${w[k]} =~ (^|/)([Bb][Aa])?[Ss][Hh]$ ]]; then
     for ((k++; k < n; k++)); do
       case ${w[k]} in -o|-O|+o|+O|--rcfile|--init-file) ((k++)); continue ;; -*|+*) continue ;; esac
       # B45: a variable in a script path under tools/ can hold .., which the rule below can't see (the allow rule matches the text too).

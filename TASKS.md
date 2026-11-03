@@ -1151,15 +1151,15 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Found in: B38
 - Brief: -
 
-### B47 · A quoted `bash`, or `bash` in another case, before a script path that leaves `tools/` passes the guard (A01:2025 Broken Access Control) · todo · XS · agent · med
+### B47 · A quoted `bash`, or `bash` in another case, before a script path that leaves `tools/` passes the guard (A01:2025 Broken Access Control) · done 2026-11-03 · XS · agent · med
 - Touches: .claude/hooks/guard-commands.sh, selftest.sh (the guard is framework-owned: T276, T277 and T278 carry the fix)
 - Repro: 1. Feed the guard hook `"bash" tools/../x.sh`, `'sh' tools/stacks/../../x.sh` or `BASH tools/stacks/../../x.sh`. 2. Expected: blocked, as `bash tools/../x.sh` is. Actual: exit 0: the script-path rule reads the shell's name with its quotes and in its case, while B39 and B46 made the git name read as the shell runs it and in any case.
 - Found in: B39
 - Brief: -
 
-### B48 · A pull request body, or a message naming a git command with a variable, is blocked · todo · S · agent · low
+### B48 · A pull request body, a message naming a git command with a variable, or a word that only names PowerShell is blocked · todo · S · agent · low
 - Touches: .claude/hooks/guard-commands.sh, selftest.sh (the guard is framework-owned: T276, T277 and T278 carry the fix)
-- Repro: 1. Feed the guard hook `gh pr edit 5 --body-file - <<'EOF'` or `gh pr create --body "$(cat <<'EOF' ... EOF)"` with a body naming `git push --force`; or `git commit -q -F - <<'EOF'` with a body line `fix: git push $X handling`. 2. Expected: passes: each body is a message no shell runs, as a quoted-delimiter commit message is since B39 and B40. Actual: exit 2: only `git commit` and `git tag` messages count as text, and B37's variable rule reads every heredoc body. Release notes passed to `gh pr edit` that name such a command would be blocked.
+- Repro: 1. Feed the guard hook `gh pr edit 5 --body-file - <<'EOF'` or `gh pr create --body "$(cat <<'EOF' ... EOF)"` with a body naming `git push --force`; `git commit -q -F - <<'EOF'` with a body line `fix: git push $X handling`; or `echo PowerShell 'bash tools/../x.sh'`, where B34's wrapper reader takes any word PowerShell or pwsh as an interpreter. 2. Expected: passes: each body is a message no shell runs, as a quoted-delimiter commit message is since B39 and B40. Actual: exit 2: only `git commit` and `git tag` messages count as text, and B37's variable rule reads every heredoc body. Release notes passed to `gh pr edit` that name such a command would be blocked.
 - Found in: B40
 - Brief: -
 
@@ -1263,10 +1263,10 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Note: found in B24: framework/.claude/settings.json wires guard-git.sh with separate `Bash` and `Monitor` matchers plus Bash ask and deny rules.
 - Brief: -
 
-### B53 · A script piped to a shell, a path-qualified git, a sudo option's value or cmd's %VAR% passes the guard (A01:2025 Broken Access Control) · todo · S · agent · med
+### B53 · A script piped to a shell, a path-qualified or `.exe` git or bash, a sudo option's value, cmd's %VAR% or a folder in another case passes the guard (A01:2025 Broken Access Control) · todo · S · agent · med
 - Touches: .claude/hooks/guard-commands.sh, selftest.sh (the guard is framework-owned: an item for each framework once it's built)
-- Repro: 1. Feed the guard hook `printf 'git push --force' | bash` or `echo 'git push --force' | sh`; `/usr/bin/git push --force` or `git.exe push --force` (so `G=/usr/bin/git; $G push --force` too); `sudo -u root "$G" push --force`; `cmd /c "%G% push --force"`; or `cat > .GIT/hooks/pre-commit <<'EOF'` with `git push --force` in the body. 2. Expected: each is blocked, as `git push --force` and a `.git/hooks` write are. Actual: exit 0: a shell reading its script from a pipe isn't read as a wrapper, the git test needs the bare name, an option's value before the command name isn't skipped, only `$` variables are read, and the `.git` folder test is case-sensitive.
-- Found in: B45, B46
+- Repro: 1. Feed the guard hook `printf 'git push --force' | bash` or `echo 'git push --force' | sh`; `/usr/bin/git push --force` or `git.exe push --force` (so `G=/usr/bin/git; $G push --force` too); `sudo -u root "$G" push --force`; `cmd /c "%G% push --force"`; `cat > .GIT/hooks/pre-commit <<'EOF'` with `git push --force` in the body; `bash.exe tools/../x.sh`; or `bash TOOLS/../x.sh`. 2. Expected: each is blocked, as `git push --force` and a `.git/hooks` write are. Actual: exit 0: a shell reading its script from a pipe isn't read as a wrapper, the git test needs the bare name, an option's value before the command name isn't skipped, only `$` variables are read, a shell's name takes no `.exe`, and the `.git` and `tools/` folder tests are case-sensitive, while Windows folders aren't.
+- Found in: B45, B46, B47
 - Brief: -
 
 ### T103 · /ui-design tells the director how to use Excalidraw · done 2026-10-20 · S · agent

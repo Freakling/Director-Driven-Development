@@ -75,7 +75,8 @@
 #      and the everyday forms pass. A shell's script, eval's argument or -Command that holds a variable the caller expands is
 #      blocked, and so is a bash script path under tools/ with a variable in it (B45).
 #      A git command name is matched in any case, so GIT and Git are git (PowerShell finds a command case-insensitively, B46);
-#      git's subcommands and flags stay case-sensitive.
+#      git's subcommands and flags stay case-sensitive. A shell's name in a bash script path under tools/ is read the same way,
+#      quotes removed and in any case, so "bash", 'sh' and BASH are bash and sh, and a quoted or split path is read too (B47).
 #   9. The site builds in strict mode, which fails on broken internal links and anchors.
 #  10. The Content-Security-Policy in overrides/main.html allows every inline script the built site
 #      runs (its sha256 is in script-src), and no script runs before the policy's meta tag.
@@ -1718,6 +1719,54 @@ else
     err "the guard hook passes a git command name in another case, or blocks a message that names git in another case (B46):"
     printf '%s\n' "${git_fail#$'\n'}"
   else echo "ok: the guard hook blocks a git command name in any case (GIT, Git) as it blocks git, and passes the everyday forms and the messages that name git in another case (B46)"; fi
+
+  # A shell's name in a bash script path under tools/ (B47): a quoted name is the same shell as the bare one, and so is one in another
+  # case (PowerShell and Windows find a command case-insensitively). So "bash", 'sh' and BASH lead a path that leaves tools/ as bash
+  # and sh do, and a quoted or split path, and a wrapper's script that names the shell in any case, are read too. The everyday forms
+  # pass, and so does a message or an echo that names a shell with its path.
+  git_fail=""
+  if [ -f .claude/hooks/guard-commands.sh ]; then
+    for cmd in \
+        '"bash" tools/../x.sh' \
+        "'sh' tools/stacks/../../x.sh" \
+        'BASH tools/stacks/../../x.sh' \
+        'Bash tools/../x.sh' \
+        '"bash" "tools/../x.sh"' \
+        'sh -x "tools/stacks/../x.sh"' \
+        'BASH -x tools/stacks/../x.sh' \
+        '"/bin/bash" tools/../x.sh' \
+        'bash tools/".."/x.sh' \
+        "bash 'tools/../x.sh'" \
+        'env "bash" tools/../x.sh' \
+        '"bash" ./tools/../x.sh' \
+        '"BASH" -c "BASH tools/../x.sh"' \
+        "sh -c 'BASH tools/../x.sh'" \
+        '"bash" tools/stacks/$X.sh' \
+        $'echo x\n"bash" tools/../x.sh'; do
+      guard 2 "$cmd"
+    done
+    for cmd in '"bash" tools/../x.sh' 'BASH tools/stacks/../../x.sh'; do
+      guard 2 "$cmd" PowerShell
+    done
+    for cmd in \
+        'bash tools/check.sh' \
+        '"bash" tools/check.sh' \
+        'BASH tools/check.sh' \
+        "'sh' tools/stacks/godot.sh --since HEAD~3..HEAD" \
+        'echo "bash" tools/../x.sh' \
+        'echo "BASH tools/../x.sh"' \
+        'git commit -m "bash tools/../x.sh"' \
+        'cat "sh" tools/../x.sh' \
+        'git status'; do
+      guard 0 "$cmd"
+    done
+    guard 0 '"bash" tools/check.sh' PowerShell
+  fi
+  guard_run
+  if [ -n "$git_fail" ]; then
+    err "the guard hook passes a bash script path that leaves tools/ when its shell's name is quoted or in another case (B47):"
+    printf '%s\n' "${git_fail#$'\n'}"
+  else echo "ok: the guard hook blocks a script path under tools/ that leaves it, when bash or sh is quoted or in any case, and passes the everyday forms and the messages that name a shell (B47)"; fi
 
   # Git's configuration keys and program flags (B38). A -c key, or --config-env, that names a program git runs (an alias that
   # starts with !, the pager, the editor, the ssh command, a diff or credential helper, an include) is blocked, and so is a key a
