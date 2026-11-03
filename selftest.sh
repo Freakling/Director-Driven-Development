@@ -60,6 +60,9 @@
 #      helper) or a key a variable holds is blocked; the keys that run nothing pass. A flag that names a program for a remote
 #      (--upload-pack, --receive-pack, --exec, clone's -u) is blocked, abbreviations too, and so is a GIT_CONFIG_*, GIT_PAGER or
 #      EDITOR variable set on a git command (B38).
+#      A quoted git name (and a quoted gh or credential subcommand) is read as the shell reads it; a heredoc body a shell runs
+#      is read by the file-writing flag rules, a backtick ends a flag in it, and a commit's or tag's message is not (B39).
+#      git branch with --delete and --force, git push --mirror, --delete, -d and a :ref refspec are blocked (B39).
 #   9. The site builds in strict mode, which fails on broken internal links and anchors.
 #  10. The Content-Security-Policy in overrides/main.html allows every inline script the built site
 #      runs (its sha256 is in script-src), and no script runs before the policy's meta tag.
@@ -1545,6 +1548,95 @@ else
     err "the guard hook passes a git -c key or a program flag that runs a command, or a variable that names one, or blocks a plain form (B38):"
     printf '%s\n' "${git_fail#$'\n'}"
   else echo "ok: the guard hook blocks a git -c key that names a program (an alias, the pager, the ssh command, a diff or credential helper), a key a variable holds, a program flag for a remote (--upload-pack, --receive-pack, --exec, clone's -u), and a GIT_CONFIG_*, GIT_PAGER or EDITOR variable on a git command; the keys that run nothing and the plain forms pass (B38)"; fi
+
+  # A quoted git name, a heredoc body a shell runs, the long forms and a credential subcommand in quotes (B39). The git name is
+  # read as the shell reads it, quotes removed, so "git", 'git' and g"it" are git. A heredoc body a shell runs (any body but a
+  # commit's or tag's message) is read by the file-writing flag rules, and a backtick ends a flag in it. git branch with --delete
+  # and --force (-d -f, -df, --del --forc), git push --mirror, --delete and -d (abbreviations too) and a :ref refspec are blocked,
+  # as their plain forms are, and the credential-print rules read the decoded words. A message that names them, and a read that
+  # names none, pass: a commit's or tag's message is text no shell runs.
+  git_fail=""
+  if [ -f .claude/hooks/guard-commands.sh ]; then
+    for cmd in \
+        '"git" push --force' \
+        "'git' push --force" \
+        'g"it" push --force' \
+        '"git" log --output=/tmp/x' \
+        $'bash <<\'EOF\'\ngit log --output=/tmp/x\nEOF' \
+        $'sh <<EOF\ngit diff --no-index a b\nEOF' \
+        $'bash <<\'EOF\'\ngit commit -F /tmp/msg.txt\nEOF' \
+        $'bash <<\'EOF\'\ngit grep -Oecho foo\nEOF' \
+        $'cat <<\'EOF\' | bash\ngit log --output=/tmp/x\nEOF' \
+        $'bash <<\'EOF\'\ngit branch --delete --force x\nEOF' \
+        $'bash <<\'EOF\'\ngit push --mirror\nEOF' \
+        $'bash <<\'EOF\'\ngit credential "fill"\nEOF' \
+        $'bash <<\'EOF\'\ngit push `echo --force`\nEOF' \
+        $'bash <<\'EOF\'\ngit push --force`echo x`\nEOF' \
+        $'ssh host <<\'EOF\'\ngit push `echo --force`\nEOF' \
+        $'git status && bash <<\'EOF\'\ngit push `echo --force`\nEOF' \
+        $'"bash" <<\'EOF\'\ngit push --mirror\nEOF' \
+        $'git commit -m "$(source /dev/stdin <<\'EOF\'\ngit push `echo --force`\nEOF\n)"' \
+        'sh -c "git push --mirror"' \
+        'git branch --delete --force x' \
+        'git branch --delete -f x' \
+        'git branch -d -f x' \
+        'git branch -df x' \
+        'git branch -fd x' \
+        'git branch --del --forc x' \
+        'git push --mirror' \
+        'git push --mirror origin' \
+        'git push --mi origin' \
+        'git push --delete origin x' \
+        'git push --de origin x' \
+        'git push -d origin x' \
+        'git push -fd origin x' \
+        'git push origin :x' \
+        'git push origin ":x"' \
+        'git push origin :refs/heads/x' \
+        'git credential "fill"' \
+        "git credential 'get'" \
+        'git credential fi"ll"' \
+        'gh "auth" "token"' \
+        'g"h" auth token'; do
+      guard 2 "$cmd"
+    done
+    for cmd in \
+        'git branch -d x' \
+        'git branch -vv' \
+        'git branch -m old new' \
+        'git branch --list "*f*"' \
+        'git push origin main:main' \
+        'git push origin HEAD:refs/heads/x' \
+        'git push --dry-run origin main' \
+        'git push --set-upstream origin x' \
+        'echo "git push --mirror"' \
+        'echo "git credential fill"' \
+        'git log --grep "push --mirror"' \
+        'git status && echo "git credential fill"' \
+        $'git commit -q -F - <<\'EOF\'\nfix: git push --mirror and git branch -d x\nEOF' \
+        $'git commit -q -F - <<\'EOF\'\nfix: git log --output=x in the docs\nEOF' \
+        $'git commit -q -F - <<\'EOF\'\nmsg with `git push --force` in it\nEOF' \
+        $'git tag -a v1 -F - <<\'EOF\'\nfix: git push --delete origin x\nEOF' \
+        $'git commit -q -F - <<\'EOF\'\nfix the --mirror and --delete flags, not -d\nEOF' \
+        $'bash <<\'EOF\'\necho hi\nEOF' \
+        $'bash <<\'EOF\'\ngit status\nEOF' \
+        $'bash <<\'EOF\'\ngit branch -d x\nEOF' \
+        $'git status && bash <<\'EOF\'\necho x\nEOF'; do
+      guard 0 "$cmd"
+    done
+    for cmd in '"git" push --force' 'git branch --delete --force x' 'git push --mirror' 'git push origin :x' \
+        'git credential "fill"' 'gh "auth" "token"'; do
+      guard 2 "$cmd" PowerShell
+    done
+    for cmd in 'git branch -d x' 'git push origin main'; do
+      guard 0 "$cmd" PowerShell
+    done
+  fi
+  guard_run
+  if [ -n "$git_fail" ]; then
+    err "the guard hook doesn't read a quoted git name, a heredoc body a shell runs, a long-form branch or push flag, a push refspec that deletes, or a quoted credential subcommand as the shell does, or blocks a message that names a plain form (B39):"
+    printf '%s\n' "${git_fail#$'\n'}"
+  else echo "ok: the guard hook blocks a quoted git name, a heredoc body a shell runs with a file-writing flag, a backtick flag or a destructive command, git branch --delete --force, git push --mirror, --delete or a :ref refspec, and a quoted credential subcommand, and passes the messages and reads that name them (B39)"; fi
 
   # The credential stores (B15): the Read tool may not open the gh CLI's token file, git's credentials or
   # ~/.ssh. The .env files with values (B21): .env.local and the other .env.<suffix> files the guard hook

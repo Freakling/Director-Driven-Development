@@ -42,6 +42,11 @@
 # --receive-pack, --exec, and clone's -u) are blocked on fetch, pull, push, clone, ls-remote and archive, abbreviations too. A
 # variable that names a program git runs (GIT_CONFIG_*, GIT_SSH_COMMAND, GIT_PAGER, EDITOR and the like) set on a git command is
 # blocked. See the section "Git configuration and program flags" below.
+#
+# The git name is read as the shell reads it, quotes removed, so "git", 'git' and g"it" are git (B39). A heredoc body a shell
+# runs (any body but a commit's or tag's message) takes a backtick as the end of a flag, and its words and the file-writing flags
+# are read there too; git branch with a delete and a force flag, git push --mirror, --delete and -d, and a :ref refspec are
+# blocked, and the credential-print rules read the decoded words (B39, where the git rules below read the bodies and the words).
 
 IFS= read -r -d '' input || true
 re='"command"[[:space:]]*:[[:space:]]*"(([^"\\]|\\.)*)"'
@@ -324,6 +329,8 @@ var_resolve() {
   ((${#kn[@]})) || return 0
   if [[ $cut_out == *'$'* ]]; then var_sub "$cut_out"; cut_out="$vbout"; fi
   if [[ $hall == *'$'* ]]; then var_sub "$hall"; hall="$vbout"; fi
+  if [[ $hdc == *'$'* ]]; then var_sub "$hdc"; hdc="$vbout"; fi
+  if [[ $hnm == *'$'* ]]; then var_sub "$hnm"; hnm="$vbout"; fi
   return 0
 }
 
@@ -584,6 +591,10 @@ cfg_segment() {
 WRAP_MAX=4
 hre='(^|[^<])<<-?[[:space:]]*(\\?["'"'"']?)([A-Za-z_][A-Za-z0-9_]*)'
 wrap_gate='(^|[^[:alnum:]_-])((ba|z|da|k)?sh|eval|powershell|pwsh|cmd)(\.exe)?([[:space:];&|()<>]|$)'
+# B39: a heredoc whose header (the text before <<, after its last ; & |) feeds a commit's or tag's message, and whose line
+# names no shell, is text no shell runs. A header that names a shell (bash, sh, eval, source...) feeds a script a shell runs.
+hmsg_re='(^|[^[:alnum:]_./-])git[[:space:]]+([^;&|]*[[:space:]])?(commit|tag)([[:space:]]|$)'
+hshell_re='(^|[^[:alnum:]_./-])((ba|z|da|k)?sh|eval|source|exec)(\.exe)?([[:space:];&|()<>]|$)'
 tab=$'\t'; cr=$'\r'
 MSG_WRAP="the guard can't read the quoting of this command, which may hold a script a shell or PowerShell runs (or an encoded PowerShell command)"
 MSG_DEEP="shell wrappers nest deeper than the guard reads (four levels, such as bash -c inside sh -c)"
@@ -942,12 +953,10 @@ if reads_cred_file; then
   exit 2
 fi
 shopt -u nocasematch
-# gh auth token, gh auth status -t and git credential fill or get print a stored credential. Matched on
-# code (the command with its quoted text blanked), so a commit message that names them isn't blocked.
+# gh auth token, gh auth status -t and git credential fill or get print a stored credential. Matched on the decoded words
+# (B39, rdec, below), so a quoted subcommand is seen; a commit message that names them has its quoted text blanked, so it isn't.
 gh_print_re='(^|[^[:alnum:]_./-])gh[[:space:]]+auth[[:space:]]+(token([[:space:]]|$|[;&|)])|status[^;&|]*[[:space:]](-[[:alpha:]]*t[[:alpha:]]*|--show-token)([[:space:]]|$|[;&|)]))'
 git_print_re='(^|[^[:alnum:]_./-])git[[:space:]]+([^;&|]*[[:space:]])?credential[[:space:]]+(fill|get)([[:space:]]|$|[;&|)])'
-[[ $code =~ $gh_print_re ]] && block "gh auth token and gh auth status -t print the gh CLI's stored token"
-[[ $code =~ $git_print_re ]] && block "git credential fill and get print a credential from git's credential store"
 
 # --- Hangs ---------------------------------------------------------------------------------------
 # A command that never returns, or runs past five minutes, lets the prompt cache expire, and the next
@@ -1047,9 +1056,13 @@ shopt -u nocasematch
 
 # --- git-specific rules --------------------------------------------------------------------------
 # A substitution's brackets are read as blanks, so $(echo git) counts as a git command (B32).
-isgit=0; [[ ${detect//$brackets/ } =~ (^|[^[:alnum:]_./-])git([[:space:]]|$) ]] && isgit=1
+# The git name is read as the shell reads it, quotes removed, so "git", 'git' and g"it" are git (B39).
+bare_g="${detect//$brackets/ }"; bare_g="${bare_g//[\"\'\\]/}"
+isgit=0; [[ $bare_g =~ (^|[^[:alnum:]_./-])git([[:space:]]|$) ]] && isgit=1
 isbash=0; [[ $detect =~ (^|[^[:alnum:]_.-])(ba)?sh([[:space:]]|$) ]] && isbash=1
-((isgit || isbash)) || continue
+# A gh command (quotes removed, as the shell reads it) is read for the gh auth token rule too (B39).
+gh_pre=0; [[ ${real//[\"\'\\]/} =~ (^|[^[:alnum:]_.-])gh[[:space:]] ]] && gh_pre=1
+((isgit || isbash || gh_pre)) || continue
 
 seg='[^;&|]*'   # the destructive git rules are below the decoding of the command (B33)
 
@@ -1065,21 +1078,33 @@ sq1="'"
 
 # Cut out the heredoc bodies (git commit -F - <<'EOF' ...; hre, the header's pattern, is set above). A quoted delimiter makes
 # the body plain text; an unquoted one expands $(...) and backticks, so a body with those stays.
-gtext=""; delim=""; hquote=""; body=""; hall=""
+gtext=""; delim=""; hquote=""; body=""; hall=""; hdc=""; hnm=""; hmsg=0; hpre=""
 while IFS= read -r line || [ -n "$line" ]; do
   if [ -n "$delim" ]; then
     if [ "${line#"${line%%[![:space:]]*}"}" = "$delim" ]; then
       delim=""
       [[ -n $hquote || ( $body != *'$('* && $body != *'`'* ) ]] || gtext+="${body//[\'\"]/_}"   # an unquoted body's quotes are text (B32)
-      hall+="$body"; body=""
+      hall+="$body"
+      # B39: a backtick ends a flag in a body a shell runs, so hdc (the destructive rules' bodies) and hnm (the flag rules' shell
+      # bodies) hold each backtick of such a body as a space. A message's body keeps its backticks, which B32 reads as text.
+      if ((hmsg)); then hdc+="$body"; else hdc+="${body//"$bt"/ }"; hnm+="${body//"$bt"/ }"; fi
+      body=""
     else body+="$line$nl"; fi
     continue
   fi
   gtext+="$line$nl"
-  [[ $line =~ $hre ]] && { delim="${BASH_REMATCH[3]}"; hquote="${BASH_REMATCH[2]}"; }
+  if [[ $line =~ $hre ]]; then
+    delim="${BASH_REMATCH[3]}"; hquote="${BASH_REMATCH[2]}"
+    # hmsg: the header's command, up to the << (after its last ; & |), is a commit's or tag's, and the line names no shell.
+    # A substitution in that command runs one, so only $(cat, which prints the message, keeps the body a message.
+    hpre="${line%%<<*}"; hpre="${hpre##*[;&|]}"; hsub="${hpre//'$(cat'/}"
+    hmsg=0
+    [[ $hpre =~ $hmsg_re && $hsub != *'$('* && $hsub != *'<('* && $hsub != *'>('* && $hsub != *"$bt"* && ! $line =~ $hshell_re ]] && hmsg=1
+  fi
 done <<<"$real"
 gtext+="$body"   # a heredoc that never closes keeps its text: a false block beats a miss
-hall+="$body"    # every body, for the destructive rules (B33): a body may be a script a shell runs
+hall+="$body"    # every body, for the variable rules (B37): a body may be a script a shell runs
+if ((hmsg)); then hdc+="$body"; else hdc+="${body//"$bt"/ }"; hnm+="${body//"$bt"/ }"; fi
 
 # B32: the substitutions are read out of the command first (subst_cut), so the quote reading below sees placeholders, not
 # their text: a quote or a ) inside a substitution can't end a quoted string or the substitution early. Outside git's
@@ -1124,6 +1149,34 @@ decode_words() {
   dec="${dec//$nl/;}"; dec="${dec//>&/> }"; dec="${dec//&>/> }"
 }
 decode_words "$cut_out"; gcode="$dec"
+
+# bdecode <bodies>: sets dec to the bodies as decode_words reads them (B33). A body over 4 KB keeps every word a quote or a
+# backslash hid, which costs one pass over the text rather than one per quote (a 300-line body with a quote on each line took
+# seconds); exposing a word can't hide a flag.
+bdecode() {
+  if ((${#1} <= 4096)); then decode_words "$1"
+  else
+    dec="${1//[\"\'\\]/}"; dec="${dec//$nl/;}"; dec="${dec//>&/> }"; dec="${dec//&>/> }"
+  fi
+}
+# B33, B39: the heredoc bodies the destructive rules read (dcode): each body that names one of their subcommands, decoded as the
+# command is. A body without one of those subcommands can't match a rule, so only a body with one is read (the test runs with
+# the quotes and backslashes removed, so pu"sh" is still found). A body is a script a shell runs, or a message that names a
+# rule (B40 covers the over-block of a message).
+bcode=""
+if [[ ${hdc//[\"\'\\]/} =~ push|reset|clean|checkout|switch|restore|stash|branch|commit ]]; then bdecode "$hdc"; bcode="$dec"; fi
+dcode="$gcode;$bcode"
+# B39: the bodies a shell runs (hnm: any heredoc but a commit's or tag's message) that name git are read by the file-writing,
+# file-reading and program flags and by the words of a git command (fcode). A message isn't, so it passes as it did.
+ncode=""
+if [[ ${hnm//[\"\'\\]/} =~ git ]]; then bdecode "$hnm"; ncode="$dec"; fi
+fcode="$gcode;$ncode"
+# B39: the credential-print rules read the command's decoded words, bodies included, with the quotes removed as the shell removes them.
+# The decode runs only when gh or credential is named in the quote-free text (it's the costly part for a long message).
+rdec=""
+if [[ ${real//[\"\'\\]/} =~ (^|[^[:alnum:]_.-])(gh|credential)[[:space:]] ]]; then decode_words "$real"; rdec="$dec"; fi
+[[ $rdec =~ $gh_print_re ]] && block "gh auth token and gh auth status -t print the gh CLI's stored token"
+[[ $rdec =~ $git_print_re ]] && block "git credential fill and get print a credential from git's credential store"
 # B32: each substitution's text is read as a command of its own (a view), so git's rules judge the git inside it.
 if ((isgit)); then
   for ((vn = 0; vn < ${#subc[@]}; vn++)); do
@@ -1153,18 +1206,7 @@ fi
 # followed by ; & | ) or a line break is found too.
 flag_end='([[:space:];&|()<>=]|$)'
 if ((isgit)); then
-  # A body without one of those subcommands can't match a rule, so only a body with one is read. The test runs on the body
-  # with its quotes and backslashes removed, so a subcommand split by them (pu"sh") is still found. A body up to 4 KB is
-  # decoded as the command is. A longer one keeps every word a quote or a backslash hid, which costs one pass over the text
-  # rather than one per quote (a 300-line body with a quote on each line took seconds); exposing a word can't hide a flag.
-  bcode=""
-  if [[ ${hall//[\"\'\\]/} =~ push|reset|clean|checkout|switch|restore|stash|branch|commit ]]; then
-    if ((${#hall} <= 4096)); then decode_words "$hall"; bcode="$dec"
-    else
-      bcode="${hall//[\"\'\\]/}"; bcode="${bcode//$nl/;}"; bcode="${bcode//>&/> }"; bcode="${bcode//&>/> }"
-    fi
-  fi
-  dcode="$gcode;$bcode"
+  # dcode and bcode (the bodies, decoded) are set above, where the bodies are read (B33, B39).
   shopt -s nocasematch
   [[ $raw =~ core\.hookspath ]] && block "changing core.hooksPath switches the pre-commit hook off"
   shopt -u nocasematch
@@ -1183,7 +1225,7 @@ if ((isgit)); then
 fi
 
 gitre='(^|[^[:alnum:]_./-])git[[:space:]]'
-gitflag() { [[ $gcode =~ $gitre($seg[[:space:]])?$1 ]]; }
+gitflag() { [[ $fcode =~ $gitre($seg[[:space:]])?$1 ]]; }
 gitflag '--output([[:space:]=;&|]|$)' && block "--output writes a file to any path, such as one a later command runs"
 gitflag '--no-index([[:space:]=;&|]|$)' && block "--no-index reads any file on the machine"
 gitflag '--ext' && block "--ext-diff runs a configured external command"
@@ -1199,7 +1241,7 @@ gitflag '--ext' && block "--ext-diff runs a configured external command"
 # path outside tools/ matches no allow rule, so it asks the human anyway.
 outre='^(/|~|[A-Za-z]:|\$[A-Za-z_{])|(^|/)\.\.(/|$)'
 dotsre='(^|/)\.\.(/|$)'
-IFS=';&|' read -r -d '' -a gsegs <<<"$gcode" || true
+IFS=';&|' read -r -d '' -a gsegs <<<"$fcode" || true
 for gs in "${gsegs[@]}"; do
   gs="${gs//$brackets/ }"
   read -ra w <<<"$gs"
@@ -1271,6 +1313,40 @@ for gs in "${gsegs[@]}"; do
           done
         fi
       done ;;
+    push)
+      # B39: --mirror and --delete, and any prefix of them that git accepts (--mi, --de), -d (and a cluster holding d, such as -fd)
+      # and a :ref refspec, which deletes the ref it names. A word that starts with : is a refspec, so the rule is conservative.
+      for ((k++; k < n; k++)); do
+        a="${w[k]}"
+        [[ $a == -- ]] && break
+        if [[ $a == --* ]]; then
+          name="${a%%=*}"; name="${name#--}"
+          [[ -n $name && mirror == "$name"* ]] && block "git push --mirror overwrites every ref on the remote"
+          [[ -n $name && delete == "$name"* ]] && block "git push --delete deletes a branch or tag on the remote"
+        elif [[ $a == -?* ]]; then
+          [[ ${a#-} == *d* ]] && block "git push -d deletes a branch or tag on the remote"
+        elif [[ $a == :* ]]; then
+          block "a push refspec that starts with : deletes the remote ref it names"
+        fi
+      done ;;
+    branch)
+      # B39: a delete flag (--delete, -d, -D) and a force flag (--force, -f), in either order or in one cluster (-df), deletes a
+      # branch whether or not it's merged. Their long forms are read as git reads an unambiguous prefix (--del, --forc).
+      del=0; frc=0
+      for ((k++; k < n; k++)); do
+        a="${w[k]}"
+        [[ $a == -- ]] && break
+        if [[ $a == --* ]]; then
+          name="${a%%=*}"; name="${name#--}"
+          [[ -n $name && delete == "$name"* ]] && del=1
+          [[ -n $name && force == "$name"* ]] && frc=1
+        elif [[ $a == -?* ]]; then
+          cl="${a#-}"
+          [[ $cl == *[dD]* ]] && del=1
+          [[ $cl == *f* ]] && frc=1
+        fi
+      done
+      ((del && frc)) && block "git branch with --delete and --force deletes a branch whether or not it's merged" ;;
   esac
 done
 done
