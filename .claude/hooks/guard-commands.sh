@@ -24,7 +24,8 @@
 # guard can't see, and what it prints is text the rules can't read (B32). In a git command's words it can be a flag, and
 # as a command's name it can be git. So the substitutions are read out of the command, each one's text is read as a
 # command of its own, and in a git command's words only a double-quoted one that starts with fixed text (or a commit's
-# or tag's -m value) passes, and only when its text is a plain read. See the section "Substitutions" below.
+# or tag's -m value) passes, and only when its text is a plain read. In Bash a comment holds no substitution, and its quotes
+# open no string (B43). See the section "Substitutions" below.
 #
 # A quoted script given to a shell or an interpreter (bash -c, sh -c, zsh -c, eval, powershell -Command, pwsh -c, cmd /c)
 # is a command of its own: each is read as one, and a script nested in one to four levels too (B34). See the section
@@ -132,15 +133,35 @@ MSG_MSG="a command substitution is a commit's or tag's message only as the value
 MSG_READ="a command substitution in a git command's words runs a command the guard can't judge; only git, date, cat, echo and printf are read there"
 MSG_UNREAD="the guard can't read a command substitution here: it's unclosed, or it holds a backtick, or a double-quoted string with a substitution"
 
-# sub_end <text> <start>: sub_e is the index of the ) that closes a substitution whose text starts at <start>. Quoted strings
+# cmt_start <text> <i>: 0 when the # at <i> starts a Bash comment (B43). It starts a word, which a # does at the text's start,
+# or after a blank, a line break, or ; & | ( that isn't escaped. A # after a ) joins its word (the ) that closes a
+# substitution ends none), and a # inside a word (a#b, ${#x}, $#) starts no comment. Nor does one inside ${...} (x:- #a),
+# which the readers track (pbr, pb): a blank there is part of the expansion.
+cmt_start() {
+  local s="$1" i=$2 k b=0
+  ((i == 0)) && return 0
+  case ${s:i-1:1} in ' ' | $'\t' | "$nl" | ';' | '&' | '|' | '(') ;; *) return 1 ;; esac
+  k=$((i - 2))
+  while ((k >= 0)) && [[ ${s:k:1} == '\' ]]; do b=$((b + 1)); k=$((k - 1)); done
+  ((b % 2 == 0))
+}
+
+# sub_end <text> <start> [1]: sub_e is the index of the ) that closes a substitution whose text starts at <start>. Quoted strings
 # and escapes are skipped, so a ) inside them doesn't count. Returns 1 when it doesn't close, or when a double-quoted string
-# in it holds a substitution or a backtick.
+# in it holds a substitution or a backtick. With a third argument of 1 (Bash, B43) a comment inside the substitution runs to its
+# line break, so a ) or a backtick in it closes nothing and starts nothing.
 sub_end() {
-  local s="$1" j=$2 L=${#s} depth=1 c k
+  local s="$1" j=$2 L=${#s} depth=1 c k cm=${3:-0} pb=0
   while ((j < L)); do
     c="${s:j:1}"
     if [[ $c == "$sesc" ]]; then ((j += 2)); continue; fi
+    if ((cm && pb == 0)) && [[ $c == '#' ]] && cmt_start "$s" "$j"; then
+      k="${s:j}"; k="${k%%"$nl"*}"; ((j += ${#k})); continue
+    fi
     case $c in
+      '$')
+        if [[ ${s:j+1:1} == '{' ]]; then ((pb++, j += 2)); continue; fi ;;
+      '}') ((pb > 0)) && ((pb--)) ;;
       "'")
         k="${s:j+1}"; [[ $k == *"'"* ]] || return 1
         k="${k%%"'"*}"; ((j += ${#k} + 2)); continue ;;
@@ -166,10 +187,13 @@ sub_end() {
 
 # subst_cut <text>: cut_out is the text with each substitution as a placeholder, and subc and subk are set (above). A
 # single quote starts a quoted string outside double quotes and is skipped whole, so a substitution inside it isn't one.
-# Returns 1 when a substitution can't be read (see MSG_UNREAD).
+# Returns 1 when a substitution can't be read (see MSG_UNREAD). In Bash a comment is copied as text (B43): a backtick, a
+# $( or a quote in it starts nothing. A heredoc body with a substitution is read whole, as the shell expands it, so the
+# comment reading is off for a command with one (hsubb, set where the bodies are collected).
 subst_cut() {
-  local s="$1" i=0 L ch nx t st e txt kind start wsf lit before pwd dqkind="" indq=0 dqpos=0
+  local s="$1" i=0 L ch nx t st e txt kind start wsf lit before pwd dqkind="" indq=0 dqpos=0 cmtc=0 pbr=0
   if [[ $tool == PowerShell ]]; then sesc='`'; else sesc='\'; fi
+  if [[ $tool != PowerShell ]] && ((${hsubb:-0} == 0)); then cmtc=1; fi
   L=${#s}; cut_out=""; sn=0; subc=(); subk=()
   while ((i < L)); do
     ch="${s:i:1}"; nx="${s:i+1:1}"
@@ -181,6 +205,10 @@ subst_cut() {
       t="${t%%"'"*}"; cut_out+="'$t'"; ((i += ${#t} + 2)); continue
     elif [[ $ch == '"' ]]; then
       indq=1; dqpos=${#cut_out}; dqkind=""; cut_out+='"'; ((i++)); continue
+    elif [[ $ch == '$' && $nx == '{' ]]; then pbr=$((pbr + 1)); cut_out+='${'; ((i += 2)); continue
+    elif ((pbr > 0)) && [[ $ch == '}' ]]; then pbr=$((pbr - 1)); cut_out+='}'; ((i++)); continue
+    elif ((cmtc && pbr == 0)) && [[ $ch == '#' ]] && cmt_start "$s" "$i"; then
+      t="${s:i}"; t="${t%%"$nl"*}"; cut_out+="$t"; ((i += ${#t})); continue
     fi
     st=0
     if [[ $ch == '$' && $nx == '(' ]]; then st=$((i + 2))
@@ -188,7 +216,7 @@ subst_cut() {
     elif ((!indq)) && [[ $tool != PowerShell && ( $ch == '<' || $ch == '>' ) && $nx == '(' ]]; then st=$((i + 2))
     fi
     if ((st > 0)); then
-      sub_end "$s" "$st" || return 1
+      sub_end "$s" "$st" "$cmtc" || return 1
       e=$sub_e; txt="${s:st:e-st}"
     elif [[ $ch == '`' && $tool != PowerShell ]]; then
       t="${s:i+1}"; [[ $t == *'`'* ]] || return 1
@@ -1117,12 +1145,12 @@ sq1="'"
 # or tag's message (hmsg) is text no shell runs, and so is a cat or tee body (hwr, collected in hwb) unless the command names a
 # runner (hrun_re, after the loop). Every body is in hall for the variable rules (B37), and an unquoted body's substitutions are
 # in gtext (B32). A shell body is collected in hsh.
-gtext=""; delim=""; hquote=""; body=""; hall=""; hsh=""; hwb=""; hdc=""; hnm=""; hmsg=0; hwr=0; hpre=""
+gtext=""; delim=""; hquote=""; body=""; hall=""; hsh=""; hwb=""; hdc=""; hnm=""; hmsg=0; hwr=0; hpre=""; hsubb=0
 while IFS= read -r line || [ -n "$line" ]; do
   if [ -n "$delim" ]; then
     if [ "${line#"${line%%[![:space:]]*}"}" = "$delim" ]; then
       delim=""
-      [[ -n $hquote || ( $body != *'$('* && $body != *'`'* ) ]] || gtext+="${body//[\'\"]/_}"   # an unquoted body's quotes are text (B32)
+      [[ -n $hquote || ( $body != *'$('* && $body != *'`'* ) ]] || { gtext+="${body//[\'\"]/_}"; hsubb=1; }   # an unquoted body's quotes are text (B32), and its substitutions are read whole (B43)
       hall+="$body"
       if ((hmsg)); then :
       elif ((hwr)); then hwb+="$body"
@@ -1143,6 +1171,7 @@ while IFS= read -r line || [ -n "$line" ]; do
   fi
 done <<<"$real"
 gtext+="$body"   # a heredoc that never closes keeps its text: a false block beats a miss
+[[ -n $body ]] && hsubb=1   # its text is read whole too, so the comment reading (B43) is off for it
 hall+="$body"    # every body, for the variable rules (B37): a body may be a script a shell runs
 hsh+="$body"
 # B40: a cat or tee body is read as a shell body when the command names a runner. The text is read with its quotes removed, so

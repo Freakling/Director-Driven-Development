@@ -48,6 +48,7 @@
 #      joined to its delimiter line (B29). A PowerShell comment that ends in a backtick is read the same way (B35).
 #      A command substitution in a git command's words, or as its name, is blocked when it can print a flag or run
 #      a command the guard can't read; a quoted value after fixed text, a commit's -m value and a read pass (B32).
+#      In Bash a comment holds no substitution and opens no quoted string, so a backtick or $( in one passes (B43).
 #      A destructive git rule (a force push, a +refspec, reset --hard, clean -f, checkout or switch -f, stash drop,
 #      branch -D) reads the decoded words, so a quoted flag or refspec is blocked, and its flag ends at ; & | ) or a
 #      line break; a heredoc body a shell runs is read too, and a quoted message that names a rule passes (B33).
@@ -1157,6 +1158,55 @@ else
     err "the guard hook reads a command substitution in a git command's words, or as its name, as harmless, or blocks a plain read (B32):"
     printf '%s\n' "${git_fail#$'\n'}"
   else echo "ok: the guard hook blocks a command substitution that can print a git flag or run a command the guard can't read, in git's words or as a command name, and passes the quoted values, messages and reads the procedures use (B32)"; fi
+
+  # A Bash comment holds no substitution and opens no quoted string (B43): a backtick, $( or quote in it is text, so the
+  # command after the comment is read as Bash reads it. A substitution after a comment, a tab, ; or & is still read, and so is
+  # one after a # inside a word (a#b) or after an escaped blank, since neither starts a comment. A ) in a comment doesn't close a
+  # substitution, so its text runs to the next line and is blocked. A blank before a # inside ${...} is part of the expansion,
+  # not a comment. An unquoted heredoc body's substitutions are read whole, as the shell expands them, so a comment in one is
+  # read too; a quoted body is text.
+  git_fail=""
+  if [ -f .claude/hooks/guard-commands.sh ]; then
+    for cmd in \
+        $'git push # x\n`echo --force`' \
+        $'git push # x\ngit push `echo --force`' \
+        $'git status # note\ngit push $(echo --force)' \
+        $'# it\'s\ngit push `echo --force`' \
+        $'git status a#b `echo --force`' \
+        $'git status a\\ #`echo --force`' \
+        $'git status ${x:- #a} $(echo --force)' \
+        $'git push origin ":${y:- #}$(echo main)"' \
+        $'git push `# x`' \
+        $'git push `echo --force` # x' \
+        $'git push $(echo --force) # `' \
+        $'git status $(echo a # `)' \
+        $'git log "--format=$(echo a # )\nprintf x)"' \
+        $'git commit -q -F - <<EOF\n# note `\nmsg\nEOF' \
+        $'git log <<EOF\n# $(git push --force)\nEOF' \
+        $'git status <<EOF\n# `git push --force`\nEOF' \
+        $'# note `\\\ngit push `echo --force`'; do
+      guard 2 "$cmd"
+    done
+    for cmd in \
+        $'# note `\ngit status' \
+        $'# note `echo --force`\ngit status' \
+        $'# note $(echo --force)\ngit status' \
+        $'git status\t# note `\ngit log -1' \
+        $'git status;# note `\ngit log -1' \
+        $'# it\'s\ngit status' \
+        $'git status # $(echo --force)' \
+        $'git status # `echo --force`' \
+        $'git status ${x:-y} # $(echo --force)' \
+        $'# note `\\\ngit status' \
+        $'git commit -q -F - <<\'EOF\'\n# note `echo --force`\nmsg\nEOF'; do
+      guard 0 "$cmd"
+    done
+  fi
+  guard_run
+  if [ -n "$git_fail" ]; then
+    err "the guard hook reads a backtick, \$( or quote in a Bash comment as a substitution or a string, or misses a substitution after one (B43):"
+    printf '%s\n' "${git_fail#$'\n'}"
+  else echo "ok: the guard hook reads a Bash comment as text, so a backtick, \$( or quote in it starts no substitution or string, and a substitution after a comment, an escaped blank or a # in a word is still read (B43)"; fi
 
   # A destructive git rule (B33) reads the words as the shell hands them over: a quoted flag, refspec or path is seen, a flag
   # ends at ; & | ) or a line break as it does at a space, and a heredoc body a shell runs is read too. The rules are a force
