@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T279 · B53 · R7
+**Next IDs:** T279 · B54 · R7
 
 ## Milestones
 | Milestone | Status |
@@ -1139,7 +1139,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Found in: B36
 - Brief: -
 
-### B45 · A variable as the command's name, or as a shell's script, passes the guard (A01:2025 Broken Access Control) · todo · XS · agent · med
+### B45 · A variable as the command's name, or as a shell's script, passes the guard (A01:2025 Broken Access Control) · done 2026-11-03 · XS · agent · med
 - Touches: .claude/hooks/guard-commands.sh, selftest.sh (the guard is framework-owned: T276, T277 and T278 carry the fix)
 - Repro: 1. Feed the guard hook `G=git; $G push --force`, `$G push --force` alone, or `bash -c "$CMD"`. 2. Expected: blocked, or blocked with a message saying the guard can't judge what the variable holds, as B37 does for `$X -c` and a variable in a git command's words. Actual: exit 0: B37 reads a variable command name only before `-c` or `-Command`, and a shell's script held in a variable is never read.
 - Found in: B37
@@ -1261,6 +1261,12 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Touches: work/Godot-Director: framework/.claude/settings.json, framework/.claude/hooks/, selftest.sh
 - Done when: the guard hook's matcher names PowerShell and every Bash deny and ask rule has a PowerShell twin, with no PowerShell allow rule, as B24 did here; the guard closes the gaps B25, B27 to B40 and B42 to B52 closed here (the read fixes where its guard checks credential reads), ported with their selftest cases, including the readings of a continued command (as written, as joined, and joined from each line after a comment: B28, B31); the selftest passes (check) · following AGENTS.md › Project rules for framework work
 - Note: found in B24: framework/.claude/settings.json wires guard-git.sh with separate `Bash` and `Monitor` matchers plus Bash ask and deny rules.
+- Brief: -
+
+### B53 · A script piped to a shell, a path-qualified git, a sudo option's value or cmd's %VAR% passes the guard (A01:2025 Broken Access Control) · todo · S · agent · med
+- Touches: .claude/hooks/guard-commands.sh, selftest.sh (the guard is framework-owned: an item for each framework once it's built)
+- Repro: 1. Feed the guard hook `printf 'git push --force' | bash` or `echo 'git push --force' | sh`; `/usr/bin/git push --force` or `git.exe push --force` (so `G=/usr/bin/git; $G push --force` too); `sudo -u root "$G" push --force`; or `cmd /c "%G% push --force"`. 2. Expected: each is blocked, as `git push --force` is. Actual: exit 0: a shell reading its script from a pipe isn't read as a wrapper, the git test needs the bare name, an option's value before the command name isn't skipped, and only `$` variables are read.
+- Found in: B45
 - Brief: -
 
 ### T103 · /ui-design tells the director how to use Excalidraw · done 2026-10-20 · S · agent

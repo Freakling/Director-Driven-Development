@@ -37,6 +37,12 @@
 # variable as the subcommand, and a variable as a command's name followed by -c or -Command, are blocked too. See the
 # section "Variables" below.
 #
+# A variable as a command's name runs what it holds (B45). A plain value the command assigns is that name (G=git; $G push
+# --force is git push --force). Otherwise it's blocked when the command sets a variable the guard can't resolve, or when a git
+# subcommand or a destructive flag follows it; "$PY" -I script.py passes. A shell's script, eval's argument or -Command that
+# holds a variable or a substitution is blocked, since the shell expands it before the guard can read it, and a bash script
+# path under tools/ that holds a variable is blocked, since it can add a .. the guard can't see. See "A variable as a command's name".
+#
 # A git -c key, or --config-env, that names a program git runs (an alias that starts with !, core.pager, core.sshCommand,
 # diff.external, a credential helper) runs a command of the caller's choice, so the keys are an allow list: only the keys that
 # run nothing pass, and a key a variable holds is blocked (B38). The flags that name a program for a remote (--upload-pack,
@@ -313,8 +319,99 @@ MSG_VAR="a variable in a git command's words holds a value the guard can't read,
 MSG_SUB="a variable as a git command's subcommand holds a value the guard can't read"
 MSG_SHVAR="a variable as a command's name, followed by -c or -Command, runs a shell or an interpreter the guard can't tell apart"
 vsh_pre_re='\$[^[:space:]]*[[:space:]]+-[a-zA-Z]*[cC]'
-vsh_prefix_re='^([A-Za-z_][A-Za-z0-9_]*=.*|env|exec|command|sudo|nohup|time|timeout|nice|ionice|stdbuf|-.*|[0-9.]+[smhd]?)$'
+# The words that may come before a command's name: NAME=value, the wrappers that run what follows (env, sudo, xargs and the like), and
+# the keywords that begin a command (if, then, do, {, !, and the rest), so `then $G push` and `xargs $G push` name $G (B45).
+vsh_prefix_re='^([A-Za-z_][A-Za-z0-9_]*=.*|env|exec|command|sudo|nohup|time|timeout|nice|ionice|stdbuf|xargs|builtin|setsid|watch|doas|coproc|if|then|else|elif|do|while|until|!|\{|-.*|[0-9.]+[smhd]?)$'
 vsh_opt_re='^-[a-zA-Z]*[cC]'
+
+# --- A variable as a command's name (B45) ------------------------------------------------------
+# A command whose name is a variable runs what the variable holds. When the command assigns it a plain value, var_resolve
+# replaces it, so the name is judged as its value (G=git; $G push --force is git push --force). Otherwise the guard can't
+# read the name, and it's blocked when the command sets that name another way (cn_asg), or when a git subcommand or a
+# destructive flag follows the name in its segment. Everyday forms pass: "$PY" -I script.py, $EDITOR notes.txt,
+# PYTHONPATH="a b" "$PY" -I script.py, and for f in *.py; do "$PY" "$f"; done (the loop sets f, not PY).
+# cname_judge <text> <mode>: each segment of the text whose command name (after the prefixes vsh_prefix_re and NAME=value
+# allow) is a variable. Mode 0 sets cnv to 1 when there is one, so the command is read; mode 1 judges the ones left.
+MSG_CNAME="a variable as a command's name, followed by a git subcommand or a destructive flag, can run git, and the guard can't read what it holds: write the command out"
+MSG_CNASG="a variable as a command's name, which the command sets another way than a plain value, can run any command, and the guard can't read what it holds: write the value out"
+MSG_CNSCR="a variable as a command's name inside a script that a shell runs can hold any command, and the guard can't read what the caller's environment sets it to: write the command out"
+cn_sub=" add am annotate apply archive bisect blame branch bundle checkout cherry cherry-pick clean clone commit config describe diff fetch format-patch gc grep init log ls-remote merge mv notes pull push range-diff rebase reflog remote repack replace reset restore revert rm shortlog show stash status submodule switch tag worktree "
+# cn_kw: the words that set a name (read NAME, for NAME in ..., declare NAME, Set-Variable NAME and the like).
+cn_kw='(read|for|foreach|select|mapfile|readarray|getopts|declare|typeset|local|export|readonly|let|set-variable|sv|new-variable|nv|read-host)'
+# cn_ps_re: PowerShell's $name = or $env:name = (a PowerShell assignment, which sets any name).
+cn_ps_re='\$[A-Za-z_][A-Za-z0-9_:]*[[:space:]]*[-+]?=[^=]'
+# cn_asg_re: for a name the walk can't name (a $1 or a $@), any of those words or an assignment in the command.
+cn_asg_re="(^|[[:space:];&|()])${cn_kw}([[:space:]]|\$)|\\\$\\{[A-Za-z_][A-Za-z0-9_]*:?=|$cn_ps_re"
+# cn_pre_re: a cheap superset of a command with a variable as a name (a segment that starts, after NAME=value words and the
+# prefixes, with a word holding a $), so the walk runs only on those commands. A miss would pass a command, so it stays loose.
+cn_pre_re='(^|[;&|()'"$nl"'])[[:space:]]*(([A-Za-z_][A-Za-z0-9_]*=[^;&|()'"$nl"']*|env|exec|command|sudo|nohup|time|timeout|nice|ionice|stdbuf|xargs|builtin|setsid|watch|doas|coproc|if|then|else|elif|do|while|until|!|\{|-[^[:space:]]*|[0-9.]+[smhd]?)[[:space:]]+)*[^[:space:];&|()]*\$'
+# cn_asg <name>: 0 when the command sets the name another way than a plain value var_resolve reads (cn_all is the command): NAME=
+# or NAME+= with a value it doesn't resolve, a cn_kw word before NAME, ${NAME:=...}, or a PowerShell assignment (cn_ps_re). With no
+# name (a $1), any of those in the command counts. Names are case-insensitive in PowerShell, so the match is too.
+cn_asg() {
+  local n="$1" t="$cn_all" rr=0 re
+  shopt -s nocasematch
+  if [[ -z $n ]]; then [[ $t =~ $cn_asg_re ]] && rr=1
+  else
+    re="(^|[^[:alnum:]_])${n}[[:space:]]*\\+?=([^=]|\$)"; [[ $t =~ $re ]] && rr=1
+    re="(^|[[:space:];&|()])${cn_kw}[^;&|()]*[[:space:]]${n}([[:space:]]|[;&|()]|\$)"; [[ $t =~ $re ]] && rr=1
+    re="\\\$\\{${n}:?="; [[ $t =~ $re ]] && rr=1
+    [[ $t =~ $cn_ps_re ]] && rr=1
+  fi
+  shopt -u nocasematch
+  ((rr))
+}
+# cn_exec_re: a find-style -exec, -execdir, -ok or -okdir whose next word holds a $ (the command it runs is a variable too).
+cn_exec_re='(^|[[:space:]])-(exec|execdir|ok|okdir)[[:space:]]+[^[:space:]]*\$'
+cname_judge() {
+  local s="$1" mode="$2" a=0 b j k n nm p w sub_done
+  local -a pos
+  var_walk "$s"
+  n=${#vbw[@]}
+  while ((a < n)); do
+    b=$a
+    while ((b + 1 < n && vbs[b + 1] == vbs[a])); do ((b++)); done
+    # The name positions of the segment: the first word after the prefixes, and the word after each find-style -exec, -execdir,
+    # -ok or -okdir, which runs the command that follows it.
+    pos=(); j=$a
+    while ((j <= b)); do
+      w="${vbw[j]}"
+      if [[ $w =~ ^[A-Za-z_][A-Za-z0-9_]*= ]]; then :
+      elif [[ $w != *$'\x07'* && $w =~ $vsh_prefix_re ]]; then :
+      else break; fi
+      ((j++))
+    done
+    ((j <= b)) && pos+=("$j")
+    for ((k = a; k < b; k++)); do
+      [[ ${vbw[k]} =~ ^-(exec|execdir|ok|okdir)$ ]] && pos+=("$((k + 1))")
+    done
+    for p in "${pos[@]}"; do
+      [[ ${vbw[p]} == *$'\x07'* ]] || continue
+      if ((mode == 0)); then cnv=1; continue; fi
+      # A script a shell runs (a view from a wrapper) gets its variables from its caller's environment too, so one as the name is
+      # blocked whatever the script assigns (B45).
+      ((${vdep[vi]:-0} > 0)) && block "$MSG_CNSCR"
+      nm="${vbn[p]}"; cn_asg "$nm" && block "$MSG_CNASG"
+      # The words after the name, as git reads them: the subcommand is the first word that isn't an option (-C and -c take a
+      # value), and a destructive long flag is blocked anywhere after the name.
+      j=$((p + 1)); sub_done=0
+      while ((j <= b)); do
+        w="${vbw[j]}"
+        case $w in
+          --force* | --hard | --mirror | --delete* | --no-veri* | --discard-changes | --upload-pack* | --receive-pack* | --exec*) block "$MSG_CNAME" ;;
+        esac
+        if ((!sub_done)); then
+          if [[ $w == -[Cc] ]]; then ((j += 2)); continue; fi
+          if [[ $w == -* ]]; then ((j++)); continue; fi
+          sub_done=1
+          [[ " $cn_sub " == *" $w "* ]] && block "$MSG_CNAME"
+        fi
+        ((j++))
+      done
+    done
+    a=$((b + 1))
+  done
+}
 
 # var_sub <text>: sets vbout to the text with each reference to a name in kn replaced by its value in kv (the other
 # references stay as they are).
@@ -357,6 +454,7 @@ var_resolve() {
     [[ $all =~ $re ]] || continue
     kn+=("$n"); kv+=("${BASH_REMATCH[2]}")
   done
+  cn_all="$all"   # B45: the command as cn_asg reads it, for a variable as a command's name
   ((${#kn[@]})) || return 0
   if [[ $cut_out == *'$'* ]]; then var_sub "$cut_out"; cut_out="$vbout"; fi
   if [[ $hall == *'$'* ]]; then var_sub "$hall"; hall="$vbout"; fi
@@ -372,24 +470,26 @@ var_resolve() {
 vend() {
   if ((st)); then
     if ((skipnext)); then skipnext=0
-    else vbs+=("$seg"); vbw+=("$w"); vbu+=("$uq"); fi
+    else vbs+=("$seg"); vbw+=("$w"); vbu+=("$uq"); vbn+=("$vn"); fi
   fi
-  st=0; w=""; uq=0
+  st=0; w=""; uq=0; vn=""
 }
 vref() { # at a $ (s[i]): a variable reference adds \x07 to the word and moves past itself; returns 1 when there is none
   local rest="${s:i}"
   if [[ $rest =~ ^\$\{[^}]*\} || $rest =~ ^\$[A-Za-z_][A-Za-z0-9_]* || $rest =~ ^\$[0-9@*#?!$-] ]]; then
     i=$((i + ${#BASH_REMATCH[0]})); w+=$'\x07'; st=1
+    # vbn gets the name of the word's first reference (B45: a name as a command's name is checked for its assignments)
+    if [[ $rest =~ ^\$\{?([A-Za-z_][A-Za-z0-9_]*) ]] && [[ -z $vn ]]; then vn="${BASH_REMATCH[1]}"; fi
     ((inq)) || uq=1
     return 0
   fi
   return 1
 }
 var_walk() {
-  local s="$1" L=${#1} i=0 c n ch k content w="" uq=0 st=0 seg=0 skipnext=0 inq=0
+  local s="$1" L=${#1} i=0 c n ch k content w="" uq=0 st=0 seg=0 skipnext=0 inq=0 vn=""
   local sesc='\'
   [[ $tool == PowerShell ]] && sesc='`'
-  vbs=(); vbw=(); vbu=()
+  vbs=(); vbw=(); vbu=(); vbn=()
   while ((i < L)); do
     c="${s:i:1}"; n="${s:i+1:1}"
     if ((inq)); then
@@ -637,6 +737,14 @@ tab=$'\t'; cr=$'\r'
 MSG_WRAP="the guard can't read the quoting of this command, which may hold a script a shell or PowerShell runs (or an encoded PowerShell command)"
 MSG_DEEP="shell wrappers nest deeper than the guard reads (four levels, such as bash -c inside sh -c)"
 MSG_VIEWS="the command runs more scripts in shells than the guard reads in time"
+# B45: a script's $NAME or ${NAME}, in double quotes or unquoted, is expanded by the calling shell before the script runs, so the text
+# the guard reads isn't what runs (outer_re). PowerShell's $true, $false and $null are constants, and pass. A $ in single quotes,
+# or escaped with \ or a backtick, is the script's own: x6 marks it, and the script is restored from it before it's read as a view.
+# A $( substitution is read as a substitution (B34's bash -c "echo $(date)" passes).
+x6=$'\x0e'; dl='$'
+outer_re='\$[A-Za-z_{@*#?!0-9^-]'
+MSG_SHSCRIPT="a shell's script, eval's argument or PowerShell's -Command holds a variable that the calling shell expands, so the guard can't read what runs: write the script out"
+MSG_SHPATH="a bash script path under tools/ holds a variable, which can add a .. the guard can't see: write the path out"
 
 # jesc <text>: sets je to the text as the inside of a JSON string, the form a view is read in.
 jesc() {
@@ -655,13 +763,14 @@ wrap_word() {
     case $c in ' ' | $'\t' | "$nl" | ';' | '&' | '|' | '(' | ')') return 0 ;; esac
     if [[ $c == "$sesc" ]]; then
       n="${s:i+1:1}"; i=$((i + 2))
-      [[ $n == "$nl" || -z $n ]] || wv+="$n"   # an escaped line break continues the word
+      # an escaped line break continues the word; an escaped $ is the script's own (x6, B45)
+      if [[ $n == '$' ]]; then wv+="$x6"; elif [[ $n != "$nl" && -n $n ]]; then wv+="$n"; fi
       continue
     fi
     case $c in
       "'")
         k="${s:i+1}"; [[ $k == *"'"* ]] || return 1
-        k="${k%%"'"*}"; wv+="$k"; i=$((i + ${#k} + 2)) ;;
+        k="${k%%"'"*}"; wv+="${k//\$/$x6}"; i=$((i + ${#k} + 2)) ;;   # a $ in single quotes is the script's own (B45)
       '"') wrap_dq || return 1 ;;
       '`')
         k="${s:i+1}"; [[ $k == *'`'* ]] || return 1
@@ -700,10 +809,11 @@ wrap_dq() {
     fi
     if [[ $c == "$sesc" ]]; then
       if [[ $tool == PowerShell ]]; then
-        [[ $n == "$nl" ]] || wv+="$n"; i=$((i + 2))
+        if [[ $n == '$' ]]; then wv+="$x6"; elif [[ $n != "$nl" ]]; then wv+="$n"; fi; i=$((i + 2))   # an escaped $ is the script's own (B45)
       else
         case $n in
-          '$' | '`' | '"' | "$sesc") wv+="$n"; i=$((i + 2)) ;;
+          '$') wv+="$x6"; i=$((i + 2)) ;;
+          '`' | '"' | "$sesc") wv+="$n"; i=$((i + 2)) ;;
           "$nl") i=$((i + 2)) ;;
           *) wv+="$c"; i=$((i + 1)) ;;
         esac
@@ -736,12 +846,22 @@ wrap_ansi() {
   ((j < L)) || return 1
   k="${s:i+2:j-i-2}"
   [[ $k == *\\[xuU0-7]* ]] && return 1
-  wv+="$k"; i=$((j + 1))
+  wv+="${k//\$/$x6}"; i=$((j + 1))
 }
 
 # wrap_push <script>: a non-empty script goes to wscripts, and wtc (1 when its wrapper runs it under a timeout, B42) to wscov.
 # wpx is 1 when the wrapper is a POSIX shell or eval, whose script is Bash text (B44), and wsposix gets it with each script.
-wrap_push() { [[ -n $1 ]] && { wscripts+=("$1"); wscov+=("$wtc"); wsposix+=("$wpx"); }; return 0; }
+# B45: a script with an outer_re variable (one the calling shell expands, not one in single quotes) is blocked. The test runs on
+# the lowercased script, so PowerShell's constants are removed from it first.
+wrap_push() {
+  if [[ -n $1 ]]; then
+    local t="${1,,}"
+    ((wpx)) || { t="${t//\$true/}"; t="${t//\$false/}"; t="${t//\$null/}"; }
+    [[ $t =~ $outer_re ]] && block "$MSG_SHSCRIPT"
+    wscripts+=("$1"); wscov+=("$wtc"); wsposix+=("$wpx")
+  fi
+  return 0
+}
 
 # wrap_rest <from>: sc is the words of wcmd from <from> on, joined by spaces, which is the text the command runs.
 wrap_rest() {
@@ -1138,7 +1258,7 @@ if [[ $bare =~ $wrap_gate ]]; then
     for ((wk = 0; wk < ${#wscripts[@]}; wk++)); do
       ((${vdep[vi]:-0} < WRAP_MAX)) || block "$MSG_DEEP"
       ((${#views[@]} < 64)) || block "$MSG_VIEWS"
-      jesc "${wscripts[wk]}"; vdep[${#views[@]}]=$((${vdep[vi]:-0} + 1))
+      jesc "${wscripts[wk]//$x6/$dl}"; vdep[${#views[@]}]=$((${vdep[vi]:-0} + 1))   # x6 restores the script's own $ (B45)
       vcov[${#views[@]}]=$((${vcov[vi]:-0} | ${wscov[wk]:-0}))   # bounded by a timeout above it, or by its own (B42)
       vpx[${#views[@]}]=${wsposix[wk]:-0}                       # a script a POSIX shell runs is Bash text (B44)
       views+=("$je")
@@ -1155,7 +1275,10 @@ isgit=0; [[ $bare_g =~ (^|[^[:alnum:]_./-])git([[:space:]]|$) ]] && isgit=1
 isbash=0; [[ $detect =~ (^|[^[:alnum:]_.-])(ba)?sh([[:space:]]|$) ]] && isbash=1
 # A gh command (quotes removed, as the shell reads it) is read for the gh auth token rule too (B39).
 gh_pre=0; [[ ${real//[\"\'\\]/} =~ (^|[^[:alnum:]_.-])gh[[:space:]] ]] && gh_pre=1
-((isgit || isbash || gh_pre)) || continue
+# B45: a variable as a command's name runs what it holds, so a command that has one is read too (cname_judge, mode 0).
+cnv=0
+[[ $real =~ $cn_pre_re || $real =~ $cn_exec_re ]] && cname_judge "$real" 0
+((isgit || isbash || gh_pre || cnv)) || continue
 
 seg='[^;&|]*'   # the destructive git rules are below the decoding of the command (B33)
 
@@ -1225,7 +1348,15 @@ hdc="${hsh//"$bt"/ }"; hnm="$hdc"
 subc=(); subk=(); sn=0
 subst_cut "$gtext" || { ((isgit)) && block "$MSG_UNREAD"; cut_out="$gtext"; subc=(); subk=(); sn=0; }
 # B37: a variable the command assigns once, to a plain value, is read as that value before the rules below (var_resolve).
-((isgit)) && [[ $cut_out$hall == *'$'* ]] && var_resolve
+# B45: a command name that resolves to git makes the command git, so isgit is set again from the resolved text. A name still a
+# variable is judged here, in the command and in the bodies a shell runs (hnm).
+[[ $cut_out$hall == *'$'* ]] && var_resolve
+if ((cnv)); then
+  cname_judge "$cut_out" 1
+  [[ $hnm == *'$'* ]] && cname_judge "$hnm" 1
+  bare_r="${cut_out//[\"\'\\]/}$nl${hnm//[\"\'\\]/}"
+  [[ $bare_r =~ (^|[^[:alnum:]_./-])git([[:space:]]|$) ]] && isgit=1
+fi
 
 # decode_words <text>: sets dec to the words the shell hands a command, as the rules read them (B26, B33). The quoted strings
 # are walked from the left. One with a space in it is message text, so it's blanked. One without a space is kept as a
@@ -1365,6 +1496,8 @@ for gs in "${gsegs[@]}"; do
   if ((k < n)) && [[ ${w[k]} =~ (^|/)(ba)?sh$ ]]; then
     for ((k++; k < n; k++)); do
       case ${w[k]} in -o|-O|+o|+O|--rcfile|--init-file) ((k++)); continue ;; -*|+*) continue ;; esac
+      # B45: a variable in a script path under tools/ can hold .., which the rule below can't see (the allow rule matches the text too).
+      [[ ${w[k]} =~ ^(\./)?tools/ && ${w[k]} == *'$'* ]] && block "$MSG_SHPATH"
       [[ ${w[k]} =~ ^(\./)?tools/ && ${w[k]} =~ $dotsre ]] && block "a bash script path with a .. segment can run a script outside the allowed ones"
       break
     done

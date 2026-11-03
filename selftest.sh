@@ -70,6 +70,10 @@
 #      A heredoc body no shell runs is text: a commit's or tag's message, and a cat or tee body that nothing in the command
 #      runs (no shell, interpreter, ssh, chmod, make, ./ path, dot-source or .git folder). The destructive and file-writing rules
 #      skip it, and a body written to a file and run in the same command (cat > x.sh, then bash x.sh) is still read (B40).
+#      A variable as a command's name is read as the value the command assigns it (G=git; $G push --force is git push
+#      --force); an unresolved one is blocked when the command sets that name another way or a git subcommand follows it,
+#      and the everyday forms pass. A shell's script, eval's argument or -Command that holds a variable the caller expands is
+#      blocked, and so is a bash script path under tools/ with a variable in it (B45).
 #   9. The site builds in strict mode, which fails on broken internal links and anchors.
 #  10. The Content-Security-Policy in overrides/main.html allows every inline script the built site
 #      runs (its sha256 is in script-src), and no script runs before the policy's meta tag.
@@ -1597,6 +1601,76 @@ else
     err "the guard hook reads a variable in a git command's words as a value it can't see, or blocks a plain form (B37):"
     printf '%s\n' "${git_fail#$'\n'}"
   else echo "ok: the guard hook reads a variable a git command assigns once as its value, blocks an unquoted or flag-capable variable in a git command's words, a variable as a subcommand or as a shell's name followed by -c, and passes the everyday forms (B37)"; fi
+
+  # A variable as a command's name, and a variable a shell's script or a script path holds (B45): the name a command assigns is
+  # the name it runs (G=git; $G push --force is git), and an unresolved name that the command sets another way, or that a git
+  # subcommand or a destructive flag follows, is blocked. A variable a shell's script (bash -c, eval, -Command) holds, or that a
+  # script path under tools/ holds, is blocked too. The everyday forms pass: "$PY" -I script.py, a loop that runs "$PY" "$f", a
+  # variable as an argument, and a single-quoted script's own variable (its shell reads it, and it can't name a command here).
+  git_fail=""
+  if [ -f .claude/hooks/guard-commands.sh ]; then
+    for cmd in \
+        'G=git; $G push --force' \
+        '$G push --force' \
+        '"$G" push --force' \
+        'G=git; ${G} push --force' \
+        'G=git; "$G" push --force' \
+        '$G --force' \
+        'if true; then $G push --force; fi' \
+        'for f in x; do $G push --force; done' \
+        '{ $G push --force; }' \
+        'xargs $G push --force' \
+        'find . -exec $G push --force \;' \
+        'if true; then "$X" -c x; fi' \
+        'CMD="git push --force"; $CMD' \
+        'read CMD <<< "git push --force"; $CMD' \
+        'FOO=$(echo git); $FOO push --force' \
+        'X=../../evil.sh; bash tools/stacks/$X' \
+        'bash tools/stacks/$X.sh' \
+        'bash "tools/$X"' \
+        'bash -c "$CMD"' \
+        'eval "$CMD"' \
+        'eval $CMD' \
+        "bash -c '\$CMD'" \
+        'CMD="git push --force" bash -c '"'"'$CMD'"'"'' \
+        'sh -c "echo $HOME"' \
+        $'G=git; bash <<\'EOF\'\n$G push --force\nEOF' \
+        $'bash <<\'EOF\'\n$G push --force\nEOF' \
+        $'CMD="git push --force" bash <<\'EOF\'\n$CMD\nEOF'; do
+      guard 2 "$cmd"
+    done
+    for cmd in "\$G = 'git'; & \$G push --force" '& $G push --force'; do
+      guard 2 "$cmd" PowerShell
+    done
+    guard 2 'powershell -Command "$P"' PowerShell
+    for cmd in \
+        'G=git; $G status' \
+        'G=ls; $G push --force' \
+        'echo $G push --force' \
+        '"$PY" -I script.py' \
+        'PY=python3; "$PY" -I script.py' \
+        'FOO="a b" "$PY" -I x.py' \
+        'for f in tools/*.py; do "$PY" "$f"; done' \
+        'for f in a b; do echo "$f"; done' \
+        'if true; then "$PY" -I x.py; fi' \
+        'find . -name x -exec "$PY" -I y {} \;' \
+        'xargs -I{} echo {}' \
+        '"$PY" tools/usage.py status' \
+        'bash "$script"' \
+        'bash tools/check.sh "$X"' \
+        'cd "$dir" && git status' \
+        'bash -c "echo \$HOME"' \
+        "bash -c 'echo \$HOME'" \
+        $'git commit -q -F - <<\'EOF\'\n$G push --force\nEOF'; do
+      guard 0 "$cmd"
+    done
+    guard 0 "powershell -Command 'Get-ChildItem | % { \$_.Name }'" PowerShell
+  fi
+  guard_run
+  if [ -n "$git_fail" ]; then
+    err "the guard hook doesn't read a variable as a command's name, or a script or script path that a variable holds, or blocks an everyday form (B45):"
+    printf '%s\n' "${git_fail#$'\n'}"
+  else echo "ok: the guard hook reads a variable as a command's name as the value it assigns, blocks an unresolved one that the command sets another way or a git subcommand follows, blocks a shell's script, eval or -Command that a variable holds and a tools/ script path with a variable, and passes the everyday forms (B45)"; fi
 
   # Git's configuration keys and program flags (B38). A -c key, or --config-env, that names a program git runs (an alias that
   # starts with !, the pager, the editor, the ssh command, a diff or credential helper, an include) is blocked, and so is a key a
