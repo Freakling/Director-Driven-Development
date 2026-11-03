@@ -36,6 +36,8 @@
 #      allow list names no PowerShell command, so PowerShell runs nothing without a prompt.
 #      The hook also blocks the PowerShell readers of a credential file (Get-Content and gc, type,
 #      Select-String and sls, [IO.File]::ReadAll...), in any case, as it blocks cat (B27).
+#      A PowerShell backtick at a line's end continues the line, so a flag or read it splits is
+#      blocked; a Bash backtick, or an escaped one, doesn't continue a line (B28).
 #   9. The site builds in strict mode, which fails on broken internal links and anchors.
 #  10. The Content-Security-Policy in overrides/main.html allows every inline script the built site
 #      runs (its sha256 is in script-src), and no script runs before the policy's meta tag.
@@ -474,7 +476,7 @@ else
   deny_needs '"Bash\(bash tools/[^"]*\*' 'Bash(bash tools/*..*)'
   guard() { # guard <expected-exit> <command> [tool name: Bash by default, or PowerShell]
     local esc="${2//\\/\\\\}" got tool="${3:-Bash}"
-    esc="${esc//\"/\\\"}"; esc="${esc//$'\n'/\\n}"; esc="${esc//$'\t'/\\t}"
+    esc="${esc//\"/\\\"}"; esc="${esc//$'\n'/\\n}"; esc="${esc//$'\r'/\\r}"; esc="${esc//$'\t'/\\t}"
     printf '{"session_id":"s","tool_name":"%s","tool_input":{"command":"%s","description":"run"}}' "$tool" "$esc" \
       | bash .claude/hooks/guard-commands.sh >/dev/null 2>&1
     got=$?
@@ -727,6 +729,40 @@ else
     err "the guard hook doesn't block every read of a credential file, or blocks a read of an ordinary file (B27):"
     printf '%s\n' "${git_fail#$'\n'}"
   else echo "ok: the guard hook blocks the PowerShell and Bash readers of credential files, in any case, and passes the readers of ordinary files and templates"; fi
+
+  # PowerShell's backtick (B28): a backtick that ends a line continues it, so a flag or a read it splits is
+  # blocked as the plain form is, and a benign continuation passes. An escaped backtick (``) and a backtick
+  # followed by spaces don't continue. In Bash a backtick is command substitution, so the same text passes
+  # there. A comment that ends in a backtick still shows the next line, which the joined text would hide.
+  git_fail=""
+  if [ -f .claude/hooks/guard-commands.sh ]; then
+    for cmd in \
+        $'git push `\n--force' \
+        $'git commit `\n-n -m x' \
+        $'cat `\n.env.local' \
+        $'cat README.md `\n.env.local' \
+        $'git push `\r\n--force' \
+        $'git push `\r--force' \
+        $'git log `\n--output=/tmp/probe.txt' \
+        $'git pu`\nsh --force' \
+        $'cat .en`\nv.local' \
+        $'# note`\ngit push --force'; do
+      guard 2 "$cmd" PowerShell
+    done
+    for cmd in \
+        $'git log `\n--oneline -3' \
+        $'git status `\n-s' \
+        $'cat ``\n.env.local' \
+        $'git push ``\n--force' \
+        $'git push ` \n--force'; do
+      guard 0 "$cmd" PowerShell
+    done
+    guard 0 $'cat README.md `\n.env.local'
+  fi
+  if [ -n "$git_fail" ]; then
+    err "the guard hook doesn't treat a PowerShell backtick at a line's end as a continuation, or treats a Bash or an escaped one as one (B28):"
+    printf '%s\n' "${git_fail#$'\n'}"
+  else echo "ok: the guard hook blocks a flag or a read that a PowerShell backtick continuation splits, and passes the benign continuations and the escaped and Bash backticks (B28)"; fi
 
   # The credential stores (B15): the Read tool may not open the gh CLI's token file, git's credentials or
   # ~/.ssh. The .env files with values (B21): .env.local and the other .env.<suffix> files the guard hook

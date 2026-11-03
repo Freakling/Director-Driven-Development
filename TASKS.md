@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T279 · B31 · R7
+**Next IDs:** T279 · B33 · R7
 
 ## Milestones
 | Milestone | Status |
@@ -1036,10 +1036,16 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Found in: B24
 - Brief: -
 
-### B28 · A PowerShell backtick continuation hides a flag or a read from the guard (A01:2025 Broken Access Control) · todo · S · agent · med
+### B28 · A PowerShell backtick continuation hides a flag or a read from the guard (A01:2025 Broken Access Control) · done 2026-11-03 · S · agent · med
 - Touches: .claude/hooks/guard-commands.sh, selftest.sh (the guard is framework-owned: T276, T277 and T278 carry the fix)
 - Repro: 1. Feed the guard hook a PowerShell payload whose command is `git push` and a backtick, with `--force` on the next line; or `git commit` and a backtick with `-n` next; or `cat` and a backtick with `.env.local` next. 2. Expected: each is blocked, as the same command on one line is. Actual: exit 0: a backtick at the end of a line continues it in PowerShell, but the hook doesn't read `tool_name`, and B25 joins only a backslash continuation, which is Bash's.
 - Found in: B25
+- Brief: -
+
+### B31 · A Bash comment ending in a backslash hides the next line from the guard (A01:2025 Broken Access Control) · todo · S · agent · med
+- Touches: .claude/hooks/guard-commands.sh, selftest.sh (the guard is framework-owned: T276, T277 and T278 carry the fix)
+- Repro: 1. Feed the guard hook a Bash payload whose first line is `# note` and a backslash and whose next line is `git push --force` (or `git commit --no-verify -m x`). 2. Expected: blocked, as the second line alone is, since Bash ends a comment at the line break whatever its last character is. Actual: exit 0: B25's join glues the next line onto the comment. A regression from B25; B28 avoids it for PowerShell by reading the command both as written and as joined.
+- Found in: B28
 - Brief: -
 
 ### B29 · A backslash continuation hides an empty heredoc from the hang check · todo · XS · agent · low
@@ -1052,6 +1058,12 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Touches: .claude/hooks/guard-commands.sh, selftest.sh (the guard is framework-owned: T276, T277 and T278 carry the fix)
 - Repro: 1. Feed the guard hook a PowerShell payload with `& 'Get-Content' .env.local`, a Bash payload with `/bin/cat .env.local`, a PowerShell payload with a backtick inside the reader or the name (`` Get-Con`tent .env.local ``, `` gc .en`v.local ``), or `[System.IO.StreamReader]::new('.env.local')`. 2. Expected: each is blocked, as `Get-Content .env.local` and `cat .env.local` are. Actual: exit 0: the reader must be a bare word, and a backtick inside a word is PowerShell's escape, which B28's continuation doesn't cover.
 - Found in: B27
+- Brief: -
+
+### B32 · A command substitution hides a git flag from the guard (A01:2025 Broken Access Control) · todo · S · agent · med
+- Touches: .claude/hooks/guard-commands.sh, selftest.sh (the guard is framework-owned: T276, T277 and T278 carry the fix)
+- Repro: 1. Feed the guard hook `git push $(echo --force)`, or the same with backticks, as a Bash and as a PowerShell payload. 2. Expected: blocked, as `git push --force` is, or the guard says why a substitution in a git command's arguments can't be judged and blocks it. Actual: exit 0: the rules read the text, not what a substitution prints.
+- Found in: B28
 - Brief: -
 
 ### T269 · Release App-Director 1.13.0 · done 2026-11-02 · S · agent
@@ -1110,23 +1122,23 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Brief: Scope › Framework features
 
 ### T276 · App-Director: the guard and the deny rules reach the PowerShell tool, and a continuation, a tab or a PowerShell read can't hide from it · todo · S · agent
-- Depends on: B25, B27, B28, B29, B30
+- Depends on: B25, B27, B28, B29, B30, B31, B32
 - Touches: work/App-Director: framework/.claude/settings.json, framework/.claude/hooks/guard-commands.sh, selftest.sh
-- Done when: the guard hook's matcher names PowerShell and every Bash deny and ask rule has a PowerShell twin, with no PowerShell allow rule, as B24 did here; the git rules join a backslash line continuation, the credential-read check matches a tab, as B25 does here, and a PowerShell read of a credential file (`Get-Content`, `gc`, `type`) is blocked, as B27 does here; a PowerShell backtick continuation can't hide a flag or a read, as B28 does here; a quoted or path-qualified reader, a backtick inside a word and a StreamReader can't pass the read check, as B30 does here; the empty-heredoc check reads the joined command, as B29 does here; the selftest covers each and passes (check) · following AGENTS.md › Project rules for framework work
+- Done when: the guard hook's matcher names PowerShell and every Bash deny and ask rule has a PowerShell twin, with no PowerShell allow rule, as B24 did here; the guard closes the gaps B25, B27, B28, B29, B30, B31 and B32 closed here, ported with their selftest cases, including B28's two views of a continued command (as written and as joined); the selftest passes (check) · following AGENTS.md › Project rules for framework work
 - Note: found in B24: framework/.claude/settings.json has the same `Bash|Monitor` matcher and eight Bash deny rules, and its selftest pins the matcher.
 - Brief: -
 
 ### T277 · SaaSAllTheThings: the guard and the deny rules reach the PowerShell tool, and a continuation, a tab or a PowerShell read can't hide from it · todo · S · agent
-- Depends on: B25, B27, B28, B29, B30
+- Depends on: B25, B27, B28, B29, B30, B31, B32
 - Touches: work/SaaSAllTheThings: framework/.claude/settings.json, framework/.claude/hooks/guard-commands.sh, selftest.sh
-- Done when: the guard hook's matcher names PowerShell and every Bash deny and ask rule has a PowerShell twin, with no PowerShell allow rule, as B24 did here; the git rules join a backslash line continuation, the credential-read check matches a tab, as B25 does here, and a PowerShell read of a credential file (`Get-Content`, `gc`, `type`) is blocked, as B27 does here; a PowerShell backtick continuation can't hide a flag or a read, as B28 does here; a quoted or path-qualified reader, a backtick inside a word and a StreamReader can't pass the read check, as B30 does here; the empty-heredoc check reads the joined command, as B29 does here; the selftest covers each and passes (check) · following AGENTS.md › Project rules for framework work
+- Done when: the guard hook's matcher names PowerShell and every Bash deny and ask rule has a PowerShell twin, with no PowerShell allow rule, as B24 did here; the guard closes the gaps B25, B27, B28, B29, B30, B31 and B32 closed here, ported with their selftest cases, including B28's two views of a continued command (as written and as joined); the selftest passes (check) · following AGENTS.md › Project rules for framework work
 - Note: found in B24: framework/.claude/settings.json has the same `Bash|Monitor` matcher plus Bash ask and deny rules, and its selftest pins the matcher.
 - Brief: -
 
 ### T278 · Godot-Director: the guard and the deny rules reach the PowerShell tool, and a continuation, a tab or a PowerShell read can't hide from it · todo · S · agent
-- Depends on: B25, B27, B28, B29, B30
+- Depends on: B25, B27, B28, B29, B30, B31, B32
 - Touches: work/Godot-Director: framework/.claude/settings.json, framework/.claude/hooks/, selftest.sh
-- Done when: the guard hook's matcher names PowerShell and every Bash deny and ask rule has a PowerShell twin, with no PowerShell allow rule, as B24 did here; the git rules join a backslash line continuation, as B25 does here, and where its guard checks credential reads, a tab and a PowerShell read (`Get-Content`, `gc`, `type`) can't pass it, as B25 and B27 do here; a PowerShell backtick continuation can't hide a flag or a read, as B28 does here; a quoted or path-qualified reader, a backtick inside a word and a StreamReader can't pass the read check, as B30 does here; the empty-heredoc check reads the joined command, as B29 does here; the selftest covers each and passes (check) · following AGENTS.md › Project rules for framework work
+- Done when: the guard hook's matcher names PowerShell and every Bash deny and ask rule has a PowerShell twin, with no PowerShell allow rule, as B24 did here; the guard closes the gaps B25, B27, B28, B29, B30, B31 and B32 closed here (the read fixes where its guard checks credential reads), ported with their selftest cases, including B28's two views of a continued command (as written and as joined); the selftest passes (check) · following AGENTS.md › Project rules for framework work
 - Note: found in B24: framework/.claude/settings.json wires guard-git.sh with separate `Bash` and `Monitor` matchers plus Bash ask and deny rules.
 - Brief: -
 

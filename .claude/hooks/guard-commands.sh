@@ -25,6 +25,25 @@ re='"command"[[:space:]]*:[[:space:]]*"(([^"\\]|\\.)*)"'
 [[ $input =~ $re ]] || exit 0
 raw="${BASH_REMATCH[1]}"
 
+# The tool's name (B28): only PowerShell reads a backtick at a line's end as a continuation, so the join
+# below is for it alone. The name is a JSON string, matched as the command is.
+tre='"tool_name"[[:space:]]*:[[:space:]]*"([^"]*)"'
+tool=""; [[ $input =~ $tre ]] && tool="${BASH_REMATCH[1]}"
+
+# PowerShell (B28): a backtick that ends a line continues it, as a backslash does in Bash (B25). PowerShell's
+# parser agrees when the backtick isn't escaped: an odd run of backticks before the line break joins it, so
+# `` (an escaped backtick) keeps the break, and a backtick followed by spaces doesn't continue. In Bash a
+# backtick is command substitution, so the text stays. The rules read the command as written, then as joined,
+# with ; between the two. Where PowerShell ends a comment at the line break (# note`), the join would glue
+# the next line onto the comment's last word and hide it; the text as written still shows it.
+bt='`'; jcr='\r'; jlf='\n'; x3=$'\x03'
+if [[ $tool == PowerShell ]]; then
+  joined="${raw//"$bt$bt"/$x3}"
+  joined="${joined//"$bt$jcr$jlf"/}"; joined="${joined//"$bt$jcr"/}"; joined="${joined//"$bt$jlf"/}"
+  joined="${joined//$x3/$bt$bt}"
+  [[ $joined != "$raw" ]] && raw="$raw;$joined"
+fi
+
 # The command as the shell reads its line breaks and tabs: a JSON \n ends a command, as ; does, and \t
 # is a space. A real backslash (the pair \\) stays as it is, so \\n is text, not a line break. The early
 # tests read this text, so a git command on any line is seen (B23). A backslash at the end of a line
