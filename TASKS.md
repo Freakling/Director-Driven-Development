@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T291 · B64 · R7
+**Next IDs:** T292 · B64 · R7
 
 ## Milestones
 | Milestone | Status |
@@ -1309,10 +1309,12 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Brief: Scope › Framework features
 
 ### T282 · Godot-Director: record only after the director approves a summary · in-progress 2026-11-03 · M · agent
+- PRs: Godot-Director #52 (open)
 - Depends on: T279
 - Touches: work/Godot-Director: framework/.godot-director/rules.md, framework/.godot-director/procedures/ (design.md, research.md, next-task.md, drift-reset.md, ui-design.md, playtest.md, function-check.md, export.md, release.md, align.md), ONBOARDING.md, framework/.claude/skills/design/SKILL.md, selftest.sh
 - Done when: following the anchor (T279), the same changes as T280's A1 to A10 in Godot-Director's files (the GDD in place of the brief; the "Still right?" ticks collected and summarised; playtest.md step 4 drops "straight away"), and: export.md › Set up exports and release.md › Set up release put a summary and its approval between the rounds and "Write it down" (C1); design.md › User stories puts the on and off switch in the summary (C2); the selftest passes (check) · following AGENTS.md › Project rules for framework work
 - Note: T279's anchor (`product/anchors/record-approval.md`) is the wording: its section 2 table names the step in each procedure, align.md included, and `ONBOARDING.md` is at the repository root.
+- Note: built 2026-11-03 as Godot-Director's T40. export.md and release.md got a Summary and approval step 3 (Write it down and Try it are 4 and 5), the playtest's machine review joins its summary, and onboarding's settings sections (facts, ownership, dev menu, model sizing) keep the install commit's approval as their gate, as in App-Director's T40. The builder also updated README.md, framework/playtesting/README.md and examples/scenarios.md.
 - Brief: Scope › Framework features
 
 ### T283 · App-Director: the selftest runs in under five minutes · todo · S · agent
@@ -1330,7 +1332,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Note: T278's review showed this repo's guard has the gaps T285 closes: on 2026-11-03 a 30 KB heredoc of GDScript `$Node.method()` lines took 10.8 s here, past the hook's 10 s limit (a hook that times out doesn't block, so padding a command could let it through unguarded), `vhang=1` in the environment let `git push --force` pass, and a nested wait loop and `sleep 600.5` passed.
 - Brief: -
 
-### T285 · App-Director: the guard takes SaaSAllTheThings' and Godot-Director's port fixes · todo · M · agent
+### T285 · App-Director: the guard takes SaaSAllTheThings' and Godot-Director's port fixes · in-progress 2026-11-03 · M · agent
 - Depends on: T276, T277, T278
 - Touches: work/App-Director: framework/.claude/hooks/guard-commands.sh, selftest.sh
 - Done when: App-Director's guard has the three fixes T277 made while porting, with their cases: a path-qualified or `.exe` git (`/usr/bin/git push --force`, `git.exe push --force`) is git; an empty-heredoc probe reads its body line by line, so a heredoc of blank lines isn't read as empty and `/usr/bin/python3` counts as `python3`; and in the PowerShell tool a backslash at a line's end is a path separator, not a continuation, so `# c\` followed by `gh auth token` is blocked; and the loop reader ends a loop at the `done` that closes a command (T278), so `until [ -f done ]; do sleep 5; done` is a wait loop; and the fixes T278's review brought to Godot-Director's guard: a wait loop with a nested loop is read to its own `done` (do and done counted), a pause with a fraction (`sleep 600.5`) is a pause, the view flags (vdep, vcov, vpx, vhang) start empty so the environment can't set them, and the per-character walk skips the bodies nothing runs, PowerShell here-strings included, so a 30 KB heredoc or here-string of `$Node.method()` lines is judged well within the hook's 10 s limit (SaaSAllTheThings' hook took 41 s on the here-string), with a timed case for each shell; and the credential-print rules read the text without message bodies, so a message may name `gh auth token`; the selftest passes (check) · following AGENTS.md › Project rules for framework work
@@ -1352,7 +1354,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Note: found in T278.
 - Brief: -
 
-### T288 · SaaSAllTheThings: the guard takes Godot-Director's loop, pause, view-flag and speed fixes · todo · S · agent
+### T288 · SaaSAllTheThings: the guard takes Godot-Director's loop, pause, view-flag and speed fixes · in-progress 2026-11-03 · S · agent
 - Depends on: T277, T278
 - Touches: work/SaaSAllTheThings: framework/.claude/hooks/guard-commands.sh, selftest.sh
 - Done when: the hang check's loop reader ends a loop at the `done` that closes a command, not at any word `done`, as Godot-Director's T278 does, so `until [ -f done ]; do sleep 5; done` is still read as a wait loop, with its case, and the fixes T278's review brought to Godot-Director's guard: a wait loop with a nested loop is read to its own `done` (do and done counted), a pause with a fraction (`sleep 600.5`) is a pause, the view flags (vdep, vcov, vpx, vhang) start empty so the environment can't set them, and the per-character walk skips the bodies nothing runs, PowerShell here-strings included, so a 30 KB heredoc or here-string of `$Node.method()` lines is judged well within the hook's 10 s limit (SaaSAllTheThings' hook took 41 s on the here-string), with a timed case for each shell; and the credential-print rules read the text without message bodies, so a message may name `gh auth token`; the selftest passes (check) · following AGENTS.md › Project rules for framework work
@@ -1371,6 +1373,13 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Touches: work/SaaSAllTheThings: framework/.claude/hooks/guard-commands.sh, selftest.sh
 - Done when: the guard blocks `& 'C:\Program Files\Az\Remove-AzResourceGroup' -Name rg`, `"C:\Program Files\Git\bin\git.exe" push --force`, `"C:\Program Files\Microsoft SDKs\Azure\CLI2\wbin\az.cmd" group delete -n rg` and `C:\bin\az.cmd group delete -n rg`, in the Bash and PowerShell tools, as it blocks the bare names, with their cases: a quoted command name with a space is read as a name, not blanked as text, and a backslash path keeps its last part for the az rule; the same check in App-Director's and Godot-Director's hooks for the git form, fixed there too if they have it; the selftests pass (check) · following AGENTS.md › Project rules for framework work
 - Note: found in T286; all four pass on the hook before T286 too.
+- Brief: -
+
+### T291 · Godot-Director: the selftest runs in under fifteen minutes · todo · M · agent
+- Depends on: T278
+- Touches: work/Godot-Director: selftest.sh
+- Done when: `bash selftest.sh <path to Godot>` in work/Godot-Director finishes in under fifteen minutes on this machine with nothing else running, with the same checks and output, measured before and after per section; the sections that take longest are named in the item's note (check) · following AGENTS.md › Project rules for framework work
+- Note: found in T282: the full run took 6006 s after T278 and 6324 s for T282 on 2026-11-03 (1041 and 1042 cases), with other builders and two stuck processes from other projects sharing the machine, so each Godot-Director item takes close to two hours to gate. T283 is App-Director's counterpart.
 - Brief: -
 
 ### B53 · A script piped to a shell, a path-qualified or `.exe` git or bash, a sudo option's value, cmd's %VAR% or a folder in another case passes the guard (A01:2025 Broken Access Control) · todo · S · agent · med
