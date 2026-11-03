@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T298 · B64 · R7
+**Next IDs:** T299 · B64 · R7
 
 ## Milestones
 | Milestone | Status |
@@ -1418,10 +1418,20 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Brief: -
 
 ### T297 · SaaSAllTheThings: the Stop hook runs the check only for the session that changed the code · in-progress 2026-11-03 · M · agent
+- PRs: SaaSAllTheThings #46 (open)
 - Depends on: T277
 - Touches: work/SaaSAllTheThings: framework/.claude/hooks/stop-check.sh, a new framework-owned PostToolUse hook in framework/.claude/hooks/, framework/.claude/settings.json, selftest.sh, the docs that describe the Stop hook, CHANGELOG.md
 - Done when: the Stop hook runs the project check only when this session itself wrote or edited a source file (any file but `*.md`, with `adr/` counting as source, the hook's present rule) since its last passing check: a PostToolUse hook on Edit, Write, MultiEdit and NotebookEdit records the paths it touched in `.satt/state/sessions/<session_id>.touched` (the hook input's `session_id`), and for Bash it compares the dirty files before and after the command (a PreToolUse snapshot, or a file list with modification times) and records the ones that changed; a session that touched only docs (`*.md` outside `adr/`, product/, TASKS.md) never triggers the check; the builder marker, the fingerprint (the same failure isn't reported twice), `SATT_STOP_CHECK=0` and the exit 0 when tools/check.sh is missing keep working; the session's record is removed when the check passes, and records older than a day are ignored (check) · in a design session that edits only Markdown while another session has uncommitted a source file (any file but `*.md`, with `adr/` counting as source, the hook's present rule) in the same folder, the Stop hook exits at once without running the check, tested with a scripted hook input; a session that edits a source file (any file but `*.md`, with `adr/` counting as source, the hook's present rule) still gets the check and is blocked once on failure, tested; the release notes' upgrade section says what changed (check) · following AGENTS.md › Project rules for framework work
 - Note: asked for by the director on 2026-11-03: when two sessions share one working folder (a design session and a build session on the same checkout, no worktree), the build session's uncommitted code makes the hook run the check at the end of every turn of the design session too, which edited no code, waits minutes, and is sometimes blocked by failures it can't fix.
+- Note: built 2026-11-04 as SaaSAllTheThings' T41: one new hook, session-touched.sh, records a session's source files from Edit, Write, MultiEdit and NotebookEdit, and from Bash and PowerShell by comparing `git status` before and after (also on PostToolUseFailure, so a failing command's writes count); about 0.9 s per Bash call on this machine. Limits: parallel Bash calls in one session share one snapshot, a background command's later writes aren't seen, and another session's write during a command can be counted for it. A subagent reports its parent's session_id, so a builder's edits count for the session that started it.
+- Brief: -
+
+### T298 · Release SaaSAllTheThings 0.16.0 · in-progress 2026-11-04 · S · agent
+- PRs: SaaSAllTheThings #46 (open)
+- Depends on: T277, T281, T286, T288, T290, T297
+- Touches: work/SaaSAllTheThings: VERSION, .claude-plugin/plugin.json, .claude-plugin/marketplace.json, skills/*/SKILL.md, README.md, project/product/director-brief.md, the example's copy of the brief, CHANGELOG.md
+- Done when: the bundle ends with the release commit: the version files bumped to 0.16.0 as its .claude/CLAUDE.md lists them, `## Unreleased` in CHANGELOG.md is `## 0.16.0 (<date>)`, the selftest passes (check), and the commit's body is the release notes (What's new, How to install, How to upgrade with this release's upgrade steps), which are also the pull request's description · following AGENTS.md › Project rules for framework work › Releases ride in the bundle
+- Note: 0.16.0 is the agent's proposal: the bundle adds features (recording after an approved summary, the per-session Stop hook) next to the guard's fixes. The director can change it in review.
 - Brief: -
 
 ### T294 · The three guards: a quoted or backslash path to git or a shell can't hide git's program flags or a wrapper's script · todo · S · agent
