@@ -51,6 +51,8 @@
 # subcommand or a destructive flag follows it; "$PY" -I script.py passes. A shell's script, eval's argument or -Command that
 # holds a variable or a substitution is blocked, since the shell expands it before the guard can read it, and a bash script
 # path under tools/ that holds a variable is blocked, since it can add a .. the guard can't see. See "A variable as a command's name".
+# A PowerShell assignment ($x = 1, $x += 1, $env:X = 'y'), a constant ($true, $false, $null) or an automatic value ($_, $args) that
+# no call operator (& or .) runs is no command name, and a Bash NAME+=value is an assignment prefix (B55).
 #
 # A git -c key, or --config-env, that names a program git runs (an alias that starts with !, core.pager, core.sshCommand,
 # diff.external, a credential helper) runs a command of the caller's choice, so the keys are an allow list: only the keys that
@@ -336,7 +338,7 @@ MSG_SHVAR="a variable as a command's name, followed by -c or -Command, runs a sh
 vsh_pre_re='\$[^[:space:]]*[[:space:]]+-[a-zA-Z]*[cC]'
 # The words that may come before a command's name: NAME=value, the wrappers that run what follows (env, sudo, xargs and the like), and
 # the keywords that begin a command (if, then, do, {, !, and the rest), so `then $G push` and `xargs $G push` name $G (B45).
-vsh_prefix_re='^([A-Za-z_][A-Za-z0-9_]*=.*|env|exec|command|sudo|nohup|time|timeout|nice|ionice|stdbuf|xargs|builtin|setsid|watch|doas|coproc|if|then|else|elif|do|while|until|!|\{|-.*|[0-9.]+[smhd]?)$'
+vsh_prefix_re='^([A-Za-z_][A-Za-z0-9_]*\+?=.*|env|exec|command|sudo|nohup|time|timeout|nice|ionice|stdbuf|xargs|builtin|setsid|watch|doas|coproc|if|then|else|elif|do|while|until|!|\{|-.*|[0-9.]+[smhd]?)$'
 vsh_opt_re='^-[a-zA-Z]*[cC]'
 
 # --- A variable as a command's name (B45) ------------------------------------------------------
@@ -359,7 +361,7 @@ cn_ps_re='\$[A-Za-z_][A-Za-z0-9_:]*[[:space:]]*[-+]?=[^=]'
 cn_asg_re="(^|[[:space:];&|()])${cn_kw}([[:space:]]|\$)|\\\$\\{[A-Za-z_][A-Za-z0-9_]*:?=|$cn_ps_re"
 # cn_pre_re: a cheap superset of a command with a variable as a name (a segment that starts, after NAME=value words and the
 # prefixes, with a word holding a $), so the walk runs only on those commands. A miss would pass a command, so it stays loose.
-cn_pre_re='(^|[;&|()'"$nl"'])[[:space:]]*(([A-Za-z_][A-Za-z0-9_]*=[^;&|()'"$nl"']*|env|exec|command|sudo|nohup|time|timeout|nice|ionice|stdbuf|xargs|builtin|setsid|watch|doas|coproc|if|then|else|elif|do|while|until|!|\{|-[^[:space:]]*|[0-9.]+[smhd]?)[[:space:]]+)*[^[:space:];&|()]*\$'
+cn_pre_re='(^|[;&|()'"$nl"'])[[:space:]]*(([A-Za-z_][A-Za-z0-9_]*\+?=[^;&|()'"$nl"']*|env|exec|command|sudo|nohup|time|timeout|nice|ionice|stdbuf|xargs|builtin|setsid|watch|doas|coproc|if|then|else|elif|do|while|until|!|\{|-[^[:space:]]*|[0-9.]+[smhd]?)[[:space:]]+)*[^[:space:];&|()]*\$'
 # cn_asg <name>: 0 when the command sets the name another way than a plain value var_resolve reads (cn_all is the command): NAME=
 # or NAME+= with a value it doesn't resolve, a cn_kw word before NAME, ${NAME:=...}, or a PowerShell assignment (cn_ps_re). With no
 # name (a $1), any of those in the command counts. Names are case-insensitive in PowerShell, so the match is too.
@@ -378,8 +380,31 @@ cn_asg() {
 }
 # cn_exec_re: a find-style -exec, -execdir, -ok or -okdir whose next word holds a $ (the command it runs is a variable too).
 cn_exec_re='(^|[[:space:]])-(exec|execdir|ok|okdir)[[:space:]]+[^[:space:]]*\$'
+# ps_name_kind <word> <text>: how a PowerShell variable at word <word> of a segment is read (B55), by its return code. In PowerShell
+# (vps: a PowerShell command, or a script one runs) a $name followed by an assignment operator is an assignment's target, in its
+# word ($x=1, $x+=1, $env:X='y', $x[0]=1) or as the next word ($x = 1, $x ??= 'a'): 0, it runs no command. A constant ($true, $false,
+# $null) or an automatic value ($_, $PSItem, $args, $input, $this, $env:NAME) that no call operator (& or .) runs before it is no
+# command name: 2, so only the words after it are read. Any other name, and a called constant or value (& $args[0], & "$_"), is
+# judged as before: 1.
+ps_name_kind() {
+  local p=$1 s="$2" w="${vbw[$1]}" tail nm call_re rr=0 q="'" d='"'
+  local lv='^(:[A-Za-z_][A-Za-z0-9_]*)?([[][^]]*[]]|[.][A-Za-z_][A-Za-z0-9_]*)*' opre='(\+|-|\*|/|%|\?\?)?=([^=]|$)'
+  ((${vps[vi]:-0})) || return 1
+  [[ $w == $'\x07'* ]] || return 1
+  tail="${w#$'\x07'}"
+  [[ $tail =~ $lv$opre ]] && return 0
+  if [[ $tail =~ $lv$ ]] && ((p + 1 < ${#vbw[@]})) && ((vbs[p + 1] == vbs[p])) && [[ ${vbw[p + 1]} =~ ^$opre ]]; then return 0; fi
+  nm="${vbn[p]}"; nm="${nm,,}"
+  case $nm in true | false | null | _ | psitem | args | input | this | env) ;; *) return 1 ;; esac
+  call_re="(^|[^[:alnum:]_])[&.][[:space:](${d}${q}]*[$]${vbn[p]}([^[:alnum:]_]|\$)"
+  shopt -s nocasematch
+  [[ $s =~ $call_re ]] && rr=1
+  shopt -u nocasematch
+  ((rr)) && return 1
+  return 2
+}
 cname_judge() {
-  local s="$1" mode="$2" a=0 b j k n nm p w sub_done
+  local s="$1" mode="$2" a=0 b j k n nm p pk w sub_done
   local -a pos
   var_walk "$s"
   n=${#vbw[@]}
@@ -391,7 +416,7 @@ cname_judge() {
     pos=(); j=$a
     while ((j <= b)); do
       w="${vbw[j]}"
-      if [[ $w =~ ^[A-Za-z_][A-Za-z0-9_]*= ]]; then :
+      if [[ $w =~ ^[A-Za-z_][A-Za-z0-9_]*\+?= ]]; then :
       elif [[ $w != *$'\x07'* && $w =~ $vsh_prefix_re ]]; then :
       else break; fi
       ((j++))
@@ -402,11 +427,17 @@ cname_judge() {
     done
     for p in "${pos[@]}"; do
       [[ ${vbw[p]} == *$'\x07'* ]] || continue
+      # B55: a PowerShell assignment runs no command (0); a constant or automatic value that no call operator runs is no command
+      # name (2), so only the words after it are read below.
+      ps_name_kind "$p" "$s"; pk=$?
+      ((pk == 0)) && continue
       if ((mode == 0)); then cnv=1; continue; fi
-      # A script a shell runs (a view from a wrapper) gets its variables from its caller's environment too, so one as the name is
-      # blocked whatever the script assigns (B45).
-      ((${vdep[vi]:-0} > 0)) && block "$MSG_CNSCR"
-      nm="${vbn[p]}"; cn_asg "$nm" && block "$MSG_CNASG"
+      if ((pk == 1)); then
+        # A script a shell runs (a view from a wrapper) gets its variables from its caller's environment too, so one as the name is
+        # blocked whatever the script assigns (B45).
+        ((${vdep[vi]:-0} > 0)) && block "$MSG_CNSCR"
+        nm="${vbn[p]}"; cn_asg "$nm" && block "$MSG_CNASG"
+      fi
       # The words after the name, as git reads them: the subcommand is the first word that isn't an option (-C and -c take a
       # value), and a destructive long flag is blocked anywhere after the name.
       j=$((p + 1)); sub_done=0
@@ -890,6 +921,7 @@ wrap_ansi() {
 
 # wrap_push <script>: a non-empty script goes to wscripts, and wtc (1 when its wrapper runs it under a timeout, B42) to wscov.
 # wpx is 1 when the wrapper is a POSIX shell or eval, whose script is Bash text (B44), and wsposix gets it with each script.
+# wps is 1 when the wrapper is PowerShell, whose script is PowerShell text (B55), and wsps gets it with each script.
 # B45: a script with an outer_re variable (one the calling shell expands, not one in single quotes) is blocked. The test runs on
 # the lowercased script, so PowerShell's constants are removed from it first.
 wrap_push() {
@@ -897,7 +929,7 @@ wrap_push() {
     local t="${1,,}"
     ((wpx)) || { t="${t//\$true/}"; t="${t//\$false/}"; t="${t//\$null/}"; }
     [[ $t =~ $outer_re ]] && block "$MSG_SHSCRIPT"
-    wscripts+=("$1"); wscov+=("$wtc"); wsposix+=("$wpx")
+    wscripts+=("$1"); wscov+=("$wtc"); wsposix+=("$wpx"); wsps+=("$wps")
   fi
   return 0
 }
@@ -934,6 +966,7 @@ wrap_cmd() {
     w="${wcmd[m]}"; base="${w##*/}"; base="${base##*\\}"
     wtc=0; tcov_before "$m" && wtc=1
     wpx=0; [[ $base =~ ^((ba|z|da|k)?sh)(\.exe)?$ || $base == eval ]] && wpx=1
+    wps=0; [[ $base =~ ^(powershell|pwsh)(\.exe)?$ ]] && wps=1
     # B48: a shell or PowerShell name right after a word that only prints its words (echo, printf, Write-Output, Write-Host, write) is
     # text, as in echo PowerShell 'x'. Anywhere else it may run a script, so ssh host pwsh -c 'x', find -exec sh -c 'x' and
     # Start-Process powershell -ArgumentList 'x' are read as before.
@@ -982,7 +1015,7 @@ wrap_read() {
   else
     sesc='\'; wrun_word='^[^[:space:];&|()<>$`'"'"'"\\]+'; wrun_dq='^[^"\\$`]+'
   fi
-  wscripts=(); wscov=(); wsposix=()
+  wscripts=(); wscov=(); wsposix=(); wsps=()
   while ((i < L)); do
     c="${s:i:1}"
     case $c in
@@ -999,6 +1032,9 @@ wrap_read() {
 # comment starts the same way and ends at the line break (B35).
 cmt_re='(^|[[:blank:]|&;()<>])#'
 views=("$raw")
+# vps (B55) is 1 for a view that is PowerShell text: the command itself under the PowerShell tool, its readings, a PowerShell
+# script a wrapper runs, and a substitution inside one. A view that is Bash text has 0.
+vps=(); [[ $tool == PowerShell ]] && vps[0]=1
 if [[ $tool == PowerShell ]]; then
   # PowerShell's line breaks are CR LF, CR and LF (B35). A backtick before a line break continues the line unless it's
   # escaped (``), which keeps the break; each continuation is marked x4 as a Bash backslash is below.
@@ -1014,7 +1050,7 @@ if [[ $tool == PowerShell || $pl == *"$x4"* ]]; then
   while [[ $rest == *"$nl"* ]]; do phys+=("${rest%%"$nl"*}"); rest="${rest#*"$nl"}"; done
   phys+=("$rest"); nphys=${#phys[@]}
   view_of 0 0; views=("$view")
-  reading_of 0 1; [[ $view == "${views[0]}" ]] || views+=("$view")
+  reading_of 0 1; [[ $view == "${views[0]}" ]] || { vps[${#views[@]}]=${vps[0]:-0}; views+=("$view"); }
   for ((k = 1; k < nphys; k++)); do
     [[ ${phys[k-1]} == *"$x4" && ${phys[k-1]} =~ $cmt_re ]] || continue
     # Each such line costs a pass of the rules, so a command with very many can't run past the hook's time limit.
@@ -1022,7 +1058,7 @@ if [[ $tool == PowerShell || $pl == *"$x4"* ]]; then
       echo "App Director: blocked: the command has more lines that end in a continuation (a backslash, or a backtick in PowerShell) after a comment marker than the guard can read in time. If it's really needed, ask the human to run it." >&2
       exit 2
     fi
-    reading_of "$k" 1; views+=("$view")
+    reading_of "$k" 1; vps[${#views[@]}]=${vps[0]:-0}; views+=("$view")
   done
 fi
 
@@ -1483,6 +1519,7 @@ if [[ $bare =~ $wrap_gate ]]; then
       jesc "${wscripts[wk]//$x6/$dl}"; vdep[${#views[@]}]=$((${vdep[vi]:-0} + 1))   # x6 restores the script's own $ (B45)
       vcov[${#views[@]}]=$((${vcov[vi]:-0} | ${wscov[wk]:-0}))   # bounded by a timeout above it, or by its own (B42)
       vpx[${#views[@]}]=${wsposix[wk]:-0}; vhang[${#views[@]}]=${vhang[vi]:-0}   # a script a POSIX shell runs is Bash text (B44); B49: a script in a substitution's view is one too
+      vps[${#views[@]}]=${wsps[wk]:-0}   # a script PowerShell runs is PowerShell text (B55)
       views+=("$je")
     done
   fi
@@ -1516,7 +1553,7 @@ if ((!isgit)) && [[ $real == *'$('* || ( $tool != PowerShell && ( $real == *'`'*
     for ((vn = 0; vn < sn; vn++)); do
       ((${#views[@]} < 64)) || break
       c="${subc[vn]}"; c="${c#"${c%%[![:space:]]*}"}"; c="${c%"${c##*[![:space:];]}"}"
-      vdep[${#views[@]}]=${vdep[vi]:-0}; vcov[${#views[@]}]=${vcov[vi]:-0}; vpx[${#views[@]}]=${vpx[vi]:-0}; vhang[${#views[@]}]=1
+      vdep[${#views[@]}]=${vdep[vi]:-0}; vcov[${#views[@]}]=${vcov[vi]:-0}; vpx[${#views[@]}]=${vpx[vi]:-0}; vps[${#views[@]}]=${vps[vi]:-0}; vhang[${#views[@]}]=1
       views+=("$c")
     done
   fi
@@ -1792,7 +1829,7 @@ if ((isgit)); then
   for ((vn = 0; vn < ${#subc[@]}; vn++)); do
     ((${#views[@]} < 64)) || block "the command has more command substitutions than the guard reads in time"
     c="${subc[vn]}"; c="${c#"${c%%[![:space:]]*}"}"; c="${c%"${c##*[![:space:];]}"}"
-    vdep[${#views[@]}]=${vdep[vi]:-0}; vcov[${#views[@]}]=${vcov[vi]:-0}; vpx[${#views[@]}]=${vpx[vi]:-0}; views+=("$c")
+    vdep[${#views[@]}]=${vdep[vi]:-0}; vcov[${#views[@]}]=${vcov[vi]:-0}; vpx[${#views[@]}]=${vpx[vi]:-0}; vps[${#views[@]}]=${vps[vi]:-0}; views+=("$c")
   done
   # B37: a variable left in a git command's words, or in a body a shell runs, is judged where it stands (var_judge). B38: the
   # command's own words are also read for their configuration keys and program flags (cfg_segment), never a heredoc body. That

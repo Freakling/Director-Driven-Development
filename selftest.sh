@@ -85,6 +85,8 @@
 #      --force); an unresolved one is blocked when the command sets that name another way or a git subcommand follows it,
 #      and the everyday forms pass. A shell's script, eval's argument or -Command that holds a variable the caller expands is
 #      blocked, and so is a bash script path under tools/ with a variable in it (B45).
+#      A PowerShell assignment, a constant or automatic value that no call operator runs, and a Bash NAME+=value are no command
+#      name, so they pass; the call operators and the prefixed variables that run git are still blocked (B55).
 #      A git command name is matched in any case, so GIT and Git are git (PowerShell finds a command case-insensitively, B46);
 #      git's subcommands and flags stay case-sensitive. A shell's name in a bash script path under tools/ is read the same way,
 #      quotes removed and in any case, so "bash", 'sh' and BASH are bash and sh, and a quoted or split path is read too (B47).
@@ -1931,6 +1933,62 @@ EOF
     err "the guard hook doesn't read a variable as a command's name, or a script or script path that a variable holds, or blocks an everyday form (B45):"
     printf '%s\n' "${git_fail#$'\n'}"
   else echo "ok: the guard hook reads a variable as a command's name as the value it assigns, blocks an unresolved one that the command sets another way or a git subcommand follows, blocks a shell's script, eval or -Command that a variable holds and a tools/ script path with a variable, and passes the everyday forms (B45)"; fi
+
+  # An assignment is not a command, so it isn't read as a variable command name (B55): a PowerShell $x = 1, $x += 1 or $env:X = 'y',
+  # and a PowerShell constant or automatic value that no call operator runs ($true, $null, $args), pass in a PowerShell payload and in
+  # a PowerShell script a shell runs. A Bash NAME+=value is an assignment prefix, as NAME=value is. A call operator still runs
+  # what its name holds, and a git subcommand after any name is still read: & $x, & $args[0], $args push --force and $G push
+  # --force block, and so does out+=x $G push --force.
+  git_fail=""
+  if [ -f .claude/hooks/guard-commands.sh ]; then
+    for cmd in \
+        '$x = 1' \
+        '$files = Get-ChildItem docs' \
+        '$x=1' \
+        '$x += 1' \
+        '$x ??= 1' \
+        "\$env:X = 'y'" \
+        '$x[0] = 1' \
+        '$null = Get-Date' \
+        '$true' \
+        '$false' \
+        '$null' \
+        'while ($true) { Get-Date }' \
+        '$args' \
+        '$_.Name' \
+        '$input | Out-Null'; do
+      guard 0 "$cmd" PowerShell
+    done
+    for cmd in \
+        "\$x = 1; & \$x" \
+        "\$x = 'git'; & \$x push --force" \
+        '$args push --force' \
+        '& $args[0] push --force' \
+        '$input | ForEach-Object { & $_ push --force }' \
+        '& $env:COMSPEC push --force'; do
+      guard 2 "$cmd" PowerShell
+    done
+    for cmd in \
+        "powershell -Command 'while (\$true) { Get-Date }'" \
+        "powershell -Command '\$x = 1'" \
+        'c="${x:0:1}"; out+="$c"; echo hi' \
+        'out+=x; echo hi'; do
+      guard 0 "$cmd"
+    done
+    for cmd in \
+        'out+=x $G push --force' \
+        'out+=x; $G push --force' \
+        'c+=y; "$c" push --force' \
+        "powershell -Command '\$args push --force'" \
+        "powershell -Command '\$G = \"git\"; & \$G status'"; do
+      guard 2 "$cmd"
+    done
+  fi
+  guard_run
+  if [ -n "$git_fail" ]; then
+    err "the guard hook reads an assignment or a constant as a variable command name, or passes a call operator or a NAME+=value prefix that runs a git command (B55):"
+    printf '%s\n' "${git_fail#$'\n'}"
+  else echo "ok: the guard hook passes a PowerShell assignment, a constant and an automatic value that runs nothing, and a Bash NAME+=value assignment, and blocks a call operator or a prefixed variable that runs git (B55)"; fi
 
   # A git command name in another case (B46): PowerShell finds a command case-insensitively, and Windows finds GIT too, so GIT and
   # Git are git in every git rule. Only the name is matched so: git's subcommands and flags stay case-sensitive, as git reads them.
