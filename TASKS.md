@@ -1347,7 +1347,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Note: found in T277.
 - Brief: -
 
-### T287 · Godot-Director: its docs say the guard covers PowerShell · todo · XS · agent
+### T287 · Godot-Director: its docs say the guard covers PowerShell · in-progress 2026-11-03 · XS · agent
 - Depends on: T278
 - Touches: work/Godot-Director: framework/.godot-director/rules.md, framework/.claude/agents/builder.md, README.md, selftest.sh if it pins the wording
 - Done when: rules.md (about line 82), the builder agent and README.md (about line 227) say "the guard" or "the command guard" where they say "the Bash guard", since T278 wired it to PowerShell too, and name the PowerShell tool where they list the shells it reads; the selftest passes (check) · following AGENTS.md › Project rules for framework work
@@ -1355,10 +1355,12 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Brief: -
 
 ### T288 · SaaSAllTheThings: the guard takes Godot-Director's loop, pause, view-flag and speed fixes · in-progress 2026-11-03 · S · agent
+- PRs: SaaSAllTheThings #46 (open)
 - Depends on: T277, T278
 - Touches: work/SaaSAllTheThings: framework/.claude/hooks/guard-commands.sh, selftest.sh
 - Done when: the hang check's loop reader ends a loop at the `done` that closes a command, not at any word `done`, as Godot-Director's T278 does, so `until [ -f done ]; do sleep 5; done` is still read as a wait loop, with its case, and the fixes T278's review brought to Godot-Director's guard: a wait loop with a nested loop is read to its own `done` (do and done counted), a pause with a fraction (`sleep 600.5`) is a pause, the view flags (vdep, vcov, vpx, vhang) start empty so the environment can't set them, and the per-character walk skips the bodies nothing runs, PowerShell here-strings included, so a 30 KB heredoc or here-string of `$Node.method()` lines is judged well within the hook's 10 s limit (SaaSAllTheThings' hook took 41 s on the here-string), with a timed case for each shell; and the credential-print rules read the text without message bodies, so a message may name `gh auth token`; the selftest passes (check) · following AGENTS.md › Project rules for framework work
 - Note: found in T278 and its review.
+- Note: built 2026-11-03 as SaaSAllTheThings' T39: the 30 KB heredoc and here-string went from 37.5 s and 35.1 s to about 1 s and 2 s. The loop reader reads a `bash -c` script's raw text without quote awareness, so a quoted `done` in one can end a loop early.
 - Brief: -
 
 ### T289 · Godot-Director: the variable command name rule skips a global option's value · todo · XS · agent
@@ -1368,10 +1370,10 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Note: found in T278's review (finding 9); the Godot exception made the assignment from tools/godot_bin.local count as unset.
 - Brief: -
 
-### T290 · SaaSAllTheThings: a quoted path with a space, or a backslash path, can't hide az, git or a Remove-Az cmdlet from the guard · todo · S · agent
+### T290 · SaaSAllTheThings: a quoted path with a space, or a backslash path, can't hide az, git or a Remove-Az cmdlet from the guard · in-progress 2026-11-03 · S · agent
 - Depends on: T286
 - Touches: work/SaaSAllTheThings: framework/.claude/hooks/guard-commands.sh, selftest.sh
-- Done when: the guard blocks `& 'C:\Program Files\Az\Remove-AzResourceGroup' -Name rg`, `"C:\Program Files\Git\bin\git.exe" push --force`, `"C:\Program Files\Microsoft SDKs\Azure\CLI2\wbin\az.cmd" group delete -n rg` and `C:\bin\az.cmd group delete -n rg`, in the Bash and PowerShell tools, as it blocks the bare names, with their cases: a quoted command name with a space is read as a name, not blanked as text, and a backslash path keeps its last part for the az rule; the same check in App-Director's and Godot-Director's hooks for the git form, fixed there too if they have it; the selftests pass (check) · following AGENTS.md › Project rules for framework work
+- Done when: the guard blocks `& 'C:\Program Files\Az\Remove-AzResourceGroup' -Name rg`, `"C:\Program Files\Git\bin\git.exe" push --force`, `"C:\Program Files\Microsoft SDKs\Azure\CLI2\wbin\az.cmd" group delete -n rg` and `C:\bin\az.cmd group delete -n rg`, in the Bash and PowerShell tools, as it blocks the bare names, with their cases: a quoted command name with a space is read as a name, not blanked as text, and a backslash path keeps its last part for the az rule; the same check, read-only, in App-Director's and Godot-Director's hooks for the git form, with an item here for each that has the gap; the selftest passes (check) · following AGENTS.md › Project rules for framework work
 - Note: found in T286; all four pass on the hook before T286 too.
 - Brief: -
 
