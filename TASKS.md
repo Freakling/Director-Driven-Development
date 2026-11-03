@@ -1350,6 +1350,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Brief: -
 
 ### T287 · Godot-Director: its docs say the guard covers PowerShell · in-progress 2026-11-03 · XS · agent
+- PRs: Godot-Director #52 (open)
 - Depends on: T278
 - Touches: work/Godot-Director: framework/.godot-director/rules.md, framework/.claude/agents/builder.md, README.md, selftest.sh if it pins the wording
 - Done when: rules.md (about line 82), the builder agent and README.md (about line 227) say "the guard" or "the command guard" where they say "the Bash guard", since T278 wired it to PowerShell too, and name the PowerShell tool where they list the shells it reads; the selftest passes (check) · following AGENTS.md › Project rules for framework work
@@ -1381,7 +1382,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Note: built 2026-11-03 as SaaSAllTheThings' T40. App-Director's and Godot-Director's hooks pass both git payloads (T292, T293).
 - Brief: -
 
-### T291 · Godot-Director: the selftest runs in under fifteen minutes · todo · M · agent
+### T291 · Godot-Director: the selftest runs in under fifteen minutes · in-progress 2026-11-04 · M · agent
 - Depends on: T278
 - Touches: work/Godot-Director: selftest.sh
 - Done when: `bash selftest.sh <path to Godot>` in work/Godot-Director finishes in under fifteen minutes on this machine with nothing else running, with the same checks and output, measured before and after per section; the sections that take longest are named in the item's note (check) · following AGENTS.md › Project rules for framework work
