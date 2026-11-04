@@ -1424,10 +1424,12 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Brief: -
 
 ### T299 · App-Director: the hook timeouts are in seconds · in-progress 2026-11-04 · XS · agent
+- PRs: App-Director #48 (open)
 - Depends on: T296
 - Touches: work/App-Director: framework/.claude/settings.json, selftest.sh, CHANGELOG.md
-- Done when: framework/.claude/settings.json gives guard-commands.sh a timeout of 10, guard-protected.sh 5 and stop-check.sh 660, since Claude Code reads a hook's `timeout` in seconds (10000, 5000 and 660000 now), and drops the top-level `"bash": {"timeout": 600000}`, which isn't a Claude Code setting (the Bash tool's limits are `BASH_DEFAULT_TIMEOUT_MS` and `BASH_MAX_TIMEOUT_MS` in `env`, and 600000 ms is already the default maximum); the selftest checks every hook timeout is at most 3600 and the guard's at most 10; the selftest passes (check) · following AGENTS.md › Project rules for framework work
+- Done when: framework/.claude/settings.json gives guard-commands.sh a timeout of 10, guard-protected.sh 5 and stop-check.sh 3600, since Claude Code reads a hook's `timeout` in seconds (10000, 5000 and 660000 now), and drops the top-level `"bash": {"timeout": 600000}`, which isn't a Claude Code setting (the Bash tool's limits are `BASH_DEFAULT_TIMEOUT_MS` and `BASH_MAX_TIMEOUT_MS` in `env`, and 600000 ms is already the default maximum); the selftest checks every hook timeout is at most 3600 and the guard's at most 10; the selftest passes (check) · following AGENTS.md › Project rules for framework work
 - Note: found in T296; Claude Code's hooks reference says a hook's timeout is "Seconds before canceling" (default 600). Godot-Director and SaaSAllTheThings use seconds already. This repo's .claude/settings.json is App-Director's and gets the fix with the next upgrade.
+- Note: built 2026-11-04 as App-Director's T45. The Stop hook got 3600, as in the other two frameworks, not 660: the stack check and tools/check.local.sh may each take up to 600 s, and a Stop hook that times out ends the turn without the check's result.
 - Brief: -
 
 ### T297 · SaaSAllTheThings: the Stop hook runs the check only for the session that changed the code · in-progress 2026-11-03 · M · agent
