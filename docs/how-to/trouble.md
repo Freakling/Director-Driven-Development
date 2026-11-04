@@ -61,15 +61,22 @@ An exit 3 is not a failure of your work. The agent reports the work as unverifie
 
 ### The agent's command is blocked
 
-A Bash guard in each framework blocks commands that hang or run past five minutes, since a wait that long lets the prompt cache expire and the next turn rewrites the whole context. The message names the form that works, and the agent uses it.
+A guard in each framework, which reads the commands of the Bash and the PowerShell tool, blocks commands that hang or run past five minutes, since a wait that long lets the prompt cache expire and the next turn rewrites the whole context. The message names the form that works, and the agent uses it.
 
-| Blocked | The form that works |
+| Blocked or ruled out | The form that works |
 |---|---|
-| Python reading from an empty heredoc, the "is Python here?" probe, which waits for console input on Windows | `python3 --version` |
+| Python reading its script from a heredoc or a here-string, whatever the body. It can wait for console input on Windows and never return | Write the script to a file with the file tools and run it, or `python3 --version` for the probe. A script file fed data from a heredoc passes |
+| A file written with a shell heredoc, or an `echo` or `printf` redirect of multi-line content. The guard lets it through, but the agent's rules forbid it, since a hung shell moves the command to the background and a subagent then shows as running for hours | The file tools (Write or Edit in Claude Code), one short command per shell call, and a multi-line script put in a file first |
 | An `until` or `while` loop with `sleep` and no limit | The same loop under `timeout 240`, or, for a background command, wait for its completion notice |
 | A loop on a background command's output that doesn't wait for its exit line | Loop until the output holds `[exited with code N]` or `[killed]`, under `timeout 240` |
 | A `sleep` over 280 seconds | A shorter sleep, or a `timeout` loop of 280 seconds or less |
 | Godot-Director only: a direct Godot run with no time limit | `timeout 120` before the Godot command; `tools/check.sh`, `tools/autoplay.sh` and `tools/ui_capture.sh` cap their own runs |
+
+A command that does move to the background is stopped by the subagent before it reports, naming it in the report's `Background:` line, and by the session after it. At session start a hook also lists Python, node, shell, Godot and headless browser processes over an hour old whose parent shell is gone. It stops nothing: you decide which to end. `APP_DIRECTOR_ORPHAN_REPORT=0`, `GODOT_DIRECTOR_ORPHAN_REPORT=0` or `SATT_ORPHAN_REPORT=0` turns it off.
+
+### The session says the project is behind
+
+At session start, at most once a day, a hook reads GitHub's public list of the framework's release tags and says when a newer release is out. It sends no project data, works offline by staying silent and never blocks a session. The upgrade commands are in the table at the top of this page. `APP_DIRECTOR_RELEASE_CHECK=0`, `GODOT_DIRECTOR_RELEASE_CHECK=0` or `SATT_RELEASE_CHECK=0` turns it off, for example in `.claude/settings.local.json` under `env`; each framework's `PRIVACY.md` says what it reads.
 
 ### A Godot test fails only in the check
 
@@ -96,6 +103,6 @@ This is by design too: the agent commits only with your approval. Asking for a r
 ## Related
 
 - The install sections of [App-Director](../frameworks/app-director.md#install), [Godot-Director](../frameworks/godot-director.md#install) and [SaaSAllTheThings](../frameworks/saasallthethings.md#install).
-- The procedures: [App-Director onboarding](https://github.com/Freakling/App-Director/blob/v1.13.0/ONBOARDING.md), [Godot-Director onboarding](https://github.com/Freakling/Godot-Director/blob/v4.9.0/ONBOARDING.md) and [SaaSAllTheThings onboarding](https://github.com/Freakling/SaaSAllTheThings/blob/v0.15.0/ONBOARDING.md).
+- The procedures: [App-Director onboarding](https://github.com/Freakling/App-Director/blob/v1.14.0/ONBOARDING.md), [Godot-Director onboarding](https://github.com/Freakling/Godot-Director/blob/v4.10.0/ONBOARDING.md) and [SaaSAllTheThings onboarding](https://github.com/Freakling/SaaSAllTheThings/blob/v0.16.0/ONBOARDING.md).
 
 <div class="takeaway"><span>Update, restart, and the commands you expect are there.</span><span class="url"><a href="index.md">All questions</a></span></div>

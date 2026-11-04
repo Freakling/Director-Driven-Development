@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T312 · B66 · R7
+**Next IDs:** T312 · B67 · R7
 
 ## Milestones
 | Milestone | Status |
@@ -1432,10 +1432,11 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Note: the release commit is on the bundle (selftest without the Godot path: 237 passed; it also adds the CHANGELOG entry T291's selftest change had left out), and the release notes are #52's description. Once the director merges #52, `bash tools/work-release.sh work/Godot-Director 52` tags and publishes v4.10.0.
 - Brief: -
 
-### T303 · Docs follow App-Director 1.14.0, SaaSAllTheThings 0.16.0 and Godot-Director 4.10.0: recording after an approved summary, the guard in PowerShell, the per-session Stop hook, no shell heredocs, the two session-start hooks · in-progress 2026-11-04 · M · agent
+### T303 · Docs follow App-Director 1.14.0, SaaSAllTheThings 0.16.0 and Godot-Director 4.10.0: recording after an approved summary, the guard in PowerShell, the per-session Stop hook, no shell heredocs, the two session-start hooks · done 2026-11-04 · M · agent
 - Depends on: T298, T300, T302, T305, T306, T307, T308, T309, T310, T311
 - Touches: frameworks.lock, docs/**/*.md (the framework links), docs/skills/ (design, research, acceptance, align, ui-design and the other pages whose procedure now records after an approved summary), docs/concept/ (the loop, reviews, the guard and the hooks), docs/how-to/, docs/frameworks/, product/brief.md
 - Done when: once the three bundles are merged and tagged (`tools/work-release.sh`), `frameworks.lock` and every framework link move to v1.14.0, v0.16.0 and v4.10.0; the site describes what the releases ship, each checked against the releases and without overclaiming: a session writes nothing until the director approves one summary of everything it will write, and a chat message or an "Other" answer re-opens the options (in SaaSAllTheThings an ADR is accepted only by that approval, and a live workshop's read-back is the room's summary); the guard and the deny rules reach the PowerShell tool; the Stop hook runs the check only for the session that changed the code; SaaSAllTheThings' guard blocks the Az PowerShell module's deletes; App-Director's hook timeouts are in seconds; files are written with the file tools, never a shell heredoc, every shell call is one short command, and a command moved to the background is stopped before a report, by the subagent and by the session after it (the how-to's troubleshooting table gains the heredoc row); the guard blocks any Python reading its script from a heredoc; a session says when the project is behind the latest release, with what the lookup reads, and lists processes whose parent shell is gone; Godot-Director's autoplay and layout lint reach controls drawn in a SubViewport through a provider; the brief's Planned framework changes bullets move to Framework features; the selftest passes with no WARN (check)
+- Note: built 2026-11-04: `frameworks.lock` and the links move to the three new tags, and the skill, concept, how-to and framework pages and the brief describe what shipped. The brief's Planned framework changes held only the SaaSAllTheThings Azure pilot, which no release ships, so it stays. `tools/audit.sh` at the new pins lists 43 lines of procedure detail that the pages summarise and link to; none is a release's behaviour the pages get wrong. The Stop hook's changed-source test differs by framework (Godot-Director counts `.gd`, `.tscn`, `.tres` and the like, the other two any file but `*.md`), and the pages say only that it runs for a session that changed code itself.
 - Brief: Scope › Framework features
 
 ### T296 · App-Director: the Stop hook runs the check only for the session that changed the code · done 2026-11-04 · M · agent
@@ -1597,6 +1598,13 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Repro: 1. Run `bash selftest.sh` in App-Director beside other selftests. 2. Expected: it ends, or shows where it is. Actual: on 2026-11-04 one run hit `timeout 2400` (T307) and one hit `timeout 3300` (T308), each with an empty log, and the rerun of each passed, in about 20 and 30 minutes. The selftest prints nothing until it ends and deletes its temp folder on exit, so where it stood isn't known; load is likely, a stall isn't ruled out.
 - Note: a line per section as it starts would show where a run stands. Both reruns used `KEEP=1`, and other runs without it passed, so that isn't shown to matter.
 - Found in: T307, T308
+- Brief: -
+
+### B66 · A bare Python with no script passes the hang check · todo · S · agent · medium
+- Touches: work/App-Director, work/SaaSAllTheThings: framework/.claude/hooks/guard-commands.sh; work/Godot-Director: framework/.claude/hooks/guard-git.sh; each repo's selftest.sh, CHANGELOG.md; then this repo's guard
+- Repro: 1. Feed each guard hook, without running it, `python3 -`, `python`, `py -3` or `python3 2>/dev/null || true`. 2. Expected: blocked: with no script, no `-c`, no `-m` and nothing piped or redirected in, Python waits for input that never comes. Actual: exit 0 in all three guards at their latest releases, on 2026-11-04.
+- Note: T309 blocks a Python reading its script from a heredoc, and this form has none. It isn't theoretical: on 2026-11-04 T303's builder ran `python3 - 2>/dev/null; sed ...`, the shell hung, the tool moved it to the background, the builder reported that it had exited by itself, and the task stayed alive until this session stopped it with TaskStop by the ID in the builder's transcript; the builder's own run ended at once. `python3 - < x.py`, `cat x.py | python3 -` and `python3 --version` stay allowed.
+- Found in: T303
 - Brief: -
 
 ### T308 · The three frameworks warn when a project is behind the latest release · done 2026-11-04 · M · agent

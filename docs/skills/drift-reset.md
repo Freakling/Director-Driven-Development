@@ -14,13 +14,13 @@ How to use it: [The system was not built as I intended](../how-to/drift.md)
 4. **Plan the rebuild.** Each difference from the approved design becomes a task. This step writes no code. The rebuild runs through [`/next-task`](next-task.md).
 5. **Postmortem**, run after the rebuild items are done. Each failure mode is checked again: fixed, or still drifting. Drift that a script could catch becomes a proposed check, for the director to approve.
 
-Only the human starts a reset, and nothing in a reset writes application code. Each step is committed after the director approves it. Nothing in a reset discards work or rewrites history, and the reset folder only grows. A later reset gets its own folder.
+Only the human starts a reset, and nothing in a reset writes application code. The analysis files are written as the analysis runs. The decisions, the design diff and the rebuild plan's items are shown as one summary, and none of them is written until the director approves it; a postmortem's chosen checks and items get a summary of their own. Each step is committed after the director approves it. Nothing in a reset discards work or rewrites history, and the reset folder only grows. A later reset gets its own folder.
 
 ## Unique per repo
 
 ### Godot-Director
 
-The procedure is at [`framework/.godot-director/procedures/drift-reset.md`](https://github.com/Freakling/Godot-Director/tree/v4.9.0/framework/.godot-director/procedures/drift-reset.md) in the Godot-Director repository.
+The procedure is at [`framework/.godot-director/procedures/drift-reset.md`](https://github.com/Freakling/Godot-Director/tree/v4.10.0/framework/.godot-director/procedures/drift-reset.md) in the Godot-Director repository.
 
 - The branch is `reset-YYYY-MM-DD`, and the reset folder is `design/resets/YYYY-MM-DD/`. A second reset on the same day adds `-2`.
 - Everything the reset writes goes in the reset folder, except the GDD and `design/decisions.md`, which change at the design step, and TASKS.md, which changes at the plan and postmortem steps. Nothing in the reset folder is deleted or rewritten; a correction is a new section.
@@ -33,7 +33,7 @@ The procedure is at [`framework/.godot-director/procedures/drift-reset.md`](http
 
 ### App-Director
 
-The procedure is at [`framework/.app-director/procedures/drift-reset.md`](https://github.com/Freakling/App-Director/tree/v1.13.0/framework/.app-director/procedures/drift-reset.md) in the App-Director repository.
+The procedure is at [`framework/.app-director/procedures/drift-reset.md`](https://github.com/Freakling/App-Director/tree/v1.14.0/framework/.app-director/procedures/drift-reset.md) in the App-Director repository.
 
 - The branch is `drift-reset-YYYY-MM-DD`, and the reset folder is `product/resets/YYYY-MM-DD/`. The working tree must be clean before it starts. If it isn't, the director decides what happens to the changes first.
 - No destructive git commands are used. The reset never discards work or rewrites history, and the git rules are in `rules.md`.
@@ -44,7 +44,7 @@ The procedure is at [`framework/.app-director/procedures/drift-reset.md`](https:
 
 ### SaaSAllTheThings
 
-The procedure is at [`framework/.satt/procedures/drift-reset.md`](https://github.com/Freakling/SaaSAllTheThings/tree/v0.15.0/framework/.satt/procedures/drift-reset.md) in the SaaSAllTheThings repository.
+The procedure is at [`framework/.satt/procedures/drift-reset.md`](https://github.com/Freakling/SaaSAllTheThings/tree/v0.16.0/framework/.satt/procedures/drift-reset.md) in the SaaSAllTheThings repository.
 
 - The scope is the product design the director owns: the Product Pillars, the PRD, the decision log and the business rules in integration contracts. The architecture is out of scope. A framework rule that conflicts with the product goes through `architect.md` and an ADR, and an accepted ADR is never dropped without a new one.
 - "Contradictory" means the build contradicts the text, or two texts contradict each other, such as the PRD and `product/decisions.md`, or the PRD and a contract. "Divergent" means the principle is built two or more ways, each defensible from the text.

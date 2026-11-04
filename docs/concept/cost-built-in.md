@@ -42,7 +42,7 @@ Every session reads the task list to find the next task. `/prune` moves finished
 
 ## Check result caching
 
-The check runs before commits and, in Claude Code, before the agent ends its turn. Two things keep it from running more than needed. The pre-commit hook runs it only when a commit touches code, so commits that only change documentation skip it. And `bash tools/check.sh --if-changed` fingerprints the files it covers: when nothing has changed since the last run, it repeats the last result at once instead of building and testing again.
+The check runs before commits and, in Claude Code, before the agent ends its turn, and then only for a session that changed code itself. Two things keep it from running more than needed. The pre-commit hook runs it only when a commit touches code, so commits that only change documentation skip it. And `bash tools/check.sh --if-changed` fingerprints the files it covers: when nothing has changed since the last run, it repeats the last result at once instead of building and testing again.
 
 ## Small files and scoped reads
 
