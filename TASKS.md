@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T312 · B67 · R7
+**Next IDs:** T315 · B67 · R7
 
 ## Milestones
 | Milestone | Status |
@@ -1317,7 +1317,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Note: built 2026-11-03 as Godot-Director's T40. export.md and release.md got a Summary and approval step 3 (Write it down and Try it are 4 and 5), the playtest's machine review joins its summary, and onboarding's settings sections (facts, ownership, dev menu, model sizing) keep the install commit's approval as their gate, as in App-Director's T40. The builder also updated README.md, framework/playtesting/README.md and examples/scenarios.md.
 - Brief: Scope › Framework features
 
-### T283 · App-Director: the selftest runs in under five minutes · todo · S · agent
+### T283 · App-Director: the selftest runs in under five minutes · in-progress 2026-11-04 · M · agent
 - PRs: App-Director #48 (merged)
 - Depends on: T276
 - Touches: work/App-Director: selftest.sh
@@ -1601,10 +1601,30 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Found in: T307, T308
 - Brief: -
 
-### B66 · A bare Python with no script passes the hang check · todo · S · agent · medium
+### T312 · Release SaaSAllTheThings 0.16.1 · in-progress 2026-11-04 · S · agent
+- PRs: SaaSAllTheThings #48 (open)
+- Touches: work/SaaSAllTheThings: the version files, CHANGELOG.md
+- Done when: the bundle is merged and `tools/work-release.sh` has tagged and published it
+- Brief: -
+
+### T313 · Release Godot-Director 4.10.1 · in-progress 2026-11-04 · S · agent
+- PRs: Godot-Director #54 (open)
+- Touches: work/Godot-Director: the version files, CHANGELOG.md
+- Done when: the bundle is merged and `tools/work-release.sh` has tagged and published it
+- Brief: -
+
+### T314 · Release App-Director 1.14.1 · todo · S · agent
+- Depends on: T283
+- Touches: work/App-Director: the version files, CHANGELOG.md
+- Done when: it ends the bundle that carries T283, the bundle is merged and `tools/work-release.sh` has tagged and published it
+- Brief: -
+
+### B66 · A bare Python with no script passes the hang check · in-progress 2026-11-04 · M · agent · medium
+- PRs: App-Director #49 (merged), SaaSAllTheThings #47 (merged), Godot-Director #53 (merged), SaaSAllTheThings #48 (open), Godot-Director #54 (open), App-Director bundle 2026-11-04-2 (not yet published)
 - Touches: work/App-Director, work/SaaSAllTheThings: framework/.claude/hooks/guard-commands.sh; work/Godot-Director: framework/.claude/hooks/guard-git.sh; each repo's selftest.sh, CHANGELOG.md; then this repo's guard
 - Repro: 1. Feed each guard hook, without running it, `python3 -`, `python`, `py -3` or `python3 2>/dev/null || true`. 2. Expected: blocked: with no script, no `-c`, no `-m` and nothing piped or redirected in, Python waits for input that never comes. Actual: exit 0 in all three guards at their latest releases, on 2026-11-04.
 - Note: T309 blocks a Python reading its script from a heredoc, and this form has none. It isn't theoretical: on 2026-11-04 T303's builder ran `python3 - 2>/dev/null; sed ...`, the shell hung, the tool moved it to the background, the builder reported that it had exited by itself, and the task stayed alive until this session stopped it with TaskStop by the ID in the builder's transcript; the builder's own run ended at once. `python3 - < x.py`, `cat x.py | python3 -` and `python3 --version` stay allowed.
+- Note: built 2026-11-04 as App-Director's T51 and T52, SaaSAllTheThings' T46 and T47 and Godot-Director's T51, the same `py_bare` block in each guard, and resized from S to M since the three guards read text three ways. Three defects surfaced after 178 forms passed: a line continuation read as a bare Python in the as-written reading, a delimiter line named `PY` read as the launcher, and a SaaSAllTheThings glob that blanked everything between a command's first and last quote (a `sleep 999` between two strings passed there too). The first two were found by the selftests; the delimiter fix reached App-Director and SaaSAllTheThings after their first bundles merged, so it's in the next one, and nothing with the defect was released. Known limits: a Python behind a variable and a wrapper option that takes a value pass, and `;; python)` and a bare `python` line in a script's data heredoc are false blocks. This repo's guard follows with App-Director's release.
 - Found in: T303
 - Brief: -
 
