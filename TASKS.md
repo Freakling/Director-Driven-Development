@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T301 · B64 · R7
+**Next IDs:** T302 · B64 · R7
 
 ## Milestones
 | Milestone | Status |
@@ -1369,10 +1369,12 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Brief: -
 
 ### T289 · Godot-Director: the variable command name rule skips a global option's value · in-progress 2026-11-04 · XS · agent
+- PRs: Godot-Director #52 (open)
 - Depends on: T278
 - Touches: work/Godot-Director: framework/.claude/hooks/guard-git.sh, selftest.sh
-- Done when: `cname_judge` skips both words after `--git-dir`, `--work-tree` and `--namespace`, as `var_segment` does, so with `git` written in tools/godot_bin.local, `G=$(cat tools/godot_bin.local); "$G" --work-tree . restore .` and `... --git-dir .git branch -D x` are blocked, with their cases; the same check in App-Director's and SaaSAllTheThings' hooks, fixed there too if they have it; the selftests pass (check) · following AGENTS.md › Project rules for framework work
+- Done when: `cname_judge` skips both words after `--git-dir`, `--work-tree` and `--namespace`, as `var_segment` does, so with `git` written in tools/godot_bin.local, `G=$(cat tools/godot_bin.local); "$G" --work-tree . restore .` and `... --git-dir .git branch -D x` are blocked, with their cases; the same check, read-only, in App-Director's and SaaSAllTheThings' hooks, with an item here if they have it; the selftest passes (check) · following AGENTS.md › Project rules for framework work
 - Note: found in T278's review (finding 9); the Godot exception made the assignment from tools/godot_bin.local count as unset.
+- Note: built 2026-11-04 as Godot-Director's T43; it skips every global option `var_segment` skips (`-C`, `-c`, `--git-dir`, `--work-tree`, `--namespace`, `--config-env`, `--attr-source`, `--super-prefix`). App-Director's and SaaSAllTheThings' hooks block the item's payloads by their assignment rule, but pass the same commands with the variable from the environment (T301).
 - Brief: -
 
 ### T290 · SaaSAllTheThings: a quoted path with a space, or a backslash path, can't hide az, git or a Remove-Az cmdlet from the guard · in-progress 2026-11-03 · S · agent
@@ -1402,7 +1404,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Note: built 2026-11-04 as App-Director's T43. An unquoted backslash path to git in an argument (`echo C:\Git\bin\git.exe push --force`) is blocked, as `echo git push --force` already is.
 - Brief: -
 
-### T293 · Godot-Director: a quoted path with a space, or a backslash path, can't hide git from the guard · todo · S · agent
+### T293 · Godot-Director: a quoted path with a space, or a backslash path, can't hide git from the guard · in-progress 2026-11-04 · S · agent
 - Depends on: T278
 - Touches: work/Godot-Director: framework/.claude/hooks/guard-git.sh, selftest.sh
 - Done when: the guard blocks `"C:\Program Files\Git\bin\git.exe" push --force`, `& 'C:\Program Files\Git\bin\git.exe' push --force` and `C:\Git\bin\git.exe push --force` in the Bash and PowerShell tools, as it blocks the bare name, with their cases, as SaaSAllTheThings' T290 does (a command name quoted with a space or a path, or an unquoted backslash path that starts with a drive, `.`, `..`, `~` or two backslashes, is read as its last part without `.exe`, `.cmd` or `.bat`); `& 'C:\Program Files\Git\bin\git.exe' status`, a commit message naming the path, and `c\at README.md` still pass; the selftest passes (check) · following AGENTS.md › Project rules for framework work
@@ -1465,6 +1467,13 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Touches: work/SaaSAllTheThings, work/App-Director, work/Godot-Director: each guard hook and selftest.sh
 - Done when: `"C:\Program Files\Git\bin\git.exe" -c core.pager=calc log` and `--upload-pack` with a quoted git path, and `"C:\Program Files\Git\bin\bash.exe" -c "git push --force"` and `C:\Git\bin\bash.exe -c ...`, are blocked as the bare names are, with their cases, in each framework's guard; the selftests pass (check) · following AGENTS.md › Project rules for framework work
 - Note: found in T290: the `-c` and program-flag rules and the shell wrapper gate read only a bare git or shell word.
+- Brief: -
+
+### T301 · App-Director and SaaSAllTheThings: a variable command name followed by a global option can't hide a git subcommand · todo · XS · agent
+- Depends on: T289, T300, T298
+- Touches: work/App-Director and work/SaaSAllTheThings: framework/.claude/hooks/guard-commands.sh, selftest.sh
+- Done when: with `G` set in the environment, `"$G" --work-tree . restore .` and `"$G" --git-dir .git branch -D x` are blocked in each hook, as Godot-Director's T43 does by skipping each global option's value before it looks for the subcommand, with their cases; the selftests pass (check) · following AGENTS.md › Project rules for framework work
+- Note: found in T289; both exit 0 on each hook at its bundle's head. Built after the two releases, in each repo's next bundle.
 - Brief: -
 
 ### B53 · A script piped to a shell, a path-qualified or `.exe` git or bash, a sudo option's value, cmd's %VAR% or a folder in another case passes the guard (A01:2025 Broken Access Control) · todo · S · agent · med
