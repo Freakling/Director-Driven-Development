@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T305 · B64 · R7
+**Next IDs:** T311 · B65 · R7
 
 ## Milestones
 | Milestone | Status |
@@ -1431,10 +1431,10 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Note: the release commit is on the bundle (selftest without the Godot path: 237 passed; it also adds the CHANGELOG entry T291's selftest change had left out), and the release notes are #52's description. Once the director merges #52, `bash tools/work-release.sh work/Godot-Director 52` tags and publishes v4.10.0.
 - Brief: -
 
-### T303 · Docs follow App-Director 1.14.0, SaaSAllTheThings 0.16.0 and Godot-Director 4.10.0: recording after an approved summary, the guard in PowerShell, the per-session Stop hook · todo · M · agent
-- Depends on: T298, T300, T302
+### T303 · Docs follow App-Director 1.14.0, SaaSAllTheThings 0.16.0 and Godot-Director 4.10.0: recording after an approved summary, the guard in PowerShell, the per-session Stop hook, no shell heredocs · todo · M · agent
+- Depends on: T298, T300, T302, T305, T306, T307
 - Touches: frameworks.lock, docs/**/*.md (the framework links), docs/skills/ (design, research, acceptance, align, ui-design and the other pages whose procedure now records after an approved summary), docs/concept/ (the loop, reviews, the guard and the hooks), docs/how-to/, docs/frameworks/, product/brief.md
-- Done when: once the three bundles are merged and tagged (`tools/work-release.sh`), `frameworks.lock` and every framework link move to v1.14.0, v0.16.0 and v4.10.0; the site describes what the releases ship, each checked against the releases and without overclaiming: a session writes nothing until the director approves one summary of everything it will write, and a chat message or an "Other" answer re-opens the options (in SaaSAllTheThings an ADR is accepted only by that approval, and a live workshop's read-back is the room's summary); the guard and the deny rules reach the PowerShell tool; the Stop hook runs the check only for the session that changed the code; SaaSAllTheThings' guard blocks the Az PowerShell module's deletes; App-Director's hook timeouts are in seconds; the brief's Planned framework changes bullets move to Framework features; the selftest passes with no WARN (check)
+- Done when: once the three bundles are merged and tagged (`tools/work-release.sh`), `frameworks.lock` and every framework link move to v1.14.0, v0.16.0 and v4.10.0; the site describes what the releases ship, each checked against the releases and without overclaiming: a session writes nothing until the director approves one summary of everything it will write, and a chat message or an "Other" answer re-opens the options (in SaaSAllTheThings an ADR is accepted only by that approval, and a live workshop's read-back is the room's summary); the guard and the deny rules reach the PowerShell tool; the Stop hook runs the check only for the session that changed the code; SaaSAllTheThings' guard blocks the Az PowerShell module's deletes; App-Director's hook timeouts are in seconds; files are written with the file tools, never a shell heredoc, every shell call is one short command, and a command moved to the background is stopped before a report, by the subagent and by the session after it (the how-to's troubleshooting table gains the heredoc row); the brief's Planned framework changes bullets move to Framework features; the selftest passes with no WARN (check)
 - Brief: Scope › Framework features
 
 ### T296 · App-Director: the Stop hook runs the check only for the session that changed the code · in-progress 2026-11-04 · M · agent
@@ -1465,10 +1465,37 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Brief: -
 
 ### T304 · App-Director: the selftest's UI capture section passes on every run · in-progress 2026-11-04 · M · agent
+- PRs: App-Director #48 (open)
 - Depends on: T283, T300
 - Touches: work/App-Director: selftest.sh, framework/tools/ui/ if the cause is there, CHANGELOG.md (under the 1.14.0 heading, since the release isn't published)
 - Done when: the cause of the two failing runs on 2026-11-04 is found and fixed: one run failed 4 checks when the `clean.busy` state's setup passed the fixture's 3-second `setup_timeout` on a busy machine, and the next failed 26 when every 1280x720 capture output went missing while the 800x600 ones were written, and left two `chrome-headless-shell` processes holding its temp folder; the fixture keeps a short limit for the `stuck` state's test without making a state that must finish fail on a busy machine; no parallel lane shares the UI capture section's folders, ports or captures; a capture run leaves no browser running; then five runs of `bash selftest.sh` in a row pass, with each time noted (check) · following AGENTS.md › Project rules for framework work
 - Note: found while measuring T283; the gate runs for T296, T299 and T300 passed, so the failure is intermittent, and T42's parallel lanes are the change most likely to have made it so.
+- Note: built 2026-11-04 as App-Director's T46. The fixture gave every state the 3-second `setup_timeout` meant for `stuck`, so on a busy machine (36-68% CPU from other dev servers, the prototype lane beside it) a state that must finish overran it; no lane shares the UI section's folders or port. And the kill test's `taskkill /F` could land while Chromium was starting, leaving 1-3 `chrome-headless-shell` helpers alive for up to 33 s, which held `todo-web`. Now the states keep the shipped 60 s, `stuck` runs on its own at 3 s, the kill waits for the capture to begin and stops the helpers a kill leaves, and the EXIT trap stops a capture's app and browser; all in selftest.sh, framework/tools/ui unchanged. Five runs in a row passed 533 checks, in 524 to 995 s.
+- Brief: -
+
+### T305 · SaaSAllTheThings: subagents write no shell heredocs, and the background commands they leave are stopped · in-progress 2026-11-04 · M · agent
+- PRs: SaaSAllTheThings #46 (open)
+- Touches: work/SaaSAllTheThings: framework/.satt/rules.md, framework/.satt/procedures/build.md, research.md, review.md and next-task.md, framework/.claude/agents/builder.md, researcher.md and reviewer.md, skills/saas-design-session/references/ (`bash bundle.sh`), CHANGELOG.md (under 0.16.0, since the release isn't published), TASKS.md
+- Done when: `rules.md` › Doing the work has a Shell commands bullet: files are written with the file tools (Write or Edit in Claude Code), never with a shell heredoc or an `echo` or `printf` redirect of multi-line content; a multi-line script goes in a file first; every shell call is one short command, with the check, a build and a host start the only long runs, each with an explicit long timeout; a command moved to the background is stopped before a report or the end of a turn (check) · `build.md` says it before step 1, has a step before Report that stops a command of the builder's that was moved to the background (the tool's stop, or `kill` or `taskkill` with its pid) and never reports while one is alive, and a `Background:` line in the report (check) · `research.md` › Core procedure and `review.md` say it in one sentence each (check) · `next-task.md` › 3. Build stops what a subagent left in the background before it deletes `.satt/state/building` and moves on, tool-neutral, with TaskStop named in its In Claude Code bullet, and Review and Research items point to it (check) · `builder.md`, `researcher.md` and `reviewer.md` each carry one line with the rule, their tools lists unchanged (check) · a CHANGELOG entry (subagents: no shell heredocs; background commands stopped before and after a report) with upgrade steps none; the release commit already bumped the version · the selftest passes (check) · following AGENTS.md › Project rules for framework work
+- Note: asked for by the director on 2026-11-04: in an installed app a builder wrote three files with shell heredocs in one Bash call that never returned; the tool moved it to the background after its 900 s timeout, the builder rewrote the files with Write and reported 45 minutes after launch, and the live background shell kept the finished subagent showing as running for ten and a half hours. The same hang hit the main session twice that day. One wording serves all three frameworks, apart from each one's paths and long runs.
+- Note: built 2026-11-04 as SaaSAllTheThings' T42, 11 files, with 725 selftest checks passing; the bundle's release commit already sets 0.16.0, so the entry sits under that heading and the version isn't bumped again. The first selftest run hit `timeout 1500` with two other selftests running, so its gate needs a longer limit under load. The researcher and reviewer have no shell tool, so their line says so; the wording in rules.md, build.md and the agent definitions repeats by the director's request, with rules.md as its home.
+- Brief: -
+
+### T306 · Godot-Director: subagents write no shell heredocs, and the background commands they leave are stopped · in-progress 2026-11-04 · M · agent
+- PRs: Godot-Director #52 (open)
+- Touches: work/Godot-Director: framework/.godot-director/rules.md, framework/.godot-director/procedures/build.md, research.md, review.md and next-task.md, framework/.claude/agents/builder.md, researcher.md and reviewer.md, CHANGELOG.md (under 4.10.0), TASKS.md
+- Done when: every outcome of T305, in Godot-Director's files: the marker is `.godot/godot-director/building`, the long runs are the check, an autoplay run and an export, the new build step is 8, and the entry goes under 4.10.0; the selftest passes with the Godot path (check) · following AGENTS.md › Project rules for framework work
+- Note: asked for by the director on 2026-11-04, with T305.
+- Note: built 2026-11-04 as Godot-Director's T46, 10 files, with 1083 selftest checks passing with Godot 4.7.2; the entry sits under 4.10.0, which the bundle's release commit already sets.
+- Brief: -
+
+### T307 · App-Director: subagents write no shell heredocs, and the background commands they leave are stopped · in-progress 2026-11-04 · M · agent
+- PRs: App-Director #48 (open)
+- Depends on: T304
+- Touches: work/App-Director: framework/.app-director/rules.md, framework/.app-director/procedures/build.md, research.md, review.md and next-task.md, framework/.claude/agents/builder.md, researcher.md and reviewer.md, CHANGELOG.md (under 1.14.0), TASKS.md
+- Done when: every outcome of T305, in App-Director's files: the marker is `.app-director/state/building`, the long runs are the check, a build and a host start, and the entry goes under 1.14.0; the selftest passes (check) · following AGENTS.md › Project rules for framework work
+- Note: asked for by the director on 2026-11-04, with T305.
+- Note: built 2026-11-04 as App-Director's T47, 10 files, with 533 selftest checks passing; the entry sits under 1.14.0, which the bundle's release commit already sets. The first run hit `timeout 2400` with an empty log, beside two other selftests and another session's jobs; the selftest prints nothing until it ends, so where it stalled isn't known. The second run passed in about 20 minutes.
 - Brief: -
 
 ### T297 · SaaSAllTheThings: the Stop hook runs the check only for the session that changed the code · in-progress 2026-11-03 · M · agent
@@ -1555,6 +1582,31 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Touches: .claude/hooks/guard-commands.sh, selftest.sh (the guard is framework-owned: an item for each framework once it's built)
 - Repro: 1. Feed the guard hook `git diff > /tmp/x.diff` or `git -C work/App-Director diff > /tmp/x.diff`. 2. Expected: passes: the redirect writes git's output, and git reads no path outside the repository. Actual: exit 2, "git diff of a path outside the repository": the outside-path rule takes the redirect's target as a pathspec.
 - Found in: T280
+- Brief: -
+
+### B64 · A quoted multi-line string after an empty Python heredoc hides it from the hang check · todo · S · agent · medium
+- Touches: .claude/hooks/guard-commands.sh, selftest.sh (the guard is framework-owned: an item for each framework once it's built; Godot-Director's is guard-git.sh)
+- Repro: 1. Feed the guard hook, without running it, a command of three lines: `python3 - <<'E' 2>/dev/null || node -e "`, then `x()"`, then `E`. 2. Expected: blocked as an empty Python heredoc: the quoted string closes on the second line, so the shell starts the heredoc's body after it and the body is empty. Actual: exit 0 in this repo's guard and in App-Director's, SaaSAllTheThings' and Godot-Director's (2026-11-04), while the plain empty form, `python3 - <<'E'` then `E`, exits 2 in all four. The hang check takes the line after the header as the body, so it never reaches the delimiter.
+- Found in: T305, by a forked session reading processes left spinning on 2026-11-04: pids 39632 and 36756 came from this form and 23516 is the same shape from another project; each burns a core until it is killed. The hang behind T305 is likely this family too: a shell that ran two `cat` heredocs and then `python - <<'EOF' 2>/dev/null || true` with an empty body; likely, not proven.
+- Note: T309, once it's built, closes this: it blocks any Python reading its script from a heredoc, whatever the body.
+- Brief: -
+
+### T308 · The three frameworks warn when a project is behind the latest release · todo · M · agent
+- Touches: work/App-Director, work/SaaSAllTheThings, work/Godot-Director: the check or a session-start hook in framework/.claude/hooks/ with framework/.claude/settings.json, selftest.sh, CHANGELOG.md
+- Done when: the check or a session-start hook warns when the installed framework is older than the latest release, so a project that has fallen behind shows up without anyone looking (test) · a warning never fails the check (test) · the selftests pass (check) · following AGENTS.md › Project rules for framework work
+- Note: asked for by the director on 2026-11-04, approved for filing only; whether it rides in the open bundles or the next is theirs to say. The frameworks already block the hang, but the fix never reached the projects: a read-only probe of the installed guards on 2026-11-04 found brfservice passing a bare `python - <<'EOF'` with an empty body, and project-director blocking that but passing the incident's shape (`cat` heredocs followed by `python - <<'EOF' 2>/dev/null || true`), while the three bundles block both.
+- Brief: -
+
+### T309 · The three guards block any Python that reads its script from a heredoc · todo · M · agent
+- Touches: work/App-Director, work/SaaSAllTheThings: framework/.claude/hooks/guard-commands.sh; work/Godot-Director: framework/.claude/hooks/guard-git.sh; each repo's selftest.sh, the rules bullet that names the empty heredoc, CHANGELOG.md
+- Done when: each guard blocks `python`, `python3` and `py`, path-qualified too, reading its script from a heredoc, whatever the body, in place of the shape-by-shape empty-body check, so B64's form is blocked, with cases (test) · a bounded form isn't exempt unless a test shows `timeout` can stop it through the Windows Store alias (test) · the selftests pass (check) · following AGENTS.md › Project rules for framework work
+- Note: asked for by the director on 2026-11-04, approved for filing only; whether it rides in the open bundles or the next is theirs to say. It enforces T305's rule that a multi-line script goes in a file first; the cost is that agents write a script to a file before running it. It closes B64, and this repo's guard follows with the App-Director upgrade.
+- Brief: -
+
+### T310 · The three frameworks report orphaned processes at session start · todo · M · agent
+- Touches: work/App-Director, work/SaaSAllTheThings, work/Godot-Director: a session-start hook in framework/.claude/hooks/, framework/.claude/settings.json, selftest.sh, CHANGELOG.md
+- Done when: a session-start hook lists long-running processes whose parent shell is gone (test) · it stops nothing, and leaves stopping them to the human (test) · the selftests pass (check) · following AGENTS.md › Project rules for framework work
+- Note: asked for by the director on 2026-11-04, approved for filing only; whether it rides in the open bundles or the next is theirs to say. T305 to T307 clean up only what a running session knows about; a process from an ended session ran over two days unnoticed.
 - Brief: -
 
 ### T103 · /ui-design tells the director how to use Excalidraw · done 2026-10-20 · S · agent
