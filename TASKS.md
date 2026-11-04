@@ -1434,6 +1434,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Touches: work/SaaSAllTheThings: VERSION, .claude-plugin/plugin.json, .claude-plugin/marketplace.json, skills/*/SKILL.md, README.md, project/product/director-brief.md, the example's copy of the brief, CHANGELOG.md
 - Done when: the bundle ends with the release commit: the version files bumped to 0.16.0 as its .claude/CLAUDE.md lists them, `## Unreleased` in CHANGELOG.md is `## 0.16.0 (<date>)`, the selftest passes (check), and the commit's body is the release notes (What's new, How to install, How to upgrade with this release's upgrade steps), which are also the pull request's description · following AGENTS.md › Project rules for framework work › Releases ride in the bundle
 - Note: 0.16.0 is the agent's proposal: the bundle adds features (recording after an approved summary, the per-session Stop hook) next to the guard's fixes. The director can change it in review.
+- Note: the release commit is on the bundle (selftest 725 passed), and the release notes are #46's description. Once the director merges #46, `bash tools/work-release.sh work/SaaSAllTheThings 46` tags and publishes v0.16.0.
 - Brief: -
 
 ### T294 · The three guards: a quoted or backslash path to git or a shell can't hide git's program flags or a wrapper's script · todo · S · agent
