@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T304 · B64 · R7
+**Next IDs:** T305 · B64 · R7
 
 ## Milestones
 | Milestone | Status |
@@ -1324,6 +1324,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: `bash selftest.sh` in work/App-Director finishes in under five minutes on this machine, with the same checks and output, measured before and after per section (check) · following AGENTS.md › Project rules for framework work
 - Note: found in T276: the selftest took about 6 min 45 s before and after the guard port, past the five-minute limit every long command keeps to, so it can only run in the background; this repo's B41 shows the pattern (parallel guard batches, one git cat-file batch, bash or awk in place of a process per line).
 - Note: built 2026-11-04 as App-Director's T42: the independent parts run side by side and the guard batches run in lanes, with the same 492 ok lines. Under five minutes isn't shown yet: every run so far shared the machine with two or three other selftests (1627 s for the gate, 2231 s before), so one run on a quiet machine decides it before the release; the serial chain (installer, check, Stop hook, pre-commit, ui-design) is what's left to speed up.
+- Note: measured 2026-11-04 with no other selftest running (four stuck processes from other projects still held four of the twelve cores): 871 s and 816 s, so under five minutes isn't met. Both runs failed in the UI capture section, which T304 fixes; what's left for this item is the serial chain (installer, check, Stop hook, pre-commit, ui-design), with fixtures built once and copied (setup-clone runs 24 times in the pre-commit block).
 - Brief: -
 
 ### T284 · This repo's guard gets App-Director's own rules and bash 3.2 forms · todo · M · agent
@@ -1461,6 +1462,13 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: the bundle ends with the release commit: the version files bumped to 1.14.0 as its CLAUDE.md lists them, `## Unreleased` in CHANGELOG.md is `## 1.14.0 (<date>)`, the selftest passes (check), and the commit's body is the release notes (How to install first, then What's new and How to upgrade with this release's upgrade steps, in the previous release's layout), which are also the pull request's description · following AGENTS.md › Project rules for framework work › Releases ride in the bundle
 - Note: 1.14.0 is the agent's proposal: the bundle adds features (recording after an approved summary, the per-session Stop hook) next to the guard's fixes. The director can change it in review.
 - Note: the release commit is on the bundle (selftest 533 passed), and the release notes are #48's description. Once the director merges #48, `bash tools/work-release.sh work/App-Director 48` tags and publishes v1.14.0.
+- Brief: -
+
+### T304 · App-Director: the selftest's UI capture section passes on every run · in-progress 2026-11-04 · M · agent
+- Depends on: T283, T300
+- Touches: work/App-Director: selftest.sh, framework/tools/ui/ if the cause is there, CHANGELOG.md (under the 1.14.0 heading, since the release isn't published)
+- Done when: the cause of the two failing runs on 2026-11-04 is found and fixed: one run failed 4 checks when the `clean.busy` state's setup passed the fixture's 3-second `setup_timeout` on a busy machine, and the next failed 26 when every 1280x720 capture output went missing while the 800x600 ones were written, and left two `chrome-headless-shell` processes holding its temp folder; the fixture keeps a short limit for the `stuck` state's test without making a state that must finish fail on a busy machine; no parallel lane shares the UI capture section's folders, ports or captures; a capture run leaves no browser running; then five runs of `bash selftest.sh` in a row pass, with each time noted (check) · following AGENTS.md › Project rules for framework work
+- Note: found while measuring T283; the gate runs for T296, T299 and T300 passed, so the failure is intermittent, and T42's parallel lanes are the change most likely to have made it so.
 - Brief: -
 
 ### T297 · SaaSAllTheThings: the Stop hook runs the check only for the session that changed the code · in-progress 2026-11-03 · M · agent
