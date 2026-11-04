@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T302 · B64 · R7
+**Next IDs:** T303 · B64 · R7
 
 ## Milestones
 | Milestone | Status |
@@ -1413,10 +1413,20 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Brief: -
 
 ### T295 · Godot-Director: the Stop hook runs the check only for the session that changed the code · in-progress 2026-11-04 · M · agent
+- PRs: Godot-Director #52 (open)
 - Depends on: T278
 - Touches: work/Godot-Director: framework/.claude/hooks/stop-check.sh, a new framework-owned PostToolUse hook in framework/.claude/hooks/, framework/.claude/settings.json, selftest.sh, the docs that describe the Stop hook, CHANGELOG.md
 - Done when: the Stop hook runs the project check only when this session itself wrote or edited a code, scene or data file (`.gd`, `.tscn`, `.scn`, `.tres`, `.res`, `.gdshader`, `.gdshaderinc`, `project.godot`) since its last passing check: a PostToolUse hook on Edit, Write, MultiEdit and NotebookEdit records the paths it touched in `.godot/godot-director/sessions/<session_id>.touched` (the hook input's `session_id`), and for Bash it compares the dirty files before and after the command (a PreToolUse snapshot, or a file list with modification times) and records the ones that changed; a session that touched only docs (design/, TASKS.md, `*.md`, assets) never triggers the check; the builder marker, the fingerprint (the same failure isn't reported twice), `GODOT_DIRECTOR_STOP_CHECK=0` and the exit 0 when tools/check.sh is missing keep working; the session's record is removed when the check passes, and records older than a day are ignored (check) · in a design session that edits only Markdown while another session has uncommitted a code, scene or data file (`.gd`, `.tscn`, `.scn`, `.tres`, `.res`, `.gdshader`, `.gdshaderinc`, `project.godot`) in the same folder, the Stop hook exits at once without running the check, tested with a scripted hook input; a session that edits a code, scene or data file (`.gd`, `.tscn`, `.scn`, `.tres`, `.res`, `.gdshader`, `.gdshaderinc`, `project.godot`) still gets the check and is blocked once on failure, tested; the release notes' upgrade section says what changed (check) · following AGENTS.md › Project rules for framework work
 - Note: asked for by the director on 2026-11-03: when two sessions share one working folder (a design session and a build session on the same checkout, no worktree), the build session's uncommitted code makes the hook run the check at the end of every turn of the design session too, which edited no code, waits minutes, and is sometimes blocked by failures it can't fix.
+- Note: built 2026-11-04 as Godot-Director's T45, ported from SaaSAllTheThings' T41 and App-Director's T44 with Godot's source list (`project.godot` only at the root, `.godot/` and `.gd.uid` never source); its selftest lane needs no Godot and adds 39 assertions, which fail against the old hook.
+- Brief: -
+
+### T302 · Release Godot-Director 4.10.0 · in-progress 2026-11-04 · S · agent
+- PRs: Godot-Director #52 (open)
+- Depends on: T278, T282, T287, T289, T291, T293, T295
+- Touches: work/Godot-Director: VERSION, .claude-plugin/plugin.json, .claude-plugin/marketplace.json, skills/godot-director/SKILL.md, the design document template links its CLAUDE.md lists, CHANGELOG.md
+- Done when: the bundle ends with the release commit: the version files bumped to 4.10.0 as its CLAUDE.md lists them, `## Unreleased` in CHANGELOG.md is `## 4.10.0 (<date>)`, the selftest passes without the Godot path (check), and the commit's body is the release notes (How to install with How to upgrade, then What's changed with this release's upgrade steps, in the previous release's layout), which are also the pull request's description · following AGENTS.md › Project rules for framework work › Releases ride in the bundle
+- Note: 4.10.0 is the agent's proposal: the bundle adds features (recording after an approved summary, the per-session Stop hook) next to the guard's fixes. The director can change it in review.
 - Brief: -
 
 ### T296 · App-Director: the Stop hook runs the check only for the session that changed the code · in-progress 2026-11-04 · M · agent
