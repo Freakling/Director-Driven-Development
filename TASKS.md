@@ -1328,12 +1328,13 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Note: T42's lanes shipped in 1.14.0, and the five-minute target isn't met: T304's runs took 524 to 995 s. This item stays open for the serial chain, in a new bundle.
 - Brief: -
 
-### T284 · This repo's guard gets App-Director's own rules and bash 3.2 forms · todo · M · agent
+### T284 · This repo's guard gets App-Director's own rules and bash 3.2 forms · done 2026-11-04 · M · agent
 - Depends on: T276, T285
 - Touches: .claude/hooks/guard-commands.sh, selftest.sh
 - Done when: this repo's guard matches App-Director's merged hook from T276 (branch `-M` and `-C` and a forced move or copy, worktree `remove --force` and `add -B` or `-f`, brace expansion and `$IFS` in a git command, a commit option's value not read as a flag, git's value-taking global options in every subcommand finder, and the bash 3.2 forms: the `lower` and `str_swap` helpers, no `${x,,}` or negative offsets) and the port fixes T285 brings from SaaSAllTheThings and Godot-Director, with their cases in the selftest, which passes (check)
 - Note: found in T276. The hook is framework-owned, so the next App-Director upgrade here brings the same file; this item keeps the two equal until then, so a guard fix built here next starts from the merged hook.
 - Note: T278's review showed this repo's guard has the gaps T285 closes: on 2026-11-03 a 30 KB heredoc of GDScript `$Node.method()` lines took 10.8 s here, past the hook's 10 s limit (a hook that times out doesn't block, so padding a command could let it through unguarded), `vhang=1` in the environment let `git push --force` pass, and a nested wait loop and `sleep 600.5` passed.
+- Note: built 2026-11-04: `.claude/hooks/guard-commands.sh` is byte-identical to App-Director v1.14.0, with the new cases in this repo's selftest, including B64's form. This repo's hook had been its own larger copy, ahead of the 229-line hook of the release it installed, so it was compared on 40 forms fed as hook input: nothing it blocked now passes, and its selftest cases hold but one flipped on purpose (a Python heredoc with a body now blocks). App-Director's T292 cases and timing check weren't copied, since that release's selftest covers this same file.
 - Brief: -
 
 ### T285 · App-Director: the guard takes SaaSAllTheThings' and Godot-Director's port fixes · done 2026-11-04 · M · agent
@@ -1586,11 +1587,11 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Found in: T280
 - Brief: -
 
-### B64 · A quoted multi-line string after an empty Python heredoc hides it from the hang check · todo · S · agent · medium
+### B64 · A quoted multi-line string after an empty Python heredoc hides it from the hang check · done 2026-11-04 · S · agent · medium
 - Touches: .claude/hooks/guard-commands.sh, selftest.sh (the guard is framework-owned: an item for each framework once it's built; Godot-Director's is guard-git.sh)
 - Repro: 1. Feed the guard hook, without running it, a command of three lines: `python3 - <<'E' 2>/dev/null || node -e "`, then `x()"`, then `E`. 2. Expected: blocked as an empty Python heredoc: the quoted string closes on the second line, so the shell starts the heredoc's body after it and the body is empty. Actual: exit 0 in this repo's guard and in App-Director's, SaaSAllTheThings' and Godot-Director's (2026-11-04), while the plain empty form, `python3 - <<'E'` then `E`, exits 2 in all four. The hang check takes the line after the header as the body, so it never reaches the delimiter.
 - Found in: T305, by a forked session reading processes left spinning on 2026-11-04: pids 39632 and 36756 came from this form and 23516 is the same shape from another project; each burns a core until it is killed. The hang behind T305 is likely this family too: a shell that ran two `cat` heredocs and then `python - <<'EOF' 2>/dev/null || true` with an empty body; likely, not proven.
-- Note: T309 closes this in the three frameworks once its bundles are merged; this repo's guard follows with the App-Director upgrade (T284).
+- Note: closed by T309 in the three released guards and T284 here.
 - Brief: -
 
 ### B65 · App-Director's selftest hit its time limit with an empty log on two runs · todo · S · agent · low

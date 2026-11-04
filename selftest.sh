@@ -935,14 +935,14 @@ else
         $'# a\\\ngit push \\\n--force' \
         $'# a\\\n# b\\\ngit push \\\n--force' \
         $'git push origin main#\\\n  --force' \
-        $'python3 \\\n- <<\'EOF\'\nEOF'; do
+        $'python3 \\\n- <<\'EOF\'\nEOF' \
+        $'python3 \\\n- <<\'EOF\'\nprint(1)\nEOF'; do
       guard 2 "$cmd"
     done
     for cmd in \
         $'# note\\\ngit status' \
         $'git status # note\\\n-s' \
-        $'echo a#b\\\n--force' \
-        $'python3 \\\n- <<\'EOF\'\nprint(1)\nEOF'; do
+        $'echo a#b\\\n--force'; do
       guard 0 "$cmd"
     done
   fi
@@ -2503,6 +2503,324 @@ EOF
     err "the guard hook reads a gh message's body, or a variable in a message or a cat body nothing runs, as a command, passes a body a shell runs, or reads a word after echo, printf, Write-Output, Write-Host or write, or a launcher's argument, wrongly (B48):"
     printf '%s\n' "${git_fail#$'\n'}"
   else echo "ok: the guard hook passes a gh pr, issue or release message with a quoted delimiter, and a variable in a message or in a cat body nothing runs, and blocks a git command after a message, an unquoted message, a message piped to a shell, and a variable in a body a shell runs; a shell or PowerShell name after echo, printf, Write-Output, Write-Host or write is text, and one that a launcher passes a script to is read (B48)"; fi
+
+  # The hook as App-Director 1.14.0 ships it (T284). A report helper for the blocks below: the cases are queued with guard, run by
+  # guard_run, and a wrong exit is named in git_fail.
+  guard_rep() { # guard_rep <what is wrong> <what holds>
+    if [ -n "$git_fail" ]; then err "$1"; printf '%s\n' "${git_fail#$'\n'}"; else echo "ok: $2"; fi
+  }
+
+  # A branch moved or copied with -M, -C or a force, a worktree removed with --force or added with -B or -f, in any spelling the shell
+  # reads as the flag: abbreviated, quoted, clustered, a brace expansion, $IFS, behind git's value-taking global options. A commit
+  # option's value (-m "-n") is a message, not a flag, and git's global options before the subcommand don't hide it.
+  git_fail=""
+  if [ -f .claude/hooks/guard-commands.sh ]; then
+    for cmd in \
+        'git worktree remove --force ../todo-web-proto-quick-add' \
+        'git worktree remove --forc ../x' \
+        'git worktree remove --f ../x' \
+        "git worktree remove '--force' ../x" \
+        'git worktree remove ../todo-web-proto-quick-add -f' \
+        'git worktree remove -ff ../x' \
+        'git -C ../todo-web worktree remove --fo ../x' \
+        'git branch -d -f proto/quick-add' \
+        'git branch --delete --force proto/quick-add' \
+        'git branch --del --forc proto/quick-add' \
+        'git branch -df proto/quick-add' \
+        'git branch -qD proto/quick-add' \
+        'git worktree remove --{force,} x' \
+        'git worktree remove -{f,f} x' \
+        'git worktree remove x$IFS--force' \
+        'git worktree remove x${IFS}--force' \
+        'git branch -{D,} x' \
+        'git branch -{d..f} x' \
+        'git --git-dir .git worktree remove --forc x' \
+        'git --work-tree . branch -df x' \
+        'git --config-env x=Y worktree remove -f x' \
+        'git branch -M a b' \
+        'git branch -C a b' \
+        'git branch -m -f a b' \
+        'git branch --move --force a b' \
+        'git branch -cf a b' \
+        'git worktree add -B proto/x ../x main' \
+        'git worktree add -f ../x proto/x' \
+        'git worktree add --forc ../x proto/x' \
+        'git --attr-source HEAD worktree remove -f x' \
+        'git --namespace x branch -df y' \
+        'git --super-prefix x worktree add -B y ../y main' \
+        "git commit -'n' -m x" \
+        'git commit $'"'"'-n'"'"' -m x' \
+        'git commit "--no-ve""rify" -m x' \
+        'git commit -m x "-n"'; do
+      guard 2 "$cmd"
+    done
+    for cmd in \
+        'git worktree add --no-track -b proto/quick-add ../todo-web-proto-quick-add main' \
+        'git worktree remove ../todo-web-proto-quick-add' \
+        'git branch -d proto/quick-add' \
+        'git branch -f topic main' \
+        'git branch -uorigin/feature-dev' \
+        'git commit -m "git branch -d -f x"' \
+        'git log HEAD@{1}' \
+        'git log --oneline @{u}..HEAD' \
+        'git diff stash@{0}' \
+        'git branch -m old new' \
+        'git branch -c old new' \
+        'git commit -m "a {b,c} message"' \
+        'git commit -m "-n"' \
+        "git commit -m '-n'" \
+        'git commit -m "-n is a message"' \
+        'git commit -m "-nodejs fix"' \
+        'git commit -m "message naming -n"'; do
+      guard 0 "$cmd"
+    done
+    # The PowerShell tool hands the hook the same text, so the branch and worktree rules block the same commands there.
+    for cmd in \
+        'git worktree remove --force x' \
+        'git worktree add -B y ../y main' \
+        'git branch -M a b' \
+        'git branch -C a b'; do
+      guard 2 "$cmd" PowerShell
+    done
+    guard 0 'git worktree add --no-track -b proto/x ../x main' PowerShell
+  fi
+  guard_run
+  guard_rep "the guard hook doesn't block a forced worktree or branch command, a brace expansion or \$IFS in a git command, or a commit option's value read as a flag, or blocks a plain form (T284)" "the guard hook blocks branch -M and -C and a forced move or copy, worktree remove --force and add -B or -f, a brace expansion and \$IFS in a git command, and a flag after git's value-taking global options, and passes a commit option's value and the plain forms (T284)"
+
+  # The hook runs under macOS's bash 3.2 too, so it holds no bash 4 form: case conversion, an associative array, mapfile or
+  # readarray, coproc, |&, or a negative substring offset (${x: -1}).
+  git_fail=""
+  bash4=$(grep -nE '^[^#]*(\$\{[A-Za-z_0-9]+(\[[^]]*\])?(,,|\^\^)\}|(declare|local|typeset) +-[a-zA-Z]*A|(^|[;&| ])(mapfile|readarray) +|(^|[;&| ])coproc +[A-Za-z]|[[:space:]]\|&[[:space:]]|\$\{[A-Za-z_0-9@*]+(\[[^]]*\])?: -[0-9])' .claude/hooks/guard-commands.sh || true)
+  if [ -n "$bash4" ]; then git_fail=$'\n'"$bash4"; fi
+  guard_rep "the guard hook uses a bash 4 form (bash 3.2 on macOS has none)" "the guard hook uses no bash 4 form, so it runs under bash 3.2"
+
+  # The fixes the ports to SaaSAllTheThings and Godot-Director brought back (Director-Driven-Development T285). A path-qualified or
+  # .exe git is git, in any case, where a path that only ends in git is an argument. A wait loop ends at the done that closes it,
+  # and a pause may have a fraction. In PowerShell a backslash at a line's end is a path separator, not a continuation. The
+  # credential-print rules read a command without its messages. The view flags the hook sets itself are no flags when the
+  # hook's environment holds a variable of the same name.
+  git_fail=""
+  nlc=$'\n'
+  if [ -f .claude/hooks/guard-commands.sh ]; then
+    for cmd in \
+        '/usr/bin/git push --force origin main' \
+        'git.exe push --force origin main' \
+        'GIT.EXE push --force' \
+        '/usr/bin/git branch -D y' \
+        'cd x && /usr/bin/git commit -m x --no-verify' \
+        '/usr/bin/git -c core.pager=x log' \
+        '/usr/bin/git push "$(echo --force)"' \
+        'FLAG=--force; /usr/bin/git push $FLAG' \
+        'sudo /usr/bin/git push --force' \
+        '/usr/bin/git credential fill' \
+        'echo hi && git.exe reset --hard' \
+        "cd x && /usr/bin/python3 - <<'EOF'${nlc}EOF" \
+        "/usr/bin/python3 - <<'EOF'${nlc}EOF" \
+        "python3 - <<'EOF'${nlc}${nlc}EOF" \
+        "python - <<-'EOF'${nlc}${nlc}EOF" \
+        "/usr/bin/python3 - <<'EOF'${nlc}print(1)${nlc}EOF" \
+        "# c\\${nlc}gh auth token" \
+        'until [ -f done ]; do sleep 5; done' \
+        'until [ -f done ]; do sleep 5; done; echo done' \
+        'while true; do for f in a b; do :; done; sleep 5; done' \
+        'until [ -f done ]; do for f in a; do :; done; sleep 5; done' \
+        'until false; do while read l; do :; done < f; sleep 5; done' \
+        "while true; do${nlc}  for f in a b; do :; done${nlc}  sleep 5${nlc}done" \
+        'sleep 600.5' \
+        'sleep 280.5' \
+        'sleep 5.5m' \
+        'echo hi && sleep 300.0' \
+        'gh auth token' \
+        'gh auth status -t' \
+        'git credential fill' \
+        "git commit -q -F - <<'EOF'${nlc}msg${nlc}EOF${nlc}gh auth token" \
+        "git commit -q -m x && gh auth token" \
+        "bash <<'EOF'${nlc}gh auth token${nlc}EOF" \
+        "git push \\${nlc}--force"; do
+      guard 2 "$cmd"
+    done
+    for cmd in \
+        '/usr/bin/git status' \
+        'git.exe log -1' \
+        '/usr/bin/git commit -m "docs: a note"' \
+        '/usr/bin/git push origin main' \
+        'ls /usr/bin/git' \
+        'cp $SRC/git $DST' \
+        'cd /c/git && ls' \
+        "python3 tool.py <<'EOF'${nlc}${nlc}EOF" \
+        "python tool.py <<-'EOF'${nlc}${nlc}EOF" \
+        "/usr/bin/python3 tool.py <<'EOF'${nlc}print(1)${nlc}EOF" \
+        'timeout 240 bash -c "until [ -f done ]; do sleep 5; done"' \
+        'timeout 120 bash -c "while true; do for f in a b; do :; done; sleep 5; done"' \
+        'for f in a b; do echo "$f"; done; sleep 5' \
+        'until [ -f done ]; do echo wait; done' \
+        'while true; do for f in a b; do :; done; done' \
+        'while read -r l; do echo "$l"; done < f' \
+        'sleep 280.0' \
+        'sleep 4.5m' \
+        'sleep 0.5' \
+        'sleep 280' \
+        "git commit -q -F - <<'EOF'${nlc}docs: the hook blocks gh auth token${nlc}EOF" \
+        "git commit -q -F - <<'EOF'${nlc}docs: git credential fill prints a credential${nlc}EOF" \
+        "gh pr edit 5 --body-file - <<'EOF'${nlc}It blocks gh auth token and git credential fill.${nlc}EOF" \
+        'git commit -m "mention gh auth token in the notes"' \
+        'gh auth login'; do
+      guard 0 "$cmd"
+    done
+    for cmd in \
+        "# c\\${nlc}gh auth token" \
+        "# c\\${nlc}git push --force" \
+        "git status # c\\${nlc}gh auth token" \
+        'Start-Sleep -Seconds 600.5' \
+        'Start-Sleep 280.5' \
+        'Start-Sleep -Milliseconds 280000.5' \
+        '/usr/bin/git push --force origin main' \
+        'gh auth token'; do
+      guard 2 "$cmd" PowerShell
+    done
+    for cmd in \
+        "# c\\${nlc}Get-Date" \
+        "dir C:\\x\\${nlc}git status" \
+        "git push \\${nlc}--force" \
+        'Start-Sleep -Seconds 0.5' \
+        'Start-Sleep -Milliseconds 280000.0' \
+        'Start-Sleep -Milliseconds 280000' \
+        '/usr/bin/git status' \
+        "git commit -q -F - <<'EOF'${nlc}docs: the hook blocks gh auth token${nlc}EOF"; do
+      guard 0 "$cmd" PowerShell
+    done
+  fi
+  guard_run
+  if [ -f .claude/hooks/guard-commands.sh ]; then
+    for env_cmd in 'git push --force origin main' 'until [ -f x ]; do sleep 5; done' 'git status'; do
+      json_str "$env_cmd"
+      printf '{"session_id":"s","tool_name":"Bash","tool_input":{"command":"%s","description":"run"}}' "$JSON_STR" > "$guard_dir/env.json"
+      expect_rc=2; [ "$env_cmd" = 'git status' ] && expect_rc=0
+      for env_flag in vps vdep vcov vpx vhang cn_all hsubb; do
+        env "$env_flag=1" bash .claude/hooks/guard-commands.sh < "$guard_dir/env.json" >/dev/null 2>&1; env_rc=$?
+        [ "$env_rc" -eq "$expect_rc" ] || git_fail="$git_fail"$'\n'"  $env_flag=1 in the hook's environment changed the exit code to $env_rc, expected $expect_rc: $env_cmd"
+      done
+    done
+    rm -f "$guard_dir/env.json"
+  fi
+  guard_rep "the guard hook misses a path-qualified or .exe git, a PowerShell backslash, a nested or condition-named done in a wait loop, a pause with a fraction, a flag set by the environment or a credential-print command, or blocks a message that names one (T285)" "the guard hook reads a path-qualified or .exe git as git, a PowerShell backslash as a path separator, a wait loop to the done that closes it, a pause with a fraction, no flag from the environment, and a credential-print command but not a message that names one (T285)"
+
+  # Python that reads its script from a heredoc or a here-string is blocked whatever the body (Director-Driven-Development T309, B64):
+  # on Windows it can wait for console input and never return, so the check no longer looks for an empty body. Every form blocks:
+  # python, python3, python3.13, pythonw and py, with or without .exe, bare, behind a path or quoted; with or without the - and with
+  # interpreter options; each heredoc form and a here-string; behind a wrapper or in a chain, a time limit too; piped in (and in
+  # PowerShell a here-string); split by a continuation; inside a heredoc body or a script a shell runs; and B64's form (a node -e
+  # string after the header closes on the second line, so the body looks empty). A script file given a heredoc of data, python -c
+  # and -m, python3 --version, and a message that names the form pass.
+  git_fail=""
+  py_body=$'\nprint(1)\nE'
+  if [ -f .claude/hooks/guard-commands.sh ]; then
+    for cmd in \
+        "python - <<'E'$py_body" \
+        "python <<'E'$py_body" \
+        "python3 - <<'E'$py_body" \
+        "python3.13 - <<'E'$py_body" \
+        "pythonw - <<'E'$py_body" \
+        "py - <<'E'$py_body" \
+        "python.exe - <<'E'$py_body" \
+        "py.exe - <<'E'$py_body" \
+        "PYTHON.EXE - <<'E'$py_body" \
+        "/usr/bin/python3 - <<'E'$py_body" \
+        "/usr/bin/env python3 - <<'E'$py_body" \
+        "C:\\Python313\\python.exe - <<'E'$py_body" \
+        "\"C:/Program Files/Python313/python.exe\" - <<'E'$py_body" \
+        "\"python3\" - <<'E'$py_body" \
+        "python3 -u - <<E$py_body" \
+        "python3 -X utf8 - <<E$py_body" \
+        "py -3.12 -u - <<E$py_body" \
+        "python - <<\"E\"$py_body" \
+        "python - <<\\E$py_body" \
+        "python - <<-E$py_body" \
+        "python -<<E$py_body" \
+        "python - <<<'print(1)'" \
+        "python3 - <<<\"print(1)\"" \
+        "timeout 60 python - <<E$py_body" \
+        "env X=1 python - <<E$py_body" \
+        "PYTHONUNBUFFERED=1 python3 -u - <<E$py_body" \
+        "cd x && python - <<E$py_body" \
+        "python3 - <<E 2>/dev/null || true$py_body" \
+        "python3 - 2>/dev/null <<'E'$py_body" \
+        "python3 - <<'E' 2>/dev/null || echo \"no python\"$py_body" \
+        "python3 - <<'E' 2>/dev/null || node -e \"${nlc}x()\"${nlc}E" \
+        "python3 - <<'E' 2>/dev/null || node -e 'x()'${nlc}print(1)${nlc}E" \
+        "python3 - <<'E'${nlc}${nlc}E" \
+        "cat <<'E' | python -$py_body" \
+        "cat <<E | python3$py_body" \
+        "cat <<'E' | /usr/bin/python3 -$py_body" \
+        "cat <<'E' | timeout 60 python -$py_body" \
+        "python3 \\${nlc}- <<'E'$py_body" \
+        "python3 \\${nlc}  -u \\${nlc}  - <<'E'$py_body" \
+        "bash <<'X'${nlc}python3 - <<'E'${nlc}print(1)${nlc}E${nlc}X" \
+        "bash -c \"python3 - <<'E'${nlc}print(1)${nlc}E\"" \
+        "bash -c 'python3 <<<\"print(1)\"'" \
+        "eval \"python3 - <<'E'${nlc}print(1)${nlc}E\"" \
+        "echo \$(python3 - <<'E'${nlc}print(1)${nlc}E${nlc})" \
+        "git commit -q -F - <<'E'${nlc}msg${nlc}E${nlc}python3 - <<'F'${nlc}print(1)${nlc}F" \
+        "cat > x.py <<'E'${nlc}print(1)${nlc}E${nlc}python3 - <<'F'${nlc}print(2)${nlc}F" \
+        "python3 - <<'E'${nlc}print(\"it's\")${nlc}E"; do
+      guard 2 "$cmd"
+    done
+    for cmd in \
+        "python - <<'E'$py_body" \
+        "python3 <<<\"print(1)\"" \
+        "timeout 60 python - <<E$py_body" \
+        "cat <<'E' | python -$py_body" \
+        "@'${nlc}print(1)${nlc}'@ | python -" \
+        "@\"${nlc}print(1)${nlc}\"@ | python" \
+        "@'${nlc}print(1)${nlc}'@ | python3 -u -" \
+        "@'${nlc}print(1)${nlc}'@ | python.exe -" \
+        "@'${nlc}print(1)${nlc}'@ | & python -" \
+        "@'${nlc}print(1)${nlc}'@ | C:\\Python313\\python.exe -" \
+        "@'${nlc}print(\"it's\")${nlc}'@ | python -"; do
+      guard 2 "$cmd" PowerShell
+    done
+    guard 2 "@'${nlc}print(1)${nlc}'@ | python -"
+    for cmd in \
+        "python tool.py <<'E'${nlc}data${nlc}E" \
+        "python3 tool.py --flag <<E${nlc}data${nlc}E" \
+        "python3 tool.py <<<\"data\"" \
+        "python3 -u tool.py <<'E'${nlc}data${nlc}E" \
+        "py -3 tool.py <<'E'${nlc}data${nlc}E" \
+        "timeout 60 python3 tool.py <<'E'${nlc}data${nlc}E" \
+        "python tool.py 2>/dev/null <<'E'${nlc}data${nlc}E" \
+        "python -c \"print(1)\"" \
+        "python -c \"print(1)\" <<'E'${nlc}data${nlc}E" \
+        "python -m mod" \
+        "python3 -m json.tool <<<'{}'" \
+        "python3 --version" \
+        "python3 --version 2>/dev/null || echo \"no python\"" \
+        "python3 tool.py" \
+        "echo hi | python3 -c \"import sys\"" \
+        "cat <<'E' | python tool.py${nlc}data${nlc}E" \
+        "pytest -q <<E${nlc}E" \
+        "git commit -q -F - <<'E'${nlc}fix: the guard blocks python3 - <<'X' with a body${nlc}E" \
+        "git commit -q -m \"docs: python3 - <<'E' can hang\"" \
+        "git commit -q -m \"\$(cat <<'EOF'${nlc}fix: python3 - <<'X' can hang${nlc}EOF${nlc})\"" \
+        "gh pr create --body-file - <<'E'${nlc}python3 - <<'X'${nlc}print(1)${nlc}X${nlc}E" \
+        "echo \"python3 - <<'E'\"" \
+        "grep -n \"python3 - <<\" notes.md" \
+        "cat > notes.md <<'E'${nlc}python3 - <<'X'${nlc}print(1)${nlc}X${nlc}E" \
+        "tee notes.md <<E${nlc}python3 - <<X${nlc}X${nlc}E"; do
+      guard 0 "$cmd"
+    done
+    for cmd in \
+        "@'${nlc}data${nlc}'@ | python tool.py" \
+        "@'${nlc}data${nlc}'@ | python -c \"import sys; print(sys.stdin.read())\"" \
+        "@'${nlc}data${nlc}'@ | python -m json.tool" \
+        "@'${nlc}data${nlc}'@ | Set-Content x.txt" \
+        "Get-Content x.py | python -" \
+        "python3 --version" \
+        "git commit -m \"python - <<E\""; do
+      guard 0 "$cmd" PowerShell
+    done
+  fi
+  guard_run
+  guard_rep "the guard hook passes Python that reads its script from a heredoc or a here-string, or blocks a script file given a heredoc of data, python -c or -m, or a message that names the form (T309, B64)" "the guard hook blocks Python reading its script from a heredoc or a here-string, whatever the body, behind a path, a wrapper or a time limit, piped in or inside a script a shell runs, and passes a script file given a heredoc of data, python -c and -m, and a message that names the form (T309, B64)"
 
   # The credential stores (B15): the Read tool may not open the gh CLI's token file, git's credentials or
   # ~/.ssh. The .env files with values (B21): .env.local and the other .env.<suffix> files the guard hook
