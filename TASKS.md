@@ -1318,10 +1318,12 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Brief: Scope › Framework features
 
 ### T283 · App-Director: the selftest runs in under five minutes · in-progress 2026-11-03 · S · agent
+- PRs: App-Director #48 (open)
 - Depends on: T276
 - Touches: work/App-Director: selftest.sh
 - Done when: `bash selftest.sh` in work/App-Director finishes in under five minutes on this machine, with the same checks and output, measured before and after per section (check) · following AGENTS.md › Project rules for framework work
 - Note: found in T276: the selftest took about 6 min 45 s before and after the guard port, past the five-minute limit every long command keeps to, so it can only run in the background; this repo's B41 shows the pattern (parallel guard batches, one git cat-file batch, bash or awk in place of a process per line).
+- Note: built 2026-11-04 as App-Director's T42: the independent parts run side by side and the guard batches run in lanes, with the same 492 ok lines. Under five minutes isn't shown yet: every run so far shared the machine with two or three other selftests (1627 s for the gate, 2231 s before), so one run on a quiet machine decides it before the release; the serial chain (installer, check, Stop hook, pre-commit, ui-design) is what's left to speed up.
 - Brief: -
 
 ### T284 · This repo's guard gets App-Director's own rules and bash 3.2 forms · todo · M · agent
@@ -1389,7 +1391,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Note: found in T282: the full run took 6006 s after T278 and 6324 s for T282 on 2026-11-03 (1041 and 1042 cases), with other builders and two stuck processes from other projects sharing the machine, so each Godot-Director item takes close to two hours to gate. T283 is App-Director's counterpart.
 - Brief: -
 
-### T292 · App-Director: a quoted path with a space, or a backslash path, can't hide git from the guard · todo · S · agent
+### T292 · App-Director: a quoted path with a space, or a backslash path, can't hide git from the guard · in-progress 2026-11-04 · S · agent
 - Depends on: T285
 - Touches: work/App-Director: framework/.claude/hooks/guard-commands.sh, selftest.sh
 - Done when: the guard blocks `"C:\Program Files\Git\bin\git.exe" push --force`, `& 'C:\Program Files\Git\bin\git.exe' push --force` and `C:\Git\bin\git.exe push --force` in the Bash and PowerShell tools, as it blocks the bare name, with their cases, as SaaSAllTheThings' T290 does (a command name quoted with a space or a path, or an unquoted backslash path that starts with a drive, `.`, `..`, `~` or two backslashes, is read as its last part without `.exe`, `.cmd` or `.bat`); `& 'C:\Program Files\Git\bin\git.exe' status`, a commit message naming the path, and `c\at README.md` still pass; the selftest passes (check) · following AGENTS.md › Project rules for framework work
