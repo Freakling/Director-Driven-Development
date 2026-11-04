@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T300 · B64 · R7
+**Next IDs:** T301 · B64 · R7
 
 ## Milestones
 | Milestone | Status |
@@ -1368,7 +1368,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Note: built 2026-11-03 as SaaSAllTheThings' T39: the 30 KB heredoc and here-string went from 37.5 s and 35.1 s to about 1 s and 2 s. The loop reader reads a `bash -c` script's raw text without quote awareness, so a quoted `done` in one can end a loop early.
 - Brief: -
 
-### T289 · Godot-Director: the variable command name rule skips a global option's value · todo · XS · agent
+### T289 · Godot-Director: the variable command name rule skips a global option's value · in-progress 2026-11-04 · XS · agent
 - Depends on: T278
 - Touches: work/Godot-Director: framework/.claude/hooks/guard-git.sh, selftest.sh
 - Done when: `cname_judge` skips both words after `--git-dir`, `--work-tree` and `--namespace`, as `var_segment` does, so with `git` written in tools/godot_bin.local, `G=$(cat tools/godot_bin.local); "$G" --work-tree . restore .` and `... --git-dir .git branch -D x` are blocked, with their cases; the same check in App-Director's and SaaSAllTheThings' hooks, fixed there too if they have it; the selftests pass (check) · following AGENTS.md › Project rules for framework work
@@ -1385,10 +1385,12 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Brief: -
 
 ### T291 · Godot-Director: the selftest runs in under fifteen minutes · in-progress 2026-11-04 · M · agent
+- PRs: Godot-Director #52 (open)
 - Depends on: T278
 - Touches: work/Godot-Director: selftest.sh
 - Done when: `bash selftest.sh <path to Godot>` in work/Godot-Director finishes in under fifteen minutes on this machine with nothing else running, with the same checks and output, measured before and after per section; the sections that take longest are named in the item's note (check) · following AGENTS.md › Project rules for framework work
 - Note: found in T282: the full run took 6006 s after T278 and 6324 s for T282 on 2026-11-03 (1041 and 1042 cases), with other builders and two stuck processes from other projects sharing the machine, so each Godot-Director item takes close to two hours to gate. T283 is App-Director's counterpart.
+- Note: built 2026-11-04 as Godot-Director's T42: 6719 s before, then 749 s for the gate and 741 to 916 s in four more runs, all on the shared machine. The time went to about 190 check and Godot runs one after another, not the guard cases; the sections now run as 39 lanes with their own game copies. The 25 KB guard-speed case flakes under load (3.7 s quiet, 7.0 s busy), so it runs before the lanes.
 - Brief: -
 
 ### T292 · App-Director: a quoted path with a space, or a backslash path, can't hide git from the guard · in-progress 2026-11-04 · S · agent
@@ -1430,6 +1432,14 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: framework/.claude/settings.json gives guard-commands.sh a timeout of 10, guard-protected.sh 5 and stop-check.sh 3600, since Claude Code reads a hook's `timeout` in seconds (10000, 5000 and 660000 now), and drops the top-level `"bash": {"timeout": 600000}`, which isn't a Claude Code setting (the Bash tool's limits are `BASH_DEFAULT_TIMEOUT_MS` and `BASH_MAX_TIMEOUT_MS` in `env`, and 600000 ms is already the default maximum); the selftest checks every hook timeout is at most 3600 and the guard's at most 10; the selftest passes (check) · following AGENTS.md › Project rules for framework work
 - Note: found in T296; Claude Code's hooks reference says a hook's timeout is "Seconds before canceling" (default 600). Godot-Director and SaaSAllTheThings use seconds already. This repo's .claude/settings.json is App-Director's and gets the fix with the next upgrade.
 - Note: built 2026-11-04 as App-Director's T45. The Stop hook got 3600, as in the other two frameworks, not 660: the stack check and tools/check.local.sh may each take up to 600 s, and a Stop hook that times out ends the turn without the check's result.
+- Brief: -
+
+### T300 · Release App-Director 1.14.0 · in-progress 2026-11-04 · S · agent
+- PRs: App-Director #48 (open)
+- Depends on: T276, T280, T283, T285, T292, T296, T299
+- Touches: work/App-Director: VERSION, .claude-plugin/plugin.json, package.json, .claude-plugin/marketplace.json, SKILL.md, skills/app-director/SKILL.md, scripts/fetch-app-director.sh, README.md, project/product/director-brief.md, the example's copy of the brief, CHANGELOG.md
+- Done when: the bundle ends with the release commit: the version files bumped to 1.14.0 as its CLAUDE.md lists them, `## Unreleased` in CHANGELOG.md is `## 1.14.0 (<date>)`, the selftest passes (check), and the commit's body is the release notes (How to install first, then What's new and How to upgrade with this release's upgrade steps, in the previous release's layout), which are also the pull request's description · following AGENTS.md › Project rules for framework work › Releases ride in the bundle
+- Note: 1.14.0 is the agent's proposal: the bundle adds features (recording after an approved summary, the per-session Stop hook) next to the guard's fixes. The director can change it in review.
 - Brief: -
 
 ### T297 · SaaSAllTheThings: the Stop hook runs the check only for the session that changed the code · in-progress 2026-11-03 · M · agent
