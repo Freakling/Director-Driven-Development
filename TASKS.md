@@ -1601,14 +1601,14 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Found in: T307, T308
 - Brief: -
 
-### T312 · Release SaaSAllTheThings 0.16.1 · in-progress 2026-11-04 · S · agent
-- PRs: SaaSAllTheThings #48 (open)
+### T312 · Release SaaSAllTheThings 0.16.1 · done 2026-11-04 · S · agent
+- PRs: SaaSAllTheThings #48 (merged)
 - Touches: work/SaaSAllTheThings: the version files, CHANGELOG.md
 - Done when: the bundle is merged and `tools/work-release.sh` has tagged and published it
 - Brief: -
 
-### T313 · Release Godot-Director 4.10.1 · in-progress 2026-11-04 · S · agent
-- PRs: Godot-Director #54 (open)
+### T313 · Release Godot-Director 4.10.1 · done 2026-11-04 · S · agent
+- PRs: Godot-Director #54 (merged)
 - Touches: work/Godot-Director: the version files, CHANGELOG.md
 - Done when: the bundle is merged and `tools/work-release.sh` has tagged and published it
 - Brief: -
@@ -1620,7 +1620,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Brief: -
 
 ### B66 · A bare Python with no script passes the hang check · in-progress 2026-11-04 · M · agent · medium
-- PRs: App-Director #49 (merged), SaaSAllTheThings #47 (merged), Godot-Director #53 (merged), SaaSAllTheThings #48 (open), Godot-Director #54 (open), App-Director bundle 2026-11-04-2 (not yet published)
+- PRs: App-Director #49 (merged), SaaSAllTheThings #47 (merged), Godot-Director #53 (merged), SaaSAllTheThings #48 (merged), Godot-Director #54 (merged), App-Director bundle 2026-11-04-2 (not yet published)
 - Touches: work/App-Director, work/SaaSAllTheThings: framework/.claude/hooks/guard-commands.sh; work/Godot-Director: framework/.claude/hooks/guard-git.sh; each repo's selftest.sh, CHANGELOG.md; then this repo's guard
 - Repro: 1. Feed each guard hook, without running it, `python3 -`, `python`, `py -3` or `python3 2>/dev/null || true`. 2. Expected: blocked: with no script, no `-c`, no `-m` and nothing piped or redirected in, Python waits for input that never comes. Actual: exit 0 in all three guards at their latest releases, on 2026-11-04.
 - Note: T309 blocks a Python reading its script from a heredoc, and this form has none. It isn't theoretical: on 2026-11-04 T303's builder ran `python3 - 2>/dev/null; sed ...`, the shell hung, the tool moved it to the background, the builder reported that it had exited by itself, and the task stayed alive until this session stopped it with TaskStop by the ID in the builder's transcript; the builder's own run ended at once. `python3 - < x.py`, `cat x.py | python3 -` and `python3 --version` stay allowed.
