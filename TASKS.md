@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T303 · B64 · R7
+**Next IDs:** T304 · B64 · R7
 
 ## Milestones
 | Milestone | Status |
@@ -1427,7 +1427,14 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Touches: work/Godot-Director: VERSION, .claude-plugin/plugin.json, .claude-plugin/marketplace.json, skills/godot-director/SKILL.md, the design document template links its CLAUDE.md lists, CHANGELOG.md
 - Done when: the bundle ends with the release commit: the version files bumped to 4.10.0 as its CLAUDE.md lists them, `## Unreleased` in CHANGELOG.md is `## 4.10.0 (<date>)`, the selftest passes without the Godot path (check), and the commit's body is the release notes (How to install with How to upgrade, then What's changed with this release's upgrade steps, in the previous release's layout), which are also the pull request's description · following AGENTS.md › Project rules for framework work › Releases ride in the bundle
 - Note: 4.10.0 is the agent's proposal: the bundle adds features (recording after an approved summary, the per-session Stop hook) next to the guard's fixes. The director can change it in review.
+- Note: the release commit is on the bundle (selftest without the Godot path: 237 passed; it also adds the CHANGELOG entry T291's selftest change had left out), and the release notes are #52's description. Once the director merges #52, `bash tools/work-release.sh work/Godot-Director 52` tags and publishes v4.10.0.
 - Brief: -
+
+### T303 · Docs follow App-Director 1.14.0, SaaSAllTheThings 0.16.0 and Godot-Director 4.10.0: recording after an approved summary, the guard in PowerShell, the per-session Stop hook · todo · M · agent
+- Depends on: T298, T300, T302
+- Touches: frameworks.lock, docs/**/*.md (the framework links), docs/skills/ (design, research, acceptance, align, ui-design and the other pages whose procedure now records after an approved summary), docs/concept/ (the loop, reviews, the guard and the hooks), docs/how-to/, docs/frameworks/, product/brief.md
+- Done when: once the three bundles are merged and tagged (`tools/work-release.sh`), `frameworks.lock` and every framework link move to v1.14.0, v0.16.0 and v4.10.0; the site describes what the releases ship, each checked against the releases and without overclaiming: a session writes nothing until the director approves one summary of everything it will write, and a chat message or an "Other" answer re-opens the options (in SaaSAllTheThings an ADR is accepted only by that approval, and a live workshop's read-back is the room's summary); the guard and the deny rules reach the PowerShell tool; the Stop hook runs the check only for the session that changed the code; SaaSAllTheThings' guard blocks the Az PowerShell module's deletes; App-Director's hook timeouts are in seconds; the brief's Planned framework changes bullets move to Framework features; the selftest passes with no WARN (check)
+- Brief: Scope › Framework features
 
 ### T296 · App-Director: the Stop hook runs the check only for the session that changed the code · in-progress 2026-11-04 · M · agent
 - PRs: App-Director #48 (open)
@@ -1453,6 +1460,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Touches: work/App-Director: VERSION, .claude-plugin/plugin.json, package.json, .claude-plugin/marketplace.json, SKILL.md, skills/app-director/SKILL.md, scripts/fetch-app-director.sh, README.md, project/product/director-brief.md, the example's copy of the brief, CHANGELOG.md
 - Done when: the bundle ends with the release commit: the version files bumped to 1.14.0 as its CLAUDE.md lists them, `## Unreleased` in CHANGELOG.md is `## 1.14.0 (<date>)`, the selftest passes (check), and the commit's body is the release notes (How to install first, then What's new and How to upgrade with this release's upgrade steps, in the previous release's layout), which are also the pull request's description · following AGENTS.md › Project rules for framework work › Releases ride in the bundle
 - Note: 1.14.0 is the agent's proposal: the bundle adds features (recording after an approved summary, the per-session Stop hook) next to the guard's fixes. The director can change it in review.
+- Note: the release commit is on the bundle (selftest 533 passed), and the release notes are #48's description. Once the director merges #48, `bash tools/work-release.sh work/App-Director 48` tags and publishes v1.14.0.
 - Brief: -
 
 ### T297 · SaaSAllTheThings: the Stop hook runs the check only for the session that changed the code · in-progress 2026-11-03 · M · agent
