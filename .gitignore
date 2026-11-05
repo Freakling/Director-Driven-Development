@@ -1,6 +1,8 @@
 init/
 site/
 work/
+__pycache__/
+
 # App Director
 .app-director/state/
 *.adir-new
