@@ -1583,10 +1583,11 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Brief: -
 - Stories: -
 
-### T322 · Docs follow App-Director 1.14.2, SaaSAllTheThings 0.16.2 and Godot-Director 4.10.2 · in-progress 2026-11-05 · M · agent
+### T322 · Docs follow App-Director 1.14.2, SaaSAllTheThings 0.16.2 and Godot-Director 4.10.2 · done 2026-11-05 · M · agent
 - Depends on: T319, T320, T321
 - Touches: frameworks.lock, docs/**/*.md (the framework links and what the releases ship), selftest.sh
 - Done when: `frameworks.lock` and every framework link are at v1.14.2, v0.16.2 and v4.10.2 (check) · a page that describes the guard or the CI and release workflow templates says what the releases ship, checked against them (check) · this repo's selftest covers a quoted and a backslash path to git and to a shell (check) · `bash tools/audit.sh` prints PASS and `bash tools/check.sh` passes (check)
+- Note: built 2026-11-05: `frameworks.lock` and 258 framework links moved to the three tags, the SaaSAllTheThings, Godot-Director and `/release` pages say the workflow templates pin every action by commit, and this repo's selftest has 20 new cases for a path to git or a shell, with no existing case flipped. `docs/how-to/trouble.md` and the guard line in `docs/frameworks/index.md` needed nothing, since a quoted path is a detail of how the guard reads.
 - Brief: Scope › Framework features
 - Stories: -
 

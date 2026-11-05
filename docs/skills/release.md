@@ -22,7 +22,7 @@ Each framework reports what ran and the result of each step.
 
 ### App-Director
 
-The procedure is at [`framework/.app-director/procedures/release.md`](https://github.com/Freakling/App-Director/tree/v1.14.1/framework/.app-director/procedures/release.md) in the App-Director repository.
+The procedure is at [`framework/.app-director/procedures/release.md`](https://github.com/Freakling/App-Director/tree/v1.14.2/framework/.app-director/procedures/release.md) in the App-Director repository.
 
 - The request names the target: `web`, `mobile` (iOS or Android) or `desktop`. The stack and deploy method are in `tools/check.cfg` and AGENTS.md › Project facts.
 - The skill lists the `done` items since the last release tag, so the release says what it contains. A `high` bug that's done without a regression test goes into the next acceptance check.
@@ -32,20 +32,20 @@ The procedure is at [`framework/.app-director/procedures/release.md`](https://gi
 
 ### Godot-Director
 
-The procedure is at [`framework/.godot-director/procedures/release.md`](https://github.com/Freakling/Godot-Director/tree/v4.10.1/framework/.godot-director/procedures/release.md) in the Godot-Director repository.
+The procedure is at [`framework/.godot-director/procedures/release.md`](https://github.com/Freakling/Godot-Director/tree/v4.10.2/framework/.godot-director/procedures/release.md) in the Godot-Director repository.
 
 - Godot Director knows no store. `release.cfg` in the project root has one section per export preset, with a `uat` command, an optional `production` command and the names of the secrets the commands read. Only names are in the file, never values.
 - The request names the stage, `uat` (the default) or `production`, and optionally one preset. The skill exports with [`/export`](../frameworks/godot-director.md), shows a dry run, then runs `tools/release.sh uat`.
 - Production needs the request to promote, a passing UAT upload of the same commit and your yes. The production commands belong to you: if the environment lacks their credentials, the skill gives you the exact command.
 - A missing secret stops the run before anything is uploaded, and the skill names the secrets to set. They come from the CI's secrets or your own shell.
 - A release writes nothing to TASKS.md; the report is the record.
-- Setting release up happens in onboarding. It asks for the upload command per preset and the names of the secrets, and writes `release.cfg` and one line each in `design/decisions.md` for the release targets and for where credentials live. With GitHub Actions it also copies `.godot-director/templates/release-workflow.yml` to `.github/workflows/release.yml`. It ends with `bash tools/release.sh uat --dry-run`, and uploads nothing.
+- Setting release up happens in onboarding. It asks for the upload command per preset and the names of the secrets, and writes `release.cfg` and one line each in `design/decisions.md` for the release targets and for where credentials live. With GitHub Actions it also copies `.godot-director/templates/release-workflow.yml` to `.github/workflows/release.yml`, with every action pinned by commit. It ends with `bash tools/release.sh uat --dry-run`, and uploads nothing.
 - Skipping the setup leaves an open question in the GDD, `Release: what command uploads each export preset's build to UAT and to production, and which CI secrets does it need? Answering it sets up release: /design Q<n> runs the "Set up release" step.`, and a setup item that waits for the answer, checked with `bash tools/release.sh uat --dry-run`.
 - The GitHub Actions template exports every preset on each push and pull request, uploads to UAT on `main`, and runs production as a job you start by hand, which waits for approval in a protected GitHub Environment. Any other CI can run the export and then `tools/release.sh uat`.
 
 ### SaaSAllTheThings
 
-The procedure is at [`framework/.satt/procedures/release.md`](https://github.com/Freakling/SaaSAllTheThings/tree/v0.16.1/framework/.satt/procedures/release.md) in the SaaSAllTheThings repository.
+The procedure is at [`framework/.satt/procedures/release.md`](https://github.com/Freakling/SaaSAllTheThings/tree/v0.16.2/framework/.satt/procedures/release.md) in the SaaSAllTheThings repository.
 
 - The request names the environment, `dev` (the default) or `prod`. Dev deploys from `main`; prod deploys from a tag.
 - Before it proposes the release, it runs a [`/security`](security.md) assessment when none exists yet or something was built since the last report. An open `high` bug that names an OWASP item blocks the release, unless an accepted ADR deviates from that item.

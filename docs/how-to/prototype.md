@@ -64,6 +64,6 @@ A prototype is for feeling an idea, so it skips the parts of the loop that make 
 
 - The [`/prototype` skill page](../skills/prototype.md), with what the gates are in each framework.
 - The harvest files stories as well as decisions: [User stories](../concept/user-stories.md), and [How do I decide what gets built?](decide.md) for the session itself.
-- The procedures: [App-Director](https://github.com/Freakling/App-Director/tree/v1.14.1/framework/.app-director/procedures/prototype.md), [Godot-Director](https://github.com/Freakling/Godot-Director/tree/v4.10.1/framework/.godot-director/procedures/prototype.md) and [SaaSAllTheThings](https://github.com/Freakling/SaaSAllTheThings/tree/v0.16.1/framework/.satt/procedures/prototype.md).
+- The procedures: [App-Director](https://github.com/Freakling/App-Director/tree/v1.14.2/framework/.app-director/procedures/prototype.md), [Godot-Director](https://github.com/Freakling/Godot-Director/tree/v4.10.2/framework/.godot-director/procedures/prototype.md) and [SaaSAllTheThings](https://github.com/Freakling/SaaSAllTheThings/tree/v0.16.2/framework/.satt/procedures/prototype.md).
 
 <div class="takeaway"><span>Try it fast in a prototype, then build what you keep from main.</span><span class="url"><a href="index.md">All questions</a></span></div>

@@ -2504,7 +2504,7 @@ EOF
     printf '%s\n' "${git_fail#$'\n'}"
   else echo "ok: the guard hook passes a gh pr, issue or release message with a quoted delimiter, and a variable in a message or in a cat body nothing runs, and blocks a git command after a message, an unquoted message, a message piped to a shell, and a variable in a body a shell runs; a shell or PowerShell name after echo, printf, Write-Output, Write-Host or write is text, and one that a launcher passes a script to is read (B48)"; fi
 
-  # The hook as App-Director 1.14.1 ships it (T284). A report helper for the blocks below: the cases are queued with guard, run by
+  # The hook as App-Director 1.14.2 ships it (T284). A report helper for the blocks below: the cases are queued with guard, run by
   # guard_run, and a wrong exit is named in git_fail.
   guard_rep() { # guard_rep <what is wrong> <what holds>
     if [ -n "$git_fail" ]; then err "$1"; printf '%s\n' "${git_fail#$'\n'}"; else echo "ok: $2"; fi
@@ -2877,6 +2877,33 @@ EOF
   fi
   guard_run
   guard_rep "the guard hook passes a Python with nothing to run, or blocks a script, python -c or -m, a version probe, a file or pipe fed to python3 -, a heredoc that ends in a line named PY, or a message that names the form (B66)" "the guard hook blocks python3 -, python and py -3 with no script, -c, -m or input, behind a path, a wrapper, a chain or a line continuation, and after a heredoc with another delimiter, and passes a script, python -c and -m, python3 --version, command -v python3, a file or pipe fed to python3 -, a line continuation before a script, a heredoc that ends in a line named PY, and a message that names the form (B66)"
+
+  # A quoted or backslash path to git or a shell is read as the bare name (T294): the -c and program-flag rules and the shell wrapper
+  # gate see git and bash behind "C:\Program Files\Git\bin\git.exe" and C:\Git\bin\bash.exe, in any case, in both tools. A path that is
+  # only an argument or a message passes.
+  git_fail=""
+  if [ -f .claude/hooks/guard-commands.sh ]; then
+    for tool in Bash PowerShell; do
+      for cmd in \
+          '"C:\Program Files\Git\bin\git.exe" -c core.pager=calc log' \
+          '"C:\Program Files\Git\bin\git.exe" fetch --upload-pack=calc origin' \
+          'C:\Git\bin\git.exe -c core.pager=calc log' \
+          '"C:\Program Files\Git\bin\bash.exe" -c "git push --force"' \
+          'C:\Git\bin\bash.exe -c "git push --force"' \
+          'C:\Git\bin\BASH.EXE -c "git reset --hard"'; do
+        guard 2 "$cmd" "$tool"
+      done
+      for cmd in \
+          '"C:\Program Files\tool\app.exe" -c x' \
+          'echo "C:\Program Files\Git\bin\bash.exe -c foo"' \
+          'ls C:\Git\bin\bash.exe' \
+          'git commit -m "note C:\Git\bin\git.exe -c core.pager=calc"'; do
+        guard 0 "$cmd" "$tool"
+      done
+    done
+  fi
+  guard_run
+  guard_rep "the guard hook reads a quoted or backslash path to git or a shell wrongly: it passes git -c, git fetch --upload-pack or bash -c with a destructive script behind such a path, or blocks a path that is only an argument or a message (T294)" "the guard hook blocks git -c, git fetch --upload-pack and bash -c with a destructive script behind a quoted or backslash path, in any case, in the Bash and the PowerShell tool, and passes a path that is only an argument or a message (T294)"
 
   # The credential stores (B15): the Read tool may not open the gh CLI's token file, git's credentials or
   # ~/.ssh. The .env files with values (B21): .env.local and the other .env.<suffix> files the guard hook
