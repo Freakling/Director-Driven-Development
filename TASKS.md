@@ -1317,8 +1317,8 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Note: built 2026-11-03 as Godot-Director's T40. export.md and release.md got a Summary and approval step 3 (Write it down and Try it are 4 and 5), the playtest's machine review joins its summary, and onboarding's settings sections (facts, ownership, dev menu, model sizing) keep the install commit's approval as their gate, as in App-Director's T40. The builder also updated README.md, framework/playtesting/README.md and examples/scenarios.md.
 - Brief: Scope › Framework features
 
-### T283 · App-Director: the selftest runs in under five minutes · in-progress 2026-11-04 · M · agent
-- PRs: App-Director #48 (merged)
+### T283 · App-Director: the selftest runs in under five minutes · in-progress 2026-11-04 · L (escalated from M) · agent
+- PRs: App-Director #48 (merged), App-Director #50 (open)
 - Depends on: T276
 - Touches: work/App-Director: selftest.sh
 - Done when: `bash selftest.sh` in work/App-Director finishes in under five minutes on this machine, with the same checks and output, measured before and after per section (check) · following AGENTS.md › Project rules for framework work
@@ -1326,6 +1326,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Note: built 2026-11-04 as App-Director's T42: the independent parts run side by side and the guard batches run in lanes, with the same 492 ok lines. Under five minutes isn't shown yet: every run so far shared the machine with two or three other selftests (1627 s for the gate, 2231 s before), so one run on a quiet machine decides it before the release; the serial chain (installer, check, Stop hook, pre-commit, ui-design) is what's left to speed up.
 - Note: measured 2026-11-04 with no other selftest running (four stuck processes from other projects still held four of the twelve cores): 871 s and 816 s, so under five minutes isn't met. Both runs failed in the UI capture section, which T304 fixes; what's left for this item is the serial chain (installer, check, Stop hook, pre-commit, ui-design), with fixtures built once and copied (setup-clone runs 24 times in the pre-commit block).
 - Note: T42's lanes shipped in 1.14.0, and the five-minute target isn't met: T304's runs took 524 to 995 s. This item stays open for the serial chain, in a new bundle.
+- Note: built 2026-11-04 and 2026-11-05 as App-Director's T53, two attempts, the second escalated to L after the first reached only 464 to 691 s with twelve lanes. The run is limited by process starts: about 35 a second from six lanes up, whatever the lanes, so a run's length is its starts divided by 35. Starts fell from 20,190 to about 10,000 by making the selftest eighteen parts, sourcing the guard hook in one bash per lane and reading `tools/check.cfg` without a pipeline per line, which took `tools/check.sh` from about 330 starts to about 40. Final files: 283 s with the machine quiet (CPU 5 to 31 percent, no Godot), 292 s on the release bump, 629 passed and the output the same line for line. The original took 962 to 1351 s. The target holds only when the machine is quiet: 491 s in a run that shared it with another project for part of its length. Git Bash on Windows only: macOS and Linux weren't run, and App-Director has no CI that would. Before and after by section, in seconds, with spans overlapping: check 326 to 71, 80 and 80 in three parts; guard-commands 212 to 192; guard-protected and stop-check 192 to 111; security 169 to 138; pre-commit and staged secret 264 to 159; prototypes 363 to 293 and 66; /ui-design 363 to 185; installer 168 to 96, 133 and 96. The review caught that a fast `cd` in `check.sh` ran the check in the wrong folder for a `$0` with a backslash, and a here-string that added a way for the fingerprint to skip contents; both went back to the old lines. Left as they are: `security.sh`, `stories.sh` and `setup-clone.sh` keep the slow per-line `cfg_get`, `install.sh` starts about 33 programs a run, and `prototype.sh` runs about 360 git commands per selftest.
 - Brief: -
 
 ### T284 · This repo's guard gets App-Director's own rules and bash 3.2 forms · done 2026-11-04 · M · agent
@@ -1613,14 +1614,15 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: the bundle is merged and `tools/work-release.sh` has tagged and published it
 - Brief: -
 
-### T314 · Release App-Director 1.14.1 · todo · S · agent
+### T314 · Release App-Director 1.14.1 · in-progress 2026-11-05 · S · agent
+- PRs: App-Director #50 (open)
 - Depends on: T283
 - Touches: work/App-Director: the version files, CHANGELOG.md
 - Done when: it ends the bundle that carries T283, the bundle is merged and `tools/work-release.sh` has tagged and published it
 - Brief: -
 
 ### B66 · A bare Python with no script passes the hang check · in-progress 2026-11-04 · M · agent · medium
-- PRs: App-Director #49 (merged), SaaSAllTheThings #47 (merged), Godot-Director #53 (merged), SaaSAllTheThings #48 (merged), Godot-Director #54 (merged), App-Director bundle 2026-11-04-2 (not yet published)
+- PRs: App-Director #49 (merged), SaaSAllTheThings #47 (merged), Godot-Director #53 (merged), SaaSAllTheThings #48 (merged), Godot-Director #54 (merged), App-Director #50 (open)
 - Touches: work/App-Director, work/SaaSAllTheThings: framework/.claude/hooks/guard-commands.sh; work/Godot-Director: framework/.claude/hooks/guard-git.sh; each repo's selftest.sh, CHANGELOG.md; then this repo's guard
 - Repro: 1. Feed each guard hook, without running it, `python3 -`, `python`, `py -3` or `python3 2>/dev/null || true`. 2. Expected: blocked: with no script, no `-c`, no `-m` and nothing piped or redirected in, Python waits for input that never comes. Actual: exit 0 in all three guards at their latest releases, on 2026-11-04.
 - Note: T309 blocks a Python reading its script from a heredoc, and this form has none. It isn't theoretical: on 2026-11-04 T303's builder ran `python3 - 2>/dev/null; sed ...`, the shell hung, the tool moved it to the background, the builder reported that it had exited by itself, and the task stayed alive until this session stopped it with TaskStop by the ID in the builder's transcript; the builder's own run ended at once. `python3 - < x.py`, `cat x.py | python3 -` and `python3 --version` stay allowed.
