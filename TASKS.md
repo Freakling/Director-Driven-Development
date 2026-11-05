@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T317 · B67 · R9
+**Next IDs:** T317 · B67 · R10
 
 ## Milestones
 | Milestone | Status |
@@ -211,6 +211,13 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Depends on: R7
 - Note: product/research/2026-11-05-ddd-compared-with-skill-and-workflow-packages.md
 - Question: How do published skill, agent and workflow packages for AI coding agents compare with App-Director, SaaSAllTheThings and Godot-Director in how they are packaged and how they guide a developer?
+- Informs: -
+- Brief: -
+
+### R9 · Do the outside facts in the production post still hold on 5 November 2026 · done 2026-11-05 · M · agent
+- Depends on: R6
+- Note: product/research/2026-11-05-outside-facts-of-the-production-post.md
+- Question: Do sixteen outside statements from the post of 21 October 2026, on what production means beyond the code, still hold today?
 - Informs: -
 - Brief: -
 
