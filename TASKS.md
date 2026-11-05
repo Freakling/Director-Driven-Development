@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T315 · B67 · R7
+**Next IDs:** T316 · B67 · R7
 
 ## Milestones
 | Milestone | Status |
@@ -1317,8 +1317,8 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Note: built 2026-11-03 as Godot-Director's T40. export.md and release.md got a Summary and approval step 3 (Write it down and Try it are 4 and 5), the playtest's machine review joins its summary, and onboarding's settings sections (facts, ownership, dev menu, model sizing) keep the install commit's approval as their gate, as in App-Director's T40. The builder also updated README.md, framework/playtesting/README.md and examples/scenarios.md.
 - Brief: Scope › Framework features
 
-### T283 · App-Director: the selftest runs in under five minutes · in-progress 2026-11-04 · L (escalated from M) · agent
-- PRs: App-Director #48 (merged), App-Director #50 (open)
+### T283 · App-Director: the selftest runs in under five minutes · done 2026-11-05 · L (escalated from M) · agent
+- PRs: App-Director #48 (merged), App-Director #50 (merged)
 - Depends on: T276
 - Touches: work/App-Director: selftest.sh
 - Done when: `bash selftest.sh` in work/App-Director finishes in under five minutes on this machine, with the same checks and output, measured before and after per section (check) · following AGENTS.md › Project rules for framework work
@@ -1614,15 +1614,21 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: the bundle is merged and `tools/work-release.sh` has tagged and published it
 - Brief: -
 
-### T314 · Release App-Director 1.14.1 · in-progress 2026-11-05 · S · agent
-- PRs: App-Director #50 (open)
+### T314 · Release App-Director 1.14.1 · done 2026-11-05 · S · agent
+- PRs: App-Director #50 (merged)
 - Depends on: T283
 - Touches: work/App-Director: the version files, CHANGELOG.md
 - Done when: it ends the bundle that carries T283, the bundle is merged and `tools/work-release.sh` has tagged and published it
 - Brief: -
 
-### B66 · A bare Python with no script passes the hang check · in-progress 2026-11-04 · M · agent · medium
-- PRs: App-Director #49 (merged), SaaSAllTheThings #47 (merged), Godot-Director #53 (merged), SaaSAllTheThings #48 (merged), Godot-Director #54 (merged), App-Director #50 (open)
+### T315 · Docs follow App-Director 1.14.1, SaaSAllTheThings 0.16.1 and Godot-Director 4.10.1, and this repo's guard follows App-Director · in-progress 2026-11-05 · M · agent
+- Depends on: T283, T312, T313, T314, B66
+- Touches: frameworks.lock, docs/**/*.md (the framework links), docs/how-to/trouble.md, .claude/hooks/guard-commands.sh, selftest.sh
+- Done when: `frameworks.lock` and every framework link are at v1.14.1, v0.16.1 and v4.10.1 (check) · the guard's table in `docs/how-to/trouble.md` names a Python with nothing to run and the form that works, checked against the three releases (check) · `.claude/hooks/guard-commands.sh` is byte-identical to App-Director v1.14.1, and this repo's selftest covers a Python with nothing to run and a heredoc delimiter named `PY` (check)
+- Brief: Scope › Framework features
+
+### B66 · A bare Python with no script passes the hang check · done 2026-11-05 · M · agent · medium
+- PRs: App-Director #49 (merged), SaaSAllTheThings #47 (merged), Godot-Director #53 (merged), SaaSAllTheThings #48 (merged), Godot-Director #54 (merged), App-Director #50 (merged)
 - Touches: work/App-Director, work/SaaSAllTheThings: framework/.claude/hooks/guard-commands.sh; work/Godot-Director: framework/.claude/hooks/guard-git.sh; each repo's selftest.sh, CHANGELOG.md; then this repo's guard
 - Repro: 1. Feed each guard hook, without running it, `python3 -`, `python`, `py -3` or `python3 2>/dev/null || true`. 2. Expected: blocked: with no script, no `-c`, no `-m` and nothing piped or redirected in, Python waits for input that never comes. Actual: exit 0 in all three guards at their latest releases, on 2026-11-04.
 - Note: T309 blocks a Python reading its script from a heredoc, and this form has none. It isn't theoretical: on 2026-11-04 T303's builder ran `python3 - 2>/dev/null; sed ...`, the shell hung, the tool moved it to the background, the builder reported that it had exited by itself, and the task stayed alive until this session stopped it with TaskStop by the ID in the builder's transcript; the builder's own run ended at once. `python3 - < x.py`, `cat x.py | python3 -` and `python3 --version` stay allowed.
