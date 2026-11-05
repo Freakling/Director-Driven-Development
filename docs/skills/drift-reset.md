@@ -23,7 +23,7 @@ Only the human starts a reset, and nothing in a reset writes application code. T
 The procedure is at [`framework/.godot-director/procedures/drift-reset.md`](https://github.com/Freakling/Godot-Director/tree/v4.10.1/framework/.godot-director/procedures/drift-reset.md) in the Godot-Director repository.
 
 - The branch is `reset-YYYY-MM-DD`, and the reset folder is `design/resets/YYYY-MM-DD/`. A second reset on the same day adds `-2`.
-- Everything the reset writes goes in the reset folder, except the GDD and `design/decisions.md`, which change at the design step, and TASKS.md, which changes at the plan and postmortem steps. Nothing in the reset folder is deleted or rewritten; a correction is a new section.
+- Everything the reset writes goes in the reset folder (the analysis is in `as-built.md` and `interpretations.md`), except the GDD and `design/decisions.md`, which change at the design step, and TASKS.md, which changes at the plan and postmortem steps. Nothing in the reset folder is deleted or rewritten; a correction is a new section.
 - The areas are one per row of the Architecture table, plus the screens, merged down to about six.
 - The evidence includes the playtest reports and function checks under `playtesting/`.
 - Human-owned areas, the ones AGENTS.md gives to the human such as art, audio and tunable values, are never rewritten. A tunable value that is part of the drift becomes a design call, and the human edits the `.tres` file.
@@ -46,7 +46,7 @@ The procedure is at [`framework/.app-director/procedures/drift-reset.md`](https:
 
 The procedure is at [`framework/.satt/procedures/drift-reset.md`](https://github.com/Freakling/SaaSAllTheThings/tree/v0.16.1/framework/.satt/procedures/drift-reset.md) in the SaaSAllTheThings repository.
 
-- The scope is the product design the director owns: the Product Pillars, the PRD, the decision log and the business rules in integration contracts. The architecture is out of scope. A framework rule that conflicts with the product goes through `architect.md` and an ADR, and an accepted ADR is never dropped without a new one.
+- The scope is the product design the director owns: the Product Pillars, the PRD (`product/prd.md`), the decision log and the business rules in integration contracts. The architecture is out of scope. A framework rule that conflicts with the product goes through `architect.md` and an ADR, and an accepted ADR is never dropped without a new one.
 - "Contradictory" means the build contradicts the text, or two texts contradict each other, such as the PRD and `product/decisions.md`, or the PRD and a contract. "Divergent" means the principle is built two or more ways, each defensible from the text.
 - Tenancy and identity is always its own area. Drift there is a security finding, not a design one: it is marked `security`, the director is told at once, and it becomes a high-severity bug. The reference already settles it, in `reference/tenancy.md` and `reference/identity.md`, so it is never a design call.
 - The analysis is written to `resets/YYYY-MM-DD/as-built.md`, one section per area, with each statement carrying its `file:line`.
@@ -54,6 +54,7 @@ The procedure is at [`framework/.satt/procedures/drift-reset.md`](https://github
 - The rebuild items put security fixes first, as high bugs that cite `resets/YYYY-MM-DD/as-built.md`, then contracts and stored schemas, then the rest as slices. Anything `L` or bigger is split, as `.satt/tasks.md` sets out. The last item is a human task to run the postmortem.
 - The branch is `reset/YYYY-MM-DD`, and the reset folder is `resets/YYYY-MM-DD/`.
 - The postmortem repeats the tenancy analysis, and project-specific checks go in `tools/check.local.sh`. A check the framework itself needs is recorded as a gap for the framework, not patched locally.
+- A hook that asks the director to confirm an edit, such as an ADR's status, is let to ask. If the director declines, the change is written as `resets/YYYY-MM-DD/proposal-<file>.md` for them to apply. The old PRD is copied to `resets/YYYY-MM-DD/prd-before.md` first.
 - At the end, the director starts the rebuild in a fresh session: `/clear`, then `/next-task`.
 
 <div class="takeaway"><span>Align often, reset when you have to. Start a reset only when you are ready to rebuild.</span><span class="url"><a href="https://saemundsson.se/2026/10/07/director-driven-development/">Why: the blog post</a></span></div>

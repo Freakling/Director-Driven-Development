@@ -23,7 +23,8 @@ The request is `prepare` (the default), `process`, or `all` for a full regressio
 The skill is `/function-check`. Its procedure is at [`framework/.godot-director/procedures/function-check.md`](https://github.com/Freakling/Godot-Director/tree/v4.10.1/framework/.godot-director/procedures/function-check.md) in the Godot-Director repository.
 
 - It collects the `(play)` outcomes, which are what a person sees while playing. The checklist is written to `playtesting/YYYY-MM-DD-function-check.md`.
-- It plays the scenarios behind the `(autoplay)` outcomes first, and lists the clean ones as pre-verified with their run folder, so the person checks only what a machine can't judge.
+- It plays the scenarios behind the `(autoplay)` outcomes first, and lists the clean ones as pre-verified with their review, such as `playtesting/autoplay/trade_week-1-20261017-101500/review.md`, so the person checks only what a machine can't judge.
+- A done `UI:` item asks the person to judge the screen against their drawing and links its compare image, such as `design/ui/captures/hero_room.compare@1920x1080.png`, regenerated first when capture can run.
 - Severity is `high` if the game crashes or blocks play, `low` if it is cosmetic, and `med` otherwise.
 - The commit message is `docs: process function check YYYY-MM-DD`.
 - In a game that uses user stories, the function check shows the stories behind its items, and a playtest the stories behind the items built since the previous report, each with the same two ticks.
@@ -35,6 +36,7 @@ The procedure is at [`framework/.app-director/procedures/acceptance.md`](https:/
 
 - It collects the `(demo)` outcomes, and the checklist is written to `validation/YYYY-MM-DD-acceptance.md`.
 - The checklist header names the environment, `local`, `staging` or `prod`, and the *How* hints name the test account and any state the item needs.
+- A done `UI:` item asks the person to judge the screen against their drawing and links its compare image, such as `product/ui/captures/hero_room.compare@1920x1080.png`, regenerated first when capture can run.
 - Severity is `high` if the app loses data, blocks a core flow or crashes, `low` if it is cosmetic, and `med` otherwise.
 - `all` adds one item for each core flow in the brief that no done item covers.
 
@@ -44,6 +46,7 @@ The procedure is at [`framework/.satt/procedures/acceptance.md`](https://github.
 
 - It collects the `(demo)` outcomes, and the checklist is written to `validation/YYYY-MM-DD-acceptance.md` with the environment, `local` or `dev`.
 - Each item names the client and the role to use. Items about tenant isolation tell the tester to sign in as the second test tenant and confirm that the first tenant's data isn't visible.
+- A done `UI:` item asks the person to judge the screen against their drawing and links its compare image, such as `product/ui/captures/orders.compare@1920x1080.png`, regenerated first when capture can run.
 - Severity is `high` if the app loses data, shows another tenant's data, fails sign-in or blocks work.
 - `all` adds one item for each PRD rule that no done item covers.
 - The sibling skill `/feedback` is a different job. It records a customer, pilot or tester session by role and tenant label, never by name, and turns the findings into bugs, score trends and product proposals.

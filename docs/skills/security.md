@@ -23,8 +23,8 @@ How to use it: [Is what was built secure?](../how-to/security.md) A release runs
 ## When it runs
 
 - On request: say "run a security assessment", or type `/security`.
-- Before a release is proposed. An open high bug that names an OWASP item blocks the release, unless an accepted decision deviates from that item.
-- When `/next-task` proposes it: none has run yet, or enough items have been built since the last report (10 by default, set under `[security]` in `tools/check.cfg`). You can decline, and a run of several items only names it in its final report.
+- Before a release is proposed, in [`/release`](release.md). An open high bug that names an OWASP item blocks the release, unless an accepted decision deviates from that item.
+- When [`/next-task`](next-task.md) proposes it: none has run yet, or enough items have been built since the last report (10 by default, set under `[security]` in `tools/check.cfg`). You can decline, and a run of several items only names it in its final report.
 
 ## What a clean run doesn't prove
 
@@ -36,9 +36,9 @@ A category is verified only for the checks in the checklist, read in that commit
 
 The procedure is at [`framework/.app-director/procedures/security.md`](https://github.com/Freakling/App-Director/tree/v1.14.1/framework/.app-director/procedures/security.md) in the App-Director repository.
 
-- `bash tools/security.sh` runs the tools: the dependency audit of the manifests it finds (npm, pnpm, yarn, pip-audit on fully pinned requirements, dotnet, and `flutter pub outdated` as information only), the check's secrets scan and UI purity step, and Semgrep.
+- `bash tools/security.sh` runs the tools: the dependency audit of the manifests it finds (npm, pnpm, yarn, pip-audit on fully pinned requirements, dotnet, and `flutter pub outdated` as information only), the check's secrets scan and UI purity step (`bash tools/check.sh --architecture`), and Semgrep with the `p/owasp-top-ten` rules when `semgrep` is installed.
 - The report is `product/security/YYYY-MM-DD.md`. It covers the OWASP Top 10 (2025), and the OWASP API Security Top 10 (2023) when the app serves an API.
-- The accepted deviations it reads are the lines of `product/decisions.md` that name an OWASP item.
+- The reviewer reads the OWASP baseline in `rules.md`, the checklist's "Where to look" for the stack in `tools/check.cfg` › `[project] stack`, and the accepted deviations, which are the lines of `product/decisions.md` that name an OWASP item. A bug item's `Found in:` line cites the report and the finding, such as `product/security/2026-10-25.md › F2`.
 - `bash tools/security.sh --due` says whether an assessment is due.
 
 ### SaaSAllTheThings
@@ -47,7 +47,9 @@ The procedure is at [`framework/.satt/procedures/security.md`](https://github.co
 
 - The tools are the check's architecture rules, the .NET, npm and pinned pip dependency audits, Semgrep, and the CI workflow's dependency review and SBOM when `gh` is signed in. It never calls Azure, and the dependency audits send package names and versions to public advisory databases, never code.
 - The report is `assessment/security/YYYY-MM-DD.md`, and the accepted deviations it reads are the ADRs that name an OWASP item.
-- It also brings the `OWASP A01` to `OWASP A10` rows of `compliance/mapping.md` up to date: a row is never `direct` from a tool alone. Rows of your own control framework stay as they are; the report names the ones a finding touches.
+- It also brings the `OWASP A01` to `OWASP A10` rows of `compliance/mapping.md` up to date: a row is never `direct` from a tool alone, and a missing baseline row is restored from the seed as [`/align`](align.md) says. Rows of your own control framework stay as they are; the report names the ones a finding touches.
+- In Claude Code the reviewer is a subagent with read and search tools only (Read, Grep, Glob), run in the foreground with its model set explicitly from the `L` entry of the mapping, as [`next-task.md`](next-task.md) says. `tasks.md` gives a security comparison across several areas that size.
+- Severity comes from `owasp.md` (a tenant isolation break is always high), and an API item updates the Top 10 row `owasp.md` names for it.
 - A finding that needs an architecture call is offered as an `/architect` session.
 
 <div class="takeaway"><span>A clean report says what was read, not that the app is secure.</span><span class="url"><a href="https://saemundsson.se/2026/10/07/director-driven-development/">Why: the blog post</a></span></div>

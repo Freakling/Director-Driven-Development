@@ -28,7 +28,7 @@ Tools without a `builder` subagent follow `build.md` directly, or hand it to a s
 
 ## Commits
 
-One task, one commit: the item's files and its records go in together, and the pre-commit hook runs the check before any commit that touches code, so a failing task cannot land. A single `/next-task` pauses for the director's approval of that commit.
+One task, one commit, written as `rules.md` describes: the item's files and its records go in together, and the pre-commit hook runs the check before any commit that touches code, so a failing task cannot land. A single `/next-task` pauses for the director's approval of that commit.
 
 When the director asks for a run, such as "grab tasks until you're blocked", "work through the queue" or "the next N tasks", the request approves the run's commits in advance. Each task commits without pausing, and the final report lists every commit. The run stops when an item is blocked on the director, a build fails, or the director declines a commit. It also ends when nothing is ready.
 
@@ -44,8 +44,8 @@ The procedure is at [`framework/.app-director/procedures/next-task.md`](https://
 - The review diff is written to `.app-director/state/review.diff`.
 - New items are formatted following `.app-director/tasks.md`, and IDs come from `Next IDs` in that file.
 - The report notes that `(demo)` outcomes and bug fixes without regression tests will appear in the next acceptance check.
-- A research item (`R<n>`) goes to the `researcher` instead of the builder. No check runs and there is no review: the session writes the note to `product/research/` and commits it with the records.
-- When a [`/security`](security.md) assessment is due, it proposes one before picking an item, and you can decline. In a run of several items it carries on picking and only names the assessment in the final report.
+- A research item (`R<n>`) goes to the `researcher` (which follows [`research.md`](research.md)) instead of the builder. No check runs and there is no review: the session writes the note to `product/research/` and commits it with the records.
+- When a [`/security`](security.md) assessment is due (no report in `product/security/` yet, or enough items built since the newest one), it proposes one before picking an item, and you can decline. In a run of several items it carries on picking and only names the assessment in the final report.
 
 ### Godot-Director
 
@@ -59,7 +59,8 @@ The procedure is at [`framework/.godot-director/procedures/next-task.md`](https:
 - The builder plays the scenarios the item names once, in one call, and leaves out `smoke` when the check already plays it.
 - The report notes that `(play)` outcomes and bug fixes without regression tests will appear in the next function check.
 - After a passing check, recurring warnings may appear as `check: note: recurring warning (N×): <text>`. The skill has a procedure for verifying, proposing and applying suppressions via `tools/check.ignore`.
-- A research item (`R<n>`) goes to the `researcher` instead of the builder. No check runs and there is no review: the session writes the note to `design/research/` and commits it with the records.
+- A research item (`R<n>`) goes to the `researcher` (which follows [`research.md`](research.md)) instead of the builder. No check runs and there is no review: the session writes the note to `design/research/` and commits it with the records.
+- An `(autoplay)` outcome is done once the report's `Autoplay:` line shows its scenario ran with the finding it names fixed or absent. A finding left unfixed becomes a `B` item that the run files without asking, as `autoplay.md` describes.
 
 ### SaaSAllTheThings
 
@@ -71,7 +72,7 @@ The procedure is at [`framework/.satt/procedures/next-task.md`](https://github.c
 - A blocked report can carry `blocked: architecture`, which triggers the `architect.md` procedure. The director chooses to comply or to accept a deviation; a deviation requires an accepted Architecture Decision Record (ADR) before the rebuild.
 - If the current stage of the roadmap has no items left, the skill offers `roadmap.md` for the next stage.
 - Its settings ask before the `az` and `azd` commands.
-- A research item (`R<n>`) goes to the `researcher` instead of the builder. No check runs and there is no review: the session writes the note to `product/research/` and commits it with the records.
+- A research item (`R<n>`) goes to the `researcher` (which follows [`research.md`](research.md)) instead of the builder. No check runs and there is no review: the session writes the note to `product/research/` and commits it with the records.
 - The report notes that `(demo)` outcomes and bug fixes without regression tests will appear in the next acceptance check.
 - When a [`/security`](security.md) assessment is due, it proposes one before picking an item, and you can decline. In a run of several items it carries on picking and only names the assessment in the final report.
 

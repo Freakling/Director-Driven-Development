@@ -19,7 +19,7 @@ A question that depends on facts nobody has checked goes to the [researcher](res
 
 Run it as `/design <topic>` for a topic, or `/design questions` to rank the open questions. Numbers and limits stay placeholders until the director sets them.
 
-Each option names the user stories it serves and drafts the new or changed ones it needs, for the director to confirm with the option ([User stories](../concept/user-stories.md)). The same procedure validates the stories on request, or when `/next-task` proposes it, and harvests a prototype ([/prototype](prototype.md)).
+Each option names the user stories it serves and drafts the new or changed ones it needs, for the director to confirm with the option ([User stories](../concept/user-stories.md)). A story's Confirmed date is when the director last confirmed it as it reads now, in a design, a validation or an [acceptance check](acceptance.md). The same procedure validates the stories on request, or when `/next-task` proposes it, and harvests a prototype ([/prototype](prototype.md)).
 
 ## Unique per repo
 
@@ -48,9 +48,10 @@ The procedure is at [`framework/.app-director/procedures/design.md`](https://git
 
 The procedure is at [`framework/.satt/procedures/design.md`](https://github.com/Freakling/SaaSAllTheThings/tree/v0.16.1/framework/.satt/procedures/design.md) in the SaaSAllTheThings repository.
 
-- It records decisions in the PRD (`product/prd.md`) and `product/decisions.md`. A decision about an external system's data also goes into `integrations/<system>/contract.md`.
+- It records decisions in the PRD (`product/prd.md`) and `product/decisions.md`, and ADR text in `adr/`. A decision about an external system's data also goes into `integrations/<system>/contract.md`.
 - Questions about how the system is built, such as a data store, a client's UI technology or a deviation from the reference, are not product calls. The skill hands them to `/architect` (the `architect.md` procedure).
 - If an idea contradicts a Product Pillar, the skill asks which gives way. New items carry a `PRD:` heading and follow the format in `.satt/tasks.md`, and limits, quotas, prices and timeouts stay `PLACEHOLDER` values.
+- New stories can also come from a workshop's notes (their User stories section, recorded by `assess.md` › Process workshop notes) or from onboarding.
 - An ADR is accepted only by the director's approval of the summary that lists it, with its status. In a live group workshop, the read-back at the end is the summary the room approves, and the notes are written from it.
 - It accepts both `/design questions` and `/design {topic}`. `/product` still runs the same session; it is a deprecated name for `/design`.
 - Research notes go in `product/research/`.

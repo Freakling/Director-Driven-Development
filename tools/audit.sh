@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 # tools/audit.sh -- Compare framework skill files against docs/skills/*.md pages.
 #
-# For each common skill in the three framework repos, checks whether the procedure
-# file contains details not captured in the skill page (either the shared section
+# For each of the twelve skills that are procedures (next-task, design, align, drift-reset, prune,
+# refresh-model-sizing, acceptance, research, release, ui-design, prototype and security) in the
+# three framework repos, checks whether the procedure file contains details not captured in the skill page (either the shared section
 # or the "Unique per repo" section for that framework). Flags differences rather
 # than silencing them.
 #
@@ -112,11 +113,11 @@ check_proc() {
           continue ;;  # generic word -- skip
       esac
       # Check if the term (or its basename) appears in the docs.
-      if grep -qF "$term" "$docs_tmp" 2>/dev/null; then
+      if grep -qF -- "$term" "$docs_tmp" 2>/dev/null; then
         continue  # found -- OK
       fi
       base="${term##*/}"
-      if [ -n "$base" ] && [ "$base" != "$term" ] && grep -qF "$base" "$docs_tmp" 2>/dev/null; then
+      if [ -n "$base" ] && [ "$base" != "$term" ] && grep -qF -- "$base" "$docs_tmp" 2>/dev/null; then
         continue  # basename found -- OK
       fi
       # Not found: flag this bullet.
@@ -157,7 +158,7 @@ repo_heading() {
   esac
 }
 
-echo "audit: checking six common skills plus acceptance/function-check"
+echo "audit: checking twelve skills (acceptance is function-check in Godot-Director; Godot-Director ships no security)"
 echo ""
 
 for skill_entry in \
@@ -167,7 +168,12 @@ for skill_entry in \
     "drift-reset:drift-reset.md" \
     "prune:prune.md" \
     "refresh-model-sizing:refresh-model-sizing.md" \
-    "acceptance:acceptance.md"
+    "acceptance:acceptance.md" \
+    "research:research.md" \
+    "release:release.md" \
+    "ui-design:ui-design.md" \
+    "prototype:prototype.md" \
+    "security:security.md"
 do
   skill="${skill_entry%%:*}"
   docs_file="${skill_entry##*:}"
@@ -175,6 +181,10 @@ do
 
   for repo in App-Director Godot-Director SaaSAllTheThings; do
     repo_dir="$FRAMEWORKS_DIR/$repo"
+    # Godot-Director ships no /security (its page says so), so there is no procedure to compare.
+    if [ "$repo" = "Godot-Director" ] && [ "$skill" = "security" ]; then
+      continue
+    fi
     proc_file="$(skill_file "$repo_dir" "$skill")"
     heading="$(repo_heading "$repo")"
     check_proc "$repo" "$skill" "$docs_page" "$proc_file" "$heading"

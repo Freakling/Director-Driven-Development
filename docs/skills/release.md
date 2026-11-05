@@ -39,6 +39,8 @@ The procedure is at [`framework/.godot-director/procedures/release.md`](https://
 - Production needs the request to promote, a passing UAT upload of the same commit and your yes. The production commands belong to you: if the environment lacks their credentials, the skill gives you the exact command.
 - A missing secret stops the run before anything is uploaded, and the skill names the secrets to set. They come from the CI's secrets or your own shell.
 - A release writes nothing to TASKS.md; the report is the record.
+- Setting release up happens in onboarding. It asks for the upload command per preset and the names of the secrets, and writes `release.cfg` and one line each in `design/decisions.md` for the release targets and for where credentials live. With GitHub Actions it also copies `.godot-director/templates/release-workflow.yml` to `.github/workflows/release.yml`. It ends with `bash tools/release.sh uat --dry-run`, and uploads nothing.
+- Skipping the setup leaves an open question in the GDD, `Release: what command uploads each export preset's build to UAT and to production, and which CI secrets does it need? Answering it sets up release: /design Q<n> runs the "Set up release" step.`, and a setup item that waits for the answer, checked with `bash tools/release.sh uat --dry-run`.
 - The GitHub Actions template exports every preset on each push and pull request, uploads to UAT on `main`, and runs production as a job you start by hand, which waits for approval in a protected GitHub Environment. Any other CI can run the export and then `tools/release.sh uat`.
 
 ### SaaSAllTheThings

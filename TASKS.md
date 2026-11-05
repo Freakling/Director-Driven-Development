@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T316 · B67 · R7
+**Next IDs:** T317 · B67 · R7
 
 ## Milestones
 | Milestone | Status |
@@ -1529,6 +1529,14 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Note: 0.16.0 is the agent's proposal: the bundle adds features (recording after an approved summary, the per-session Stop hook) next to the guard's fixes. The director can change it in review.
 - Note: the release commit is on the bundle (selftest 725 passed), and the release notes are #46's description. Once the director merges #46, `bash tools/work-release.sh work/SaaSAllTheThings 46` tags and publishes v0.16.0.
 - Brief: -
+
+### T316 · The skill pages carry what the audit finds, and the audit reads all twelve · done 2026-11-05 · M · agent
+- Touches: docs/skills/*.md, tools/audit.sh
+- Done when: `bash tools/audit.sh` reads every skill page (the seven it reads today, plus research, release, ui-design, prototype and security) and prints PASS at the pinned releases (check) · each statement added to a page is checked against the pinned release, and a page links a procedure rather than copying it (check) · `bash tools/check.sh` passes (check)
+- Note: found 2026-11-05 when the director asked whether the site is up to date: the audit listed 43 bullets on the seven pages it reads, and the other five pages, which it doesn't read, have 80 more.
+- Note: built 2026-11-05: `tools/audit.sh` reads all twelve skill pages, skips Godot-Director's `/security`, which it doesn't ship, and ignores no terms, and it prints PASS. It had also read a term that starts with `--` as a grep option, so such a term always counted as missing. The 123 bullets closed were about 12 real gaps, such as Godot-Director's screens check in `/align`, its release setup, `/prototype list` and `remove`, and the `/security` reviewer, plus paths, cross-references and worked examples named in the pages' own sentences. The review of the pages fixed a pre-push snippet split by a line break. The audit tests that each path is named, not that a sentence is right, so a PASS doesn't prove the prose.
+- Brief: Scope › Common skills
+- Stories: US-10
 
 ### T294 · The three guards: a quoted or backslash path to git or a shell can't hide git's program flags or a wrapper's script · todo · S · agent
 - Depends on: T290, T292, T293

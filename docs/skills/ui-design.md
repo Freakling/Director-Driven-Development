@@ -11,9 +11,11 @@ How to use it: [How do I work with UI changes?](../how-to/ui.md)
 ## What it does
 
 1. **List** the screens in the catalog, and any screen file the catalog doesn't cover yet.
-2. **Capture** each screen in each state and at each size that the project's settings list. Each one gives a screenshot, an element map, a numbered map image and a lint file of layout findings, such as squeezed text or overlapping controls. The capture also writes a starter drawing to draw over.
-3. **Process** a drawing. The agent reads each box you drew, briefs you on it element by element, and asks about each open point with options and a recommendation. Then it shows one summary of the screen spec, the decision lines and the task for the screen. Nothing is written or committed until you approve it, and a chat message or an "Other" answer before then re-opens the options it touches.
+2. **Capture** each screen in each state and at each size that the project's settings list. Each one gives a screenshot (`.png`), an element map (`.elements.json`), a numbered map image (`.map.png`) and a lint file (`.lint.txt`) of layout findings, such as squeezed text or overlapping controls. The capture also writes a starter drawing to draw over.
+3. **Process** a drawing. The agent reads each box you drew, briefs you on it element by element, and asks about each open point with options and a recommendation. Then it shows one summary of the screen spec (`product/ui/<id>.md`, or `design/ui/<id>.md` in Godot-Director), the decision lines (`product/decisions.md`, or `design/decisions.md`), each marked `from: drawing director/ui/<id>.excalidraw`, and the task for the screen in `TASKS.md`. Nothing is written or committed until you approve it, and a chat message or an "Other" answer before then re-opens the options it touches.
 4. **Verify** the built screen against the spec. It prints one row per element, saying whether the element is present, where it is, whether the keyboard (and the pad, in Godot-Director) reaches it, and whether its layout is clean. With a processed drawing it also writes a compare image: your screenshot on the left, the screen as it is now on the right, and your boxes labelled `b1`, `b2` and so on. The deviations go in a table. The ones in scope are fixed, and the rest become bug items once you agree.
+
+The catalog of screens is `tools/ui/screens.mjs` (`tools/ui_screens.gd` in Godot-Director, which extends `tools/ui_catalog.gd`) and the settings are in `tools/ui_capture.cfg`. Capture stops with a message when either has a problem, such as an unknown screen, state or option. A screen whose page throws an error is still captured, with the error at the top of its `.lint.txt`. When capture can't run at all, the agent says why and stops, and in Godot-Director `--no-images` still writes the element maps and lint when only the display is missing, from a headless run whose text measurement can differ slightly.
 
 ## Drawing
 
@@ -38,5 +40,9 @@ Every step has a text path for an assistant that can't view images. The element 
 | Spec folder | `design/ui/` | `product/ui/` | `product/ui/` |
 
 The procedures for each step are at [Godot-Director](https://github.com/Freakling/Godot-Director/tree/v4.10.1/framework/.godot-director/procedures/ui-design.md), [App-Director](https://github.com/Freakling/App-Director/tree/v1.14.1/framework/.app-director/procedures/ui-design.md) and [SaaSAllTheThings](https://github.com/Freakling/SaaSAllTheThings/tree/v0.16.1/framework/.satt/procedures/ui-design.md).
+
+### SaaSAllTheThings
+
+A screen behind the sign-in names a `tenant` and an `auth` in its catalog entry: the saved sign-in of that test user, kept in the gitignored `tools/ui/.auth/`. Saving it is a step for you or a developer, once per clone and again when it expires: with the app running, run `npx playwright codegen --save-storage=.auth/<auth>.json <base_url>` in `tools/ui`, then sign in as that test user. The agent never asks for a password or a token in the conversation.
 
 <div class="takeaway"><span>You draw the layout once; the agent records it and checks the screen against it.</span><span class="url"><a href="https://saemundsson.se/2026/10/07/director-driven-development/">Why: the blog post</a></span></div>
