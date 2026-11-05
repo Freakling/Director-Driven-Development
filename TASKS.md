@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T317 · B67 · R7
+**Next IDs:** T317 · B67 · R9
 
 ## Milestones
 | Milestone | Status |
@@ -197,6 +197,20 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Depends on: R5
 - Note: product/research/2026-10-21-production-readiness-operating-envelope-and-saasallthethings.md
 - Question: What does production readiness mean for a business-critical system in an enterprise, beyond the code: infrastructure, monitoring and operations, compliance audits and the evidence they need, PII handling, access control to sensitive data and production environments, business continuity and disaster recovery, and cloud networking that can't exfiltrate through public endpoints; what do the main breach and incident reports (Verizon DBIR, IBM Cost of a Data Breach, Microsoft Digital Defense Report, Mandiant M-Trends, CSA top threats) say about how people, process and infrastructure hygiene fail, as against code vulnerabilities, with samples and editions; what the AI coding tools' security features cover at those layers (from R5, extended: CodeQL, secret scanning, Bugbot, Devin Review, Codex Security) and what enterprises use instead (Azure Policy, Defender for Cloud, IaC scanners) and where in the pipeline; and what SaaSAllTheThings does with an uploaded control framework such as the ISF Standard of Good Practice, from its own repository at the latest release: the assessment, the workshops (vision, tenancy and identity, integrations, operations, planning), the requirements and control framework in the repository, the architecture rules enforced in the check, the ADR exception path, and the records a compliance reviewer can read; which of "a full supply-chain view, more security and easier compliance proof than others" holds on those records, and which needs a deployment or an audit?
+- Informs: -
+- Brief: -
+
+### R7 · How the alternatives to DDD compare on twelve dimensions, and who brings each one · done 2026-11-05 · M · agent
+- Depends on: R4
+- Note: product/research/2026-11-05-ddd-compared-with-other-ai-coding-workflows.md
+- Question: As of 5 November 2026, what do the alternatives to Director-Driven Development ship or prescribe on twelve dimensions, and which cells of the 20 October matrix have changed?
+- Informs: -
+- Brief: -
+
+### R8 · How skill and workflow packages compare with DDD's three frameworks, in packaging and guidance · done 2026-11-05 · M · agent
+- Depends on: R7
+- Note: product/research/2026-11-05-ddd-compared-with-skill-and-workflow-packages.md
+- Question: How do published skill, agent and workflow packages for AI coding agents compare with App-Director, SaaSAllTheThings and Godot-Director in how they are packaged and how they guide a developer?
 - Informs: -
 - Brief: -
 
