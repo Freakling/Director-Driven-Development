@@ -1,5 +1,5 @@
-# app-director 1.14.1
-# source 0c0e49b
+# app-director 1.14.2
+# source 1b3b7c1
 7eaf95f60e4547cf8ae6db7074c4461ea952b393	.app-director/LICENSE
 1cccdbf4d6a65d0cc215671df1184e0b79757052	.app-director/procedures/acceptance.md
 125b7b0f554af50f3f61ec10f2ae25585c27cd2a	.app-director/procedures/align.md
@@ -22,7 +22,7 @@ f7f65f7af40fed0357d877fff3e83854927ee60a	.app-director/rules.md
 7d4690036c1d4fc9fb447722e9579f4346ec31c6	.claude/agents/builder.md
 9360110b7d2820009e4dec0c3198073d600bdf96	.claude/agents/researcher.md
 6361e06c10394d165cbaa2de6284ca90a5dea71f	.claude/agents/reviewer.md
-10452b0b1c994ac80b070a2a0e46c6e7624ae597	.claude/hooks/guard-commands.sh
+1455fc93d4e9d9b95b4fbdead8a29730fd6ae816	.claude/hooks/guard-commands.sh
 8c3dcee3ed742af7274c35f8629e224ff971f7b4	.claude/hooks/guard-protected.sh
 a0608bd131ddcce4cda9cbb02f5cb17213dc19b3	.claude/hooks/orphan-report.sh
 b59fbce3a476c96c66f2cdaf603c27322cf66679	.claude/hooks/release-check.sh

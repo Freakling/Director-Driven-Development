@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T322 · B68 · R10
+**Next IDs:** T323 · B68 · R10
 
 ## Milestones
 | Milestone | Status |
@@ -1559,28 +1559,35 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Brief: Scope › Common skills
 - Stories: US-10
 
-### T319 · Release App-Director 1.14.2 · in-progress 2026-11-05 · S · agent
-- PRs: App-Director #51 (open)
+### T319 · Release App-Director 1.14.2 · done 2026-11-05 · S · agent
+- PRs: App-Director #51 (merged)
 - Depends on: T294
 - Touches: work/App-Director: the version files, CHANGELOG.md
 - Done when: it ends the bundle that carries T294's App-Director item, the bundle is merged and `tools/work-release.sh` has tagged and published it
 - Brief: -
 - Stories: -
 
-### T320 · Release SaaSAllTheThings 0.16.2 · in-progress 2026-11-05 · S · agent
-- PRs: SaaSAllTheThings #49 (open)
+### T320 · Release SaaSAllTheThings 0.16.2 · done 2026-11-05 · S · agent
+- PRs: SaaSAllTheThings #49 (merged)
 - Depends on: T294, T317
 - Touches: work/SaaSAllTheThings: the version files, CHANGELOG.md
 - Done when: it ends the bundle that carries T294's and T317's SaaSAllTheThings items, the bundle is merged and `tools/work-release.sh` has tagged and published it
 - Brief: -
 - Stories: -
 
-### T321 · Release Godot-Director 4.10.2 · in-progress 2026-11-05 · S · agent
-- PRs: Godot-Director #55 (open)
+### T321 · Release Godot-Director 4.10.2 · done 2026-11-05 · S · agent
+- PRs: Godot-Director #55 (merged)
 - Depends on: T294, T318
 - Touches: work/Godot-Director: the version files, CHANGELOG.md
 - Done when: it ends the bundle that carries T294's and T318's Godot-Director items, the bundle is merged and `tools/work-release.sh` has tagged and published it
 - Brief: -
+- Stories: -
+
+### T322 · Docs follow App-Director 1.14.2, SaaSAllTheThings 0.16.2 and Godot-Director 4.10.2 · in-progress 2026-11-05 · M · agent
+- Depends on: T319, T320, T321
+- Touches: frameworks.lock, docs/**/*.md (the framework links and what the releases ship), selftest.sh
+- Done when: `frameworks.lock` and every framework link are at v1.14.2, v0.16.2 and v4.10.2 (check) · a page that describes the guard or the CI and release workflow templates says what the releases ship, checked against them (check) · this repo's selftest covers a quoted and a backslash path to git and to a shell (check) · `bash tools/audit.sh` prints PASS and `bash tools/check.sh` passes (check)
+- Brief: Scope › Framework features
 - Stories: -
 
 ### B67 · A long enough command body outlasts the guard's time limit (A01:2025 Broken Access Control) · todo · M · agent · medium
@@ -1591,8 +1598,8 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Brief: -
 - Stories: -
 
-### T294 · The three guards: a quoted or backslash path to git or a shell can't hide git's program flags or a wrapper's script · in-progress 2026-11-05 · M · agent
-- PRs: App-Director #51 (open), SaaSAllTheThings #49 (open), Godot-Director #55 (open)
+### T294 · The three guards: a quoted or backslash path to git or a shell can't hide git's program flags or a wrapper's script · done 2026-11-05 · M · agent
+- PRs: App-Director #51 (merged), SaaSAllTheThings #49 (merged), Godot-Director #55 (merged)
 - Depends on: T290, T292, T293
 - Touches: work/SaaSAllTheThings, work/App-Director, work/Godot-Director: each guard hook and selftest.sh
 - Done when: `"C:\Program Files\Git\bin\git.exe" -c core.pager=calc log` and `--upload-pack` with a quoted git path, and `"C:\Program Files\Git\bin\bash.exe" -c "git push --force"` and `C:\Git\bin\bash.exe -c ...`, are blocked as the bare names are, with their cases, in each framework's guard; the selftests pass (check) · following AGENTS.md › Project rules for framework work
@@ -1601,8 +1608,8 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Brief: -
 - Stories: -
 
-### T317 · SaaSAllTheThings: the check workflow template pins every action by commit, as its OWASP check asks · in-progress 2026-11-05 · S · agent
-- PRs: SaaSAllTheThings #49 (open)
+### T317 · SaaSAllTheThings: the check workflow template pins every action by commit, as its OWASP check asks · done 2026-11-05 · S · agent
+- PRs: SaaSAllTheThings #49 (merged)
 - Depends on: T294
 - Touches: work/SaaSAllTheThings: framework/.satt/templates/check-workflow.yml, framework/.satt/reference/owasp.md, skills/saas-design-session/references/reference/owasp.md (by `bash bundle.sh`), selftest.sh
 - Done when: every `uses:` in the template is a full commit SHA with its version in a trailing comment, each SHA read from the action's own repository (check) · `owasp.md` A08 says pinned by commit and the bundled copy matches it (check) · the selftest passes (check) · following AGENTS.md › Project rules for framework work
@@ -1610,8 +1617,8 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Brief: -
 - Stories: -
 
-### T318 · Godot-Director: the release workflow template pins every action by commit · in-progress 2026-11-05 · S · agent
-- PRs: Godot-Director #55 (open)
+### T318 · Godot-Director: the release workflow template pins every action by commit · done 2026-11-05 · S · agent
+- PRs: Godot-Director #55 (merged)
 - Depends on: T294
 - Touches: work/Godot-Director: framework/.godot-director/templates/release-workflow.yml, selftest.sh
 - Done when: every `uses:` in the template is a full commit SHA with its version in a trailing comment, each SHA read from the action's own repository (check) · the selftest passes (check) · following AGENTS.md › Project rules for framework work
