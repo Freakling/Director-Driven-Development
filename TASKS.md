@@ -1621,10 +1621,11 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: it ends the bundle that carries T283, the bundle is merged and `tools/work-release.sh` has tagged and published it
 - Brief: -
 
-### T315 · Docs follow App-Director 1.14.1, SaaSAllTheThings 0.16.1 and Godot-Director 4.10.1, and this repo's guard follows App-Director · in-progress 2026-11-05 · M · agent
+### T315 · Docs follow App-Director 1.14.1, SaaSAllTheThings 0.16.1 and Godot-Director 4.10.1, and this repo's guard follows App-Director · done 2026-11-05 · M · agent
 - Depends on: T283, T312, T313, T314, B66
 - Touches: frameworks.lock, docs/**/*.md (the framework links), docs/how-to/trouble.md, .claude/hooks/guard-commands.sh, selftest.sh
 - Done when: `frameworks.lock` and every framework link are at v1.14.1, v0.16.1 and v4.10.1 (check) · the guard's table in `docs/how-to/trouble.md` names a Python with nothing to run and the form that works, checked against the three releases (check) · `.claude/hooks/guard-commands.sh` is byte-identical to App-Director v1.14.1, and this repo's selftest covers a Python with nothing to run and a heredoc delimiter named `PY` (check)
+- Note: built 2026-11-05: `frameworks.lock` and 96 link lines in 35 pages moved to the three tags, the guard's table in `docs/how-to/trouble.md` names a Python with nothing to run, and `docs/frameworks/index.md`'s line on the guard says so too. `.claude/hooks/guard-commands.sh` is byte-identical to App-Director v1.14.1, with 38 cases in this repo's selftest, and no existing case flipped.
 - Brief: Scope › Framework features
 
 ### B66 · A bare Python with no script passes the hang check · done 2026-11-05 · M · agent · medium

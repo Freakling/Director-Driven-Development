@@ -2504,7 +2504,7 @@ EOF
     printf '%s\n' "${git_fail#$'\n'}"
   else echo "ok: the guard hook passes a gh pr, issue or release message with a quoted delimiter, and a variable in a message or in a cat body nothing runs, and blocks a git command after a message, an unquoted message, a message piped to a shell, and a variable in a body a shell runs; a shell or PowerShell name after echo, printf, Write-Output, Write-Host or write is text, and one that a launcher passes a script to is read (B48)"; fi
 
-  # The hook as App-Director 1.14.0 ships it (T284). A report helper for the blocks below: the cases are queued with guard, run by
+  # The hook as App-Director 1.14.1 ships it (T284). A report helper for the blocks below: the cases are queued with guard, run by
   # guard_run, and a wrong exit is named in git_fail.
   guard_rep() { # guard_rep <what is wrong> <what holds>
     if [ -n "$git_fail" ]; then err "$1"; printf '%s\n' "${git_fail#$'\n'}"; else echo "ok: $2"; fi
@@ -2821,6 +2821,62 @@ EOF
   fi
   guard_run
   guard_rep "the guard hook passes Python that reads its script from a heredoc or a here-string, or blocks a script file given a heredoc of data, python -c or -m, or a message that names the form (T309, B64)" "the guard hook blocks Python reading its script from a heredoc or a here-string, whatever the body, behind a path, a wrapper or a time limit, piped in or inside a script a shell runs, and passes a script file given a heredoc of data, python -c and -m, and a message that names the form (T309, B64)"
+
+  # A Python with nothing to run (B66): python3 -, python or py -3 with no script, no -c, no -m and nothing fed to it waits for input
+  # that never comes. A script, -c, -m, a version probe, a file or pipe fed in, and a heredoc that ends in a line named PY pass.
+  git_fail=""
+  if [ -f .claude/hooks/guard-commands.sh ]; then
+    for cmd in \
+        "python3 -" \
+        "python" \
+        "py -3" \
+        "python3 -u -" \
+        "python3 -u" \
+        "python3 -" \
+        "/usr/bin/python3 -" \
+        "timeout 60 python3 -" \
+        "env python3 -" \
+        "python3 - 2>/dev/null" \
+        "cd x && python3 -" \
+        "echo hi; python3" \
+        "bash -c 'python3 -'" \
+        "echo \$(python3 -)" \
+        "python3 \\${nlc}-" \
+        "cat > x.py <<'E'${nlc}print(1)${nlc}E${nlc}python3" \
+        "cat <<'E' > x.txt${nlc}data${nlc}E${nlc}python3 -" \
+        "python3 tool.py <<PY${nlc}data${nlc}PY${nlc}python3" \
+        "git commit -q -F - <<'E'${nlc}msg${nlc}E${nlc}python3 -"; do
+      guard 2 "$cmd"
+    done
+    for cmd in \
+        "python -" \
+        "py -3 -" \
+        "python3.exe -"; do
+      guard 2 "$cmd" PowerShell
+    done
+    for cmd in \
+        "python3 --version" \
+        "command -v python3" \
+        "python3 tool.py" \
+        "python3 -c \"print(1)\"" \
+        "python3 -m json.tool" \
+        "python3 - < x.py" \
+        "cat x.py | python3 -" \
+        "python3 \\${nlc}tool.py" \
+        "python3 -u \\${nlc}tool.py" \
+        "python3 tool.py <<PY${nlc}data${nlc}PY" \
+        "python3 tool.py <<'PY'${nlc}data${nlc}PY" \
+        "python3 tool.py <<-PY${nlc}data${nlc}PY" \
+        "echo \"python3 -\"" \
+        "git commit -q -m \"docs: python3 - waits for input\"" \
+        "grep -n \"python3 -\" notes.md"; do
+      guard 0 "$cmd"
+    done
+    guard 0 "python3 - < x.py" PowerShell
+    guard 0 "python3 --version" PowerShell
+  fi
+  guard_run
+  guard_rep "the guard hook passes a Python with nothing to run, or blocks a script, python -c or -m, a version probe, a file or pipe fed to python3 -, a heredoc that ends in a line named PY, or a message that names the form (B66)" "the guard hook blocks python3 -, python and py -3 with no script, -c, -m or input, behind a path, a wrapper, a chain or a line continuation, and after a heredoc with another delimiter, and passes a script, python -c and -m, python3 --version, command -v python3, a file or pipe fed to python3 -, a line continuation before a script, a heredoc that ends in a line named PY, and a message that names the form (B66)"
 
   # The credential stores (B15): the Read tool may not open the gh CLI's token file, git's credentials or
   # ~/.ssh. The .env files with values (B21): .env.local and the other .env.<suffix> files the guard hook

@@ -21,7 +21,7 @@ How to use it: [How do I try a change before it's built?](../how-to/prototype.md
 
 ### Godot-Director
 
-The procedure is at [`framework/.godot-director/procedures/prototype.md`](https://github.com/Freakling/Godot-Director/tree/v4.10.0/framework/.godot-director/procedures/prototype.md) in the Godot-Director repository.
+The procedure is at [`framework/.godot-director/procedures/prototype.md`](https://github.com/Freakling/Godot-Director/tree/v4.10.1/framework/.godot-director/procedures/prototype.md) in the Godot-Director repository.
 
 - The game can run in the prototype. You play it, `bash tools/autoplay.sh` plays it and `bash tools/log_review.sh` reads the run, and `bash tools/check.sh --only tests/<file>.gd` runs one test file. A playtest report or function check stays a record of the main session, and nothing is exported, released or uploaded.
 - `start` copies the clone's saved Godot path (`tools/godot_bin.local`) into the worktree. The first run there builds its own `.godot/` import cache, so it is slower than usual.
@@ -32,7 +32,7 @@ The procedure is at [`framework/.godot-director/procedures/prototype.md`](https:
 
 ### App-Director
 
-The procedure is at [`framework/.app-director/procedures/prototype.md`](https://github.com/Freakling/App-Director/tree/v1.14.0/framework/.app-director/procedures/prototype.md) in the App-Director repository.
+The procedure is at [`framework/.app-director/procedures/prototype.md`](https://github.com/Freakling/App-Director/tree/v1.14.1/framework/.app-director/procedures/prototype.md) in the App-Director repository.
 
 - The app runs from the worktree on this machine, with its own `.env` copied by you and its dependencies installed as in any new clone.
 - The pre-commit hook skips the project check and still scans the staged changes for secrets. It blocks the commit while gitleaks is missing, while `.gitleaksignore` or `.gitleaks.toml` differs from main's, and when a staged line adds `gitleaks:allow`. The protected-files hook refuses edits to the hooks, the guard, `tools/prototype.sh`, `tools/setup-clone.sh` and the two gitleaks files while `PROTOTYPE.md` sits at the project root.
@@ -41,7 +41,7 @@ The procedure is at [`framework/.app-director/procedures/prototype.md`](https://
 
 ### SaaSAllTheThings
 
-The procedure is at [`framework/.satt/procedures/prototype.md`](https://github.com/Freakling/SaaSAllTheThings/tree/v0.16.0/framework/.satt/procedures/prototype.md) in the SaaSAllTheThings repository.
+The procedure is at [`framework/.satt/procedures/prototype.md`](https://github.com/Freakling/SaaSAllTheThings/tree/v0.16.1/framework/.satt/procedures/prototype.md) in the SaaSAllTheThings repository.
 
 - A prototype never deploys, to any Azure environment, dev included, and not through a pipeline. It runs on this machine with the Functions host and the emulators. In a prototype session the guard blocks `az`, `azd`, `func azure` and `gh workflow run`. The guard reads the text of a command, so a script or an allowed command can still call `az` where it cannot see, and the procedure tells the agent to keep to this as well. A prototype you want others to see is harvested, built from main and released with `/release` and your approval.
 - The pre-commit hook skips the project check and runs the secrets scan (`bash tools/check.sh --secrets`) on every commit. It blocks the commit when the scan can't run, and while `adr/`, `tools/check.cfg`, `tools/check.sh`, `tools/archcheck.awk` or a `.gitattributes` file, which decide what the scan excuses or skips, differ from main's.

@@ -66,6 +66,7 @@ A guard in each framework, which reads the commands of the Bash and the PowerShe
 | Blocked or ruled out | The form that works |
 |---|---|
 | Python reading its script from a heredoc or a here-string, whatever the body. It can wait for console input on Windows and never return | Write the script to a file with the file tools and run it, or `python3 --version` for the probe. A script file fed data from a heredoc passes |
+| `python3 -`, `python` or `py -3` with no script, no `-c`, no `-m` and nothing fed to it. It waits for input that never comes, and a time limit doesn't change that | A script file (`python3 script.py`), `python3 -c` for one line, a file fed in (`python3 - < script.py`), or `python3 --version` for the probe |
 | A file written with a shell heredoc, or an `echo` or `printf` redirect of multi-line content. The guard lets it through, but the agent's rules forbid it, since a hung shell moves the command to the background and a subagent then shows as running for hours | The file tools (Write or Edit in Claude Code), one short command per shell call, and a multi-line script put in a file first |
 | An `until` or `while` loop with `sleep` and no limit | The same loop under `timeout 240`, or, for a background command, wait for its completion notice |
 | A loop on a background command's output that doesn't wait for its exit line | Loop until the output holds `[exited with code N]` or `[killed]`, under `timeout 240` |
@@ -103,6 +104,6 @@ This is by design too: the agent commits only with your approval. Asking for a r
 ## Related
 
 - The install sections of [App-Director](../frameworks/app-director.md#install), [Godot-Director](../frameworks/godot-director.md#install) and [SaaSAllTheThings](../frameworks/saasallthethings.md#install).
-- The procedures: [App-Director onboarding](https://github.com/Freakling/App-Director/blob/v1.14.0/ONBOARDING.md), [Godot-Director onboarding](https://github.com/Freakling/Godot-Director/blob/v4.10.0/ONBOARDING.md) and [SaaSAllTheThings onboarding](https://github.com/Freakling/SaaSAllTheThings/blob/v0.16.0/ONBOARDING.md).
+- The procedures: [App-Director onboarding](https://github.com/Freakling/App-Director/blob/v1.14.1/ONBOARDING.md), [Godot-Director onboarding](https://github.com/Freakling/Godot-Director/blob/v4.10.1/ONBOARDING.md) and [SaaSAllTheThings onboarding](https://github.com/Freakling/SaaSAllTheThings/blob/v0.16.1/ONBOARDING.md).
 
 <div class="takeaway"><span>Update, restart, and the commands you expect are there.</span><span class="url"><a href="index.md">All questions</a></span></div>
