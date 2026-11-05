@@ -16,7 +16,11 @@ The request can be:
 1. **Find items without reading the whole file.** `grep -n '^### ' TASKS.md` lists every heading; then read only the candidates.
 2. **Is the tree clean?** If uncommitted changes from another item are in the working tree, don't start a new one. Ask the human whether to finish that item, commit it, or set it aside with `git stash push -- <paths>`.
 3. **Does the check pass now?** Run `bash tools/check.sh --if-changed`; it's instant after a passing commit. If it fails, say so, and offer the items that would fix it. Build others only if the human says to, telling the builder the failure was there before. A research item changes no code, so skip this for one.
-4. **Is a security assessment due?** Run `bash tools/security.sh --due`. When its line says `due` (no report in `product/security/` yet, or enough items built since the newest one, by `tools/check.cfg` › `[security] every`), propose an assessment (`security.md`) with that line, and run it before the next item if the human agrees; the human can decline. In a run of several items, don't stop or ask: carry on picking items, and only name the assessment in the final report.
+4. **Is a security assessment or a stories validation due?** Run `bash tools/security.sh --due` and `bash tools/stories.sh --due`. Each prints a line that counts built items against its setting in `tools/check.cfg`:
+   - `security: due` (no report in `product/security/` yet, or enough items built since the newest one, by `[security] every`): propose an assessment (`security.md`) with that line.
+   - `stories: due` (the stories in `product/user-stories.md` never validated, or enough items built since their Last validated commit, by `[stories] every`): propose validating them (`design.md` › Validate the stories) with that line.
+
+   Run what the human agrees to before the next item; the human can decline either. In a run of several items, don't stop or ask: carry on picking items, and only name what's due in the final report.
 5. **Items already `in-progress`:**
    - **Claimed today:** another session may be working on it right now, so ask before touching it.
    - **Older:** a session probably ended mid-task. Read its `Note:`, look at `git status` and `git diff`, then resume it or set it back to `todo`, and say which.
@@ -25,20 +29,23 @@ The request can be:
 8. **Nothing ready?** Report what's blocked and on what (dependencies, `human` items, open questions), and stop.
 
 ## 2. Claim
-Set the item to `in-progress YYYY-MM-DD` (today).
+Set the item to `in-progress YYYY-MM-DD` (today). A feature item (not a research item) with no story gets one before it is built: draft it and set the item's `Stories:` as `design.md` › User stories says, and name the drafted story in your report. A run of several items doesn't stop for it.
 
 ## 3. Build
 A research item goes to Research items instead, and skips steps 4 and 6.
 
 Every subagent launch sets its model explicitly, from the sizing table (the Model sizing block in AGENTS.md › Project rules) for the item's size: the builder, the reviewer (step 6), the researcher (Research items) and an escalated retry. A launch never lets a subagent inherit the session's model. Where the table has no entry for the size, or model sizing is off, the launch passes the session model explicitly.
 
+Every subagent's report is followed by a cleanup before anything else: find the commands the subagent left running in the background (the harness's task list, or the results in its transcript that say a command was moved to the background) and stop each one. A finished subagent with a live background command still counts as running, for hours if nothing stops it.
+
 - **In Claude Code,** give the `builder` subagent the item's ID and full text. Run it in the foreground (`run_in_background: false`), and never run two builders at once: they would edit, and check, each other's files.
-  1. Before starting it, create the file `.app-director/state/building`. Delete it when the report arrives; while it exists, the Stop hook leaves the half-built files alone.
+  1. Before starting it, create the file `.app-director/state/building`. When the report arrives, stop each background task the builder left with TaskStop, by the ID that its "moved to the background" result or the task list gives, then delete the file. While it exists, the Stop hook leaves the half-built files alone.
   2. Pass that model as `model:`.
 - **Other tools:** follow `build.md` yourself, or in a subagent if your tool has them, with its model set as section 3 says.
 - **A rebuild** (after a failure, a blocked report or review findings) gets the previous report, anything the human said about the item, and word that the earlier attempt's edits are still in the tree to continue from.
 - **Report `blocked`:** the report brings the question with options and a recommendation. Put it to the human.
-  - If the answer is a design decision, record it following `design.md` › Record each decision before rebuilding. It's committed with the item.
+  - If the answer is a design decision, the summary lists its records, as `design.md` lists them. Write nothing until the human approves a summary of all of it (`design.md` › Summary and approval); a chat message or an "Other" answer before then re-opens the options.
+  - Once it is approved, record it following `design.md` › Record each decision before rebuilding. It's committed with the item.
   - Then rebuild, including the answer.
 - **Report `failed`:**
   - If the item is not `XL` and has not already been escalated, retry once with its model set to the next size's entry (XS→S, S→M, M→L, L→XL), or the session model where that size has no entry, as section 3 says. Update the item label to `<next-size> (escalated from <original-size>)`, e.g. `M (escalated from S)`.
@@ -59,12 +66,12 @@ From the report:
 ## 6. Review
 Only when `rules.md` › Reviews and model size calls for one, judged from the item's size and the report's `API/saves:` line.
 1. Make new files show up in the diff with `git add -N <new files>`, then write it: `git diff HEAD > .app-director/state/review.diff`.
-2. Ask for a review following `review.md`; in Claude Code, that's the `reviewer` subagent, with its model set as section 3 says for the item's size. Give it the item ID, the builder's report and the check result.
+2. Ask for a review following `review.md`; in Claude Code, that's the `reviewer` subagent, with its model set as section 3 says for the item's size. Give it the item ID, the builder's report and the check result. When it reports, stop anything it left in the background, as section 3 says.
 3. Code findings that are in scope: rebuild with the findings. Record findings: fix them yourself. Everything else becomes new items.
 4. Review again only if the fixes were substantial.
 
 ## 7. Commit and report
-- **Commit** as `rules.md` › Git describes: one commit for the item's paths, including its records. A research item's paths are its note and TASKS.md, and its message is `docs: <summary> (R3)`. Pause for approval unless the human has said to work autonomously ("do the next N tasks", "work through the queue", "grab tasks until you're blocked"), in which case commit without pausing and include all commits in the final report.
+- **Commit** as `rules.md` › Git describes: one commit for the item's paths, including its records (with `product/user-stories.md` when the claim drafted a story). A research item's paths are its note and TASKS.md, and its message is `docs: <summary> (R3)`. Pause for approval unless the human has said to work autonomously ("do the next N tasks", "work through the queue", "grab tasks until you're blocked"), in which case commit without pausing and include all commits in the final report.
 - **Report** in a few lines: what changed, the check result, placeholders added, and anything waiting on the human. Mention that `(demo)` outcomes, or a bug fix without a regression test, will be in the next acceptance check.
 - **After the commit,** the records hold everything about the item. A new item can start in a fresh session, or after `/clear` in Claude Code, without losing anything.
 
@@ -74,6 +81,7 @@ A research item (format in `.app-director/tasks.md`) is a candidate like any oth
 2. **Run it** in a fresh context.
    - In Claude Code, give the `researcher` subagent the item's ID and full text, in the foreground (`run_in_background: false`), with its model set as section 3 says for the item's size.
    - Other tools: follow `research.md` in a fresh context, or a subagent if your tool has them, with its model set as section 3 says.
+   - When the report arrives, stop anything the researcher left in the background, as section 3 says.
    - The researcher never asks the human. It states assumptions in the note and carries on.
 3. **Write the note.** The report is the note. Write it to `product/research/YYYY-MM-DD-<slug>.md`, with today's date and a short kebab-case slug of the topic, creating the folder if needed. The researcher never writes the file.
 4. **Update the records.** Set the item to `done` and delete its `Note:`. Follow-ups the note names become new items (IDs from `Next IDs`, then bump it). The note doesn't change the brief, `product/decisions.md` or Open Questions.
@@ -89,7 +97,7 @@ Repeat steps 1-7 for each item, skipping `human` items as step 1 does. Report on
 
 A finished research item doesn't stop the run: it goes on with the next candidate.
 
-End with the list of items done, a security assessment if Pick step 4 found one due, the questions that research has made ready for a design call, and what's next.
+End with the list of items done, a security assessment or a stories validation if Pick step 4 found one due, the stories drafted for items that had none (for the human to confirm), the questions that research has made ready for a design call, and what's next.
 
 ## Stopping partway through
 If you must stop before the item is done, add `- Note: <where it stands, what's next>` to the item.

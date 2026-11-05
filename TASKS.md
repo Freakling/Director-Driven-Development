@@ -598,6 +598,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Touches: -
 - Done when: the example app runs in an Azure sandbox subscription with Azure Policy Deny assignments for public network access and local authentication and Defender for Cloud on, it is tested from outside, and the results are written down in `product/research/` for a later claims decision (demo)
 - Brief: Scope › What the site claims for production and compliance
+- Stories: -
 
 ### B14 · The `git grep` allow rule runs any command (A01:2025 Broken Access Control) · done 2026-10-30 · M · agent · med
 - Touches: .claude/settings.json, .claude/hooks/guard-commands.sh, selftest.sh (the settings and the guard are framework-owned: App-Director and SaaSAllTheThings items too)
@@ -673,6 +674,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Touches: a Godot game of the director's, with Godot-Director 3.11.0
 - Done when: the director has captured, drawn, processed and verified at least one screen with the released /ui-design, and said whether App-Director and SaaSAllTheThings should follow as the anchor says or after changes (demo)
 - Brief: Scope › Planned framework changes
+- Stories: -
 
 ### B17 · The wildcard git allow rules write and read any file without a prompt (A01:2025 Broken Access Control) · done 2026-10-29 · M · agent · med
 - Touches: .claude/settings.json, .claude/hooks/guard-commands.sh, selftest.sh, AGENTS.md (the settings and the guard are framework-owned: an App-Director item too, as T213 was)
@@ -703,48 +705,56 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Touches: -
 - Done when: the director has reviewed who has write or admin access to the four repositories, their Pages settings, the WordPress site and its hosting, itch.io and the Anthropic account, removed what isn't needed, and set when to review it again (on a schedule and when someone leaves) (demo)
 - Brief: -
+- Stories: -
 
 ### T226 · The director checks the Pages settings (A02:2025 Security Misconfiguration) · todo · - · human
 - Depends on: -
 - Touches: -
 - Done when: the Pages source is GitHub Actions, "Enforce HTTPS" is on and the `github-pages` environment deploys only from `main`, checked in this repository's settings (demo)
 - Brief: -
+- Stories: -
 
 ### T227 · The director turns on dependency alerts and pip updates (A03:2025 Software Supply Chain Failures) · todo · - · human
 - Depends on: -
 - Touches: -
 - Done when: Dependabot alerts are on in all four repositories and Dependabot proposes `pip` updates where a repository has Python packages, beside the action updates, and the director has said who may add a dependency (demo)
 - Brief: -
+- Stories: -
 
 ### T228 · The director rotates the GitHub and WordPress credentials (A04:2025 Cryptographic Failures) · todo · - · human
 - Depends on: -
 - Touches: -
 - Done when: the gh token, the git credential entry and the SSH keys on this machine and the WordPress application password are rotated, unused application passwords are revoked, the WordPress password lives only in the local MCP configuration, and the director has set when to rotate them again (demo)
 - Brief: -
+- Stories: -
 
 ### T229 · The director reviews misuse before changing the agent's permissions or the publish scripts (A06:2025 Insecure Design) · todo · - · human
 - Depends on: -
 - Touches: -
 - Done when: the director has thought through how a change to `.claude/settings.json`, `tools/work-publish.sh` or `tools/work-release.sh` could be misused, starting with B17 and B19, and keeps doing so before each such change (demo)
 - Brief: -
+- Stories: -
 
 ### T230 · The director turns on two-factor authentication on every account (A07:2025 Authentication Failures) · todo · - · human
 - Depends on: -
 - Touches: -
 - Done when: two-factor authentication is on for GitHub, WordPress and its hosting, itch.io and the Anthropic account (demo)
 - Brief: -
+- Stories: -
 
 ### T231 · The director sets the GitHub rulesets and Actions settings (A08:2025 Software or Data Integrity Failures) · todo · - · human
 - Depends on: -
 - Touches: -
 - Done when: a branch ruleset on `main` in all four repositories requires a pull request and blocks force-push and deletion, a tag ruleset protects `v*` in the three framework repositories, the default `GITHUB_TOKEN` is read-only, only GitHub-owned or verified Actions may run, and secret scanning push protection is on (demo)
 - Brief: -
+- Stories: -
 
 ### T232 · The director routes the alerts and writes an incident note (A09:2025 Security Logging and Alerting Failures) · todo · - · human
 - Depends on: -
 - Touches: -
 - Done when: failed workflow runs and Dependabot and secret scanning alerts reach the director's email, and a short note says what to do if the site is defaced or a token leaks (demo)
 - Brief: -
+- Stories: -
 
 ### T233 · App-Director: the guard blocks the git flags that write or read any file · done 2026-10-29 · M · agent
 - PRs: App-Director #41 (merged)
@@ -1526,6 +1536,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: `"C:\Program Files\Git\bin\git.exe" -c core.pager=calc log` and `--upload-pack` with a quoted git path, and `"C:\Program Files\Git\bin\bash.exe" -c "git push --force"` and `C:\Git\bin\bash.exe -c ...`, are blocked as the bare names are, with their cases, in each framework's guard; the selftests pass (check) · following AGENTS.md › Project rules for framework work
 - Note: found in T290: the `-c` and program-flag rules and the shell wrapper gate read only a bare git or shell word.
 - Brief: -
+- Stories: -
 
 ### T301 · App-Director and SaaSAllTheThings: a variable command name followed by a global option can't hide a git subcommand · todo · XS · agent
 - Depends on: T289, T300, T298
@@ -1533,60 +1544,70 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: with `G` set in the environment, `"$G" --work-tree . restore .` and `"$G" --git-dir .git branch -D x` are blocked in each hook, as Godot-Director's T43 does by skipping each global option's value before it looks for the subcommand, with their cases; the selftests pass (check) · following AGENTS.md › Project rules for framework work
 - Note: found in T289; both exit 0 on each hook at its bundle's head. Built after the two releases, in each repo's next bundle.
 - Brief: -
+- Stories: -
 
 ### B53 · A script piped to a shell, a path-qualified or `.exe` git or bash, a sudo option's value, cmd's %VAR% or a folder in another case passes the guard (A01:2025 Broken Access Control) · todo · S · agent · med
 - Touches: .claude/hooks/guard-commands.sh, selftest.sh (the guard is framework-owned: an item for each framework once it's built)
 - Repro: 1. Feed the guard hook `printf 'git push --force' | bash` or `echo 'git push --force' | sh`; `/usr/bin/git push --force` or `git.exe push --force` (so `G=/usr/bin/git; $G push --force` too); `sudo -u root "$G" push --force`; `cmd /c "%G% push --force"`; `cat > .GIT/hooks/pre-commit <<'EOF'` with `git push --force` in the body; `bash.exe tools/../x.sh`; or `bash TOOLS/../x.sh`. 2. Expected: each is blocked, as `git push --force` and a `.git/hooks` write are. Actual: exit 0: a shell reading its script from a pipe isn't read as a wrapper, the git test needs the bare name, an option's value before the command name isn't skipped, only `$` variables are read, a shell's name takes no `.exe`, and the `.git` and `tools/` folder tests are case-sensitive, while Windows folders aren't. T285 and T284 bring T277's path-qualified git to the generic and flag rules here; the `-c` key, variable and credential readings still need it, in all three frameworks.
 - Found in: B45, B46, B47, T277
 - Brief: -
+- Stories: -
 
 ### B54 · A message that names `--no-verify` or `gh auth token` is blocked · todo · XS · agent · low
 - Touches: .claude/hooks/guard-commands.sh, selftest.sh (the guard is framework-owned: an item for each framework once it's built)
 - Repro: 1. Feed the guard hook `git commit -q -F - <<'EOF'` with a body line naming `--no-verify`, or `gh pr edit 5 --body-file - <<'EOF'` with a body naming `gh auth token`. 2. Expected: passes: each body is a message no shell runs (B39, B40, B48). Actual: exit 2: the no-verify check reads the raw text, and the credential-print rule reads decoded bodies, messages included.
 - Found in: B48
 - Brief: -
+- Stories: -
 
 ### B56 · A PowerShell `for (;;)` loop passes the hang check · todo · XS · agent · low
 - Touches: .claude/hooks/guard-commands.sh, selftest.sh (the guard is framework-owned: an item for each framework once it's built)
 - Repro: 1. Feed the guard hook a PowerShell payload with `for (;;) { Start-Sleep 1 }`. 2. Expected: blocked, as the Bash form is since B49. Actual: exit 0: the loop rule reads Bash's C-style loop only. (B52 made the hang rules read PowerShell subexpressions, which was this item's other half.)
 - Found in: B49
 - Brief: -
+- Stories: -
 
 ### B57 · A `-m` message is read as commands when the same command also runs `bash -c` · todo · XS · agent · low
 - Touches: .claude/hooks/guard-commands.sh, selftest.sh (the guard is framework-owned: an item for each framework once it's built)
 - Repro: 1. Feed the guard hook `bash -c 'echo hi' && git commit -q -m "wait: until done; do sleep 1; done"`. 2. Expected: passes: the -m value is a message. Actual: exit 2: with an unquoted `bash -c` in the command, the raw-text scan reads the -m value too.
 - Found in: B50
 - Brief: -
+- Stories: -
 
 ### B58 · A PowerShell block comment, or an ANSI-C quoted escape before a `#`, hides a git flag (A01:2025 Broken Access Control) · todo · XS · agent · med
 - Touches: .claude/hooks/guard-commands.sh, selftest.sh (the guard is framework-owned: an item for each framework once it's built)
 - Repro: 1. Feed the guard hook a PowerShell payload with `<# it's #> git push origin ':main' 'x'`, or a Bash payload with `git push $'a\'b #' "$(printf '\055\055force')"`. 2. Expected: each is blocked. Actual: exit 0: B51 reads PowerShell's line comments but not its block comments, and B43's substitution reader takes the `#` after an ANSI-C quoted escape as a comment, so the substitution after it is never read.
 - Found in: B51
 - Brief: -
+- Stories: -
 
 ### B59 · A quoted `;` in a reader's arguments, a substitution inside a reader's name, or git printing a file passes the credential-read check (A01:2025 Broken Access Control) · todo · S · agent · med
 - Touches: .claude/hooks/guard-commands.sh, selftest.sh (the guard is framework-owned: an item for each framework once it's built)
 - Repro: 1. Feed the guard hook `cat 'a;b' .env.local`, `c$(echo a)t .env.local`, `git show HEAD:.env.local` or `git cat-file -p HEAD:.env.local`. 2. Expected: each is blocked, as `cat .env.local` is. Actual: exit 0: a quoted `;` ends the reader's arguments, a substitution inside a reader's name isn't read, and no rule treats git's file printers as readers.
 - Found in: B52
 - Brief: -
+- Stories: -
 
 ### B61 · A PowerShell pipeline from a variable, an `if` or `foreach` inside `-Command`, or a case-sensitive operator is blocked · todo · XS · agent · low
 - Touches: .claude/hooks/guard-commands.sh, selftest.sh (the guard is framework-owned: an item for each framework once it's built)
 - Repro: 1. Feed the guard hook a PowerShell payload with `$files = Get-ChildItem; $files | Measure-Object`, `$x = "$(git status)"; $x`, or `$x -ceq 1`; `powershell -Command 'if ($x) { Get-Date }'` or a `foreach ($f in $files)` script; or `powershell -ExecutionPolicy Bypass -File` with a path holding `$`. 2. Expected: passes: none runs a command named by a variable. Actual: exit 2: the assignment test matches any `$name =` in the command, a segment starts at `(`, B37's `-c` rule reads `-ceq` and `-cgt`, and the value of `-ExecutionPolicy` is read as the start of a `-Command` script.
 - Found in: B55, B60
 - Brief: -
+- Stories: -
 
 ### B62 · A PowerShell call operator on a variable, or a wrapper inside a non-git command's substitution, passes the guard (A01:2025 Broken Access Control) · todo · XS · agent · med
 - Touches: .claude/hooks/guard-commands.sh, selftest.sh (the guard is framework-owned: an item for each framework once it's built)
 - Repro: 1. Feed the guard hook a PowerShell payload with `& ($args[0]) push --force`, `& $cmd` or `. $script` (unresolved); `echo "$(powershell -Command '& $args push --force')"`; or `$sb = [scriptblock]::Create('git push --force')` then `$sb.Invoke()`, or `$ExecutionContext.InvokeCommand.NewScriptBlock('...')`. 2. Expected: blocked, or blocked with a message that the guard can't judge what the variable runs. Actual: exit 0: a segment ends at `)`, B45 blocks a call only with a subcommand, a destructive flag, -c or an assignment, a non-git command's substitution gets only the hang and read rules, and a script block's literal isn't read as a script, since the `(` splits the words.
 - Found in: B55, B60
 - Brief: -
+- Stories: -
 
 ### B63 · A redirect after `git diff` is read as a path outside the repository · todo · XS · agent · low
 - Touches: .claude/hooks/guard-commands.sh, selftest.sh (the guard is framework-owned: an item for each framework once it's built)
 - Repro: 1. Feed the guard hook `git diff > /tmp/x.diff` or `git -C work/App-Director diff > /tmp/x.diff`. 2. Expected: passes: the redirect writes git's output, and git reads no path outside the repository. Actual: exit 2, "git diff of a path outside the repository": the outside-path rule takes the redirect's target as a pathspec.
 - Found in: T280
 - Brief: -
+- Stories: -
 
 ### B64 · A quoted multi-line string after an empty Python heredoc hides it from the hang check · done 2026-11-04 · S · agent · medium
 - Touches: .claude/hooks/guard-commands.sh, selftest.sh (the guard is framework-owned: an item for each framework once it's built; Godot-Director's is guard-git.sh)
@@ -1601,6 +1622,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Note: a line per section as it starts would show where a run stands. Both reruns used `KEEP=1`, and other runs without it passed, so that isn't shown to matter.
 - Found in: T307, T308
 - Brief: -
+- Stories: -
 
 ### T312 · Release SaaSAllTheThings 0.16.1 · done 2026-11-04 · S · agent
 - PRs: SaaSAllTheThings #48 (merged)

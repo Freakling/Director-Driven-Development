@@ -4,7 +4,7 @@ AGENTS.md › Project rules, and win over these defaults. -->
 
 These rules apply to any AI assistant working in this project. For each of these requests, follow the procedure in `.app-director/procedures/`:
 - **next-task.md:** do the next task(s), or a named item (T12, B3, R2). The build itself is `build.md`.
-- **design.md:** brainstorm, open design questions, change the design.
+- **design.md:** brainstorm, open design questions, change the design, validate the user stories.
 - **research.md:** research a question in a fresh context and save a dated note in `product/research/`, for a design call or a decision about stacks, libraries, licences or app-store requirements. It informs; the human decides. Domain reference: `.app-director/research-domain.md`.
 - **acceptance.md:** prepare or process an acceptance check.
 - **align.md:** check the docs and tasks are aligned.
@@ -15,12 +15,14 @@ These rules apply to any AI assistant working in this project. For each of these
 - **security.md:** a security assessment (`/security`): the tools, then a fresh reader through the OWASP checklist in `.app-director/reference/owasp.md`; findings become bug items, people and process items go to the human, and a dated report goes in `product/security/`. It runs on request, before a release is proposed, and when `next-task.md` finds one due.
 - **ui-design.md:** capture the screens (`/ui-design`): a PNG per screen, state and size of the web app on this machine, with an element map, a numbered map image, layout lint and a starter drawing; process the human's Excalidraw drawing of a screen into a screen spec and items; verify a built screen against its spec and write compare images; list the screens in the catalog.
 - **refresh-model-sizing.md:** set or update the model sizing block in AGENTS.md › Project rules.
+- **prototype.md:** try a change fast in a prototype (`/prototype <name>`), in its own session and git worktree on a `proto/<name>` branch, outside the loop; list the prototypes; harvest one into decisions, user stories and items (`/prototype harvest <name>`), and remove it.
 
 In Claude Code these are also slash commands, and builds, reviews (with the security assessment's reading pass) and research run as the `builder`, `reviewer` and `researcher` subagents.
 
 ## The human decides
 - The human owns product vision, design and priorities. You build, keep the records, and propose.
 - A design call is a feature behaviour, a flow, or anything the user experiences that `product/brief.md` doesn't settle. For one, give 2-4 options with one recommendation and a one-line reason, then wait. Write down only what was chosen, following `design.md` › Record each decision. If you had to interpret the answer, say how you read it.
+- **Nothing is written without the human's explicit approval.** While a session runs, the answers stay in the conversation. A chat message or an "Other" answer during a session is a scope change or a modification, not an answer to record: it re-opens the options it touches, and the session reassesses, then restarts or continues. Once everything is chosen, show a summary of every file, line, item and story to be written (`design.md` › Summary and approval), and write and commit all of it in one change only after the human approves the summary.
 - Never answer an Open Question in `product/brief.md` yourself. Work that depends on one gets a placeholder that names the question.
 - Something that seems to contradict a stated goal is flagged, never reinterpreted.
 - Research informs a design call and never makes it. The `researcher` records no decision, never edits the brief or `product/decisions.md`, never answers an Open Question, and never asks the human; its recommendation is shown as one option with its reason.
@@ -32,6 +34,7 @@ In Claude Code these are also slash commands, and builds, reviews (with the secu
 | Fact | Only in |
 |---|---|
 | What the app should be | `product/brief.md`. List its sections with `grep -n "^#" product/brief.md` and read only the ones you need. |
+| The roles the app serves, and why each feature is built | `product/user-stories.md`: the roles and their stories (`US-<n>`), each confirmed by the human or `unconfirmed` (`procedures/design.md` › User stories) |
 | What's undecided | brief › Open Questions |
 | Why a design decision was made | `product/decisions.md` (append-only) |
 | The evidence behind a design call | `product/research/`, one dated note per topic; the decision line links to it |
@@ -58,7 +61,8 @@ Update the owning place in the same change that makes it untrue. Replace superse
 
 ## Doing the work
 - **Where work comes from.** `TASKS.md`, or straight from the human. A direct request that won't be finished this session, or that turns up follow-up work, gets a TASKS.md item. Work you discover always becomes a new item; never do it silently as part of another.
-- **Read what the work needs:** the item's `Touches`, the Architecture rows, and the brief sections it names. Read by heading or line range, not whole files. Quote only the relevant lines of logs.
+- **Why it's built.** A feature item names the user stories it serves (`Stories:` in `.app-director/tasks.md`). One with no story gets one drafted first, as `design.md` › User stories says, for the human to confirm.
+- **Read what the work needs:** the item's `Touches`, the Architecture rows, and the brief sections and stories it names. Read by heading or line range, not whole files. Quote only the relevant lines of logs.
 - **Stay inside the item.** Prefer the smallest change, and delete dead code. Match existing patterns; a new pattern needs a reason in the commit message.
 - **Tests.** Logic that can be tested without a running UI gets a test. A fixed bug gets a regression test when it can have one.
 - **Outcome tags.** Each outcome in `Done when` is tagged:
@@ -67,17 +71,19 @@ Update the owning place in the same change that makes it untrue. Replace superse
   - `(demo)`: a human verifies it in the next acceptance check.
 - **Done** means every `(test)` and `(check)` outcome holds, every `(demo)` outcome is implemented, and `bash tools/check.sh` exits 0. Never report done otherwise, and show the output of a failing check. Exit 3 means the check couldn't run, so say the work is unverified.
 - **Running the check.** Run it in the foreground with a long timeout (10 minutes or more), or start it with `run_in_background` and keep working until its completion notice.
-- **Commands that may run long.** Give every command that may run long a time limit under five minutes (`timeout 240 ...`, at most 280 seconds), because a wait past five minutes lets the prompt cache expire and the next turn rewrites the whole context. Start a long check with `run_in_background` and keep working until its completion notice instead of polling it with `sleep` loops. Never probe for a tool with an empty heredoc (`python3 - <<'EOF'` followed by `EOF`): it waits for input and never returns, so use `python3 --version`. The command guard blocks these forms. `tools/check.sh` limits each test run to `[tests] timeout` in `tools/check.cfg` (600 seconds by default) and exits 3 when it hits the limit.
+- **Commands that may run long.** Give every command that may run long a time limit under five minutes (`timeout 240 ...`, at most 280 seconds), because a wait past five minutes lets the prompt cache expire and the next turn rewrites the whole context. Start a long check with `run_in_background` and keep working until its completion notice instead of polling it with `sleep` loops. Never feed Python its script from a heredoc (`python3 - <<'EOF'`, with a body or not): it can wait for input and never return. Put the script in a file and run that, and use `python3 --version` to probe for it. The command guard blocks these forms. `tools/check.sh` limits each test run to `[tests] timeout` in `tools/check.cfg` (600 seconds by default) and exits 3 when it hits the limit.
+- **Shell commands.** Write files with the file tools (Write or Edit in Claude Code), never with a shell heredoc or an `echo` or `printf` redirect of multi-line content, because a heredoc can hang the shell; a multi-line script is written to a file the same way and run from there. Every shell call is one short command that finishes well inside the tool's timeout; the only long runs are the check, a build and a host start, each with an explicit long timeout or in the background (Running the check). A command the tool moved to the background after its timeout keeps a finished agent running for as long as it lives: stop it before you report or end the turn, with the tool's stop if it has one (TaskStop in Claude Code), or else `kill` or `taskkill` with its pid.
 - **Two failed attempts.** After two failed attempts at the same problem, stop and report instead of guessing further.
 
 ## Git
-- **One item, one commit.** The message is `<type>: <summary> (T12)`, with a body saying why; types are `feat fix refactor test docs data chore`. The item's paths are its code, tests, data, and the records the item changed (TASKS.md, AGENTS.md, and the brief and decisions for a decision made during the item). `git add` the new ones, then commit only those paths, `git commit -m "…" -- <paths>`, so another session's staged work stays out.
+- **One item, one commit.** The message is `<type>: <summary> (T12)`, with a body saying why; types are `feat fix refactor test docs data chore`. The item's paths are its code, tests, data, and the records the item changed (TASKS.md, AGENTS.md, `product/user-stories.md` when a story was drafted for it, and the brief and decisions for a decision made during the item). `git add` the new ones, then commit only those paths, `git commit -m "…" -- <paths>`, so another session's staged work stays out.
 - **Approval.** Commit only with the human's approval. Push only when asked. Never get around the hooks (`--no-verify`, `core.hooksPath`).
 - **Destructive commands.** Anything that discards uncommitted work or rewrites history needs the human.
 
 ## Sessions and context
-- **New clone.** Run `bash tools/setup-clone.sh`. It checks that the stack tool is available and installs the pre-commit hook.
-- **Any two sessions building at once** (say design and coding): each gets its own git worktree, since a shared checkout lets one session's half-written files fail the other's check and Stop hook, and both queue on the same build artefacts. Make one with `git worktree add ../app-design`, then run `bash tools/setup-clone.sh` there. A claim in TASKS.md protects only its own worktree. So only one session per project picks items; the others name the item they work on.
+- **New clone.** Run `bash tools/setup-clone.sh`. It checks that the stack tool is available and installs the pre-commit and pre-push hooks.
+- **Any two sessions building at once** (say design and coding): each gets its own git worktree, since a shared checkout lets one session's half-written files fail the other's check, and both queue on the same build artefacts. The Stop hook runs the check only for a session that wrote a source file itself, so a session that edits only documentation isn't held up by the other's code. Make one with `git worktree add ../app-design`, then run `bash tools/setup-clone.sh` there. A claim in TASKS.md protects only its own worktree. So only one session per project picks items; the others name the item they work on.
+- **Prototypes.** A prototype (`procedures/prototype.md`) tries a change in its own session, in a git worktree on a `proto/<name>` branch. A session in a checkout that `bash tools/prototype.sh here` calls a prototype (a linked worktree on a `proto/` branch with `PROTOTYPE.md` at its root) is a prototype session: read `prototype.md` › In a prototype session before any work. That session is outside the loop: there the rules on items, records, the builder, reviews and commit approval give way to that section, while the guard, the secrets scan and Protected space still apply, and nothing on a `proto/` branch is pushed or merged. Its work reaches main only through the harvest, which turns it into decisions, user stories and items built from main like any other.
 - **The records are the hand-off.** TASKS.md (what's done and what's next), commit messages (why), AGENTS.md and the brief carry everything between sessions. Once an item is committed, a fresh session, or `/clear` in Claude Code, loses nothing.
 
 ## Reviews and model size
