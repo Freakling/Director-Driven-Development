@@ -25,7 +25,7 @@ Each option names the user stories it serves and drafts the new or changed ones 
 
 ### Godot-Director
 
-The procedure is at [`framework/.godot-director/procedures/design.md`](https://github.com/Freakling/Godot-Director/tree/v4.10.2/framework/.godot-director/procedures/design.md) in the Godot-Director repository.
+The procedure is at [`framework/.godot-director/procedures/design.md`](https://github.com/Freakling/Godot-Director/tree/v4.10.3/framework/.godot-director/procedures/design.md) in the Godot-Director repository.
 
 - It reads the Design Pillars and the GDD's Open Questions, and records decisions in `design/gdd.md` and `design/decisions.md`.
 - If an idea contradicts a Design Pillar, the skill stops and asks which gives way, the pillar or the idea.

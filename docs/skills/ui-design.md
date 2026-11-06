@@ -21,7 +21,7 @@ The catalog of screens is `tools/ui/screens.mjs` (`tools/ui_screens.gd` in Godot
 
 Open the starter in [Excalidraw](https://excalidraw.com), which runs in the browser and needs no account. Draw one rectangle per element, with its name on the first line. The stroke colour says what changes: green is new, blue is kept but moved or resized, red removes the element, orange is a question for you, and black is how it should be. To re-arrange a screen, drag a grey box to where the element should sit, or draw a blue box named after the element. Your drawings go in `director/ui/`, which the agent reads and never writes.
 
-The drawing conventions are in the README that each project keeps with its screen designs: [Godot-Director](https://github.com/Freakling/Godot-Director/tree/v4.10.2/project/design/ui/README.md), [App-Director](https://github.com/Freakling/App-Director/tree/v1.14.2/project/product/ui/README.md) and [SaaSAllTheThings](https://github.com/Freakling/SaaSAllTheThings/tree/v0.16.2/project/product/ui/README.md).
+The drawing conventions are in the README that each project keeps with its screen designs: [Godot-Director](https://github.com/Freakling/Godot-Director/tree/v4.10.3/project/design/ui/README.md), [App-Director](https://github.com/Freakling/App-Director/tree/v1.14.2/project/product/ui/README.md) and [SaaSAllTheThings](https://github.com/Freakling/SaaSAllTheThings/tree/v0.16.2/project/product/ui/README.md).
 
 ## Text path
 
@@ -39,7 +39,7 @@ Every step has a text path for an assistant that can't view images. The element 
 | The reader runs on | Godot, headless, with no display | Node | Node |
 | Spec folder | `design/ui/` | `product/ui/` | `product/ui/` |
 
-The procedures for each step are at [Godot-Director](https://github.com/Freakling/Godot-Director/tree/v4.10.2/framework/.godot-director/procedures/ui-design.md), [App-Director](https://github.com/Freakling/App-Director/tree/v1.14.2/framework/.app-director/procedures/ui-design.md) and [SaaSAllTheThings](https://github.com/Freakling/SaaSAllTheThings/tree/v0.16.2/framework/.satt/procedures/ui-design.md).
+The procedures for each step are at [Godot-Director](https://github.com/Freakling/Godot-Director/tree/v4.10.3/framework/.godot-director/procedures/ui-design.md), [App-Director](https://github.com/Freakling/App-Director/tree/v1.14.2/framework/.app-director/procedures/ui-design.md) and [SaaSAllTheThings](https://github.com/Freakling/SaaSAllTheThings/tree/v0.16.2/framework/.satt/procedures/ui-design.md).
 
 ### SaaSAllTheThings
 

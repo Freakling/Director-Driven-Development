@@ -20,7 +20,7 @@ Only the human starts a reset, and nothing in a reset writes application code. T
 
 ### Godot-Director
 
-The procedure is at [`framework/.godot-director/procedures/drift-reset.md`](https://github.com/Freakling/Godot-Director/tree/v4.10.2/framework/.godot-director/procedures/drift-reset.md) in the Godot-Director repository.
+The procedure is at [`framework/.godot-director/procedures/drift-reset.md`](https://github.com/Freakling/Godot-Director/tree/v4.10.3/framework/.godot-director/procedures/drift-reset.md) in the Godot-Director repository.
 
 - The branch is `reset-YYYY-MM-DD`, and the reset folder is `design/resets/YYYY-MM-DD/`. A second reset on the same day adds `-2`.
 - Everything the reset writes goes in the reset folder (the analysis is in `as-built.md` and `interpretations.md`), except the GDD and `design/decisions.md`, which change at the design step, and TASKS.md, which changes at the plan and postmortem steps. Nothing in the reset folder is deleted or rewritten; a correction is a new section.

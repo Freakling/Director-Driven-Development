@@ -59,6 +59,8 @@ Balanced test jobs are opt-in. `[tests] balance = true` in `tools/check.cfg` dea
 
 An exit 3 is not a failure of your work. The agent reports the work as unverified rather than done, and says why.
 
+In Godot-Director, a check that repeats a failure on unchanged files prints the reason lines it saved from that run, in `--if-changed`, the pre-commit hook and the Stop hook, so the reason shows without running the tests again.
+
 ### The agent's command is blocked
 
 A guard in each framework, which reads the commands of the Bash and the PowerShell tool, blocks commands that hang or run past five minutes, since a wait that long lets the prompt cache expire and the next turn rewrites the whole context. The message names the form that works, and the agent uses it.
@@ -104,6 +106,6 @@ This is by design too: the agent commits only with your approval. Asking for a r
 ## Related
 
 - The install sections of [App-Director](../frameworks/app-director.md#install), [Godot-Director](../frameworks/godot-director.md#install) and [SaaSAllTheThings](../frameworks/saasallthethings.md#install).
-- The procedures: [App-Director onboarding](https://github.com/Freakling/App-Director/blob/v1.14.2/ONBOARDING.md), [Godot-Director onboarding](https://github.com/Freakling/Godot-Director/blob/v4.10.2/ONBOARDING.md) and [SaaSAllTheThings onboarding](https://github.com/Freakling/SaaSAllTheThings/blob/v0.16.2/ONBOARDING.md).
+- The procedures: [App-Director onboarding](https://github.com/Freakling/App-Director/blob/v1.14.2/ONBOARDING.md), [Godot-Director onboarding](https://github.com/Freakling/Godot-Director/blob/v4.10.3/ONBOARDING.md) and [SaaSAllTheThings onboarding](https://github.com/Freakling/SaaSAllTheThings/blob/v0.16.2/ONBOARDING.md).
 
 <div class="takeaway"><span>Update, restart, and the commands you expect are there.</span><span class="url"><a href="index.md">All questions</a></span></div>

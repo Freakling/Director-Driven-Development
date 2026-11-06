@@ -21,7 +21,7 @@ How to use it: [How do I try a change before it's built?](../how-to/prototype.md
 
 ### Godot-Director
 
-The procedure is at [`framework/.godot-director/procedures/prototype.md`](https://github.com/Freakling/Godot-Director/tree/v4.10.2/framework/.godot-director/procedures/prototype.md) in the Godot-Director repository.
+The procedure is at [`framework/.godot-director/procedures/prototype.md`](https://github.com/Freakling/Godot-Director/tree/v4.10.3/framework/.godot-director/procedures/prototype.md) in the Godot-Director repository.
 
 - The game can run in the prototype. You play it, `bash tools/autoplay.sh smoke` (or a scenario) plays it and `bash tools/log_review.sh <run folder>` reads the run as `autoplay.md` says (`bash tools/log_review.sh --player` reads a session you played yourself), and `bash tools/check.sh --only tests/<file>.gd` runs one test file. A playtest report or function check (`playtest.md`, `function-check.md`) stays a record of the main session, and nothing is exported, released or uploaded.
 - `start` copies the clone's saved Godot path (`tools/godot_bin.local`) into the worktree. The first run there builds its own `.godot/` import cache, so it is slower than usual.

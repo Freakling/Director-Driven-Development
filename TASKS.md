@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T324 · B69 · R10
+**Next IDs:** T325 · B69 · R10
 
 ## Milestones
 | Milestone | Status |
@@ -1591,16 +1591,23 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Brief: Scope › Framework features
 - Stories: -
 
-### T323 · Release Godot-Director 4.10.3 · in-progress 2026-11-06 · S · agent
-- PRs: Godot-Director #56 (open)
+### T324 · Docs follow Godot-Director 4.10.3 · done 2026-11-06 · XS · agent
+- Depends on: T323
+- Touches: frameworks.lock, docs/**/*.md (the Godot-Director links), docs/how-to/trouble.md
+- Done when: `frameworks.lock` and every Godot-Director link are at v4.10.3, and the troubleshooting page says a repeated failure prints its saved reason (check)
+- Brief: Scope › Framework features
+- Stories: US-11
+
+### T323 · Release Godot-Director 4.10.3 · done 2026-11-06 · S · agent
+- PRs: Godot-Director #56 (merged)
 - Depends on: B68
 - Touches: work/Godot-Director: the version files, CHANGELOG.md
 - Done when: it ends the bundle that carries B68, the bundle is merged and `tools/work-release.sh` has tagged and published it
 - Brief: -
 - Stories: -
 
-### B68 · Godot-Director: a check failure doesn't always say why · in-progress 2026-11-06 · M · agent · medium
-- PRs: Godot-Director #56 (open)
+### B68 · Godot-Director: a check failure doesn't always say why · done 2026-11-06 · M · agent · medium
+- PRs: Godot-Director #56 (merged)
 - Touches: work/Godot-Director: framework/tools/check.sh, selftest.sh, the version files, CHANGELOG.md, TASKS.md
 - Repro: 1. In The Guildkeeper (its B117), a test group whose log has `GDIR-TESTS:` exits non-zero, with an error line only that group's allow list reads as an error. 2. Expected: a line that names what failed. Actual: `check: FAIL (full logs in .godot/godot-director/)` and nothing else. 3. Run `bash tools/check.sh --if-changed` on the same files. Actual: only `check: FAIL (nothing changed since the last failing run; run 'bash tools/check.sh' to see why)`, so the agent reruns the tests to learn the reason, and a hook that waits on a running check repeats the same message.
 - Done when: every path that sets `failed=1` or `hard_fail=1` prints a line naming what failed or adds to `errors` (test) · a failing run saves its reason lines beside `last-fail`, capped at about 20, and a repeat prints them after the FAIL line, in `--if-changed`, the pre-commit hook and the Stop hook (test) · a leak line at exit, such as `ERROR: 1 RID allocations of type ... were leaked at exit`, counts as an error and stays in the saved reason (test) · the existing wording and exit codes are unchanged (test) · the selftest passes (check)
