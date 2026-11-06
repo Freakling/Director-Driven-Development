@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T323 · B68 · R10
+**Next IDs:** T324 · B69 · R10
 
 ## Milestones
 | Milestone | Status |
@@ -1589,6 +1589,24 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: `frameworks.lock` and every framework link are at v1.14.2, v0.16.2 and v4.10.2 (check) · a page that describes the guard or the CI and release workflow templates says what the releases ship, checked against them (check) · this repo's selftest covers a quoted and a backslash path to git and to a shell (check) · `bash tools/audit.sh` prints PASS and `bash tools/check.sh` passes (check)
 - Note: built 2026-11-05: `frameworks.lock` and 258 framework links moved to the three tags, the SaaSAllTheThings, Godot-Director and `/release` pages say the workflow templates pin every action by commit, and this repo's selftest has 20 new cases for a path to git or a shell, with no existing case flipped. `docs/how-to/trouble.md` and the guard line in `docs/frameworks/index.md` needed nothing, since a quoted path is a detail of how the guard reads.
 - Brief: Scope › Framework features
+- Stories: -
+
+### T323 · Release Godot-Director 4.10.3 · in-progress 2026-11-06 · S · agent
+- PRs: Godot-Director #56 (open)
+- Depends on: B68
+- Touches: work/Godot-Director: the version files, CHANGELOG.md
+- Done when: it ends the bundle that carries B68, the bundle is merged and `tools/work-release.sh` has tagged and published it
+- Brief: -
+- Stories: -
+
+### B68 · Godot-Director: a check failure doesn't always say why · in-progress 2026-11-06 · M · agent · medium
+- PRs: Godot-Director #56 (open)
+- Touches: work/Godot-Director: framework/tools/check.sh, selftest.sh, the version files, CHANGELOG.md, TASKS.md
+- Repro: 1. In The Guildkeeper (its B117), a test group whose log has `GDIR-TESTS:` exits non-zero, with an error line only that group's allow list reads as an error. 2. Expected: a line that names what failed. Actual: `check: FAIL (full logs in .godot/godot-director/)` and nothing else. 3. Run `bash tools/check.sh --if-changed` on the same files. Actual: only `check: FAIL (nothing changed since the last failing run; run 'bash tools/check.sh' to see why)`, so the agent reruns the tests to learn the reason, and a hook that waits on a running check repeats the same message.
+- Done when: every path that sets `failed=1` or `hard_fail=1` prints a line naming what failed or adds to `errors` (test) · a failing run saves its reason lines beside `last-fail`, capped at about 20, and a repeat prints them after the FAIL line, in `--if-changed`, the pre-commit hook and the Stop hook (test) · a leak line at exit, such as `ERROR: 1 RID allocations of type ... were leaked at exit`, counts as an error and stays in the saved reason (test) · the existing wording and exit codes are unchanged (test) · the selftest passes (check)
+- Note: from the director on 2026-11-06, from The Guildkeeper's session. Its `tools/check.sh` carries the first fix as a local patch, commit be0be6c5, which the upgrade replaces. Nothing is committed in the clone until the director approves.
+- Note: built 2026-11-06 as Godot-Director's B6. `silent_exit` allowed from one log and the final scan from all of them, so one group's `GDIR-IGNORE` could erase another's error; the load pass had the same hole. The review showed the director's patch would print on every ordinary failing test, since `tools/check.gd` exits 1 on any failure, so the line prints at once for a crash or a kill and, for status 1, only when the final scan reports nothing from that log. An ordinary failure's output is line for line what it was. The selftest passed 1249 of 1249, and the release run 335. One earlier run failed once in an autoplay screenshot case this doesn't touch (`0000-view.png` for `0000-start.png`); it passed on the others, is probably a flake under load, and wasn't looked into.
+- Brief: -
 - Stories: -
 
 ### B67 · A long enough command body outlasts the guard's time limit (A01:2025 Broken Access Control) · todo · M · agent · medium
