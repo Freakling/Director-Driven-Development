@@ -1617,6 +1617,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Stories: -
 
 ### T329 · Release Godot-Director 4.10.4 · in-progress 2026-11-10 · S · agent
+- PRs: Godot-Director #57 (open)
 - Depends on: B69
 - Touches: work/Godot-Director: the version files, CHANGELOG.md
 - Done when: it ends the bundle that carries B69, the bundle is merged and `tools/work-release.sh` has tagged and published it
@@ -1624,13 +1625,16 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Stories: -
 
 ### B69 · Godot-Director: staging a new file changes the check's fingerprint and the import fingerprint · in-progress 2026-11-10 · S · agent · med
+- PRs: Godot-Director #57 (open)
 - Touches: work/Godot-Director: framework/tools/check.sh, framework/tools/autoplay.sh, framework/tools/ui_capture.sh, selftest.sh, CHANGELOG.md, TASKS.md
 - Repro: 1. In a game with a committed `scripts/a.gd` and a new, untracked `scripts/b.gd`, run `bash tools/check.sh --fingerprint`. 2. Run `git add scripts/b.gd`, then the same command. Expected: the same hash, since no file's content changed. Actual: a different hash. `fingerprint()` hashes the paths in the order `git ls-files -c -o --exclude-standard` prints them, untracked files first, so staging moves the file in the list. `--if-changed` then misses, and the pre-commit hook runs the whole check again right after the build or the Stop hook passed the same files. `import_fingerprint()`, the block `check.sh`, `autoplay.sh` and `ui_capture.sh` share, orders its list the same way, so staging a new asset or script runs the import pass again.
 - Found in: T325 (its first review), reproduced on v4.10.3
+- Note: built 2026-11-11 as Godot-Director's B7. `fingerprint()` and `import_fingerprint()` sort their lists with `LC_ALL=C sort -u`, through `/usr/bin/sort` where it exists, and the import block is the same in its three scripts. `git grep --untracked` already prints in path order, so the block's `decl` line is as it was. Three selftest cases in the framework lane, which runs without Godot: both fingerprints are the same before and after `git add` of a new script and a new asset, and a changed script still changes the check's fingerprint. The two staging cases failed before the fix. The selftest passed 1252 of 1252 with Godot 4.7.2, and the release run 338.
 - Brief: -
 - Stories: -
 
 ### T330 · Release SaaSAllTheThings 0.16.3 · in-progress 2026-11-10 · S · agent
+- PRs: SaaSAllTheThings #50 (open)
 - Depends on: B70
 - Touches: work/SaaSAllTheThings: the version files, CHANGELOG.md
 - Done when: it ends the bundle that carries B70, the bundle is merged and `tools/work-release.sh` has tagged and published it
@@ -1638,9 +1642,11 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Stories: -
 
 ### B70 · SaaSAllTheThings: staging a new file changes the check's fingerprint · in-progress 2026-11-10 · S · agent · med
+- PRs: SaaSAllTheThings #50 (open)
 - Touches: work/SaaSAllTheThings: framework/tools/check.sh, selftest.sh, CHANGELOG.md, TASKS.md
 - Repro: 1. In an app with a committed `src/a.cs` and a new, untracked `src/b.cs`, run `bash tools/check.sh --fingerprint`. 2. Run `git add src/b.cs`, then the same command. Expected: the same hash, since no file's content changed. Actual: a different hash, for B69's reason: `fingerprint()` hashes the paths in the order `git ls-files -c -o --exclude-standard` prints them. `--if-changed` then misses, and the pre-commit hook runs the whole check again right after the build or the Stop hook passed the same files.
 - Found in: T325 (its first review), reproduced on v0.16.2
+- Note: built 2026-11-11 as SaaSAllTheThings' B3. `fingerprint()` sorts its list with `LC_ALL=C sort -u`, through `/usr/bin/sort` where it exists. Four selftest cases in the check section: a check passes with a new, untracked file, the fingerprint is the same after `git add`, `--if-changed` reuses that pass, and a changed file still changes the fingerprint. Run against a `check.sh` without the sort, the second and third fail. The selftest passed 811 of 811, for the fix and again for the release; its .NET part was skipped, since this machine has no .NET SDK.
 - Brief: -
 - Stories: -
 
