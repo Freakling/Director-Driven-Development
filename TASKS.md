@@ -1616,16 +1616,23 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Brief: -
 - Stories: -
 
-### T327 · Release App-Director 1.15.0 · in-progress 2026-11-10 · S · agent
-- PRs: App-Director #52 (open)
+### T328 · Docs follow App-Director 1.15.0 · todo · M · agent
+- Depends on: T327
+- Touches: frameworks.lock, docs/**/*.md (the App-Director links), docs/frameworks/app-director.md, docs/frameworks/index.md, docs/concept/check.md, docs/concept/cost-built-in.md, docs/how-to/check.md, docs/how-to/build.md
+- Done when: `frameworks.lock` and every App-Director link are at v1.15.0 (check) · the pages that describe App-Director's check say what the release ships, each statement checked against it: the fast and the full tier and when the full tier is due, which tier the pre-commit, pre-push and Stop hooks ask for, a stack with no fast mode running one suite, the time limit of each tier, the cache naming what changed on a miss, and one check at a time in a checkout (check) · `bash tools/audit.sh` prints PASS and `bash tools/check.sh` passes (check)
+- Brief: Scope › Framework features
+- Stories: US-5, US-13
+
+### T327 · Release App-Director 1.15.0 · done 2026-11-10 · S · agent
+- PRs: App-Director #52 (merged)
 - Depends on: T325
 - Touches: work/App-Director: the version files, CHANGELOG.md
 - Done when: it ends the bundle that carries T325, the bundle is merged and `tools/work-release.sh` has tagged and published it
 - Brief: -
 - Stories: -
 
-### T325 · App-Director: a fast check tier for every commit, a cache that says why it missed, and one check at a time · in-progress 2026-11-10 · XL · agent
-- PRs: App-Director #52 (open)
+### T325 · App-Director: a fast check tier for every commit, a cache that says why it missed, and one check at a time · done 2026-11-10 · XL · agent
+- PRs: App-Director #52 (merged)
 - Touches: work/App-Director: framework/tools/check.sh, framework/tools/stacks/typescript.sh, framework/.githooks/pre-commit, framework/.githooks/pre-push, framework/.claude/hooks/stop-check.sh, framework/.app-director/procedures/build.md, next-task.md, release.md, framework/.app-director/rules.md, project/tools/check.cfg, README.md, ONBOARDING.md, framework/tools/prototype.sh, selftest.sh, CHANGELOG.md, TASKS.md
 - Done when: `bash tools/check.sh --fast` runs UI purity, the secrets scan, tsc, eslint on the changed files and only the tests related to the change, and `bash tools/check.sh` with no argument still runs everything and fails on any failure (test) · the pre-commit and Stop hooks run the fast tier, the commit hook and the pre-push hook run the full tier when `[tests] full-every` commits have passed or a changed path is a dependency, config, tool or `[tests] full-when` path, and a fast pass is never recorded or reported as a full one (test) · `--if-changed` prints one line on every miss naming what changed and the pass it compared with, reuses a builder's pass on identical files, and every run is logged in `.app-director/state/check-runs.log` with its tier and duration (test) · two simultaneous checks start one suite, the second says it's waiting and reuses the first's result, and a stale lock is removed (test) · the Stop hook never runs the full tier and never reports "couldn't run" because another check is running (test) · each tier has its own time limit (300 and 3600 s by default), the check prints its progress every 60 s, and exit codes 0, 1 and 3 and the secrets scan on every commit are unchanged (test) · a commit that changes one .ts file and its test in a clone of brfservice runs the fast tier in under 2 minutes, measured and recorded (check) · the selftest passes (check) · following AGENTS.md › Project rules for framework work
 - Note: from the director on 2026-11-10, from brfservice's session: 17 commits that day each ran the whole check (UI purity, gitleaks, tsc, eslint, a production build, npm audit, about 4,900 vitest tests) in the pre-commit hook, 15 to 25 minutes a commit; a builder's pass was run again by the commit hook on the same files without saying why it missed; a JSON wording change ran every test; and a Stop hook beside a commit hook timed out at 1200 s. brfservice's own `tools/check.cfg` keys (`[tests] fast = related`, `full-every = 10`, the per-tier limits) are delivered with it, and its product code isn't touched. Built in three stages: the check, then single flight and the hooks, then the procedures.
@@ -1638,6 +1645,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
   - `--coverage.enabled=false` was confirmed off in vitest 5.0.5.
 
   brfservice's settings and the optional `check.local.sh` change were handed to the director as a patch and aren't applied there.
+- Note: a third round on 2026-11-10, after the director asked for a reassessment of the pull request and approved its recommendations. Where neither the stack check nor `tools/check.local.sh` reads `CHECK_TIER` (the python, flutter and none stacks), a fast request runs as the full tier, so one pass serves the build, the commit and the push, and the Stop hook's check there is the whole suite under the full tier's limit. The paths that make the full tier due count in the cache and in the hook's staged test, so a changed migration is a miss and a commit that stages only one starts the check. The rules have the agent ask `bash tools/check.sh --due` before a commit and run a due full tier in the background first. The same commit reads a `tools/check.cfg` with CRLF line endings without a pipeline for each line: in the scratch clone of brfservice `--due` went from about 6 s to about 1 s. Selftest 893 of 893. Merged with #52 and released as 1.15.0.
 - Brief: -
 - Stories: -
 
