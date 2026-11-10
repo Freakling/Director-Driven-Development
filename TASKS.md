@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T325 · B69 · R10
+**Next IDs:** T328 · B69 · R10
 
 ## Milestones
 | Milestone | Status |
@@ -1613,6 +1613,38 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: every path that sets `failed=1` or `hard_fail=1` prints a line naming what failed or adds to `errors` (test) · a failing run saves its reason lines beside `last-fail`, capped at about 20, and a repeat prints them after the FAIL line, in `--if-changed`, the pre-commit hook and the Stop hook (test) · a leak line at exit, such as `ERROR: 1 RID allocations of type ... were leaked at exit`, counts as an error and stays in the saved reason (test) · the existing wording and exit codes are unchanged (test) · the selftest passes (check)
 - Note: from the director on 2026-11-06, from The Guildkeeper's session. Its `tools/check.sh` carries the first fix as a local patch, commit be0be6c5, which the upgrade replaces. Nothing is committed in the clone until the director approves.
 - Note: built 2026-11-06 as Godot-Director's B6. `silent_exit` allowed from one log and the final scan from all of them, so one group's `GDIR-IGNORE` could erase another's error; the load pass had the same hole. The review showed the director's patch would print on every ordinary failing test, since `tools/check.gd` exits 1 on any failure, so the line prints at once for a crash or a kill and, for status 1, only when the final scan reports nothing from that log. An ordinary failure's output is line for line what it was. The selftest passed 1249 of 1249, and the release run 335. One earlier run failed once in an autoplay screenshot case this doesn't touch (`0000-view.png` for `0000-start.png`); it passed on the others, is probably a flake under load, and wasn't looked into.
+- Brief: -
+- Stories: -
+
+### T327 · Release App-Director 1.15.0 · in-progress 2026-11-10 · S · agent
+- PRs: App-Director #52 (open)
+- Depends on: T325
+- Touches: work/App-Director: the version files, CHANGELOG.md
+- Done when: it ends the bundle that carries T325, the bundle is merged and `tools/work-release.sh` has tagged and published it
+- Brief: -
+- Stories: -
+
+### T325 · App-Director: a fast check tier for every commit, a cache that says why it missed, and one check at a time · in-progress 2026-11-10 · XL · agent
+- PRs: App-Director #52 (open)
+- Touches: work/App-Director: framework/tools/check.sh, framework/tools/stacks/typescript.sh, framework/.githooks/pre-commit, framework/.githooks/pre-push, framework/.claude/hooks/stop-check.sh, framework/.app-director/procedures/build.md, next-task.md, release.md, framework/.app-director/rules.md, project/tools/check.cfg, README.md, ONBOARDING.md, framework/tools/prototype.sh, selftest.sh, CHANGELOG.md, TASKS.md
+- Done when: `bash tools/check.sh --fast` runs UI purity, the secrets scan, tsc, eslint on the changed files and only the tests related to the change, and `bash tools/check.sh` with no argument still runs everything and fails on any failure (test) · the pre-commit and Stop hooks run the fast tier, the commit hook and the pre-push hook run the full tier when `[tests] full-every` commits have passed or a changed path is a dependency, config, tool or `[tests] full-when` path, and a fast pass is never recorded or reported as a full one (test) · `--if-changed` prints one line on every miss naming what changed and the pass it compared with, reuses a builder's pass on identical files, and every run is logged in `.app-director/state/check-runs.log` with its tier and duration (test) · two simultaneous checks start one suite, the second says it's waiting and reuses the first's result, and a stale lock is removed (test) · the Stop hook never runs the full tier and never reports "couldn't run" because another check is running (test) · each tier has its own time limit (300 and 3600 s by default), the check prints its progress every 60 s, and exit codes 0, 1 and 3 and the secrets scan on every commit are unchanged (test) · a commit that changes one .ts file and its test in a clone of brfservice runs the fast tier in under 2 minutes, measured and recorded (check) · the selftest passes (check) · following AGENTS.md › Project rules for framework work
+- Note: from the director on 2026-11-10, from brfservice's session: 17 commits that day each ran the whole check (UI purity, gitleaks, tsc, eslint, a production build, npm audit, about 4,900 vitest tests) in the pre-commit hook, 15 to 25 minutes a commit; a builder's pass was run again by the commit hook on the same files without saying why it missed; a JSON wording change ran every test; and a Stop hook beside a commit hook timed out at 1200 s. brfservice's own `tools/check.cfg` keys (`[tests] fast = related`, `full-every = 10`, the per-tier limits) are delivered with it, and its product code isn't touched. Built in three stages: the check, then single flight and the hooks, then the procedures.
+- Note: built 2026-11-10 as App-Director's T55, in three stages and two rounds of review fixes. The first review found the fingerprint hashed `git ls-files` in its order, untracked files first, so `git add` of a new file changed it and a builder's pass of an item that adds a file was never reused; the list is sorted now. It also found three ways the TypeScript fast tier failed where the full tier passed: a legacy eslint config, cmd.exe's 8,191-character limit, and coverage thresholds. The second review found the large-change fallback ran the whole suite under the fast limit, so such a change now runs as the full tier, and that requiring the same commit threw away the pass that gated a commit, so a fast record now keeps its changed list. It also closed gaps in the lock's heartbeat: sleep and wake, a mismatch, and the holder's limit. Vitest has no result cache by file content, so none is faked; the check's own cache skips a repeat. Selftest 866 of 866. Timed on a scratch clone of brfservice with its packages, an otherwise quiet machine, and its proposed settings and `check.local.sh`:
+  - A commit of one .ts file and its test ran the fast tier in 67 s twice: 37 of 278 test files (686 of 4,938 tests), and the check took 60 s. The first commit, before the incremental tsc had its build info and with the build and audit still in `check.local.sh`, took 145 s; the next took 126 s.
+  - A translations-only commit took 48 s: only `tests/i18n.test.tsx` ran.
+  - A docs-only commit took 2 s.
+  - Two checks at once started one suite; the second waited and reused its pass.
+  - A full-tier commit took 398 s, and a plain full run 618 s.
+  - `--coverage.enabled=false` was confirmed off in vitest 5.0.5.
+
+  brfservice's settings and the optional `check.local.sh` change were handed to the director as a patch and aren't applied there.
+- Brief: -
+- Stories: -
+
+### T326 · App-Director: the TypeScript stack finds every eslint config name · todo · XS · agent
+- Touches: work/App-Director: framework/tools/stacks/typescript.sh, selftest.sh, CHANGELOG.md, TASKS.md
+- Done when: a project whose only eslint config is `eslint.config.cjs`, `.ts`, `.mts` or `.cts`, `.eslintrc.yml`, `.eslintrc.yaml` or `.eslintrc` gets the lint step in both tiers, a flat one with the changed files and `--no-warn-ignored` in the fast tier, a legacy one over the whole project (test) · the selftest passes (check) · following AGENTS.md › Project rules for framework work
+- Note: found in T325's second review: `typescript.sh` lints only when `.eslintrc.json`, `.js` or `.cjs`, or `eslint.config.js` or `.mjs`, exists, so a project with another config name gets no lint in either tier. It was so before T325.
 - Brief: -
 - Stories: -
 
