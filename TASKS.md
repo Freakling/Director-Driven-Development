@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T328 · B69 · R10
+**Next IDs:** T331 · B71 · R10
 
 ## Milestones
 | Milestone | Status |
@@ -1613,6 +1613,34 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Done when: every path that sets `failed=1` or `hard_fail=1` prints a line naming what failed or adds to `errors` (test) · a failing run saves its reason lines beside `last-fail`, capped at about 20, and a repeat prints them after the FAIL line, in `--if-changed`, the pre-commit hook and the Stop hook (test) · a leak line at exit, such as `ERROR: 1 RID allocations of type ... were leaked at exit`, counts as an error and stays in the saved reason (test) · the existing wording and exit codes are unchanged (test) · the selftest passes (check)
 - Note: from the director on 2026-11-06, from The Guildkeeper's session. Its `tools/check.sh` carries the first fix as a local patch, commit be0be6c5, which the upgrade replaces. Nothing is committed in the clone until the director approves.
 - Note: built 2026-11-06 as Godot-Director's B6. `silent_exit` allowed from one log and the final scan from all of them, so one group's `GDIR-IGNORE` could erase another's error; the load pass had the same hole. The review showed the director's patch would print on every ordinary failing test, since `tools/check.gd` exits 1 on any failure, so the line prints at once for a crash or a kill and, for status 1, only when the final scan reports nothing from that log. An ordinary failure's output is line for line what it was. The selftest passed 1249 of 1249, and the release run 335. One earlier run failed once in an autoplay screenshot case this doesn't touch (`0000-view.png` for `0000-start.png`); it passed on the others, is probably a flake under load, and wasn't looked into.
+- Brief: -
+- Stories: -
+
+### T329 · Release Godot-Director 4.10.4 · in-progress 2026-11-10 · S · agent
+- Depends on: B69
+- Touches: work/Godot-Director: the version files, CHANGELOG.md
+- Done when: it ends the bundle that carries B69, the bundle is merged and `tools/work-release.sh` has tagged and published it
+- Brief: -
+- Stories: -
+
+### B69 · Godot-Director: staging a new file changes the check's fingerprint and the import fingerprint · in-progress 2026-11-10 · S · agent · med
+- Touches: work/Godot-Director: framework/tools/check.sh, framework/tools/autoplay.sh, framework/tools/ui_capture.sh, selftest.sh, CHANGELOG.md, TASKS.md
+- Repro: 1. In a game with a committed `scripts/a.gd` and a new, untracked `scripts/b.gd`, run `bash tools/check.sh --fingerprint`. 2. Run `git add scripts/b.gd`, then the same command. Expected: the same hash, since no file's content changed. Actual: a different hash. `fingerprint()` hashes the paths in the order `git ls-files -c -o --exclude-standard` prints them, untracked files first, so staging moves the file in the list. `--if-changed` then misses, and the pre-commit hook runs the whole check again right after the build or the Stop hook passed the same files. `import_fingerprint()`, the block `check.sh`, `autoplay.sh` and `ui_capture.sh` share, orders its list the same way, so staging a new asset or script runs the import pass again.
+- Found in: T325 (its first review), reproduced on v4.10.3
+- Brief: -
+- Stories: -
+
+### T330 · Release SaaSAllTheThings 0.16.3 · in-progress 2026-11-10 · S · agent
+- Depends on: B70
+- Touches: work/SaaSAllTheThings: the version files, CHANGELOG.md
+- Done when: it ends the bundle that carries B70, the bundle is merged and `tools/work-release.sh` has tagged and published it
+- Brief: -
+- Stories: -
+
+### B70 · SaaSAllTheThings: staging a new file changes the check's fingerprint · in-progress 2026-11-10 · S · agent · med
+- Touches: work/SaaSAllTheThings: framework/tools/check.sh, selftest.sh, CHANGELOG.md, TASKS.md
+- Repro: 1. In an app with a committed `src/a.cs` and a new, untracked `src/b.cs`, run `bash tools/check.sh --fingerprint`. 2. Run `git add src/b.cs`, then the same command. Expected: the same hash, since no file's content changed. Actual: a different hash, for B69's reason: `fingerprint()` hashes the paths in the order `git ls-files -c -o --exclude-standard` prints them. `--if-changed` then misses, and the pre-commit hook runs the whole check again right after the build or the Stop hook passed the same files.
+- Found in: T325 (its first review), reproduced on v0.16.2
 - Brief: -
 - Stories: -
 
