@@ -25,7 +25,7 @@ Each option names the user stories it serves and drafts the new or changed ones 
 
 ### Godot-Director
 
-The procedure is at [`framework/.godot-director/procedures/design.md`](https://github.com/Freakling/Godot-Director/tree/v4.10.3/framework/.godot-director/procedures/design.md) in the Godot-Director repository.
+The procedure is at [`framework/.godot-director/procedures/design.md`](https://github.com/Freakling/Godot-Director/tree/v4.10.4/framework/.godot-director/procedures/design.md) in the Godot-Director repository.
 
 - It reads the Design Pillars and the GDD's Open Questions, and records decisions in `design/gdd.md` and `design/decisions.md`.
 - If an idea contradicts a Design Pillar, the skill stops and asks which gives way, the pillar or the idea.
@@ -46,7 +46,7 @@ The procedure is at [`framework/.app-director/procedures/design.md`](https://git
 
 ### SaaSAllTheThings
 
-The procedure is at [`framework/.satt/procedures/design.md`](https://github.com/Freakling/SaaSAllTheThings/tree/v0.16.2/framework/.satt/procedures/design.md) in the SaaSAllTheThings repository.
+The procedure is at [`framework/.satt/procedures/design.md`](https://github.com/Freakling/SaaSAllTheThings/tree/v0.16.3/framework/.satt/procedures/design.md) in the SaaSAllTheThings repository.
 
 - It records decisions in the PRD (`product/prd.md`) and `product/decisions.md`, and ADR text in `adr/`. A decision about an external system's data also goes into `integrations/<system>/contract.md`.
 - Questions about how the system is built, such as a data store, a client's UI technology or a deviation from the reference, are not product calls. The skill hands them to `/architect` (the `architect.md` procedure).

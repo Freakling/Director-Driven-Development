@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T331 · B71 · R10
+**Next IDs:** T332 · B71 · R10
 
 ## Milestones
 | Milestone | Status |
@@ -1614,6 +1614,13 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Note: from the director on 2026-11-06, from The Guildkeeper's session. Its `tools/check.sh` carries the first fix as a local patch, commit be0be6c5, which the upgrade replaces. Nothing is committed in the clone until the director approves.
 - Note: built 2026-11-06 as Godot-Director's B6. `silent_exit` allowed from one log and the final scan from all of them, so one group's `GDIR-IGNORE` could erase another's error; the load pass had the same hole. The review showed the director's patch would print on every ordinary failing test, since `tools/check.gd` exits 1 on any failure, so the line prints at once for a crash or a kill and, for status 1, only when the final scan reports nothing from that log. An ordinary failure's output is line for line what it was. The selftest passed 1249 of 1249, and the release run 335. One earlier run failed once in an autoplay screenshot case this doesn't touch (`0000-view.png` for `0000-start.png`); it passed on the others, is probably a flake under load, and wasn't looked into.
 - Brief: -
+- Stories: -
+
+### T331 · Docs follow Godot-Director 4.10.4 and SaaSAllTheThings 0.16.3 · done 2026-11-11 · XS · agent
+- Depends on: T329, T330
+- Touches: frameworks.lock, docs/**/*.md (the Godot-Director and SaaSAllTheThings links)
+- Done when: `frameworks.lock` and every Godot-Director and SaaSAllTheThings link are at v4.10.4 and v0.16.3 (check) · `bash tools/audit.sh` prints PASS and `bash tools/check.sh` passes (check)
+- Brief: Scope › Framework features
 - Stories: -
 
 ### T329 · Release Godot-Director 4.10.4 · done 2026-11-11 · S · agent

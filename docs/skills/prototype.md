@@ -21,7 +21,7 @@ How to use it: [How do I try a change before it's built?](../how-to/prototype.md
 
 ### Godot-Director
 
-The procedure is at [`framework/.godot-director/procedures/prototype.md`](https://github.com/Freakling/Godot-Director/tree/v4.10.3/framework/.godot-director/procedures/prototype.md) in the Godot-Director repository.
+The procedure is at [`framework/.godot-director/procedures/prototype.md`](https://github.com/Freakling/Godot-Director/tree/v4.10.4/framework/.godot-director/procedures/prototype.md) in the Godot-Director repository.
 
 - The game can run in the prototype. You play it, `bash tools/autoplay.sh smoke` (or a scenario) plays it and `bash tools/log_review.sh <run folder>` reads the run as `autoplay.md` says (`bash tools/log_review.sh --player` reads a session you played yourself), and `bash tools/check.sh --only tests/<file>.gd` runs one test file. A playtest report or function check (`playtest.md`, `function-check.md`) stays a record of the main session, and nothing is exported, released or uploaded.
 - `start` copies the clone's saved Godot path (`tools/godot_bin.local`) into the worktree. The first run there builds its own `.godot/` import cache, so it is slower than usual.
@@ -43,7 +43,7 @@ The procedure is at [`framework/.app-director/procedures/prototype.md`](https://
 
 ### SaaSAllTheThings
 
-The procedure is at [`framework/.satt/procedures/prototype.md`](https://github.com/Freakling/SaaSAllTheThings/tree/v0.16.2/framework/.satt/procedures/prototype.md) in the SaaSAllTheThings repository.
+The procedure is at [`framework/.satt/procedures/prototype.md`](https://github.com/Freakling/SaaSAllTheThings/tree/v0.16.3/framework/.satt/procedures/prototype.md) in the SaaSAllTheThings repository.
 
 - A prototype never deploys, to any Azure environment, dev included, and not through a pipeline. It runs on this machine with the Functions host and the emulators (`reference/infra.md` › Environments), with your own `.env` or local settings copied by you, never by the agent. In a prototype session the guard blocks `az`, `azd`, `func azure` and `gh workflow run`. The guard reads the text of a command (a path before the word, `.exe`, `.cmd` or `.bat` after it), so a script or an allowed command can still call `az` where it cannot see, and the procedure tells the agent to keep to this as well. A prototype you want others to see is harvested, built from main and released with [`/release`](release.md) and your approval.
 - The pre-commit hook skips the project check and runs the secrets scan (`bash tools/check.sh --secrets`) on every commit. It blocks the commit when the scan can't run, and while `adr/`, `tools/check.cfg`, `tools/check.sh`, `tools/archcheck.awk` or a `.gitattributes` file, which decide what the scan excuses or skips, differ from main's. When main changed one of them since the prototype started, take main's copy with `git checkout refs/heads/main -- <path>`.

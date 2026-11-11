@@ -43,7 +43,7 @@ The procedure is at [`framework/.app-director/procedures/security.md`](https://g
 
 ### SaaSAllTheThings
 
-The procedure is at [`framework/.satt/procedures/security.md`](https://github.com/Freakling/SaaSAllTheThings/tree/v0.16.2/framework/.satt/procedures/security.md) in the SaaSAllTheThings repository.
+The procedure is at [`framework/.satt/procedures/security.md`](https://github.com/Freakling/SaaSAllTheThings/tree/v0.16.3/framework/.satt/procedures/security.md) in the SaaSAllTheThings repository.
 
 - The tools are the check's architecture rules, the .NET, npm and pinned pip dependency audits, Semgrep, and the CI workflow's dependency review and SBOM when `gh` is signed in. It never calls Azure, and the dependency audits send package names and versions to public advisory databases, never code.
 - The report is `assessment/security/YYYY-MM-DD.md`, and the accepted deviations it reads are the ADRs that name an OWASP item.
