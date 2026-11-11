@@ -115,6 +115,7 @@ What the three frameworks do as decided here, carried out through the orchestrat
 Changes the director has decided that aren't released yet.
 
 - **A pilot of SaaSAllTheThings in Azure:** the director deploys the example app to an Azure sandbox with Azure Policy Deny assignments and Defender for Cloud, tests it from outside and records the results.
+- **App-Director enforces the approved summary:** the assistant registers a summary's exact lines, a hook records the director's approval of them, and the pre-commit hook refuses a commit whose brief, decision, confirmed-story or item lines no approval covers. The approval is a chat message that is only an approval word, or the question dialog's Approve button where a hook can see it; it is tied to the lines by a hash and named in the commit message. What the assistant files by itself is a `proposed` item, which `/next-task` never picks; a bug may be filed `todo` when it names the brief heading or confirmed story it restores, a setting onboarding asks for. Godot-Director and SaaSAllTheThings follow once it has been used in a project.
 
 ## Core Flows
 

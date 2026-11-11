@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T332 · B71 · R10
+**Next IDs:** T338 · B71 · R10
 
 ## Milestones
 | Milestone | Status |
@@ -1689,6 +1689,50 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Note: a third round on 2026-11-10, after the director asked for a reassessment of the pull request and approved its recommendations. Where neither the stack check nor `tools/check.local.sh` reads `CHECK_TIER` (the python, flutter and none stacks), a fast request runs as the full tier, so one pass serves the build, the commit and the push, and the Stop hook's check there is the whole suite under the full tier's limit. The paths that make the full tier due count in the cache and in the hook's staged test, so a changed migration is a miss and a commit that stages only one starts the check. The rules have the agent ask `bash tools/check.sh --due` before a commit and run a due full tier in the background first. The same commit reads a `tools/check.cfg` with CRLF line endings without a pipeline for each line: in the scratch clone of brfservice `--due` went from about 6 s to about 1 s. Selftest 893 of 893. Merged with #52 and released as 1.15.0.
 - Brief: -
 - Stories: -
+
+### T332 · App-Director: a `proposed` item status, the bugs rule, and what a message means · todo · M · agent
+- Touches: work/App-Director: framework/.app-director/tasks.md, framework/.app-director/rules.md, framework/.app-director/procedures/next-task.md, design.md, review.md, research.md, security.md, project/tools/check.cfg, ONBOARDING.md, selftest.sh, CHANGELOG.md, TASKS.md
+- Done when: `tasks.md` has the status `proposed`, an item the assistant filed by itself that no procedure picks or builds until an approved summary makes it `todo` (check) · `next-task.md` files a builder's `Found:` lines, review leftovers, research follow-ups and a failing full run as `proposed`, or as a `todo` bug where the bugs rule allows it, and never picks a `proposed` item (check) · the bugs rule is in `rules.md`: a bug restores behaviour the brief or a confirmed story already states and names that heading or story, one that can name neither is `proposed`, and `[records] bugs` in `tools/check.cfg` (`cited` by default, `all` or `none`) is asked at onboarding (check) · `rules.md` and `design.md` say that a complaint, an observation, a screenshot or a bug report means diagnose, propose and ask, that a question dialog the director left unanswered is no answer whatever its tool result says, and that a run mode or a project's commit rule never authorises a record (check) · the selftest passes (check) · following AGENTS.md › Project rules for framework work
+- Note: from the director on 2026-11-11, from brfservice's session: its assistant wrote decisions, brief text and items five times in one day without an approved summary, and withdrew one item at the director's demand. The director chose this design on 2026-11-11.
+- Brief: Scope › Planned framework changes
+- Stories: -
+
+### T333 · App-Director: `tools/records.sh` and a commit gate for records · todo · L · agent
+- Depends on: T332
+- Touches: work/App-Director: framework/tools/records.sh (new), framework/.githooks/pre-commit, framework/.githooks/commit-msg (new), framework/tools/setup-clone.sh, project/tools/check.cfg, install.sh and the manifest where they list files, selftest.sh, CHANGELOG.md, TASKS.md
+- Done when: `bash tools/records.sh summary <file>` registers the exact lines a summary adds and removes, per file, and prints its id, its hash and the lines (test) · `bash tools/records.sh approve <id>`, and `approve --staged` for the director's own edits, record an approval from the director's own terminal, the path for an assistant without hooks (test) · the pre-commit hook refuses a commit that adds or removes a line of `product/brief.md` or `product/decisions.md`, sets, changes or removes a confirmed story or the Last validated line, adds an item that isn't `proposed` (except a bug the bugs setting frees), moves a `proposed` item on, changes an item's `Done when`, `Repro` or `Question`, removes an item that isn't `done`, or changes a `[records]` or `[approval]` setting, unless an approval covers exactly those lines; it names the lines and what to do (test) · status changes, the escalation label, `Note:` lines, `Next IDs`, pruned `done` items, `unconfirmed` stories and `proposed` items pass, and so do lines a merge brings from a commit, and a prototype checkout (test) · an approval covers only the text registered: a changed summary, an approval older than its summary and an approval whose lines are already committed are refused (test) · the commit-msg hook refuses a commit that carries approved record lines and doesn't name the approval, with the line to add (test) · `bash tools/records.sh report` lists the approvals used since a commit and the `proposed` items (test) · the record paths come from `[records]` in `tools/check.cfg`, with the defaults when it has none, on Git Bash, bash 3.2 and BSD tools (test) · the selftest passes (check) · following AGENTS.md › Project rules for framework work
+- Brief: Scope › Planned framework changes
+- Stories: -
+
+### T334 · App-Director: Claude Code records the director's approval and guards the records · todo · L · agent
+- Depends on: T333
+- Touches: work/App-Director: framework/.claude/hooks/record-approval.sh (new), framework/.claude/hooks/record-watch.sh (new), framework/.claude/hooks/guard-protected.sh, framework/.claude/hooks/guard-commands.sh, framework/.claude/settings.json, project/tools/check.cfg, selftest.sh, CHANGELOG.md, TASKS.md
+- Done when: a probe in a scratch repo, run by the orchestrating session before the build, shows what the hooks receive for a typed message, a dialog answer, a message typed while a dialog is open, a background subagent's report, another session's message and a scheduled prompt, and the hook's header and the CHANGELOG say what it showed (check) · a prompt hook records an approval when the director's message is nothing but a word from `[approval] words` in `tools/check.cfg` (godkänt, godkänd, approve, approved, ok, ja, yes and kör by default), alone for a summary registered since the previous message or followed by the summary's id; where the probe shows a hook receives a dialog's answer, the Approve option of a question that names the summary counts too (test) · any other message withdraws an approval that isn't committed yet and tells the assistant, as context, that nothing may be written; with no summary waiting the hook prints nothing; only the approval is stored, never another message's text (test) · the file tools can't change `product/brief.md` or `product/decisions.md` without an open approval, never from a subagent, and never the approval state; the command guard refuses `records.sh approve` and a prompt the assistant schedules or sends that is only an approval word (test) · after a file tool or a shell command changes a protected file, a hook tells the assistant at once which lines no approval covers, whatever wrote them (`sed -i`, `node -e`, a Python one-liner) (test) · the 2026-11-11 sequence, replayed against a fake repository, ends with no approval and a refused commit: a dialog left unanswered, a complaint, then a decision line, brief text and a `todo` item (test) · the guard's existing cases still pass, and the new hooks run on Git Bash and bash 3.2 (check) · the selftest passes (check) · following AGENTS.md › Project rules for framework work
+- Note: the probe needs the director for two steps in the probe session: one dialog answer, and one message typed while a dialog is open.
+- Brief: Scope › Planned framework changes
+- Stories: -
+
+### T335 · App-Director: the procedures write records through the approved summary · todo · M · agent
+- Depends on: T334
+- Touches: work/App-Director: framework/.app-director/rules.md, framework/.app-director/procedures/design.md, next-task.md, build.md, acceptance.md, align.md, research.md, ui-design.md, drift-reset.md, security.md, prune.md, prototype.md, framework/.claude/agents/builder.md, reviewer.md, researcher.md, README.md, ONBOARDING.md, selftest.sh, CHANGELOG.md, TASKS.md
+- Done when: `design.md` › Summary and approval registers the summary, shows its lines word for word with its id, and writes and commits only after the approval, and every procedure that writes from a conversation points there (check) · `next-task.md` commits a decision's records at once, before the rebuild, and a run's final report lists each record written with its approval and every `proposed` item filed, from `bash tools/records.sh report` (check) · `build.md` and the three agents say that a builder, reviewer or researcher reports record text and never writes it (check) · the CHANGELOG has Upgrade steps: the hook wiring in `.claude/settings.json`, `bash tools/setup-clone.sh` for the new git hook, the settings in `tools/check.cfg`, and that lines already committed aren't judged (check) · the selftest passes (check) · following AGENTS.md › Project rules for framework work
+- Brief: Scope › Planned framework changes
+- Stories: -
+
+### T336 · Release App-Director 1.16.0 · todo · S · agent
+- Depends on: T335
+- Touches: work/App-Director: the version files, CHANGELOG.md
+- Done when: it ends the bundle that carries T332 to T335, the bundle is merged and `tools/work-release.sh` has tagged and published it
+- Brief: -
+- Stories: -
+
+### T337 · Docs follow App-Director 1.16.0 · todo · M · agent
+- Depends on: T336
+- Touches: frameworks.lock, docs/**/*.md (the App-Director links), docs/frameworks/app-director.md, docs/skills/design.md, docs/skills/next-task.md, docs/how-to/decide.md, docs/how-to/trouble.md, docs/concept/design-calls.md, docs/concept/records.md
+- Done when: `frameworks.lock` and every App-Director link are at v1.16.0 (check) · the pages that describe App-Director's design session, its items and its commits say what the release ships, checked against it: the registered summary and its approval, the commit gate, `proposed` items and the bugs setting (check) · `bash tools/audit.sh` prints PASS and `bash tools/check.sh` passes (check)
+- Note: when it's done, the session moves the brief's bullet from Planned framework changes to Framework features.
+- Brief: Scope › Framework features
+- Stories: US-5, US-9, US-10, US-11
 
 ### T326 · App-Director: the TypeScript stack finds every eslint config name · todo · XS · agent
 - Touches: work/App-Director: framework/tools/stacks/typescript.sh, selftest.sh, CHANGELOG.md, TASKS.md
