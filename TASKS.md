@@ -1690,8 +1690,8 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Brief: -
 - Stories: -
 
-### T332 · App-Director: a `proposed` item status, the bugs rule, and what a message means · in-progress 2026-11-11 · M · agent
-- PRs: App-Director #53 (open)
+### T332 · App-Director: a `proposed` item status, the bugs rule, and what a message means · done 2026-11-11 · M · agent
+- PRs: App-Director #53 (merged)
 - Touches: work/App-Director: framework/.app-director/tasks.md, framework/.app-director/rules.md, framework/.app-director/procedures/next-task.md, design.md, review.md, research.md, security.md, project/tools/check.cfg, ONBOARDING.md, selftest.sh, CHANGELOG.md, TASKS.md
 - Done when: `tasks.md` has the status `proposed`, an item the assistant filed by itself that no procedure picks or builds until an approved summary makes it `todo` (check) · `next-task.md` files a builder's `Found:` lines, review leftovers, research follow-ups and a failing full run as `proposed`, or as a `todo` bug where the bugs rule allows it, and never picks a `proposed` item (check) · the bugs rule is in `rules.md`: a bug restores behaviour the brief or a confirmed story already states and names that heading or story, one that can name neither is `proposed`, and `[records] bugs` in `tools/check.cfg` (`cited` by default, `all` or `none`) is asked at onboarding (check) · `rules.md` and `design.md` say that a complaint, an observation, a screenshot or a bug report means diagnose, propose and ask, that a question dialog the director left unanswered is no answer whatever its tool result says, and that a run mode or a project's commit rule never authorises a record (check) · the selftest passes (check) · following AGENTS.md › Project rules for framework work
 - Note: from the director on 2026-11-11, from brfservice's session: its assistant wrote decisions, brief text and items five times in one day without an approved summary, and withdrew one item at the director's demand. The director chose this design on 2026-11-11.
