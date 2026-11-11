@@ -1616,16 +1616,16 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Brief: -
 - Stories: -
 
-### T329 · Release Godot-Director 4.10.4 · in-progress 2026-11-10 · S · agent
-- PRs: Godot-Director #57 (open)
+### T329 · Release Godot-Director 4.10.4 · done 2026-11-11 · S · agent
+- PRs: Godot-Director #57 (merged)
 - Depends on: B69
 - Touches: work/Godot-Director: the version files, CHANGELOG.md
 - Done when: it ends the bundle that carries B69, the bundle is merged and `tools/work-release.sh` has tagged and published it
 - Brief: -
 - Stories: -
 
-### B69 · Godot-Director: staging a new file changes the check's fingerprint and the import fingerprint · in-progress 2026-11-10 · S · agent · med
-- PRs: Godot-Director #57 (open)
+### B69 · Godot-Director: staging a new file changes the check's fingerprint and the import fingerprint · done 2026-11-11 · S · agent · med
+- PRs: Godot-Director #57 (merged)
 - Touches: work/Godot-Director: framework/tools/check.sh, framework/tools/autoplay.sh, framework/tools/ui_capture.sh, selftest.sh, CHANGELOG.md, TASKS.md
 - Repro: 1. In a game with a committed `scripts/a.gd` and a new, untracked `scripts/b.gd`, run `bash tools/check.sh --fingerprint`. 2. Run `git add scripts/b.gd`, then the same command. Expected: the same hash, since no file's content changed. Actual: a different hash. `fingerprint()` hashes the paths in the order `git ls-files -c -o --exclude-standard` prints them, untracked files first, so staging moves the file in the list. `--if-changed` then misses, and the pre-commit hook runs the whole check again right after the build or the Stop hook passed the same files. `import_fingerprint()`, the block `check.sh`, `autoplay.sh` and `ui_capture.sh` share, orders its list the same way, so staging a new asset or script runs the import pass again.
 - Found in: T325 (its first review), reproduced on v4.10.3
@@ -1633,16 +1633,16 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Brief: -
 - Stories: -
 
-### T330 · Release SaaSAllTheThings 0.16.3 · in-progress 2026-11-10 · S · agent
-- PRs: SaaSAllTheThings #50 (open)
+### T330 · Release SaaSAllTheThings 0.16.3 · done 2026-11-11 · S · agent
+- PRs: SaaSAllTheThings #50 (merged)
 - Depends on: B70
 - Touches: work/SaaSAllTheThings: the version files, CHANGELOG.md
 - Done when: it ends the bundle that carries B70, the bundle is merged and `tools/work-release.sh` has tagged and published it
 - Brief: -
 - Stories: -
 
-### B70 · SaaSAllTheThings: staging a new file changes the check's fingerprint · in-progress 2026-11-10 · S · agent · med
-- PRs: SaaSAllTheThings #50 (open)
+### B70 · SaaSAllTheThings: staging a new file changes the check's fingerprint · done 2026-11-11 · S · agent · med
+- PRs: SaaSAllTheThings #50 (merged)
 - Touches: work/SaaSAllTheThings: framework/tools/check.sh, selftest.sh, CHANGELOG.md, TASKS.md
 - Repro: 1. In an app with a committed `src/a.cs` and a new, untracked `src/b.cs`, run `bash tools/check.sh --fingerprint`. 2. Run `git add src/b.cs`, then the same command. Expected: the same hash, since no file's content changed. Actual: a different hash, for B69's reason: `fingerprint()` hashes the paths in the order `git ls-files -c -o --exclude-standard` prints them. `--if-changed` then misses, and the pre-commit hook runs the whole check again right after the build or the Stop hook passed the same files.
 - Found in: T325 (its first review), reproduced on v0.16.2
