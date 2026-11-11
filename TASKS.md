@@ -1735,11 +1735,11 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Brief: -
 - Stories: -
 
-### T337 · Docs follow App-Director 1.16.0 · in-progress 2026-11-11 · M · agent
+### T337 · Docs follow App-Director 1.16.0 · done 2026-11-11 · M · agent
 - Depends on: T336
 - Touches: frameworks.lock, docs/**/*.md (the App-Director links), docs/frameworks/app-director.md, docs/skills/design.md, docs/skills/next-task.md, docs/how-to/decide.md, docs/how-to/trouble.md, docs/concept/design-calls.md, docs/concept/records.md
 - Done when: `frameworks.lock` and every App-Director link are at v1.16.0 (check) · the pages that describe App-Director's design session, its items and its commits say what the release ships, checked against it: the registered summary and its approval, the commit gate, `proposed` items and the bugs setting (check) · `bash tools/audit.sh` prints PASS and `bash tools/check.sh` passes (check)
-- Note: when it's done, the session moves the brief's bullet from Planned framework changes to Framework features.
+- Note: built on 2026-11-11. The pin, 45 links and seven pages follow the release, and the brief's bullet moved from Planned framework changes to Framework features. The audit prints PASS and the check passes without the pin warning.
 - Brief: Scope › Framework features
 - Stories: US-5, US-9, US-10, US-11
 

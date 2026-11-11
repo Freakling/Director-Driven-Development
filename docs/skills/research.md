@@ -45,9 +45,9 @@ Web search and fetch are allowed for every research session in all three framewo
 
 ### App-Director
 
-The procedure is at [`framework/.app-director/procedures/research.md`](https://github.com/Freakling/App-Director/tree/v1.15.0/framework/.app-director/procedures/research.md) in the App-Director repository.
+The procedure is at [`framework/.app-director/procedures/research.md`](https://github.com/Freakling/App-Director/tree/v1.16.0/framework/.app-director/procedures/research.md) in the App-Director repository.
 
-- The domain file, [`research-domain.md`](https://github.com/Freakling/App-Director/tree/v1.15.0/framework/.app-director/research-domain.md), covers stacks and libraries (maturity, maintenance, advisories, licence and platform support), licences, and app-store and platform requirements. Those requirements are tier 1 binding requirements.
+- The domain file, [`research-domain.md`](https://github.com/Freakling/App-Director/tree/v1.16.0/framework/.app-director/research-domain.md), covers stacks and libraries (maturity, maintenance, advisories, licence and platform support), licences, and app-store and platform requirements. Those requirements are tier 1 binding requirements.
 - Notes go in `product/research/`, named `YYYY-MM-DD-<slug>.md`.
 - The item heading is `Brief:`, and an item that informs no question writes `Informs: -`.
 - The decision line in `product/decisions.md` ends its "why" with the note's path.

@@ -20,7 +20,7 @@ How to use it: [How do I get things built?](../how-to/build.md)
 
 A feature item with no user story gets one drafted first, marked `unconfirmed`, and the report names it for the director to confirm. When the stories are due for validation (`bash tools/stories.sh --due`), the skill proposes that too before picking an item, and the director can decline. In a run of several items it carries on picking and only names the validation in the final report. In Godot-Director both apply only in a game that uses user stories ([User stories](../concept/user-stories.md)).
 
-If a build fails, the skill escalates to the next model size and retries once. If blocked, it brings the question with options and a recommendation to the director. A design decision made this way is recorded following `design.md` before the rebuild: the answer stays in the conversation until the director approves one summary of its records, and the records are then committed with the item.
+If a build fails, the skill escalates to the next model size and retries once. If blocked, it brings the question with options and a recommendation to the director. A design decision made this way is recorded following `design.md` before the rebuild: the answer stays in the conversation until the director approves one summary of its records, and the records are then committed with the item (App-Director commits them at once, before the rebuild: see [below](#app-director)).
 
 Subagents write files with the file tools, never a shell heredoc, and keep every shell call to one short command. A command that was moved to the background is stopped before the builder reports, and the report's `Background:` line says so. The session stops anything a builder, reviewer or researcher left running before it clears the building marker and moves on.
 
@@ -38,7 +38,7 @@ A run covers commits only, not pushes, deploys or cloud changes. Each framework'
 
 ### App-Director
 
-The procedure is at [`framework/.app-director/procedures/next-task.md`](https://github.com/Freakling/App-Director/tree/v1.15.0/framework/.app-director/procedures/next-task.md) in the App-Director repository.
+The procedure is at [`framework/.app-director/procedures/next-task.md`](https://github.com/Freakling/App-Director/tree/v1.16.0/framework/.app-director/procedures/next-task.md) in the App-Director repository.
 
 - The building state file is `.app-director/state/building`. The Stop hook checks for it and leaves half-built files alone while it exists.
 - The review diff is written to `.app-director/state/review.diff`.
@@ -46,6 +46,9 @@ The procedure is at [`framework/.app-director/procedures/next-task.md`](https://
 - New items are formatted following `.app-director/tasks.md`, and IDs come from `Next IDs` in that file.
 - The report notes that `(demo)` outcomes and bug fixes without regression tests will appear in the next acceptance check.
 - A research item (`R<n>`) goes to the `researcher` (which follows [`research.md`](research.md)) instead of the builder. No check runs and there is no review: the session writes the note to `product/research/` and commits it with the records.
+- What the agent files by itself (a builder's `Found:` lines, review leftovers, a research note's follow-ups, a failing full run) is `proposed`, and `/next-task` never picks it. Your approval of a summary that lists it makes it `todo`. A bug may be filed `todo` when it names the brief heading or the confirmed story whose behaviour it restores; `[records] bugs` in `tools/check.cfg` (`cited`, `all` or `none`, asked at onboarding) sets that.
+- A design decision made in a blocked build is committed at once, as its own commit before the rebuild, after you approve its summary ([the records gate](../concept/records.md#the-records-gate)).
+- A single item's report lists the `proposed` items it filed. A run's final report lists each record written with its approval and every `proposed` item, for you to approve or drop (`bash tools/records.sh report`).
 - When a [`/security`](security.md) assessment is due (no report in `product/security/` yet, or enough items built since the newest one), it proposes one before picking an item, and you can decline. In a run of several items it carries on picking and only names the assessment in the final report.
 
 ### Godot-Director

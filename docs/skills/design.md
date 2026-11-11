@@ -36,12 +36,15 @@ The procedure is at [`framework/.godot-director/procedures/design.md`](https://g
 
 ### App-Director
 
-The procedure is at [`framework/.app-director/procedures/design.md`](https://github.com/Freakling/App-Director/tree/v1.15.0/framework/.app-director/procedures/design.md) in the App-Director repository.
+The procedure is at [`framework/.app-director/procedures/design.md`](https://github.com/Freakling/App-Director/tree/v1.16.0/framework/.app-director/procedures/design.md) in the App-Director repository.
 
 - It records decisions in `product/brief.md` and `product/decisions.md`, and open questions live in the brief's Open Questions section.
 - Before the options, it quotes the related lines from `product/decisions.md` word for word, so the director sees the state of play first.
 - New items carry a `Brief:` heading and follow the format in `.app-director/tasks.md`. Numbers and thresholds are set by the human in config or environment variables.
 - Where an option touches security (input, authentication, sessions, secrets, data access, file or network access, dependencies), it states the OWASP item it touches and whether it meets, strengthens or would deviate from the [OWASP baseline](../frameworks/app-director.md#the-owasp-baseline). An option that would deviate is shown with the accepted decision it needs, and is never recommended without saying so.
+- The agent registers the summary's exact lines with [`tools/records.sh`](https://github.com/Freakling/App-Director/blob/v1.16.0/framework/tools/records.sh) and shows them word for word with the summary's id. You approve with a message that is only an approval word, alone or with the id (`ok S7`), or with the Approve option of a question dialog that names the summary, in Claude Code. Any other message is a scope change: it withdraws an approval that isn't committed yet, and the agent registers and shows a new summary. The approval words are the `[approval] words` setting in `tools/check.cfg`. With an assistant that has no such hook, you approve by running `bash tools/records.sh approve <id>` in your own terminal.
+- It commits everything the approved summary lists at once as `docs: <summary>`, with the decisions in the body and the `Approved:` line that `bash tools/records.sh trailer` prints, and the session's research notes and `R<n>` items go in the same commit.
+- Items the agent files by itself, such as follow-ups from research, stay `proposed` until a summary that lists them is approved, and then become `todo`.
 - Research notes go in `product/research/`.
 
 ### SaaSAllTheThings

@@ -99,6 +99,15 @@ Everything in the project is committed except the per-machine setup. In a new cl
 
 This is by design, in all three frameworks. `director/` is your own workspace for reference art, drawings, sketches and notes. The agent reads it for context and never writes there, whether the path is relative or absolute. Put files in it yourself.
 
+### A commit was refused, or an "ok" didn't count
+
+This is App-Director's records gate, working as intended ([Records in files](../concept/records.md#the-records-gate)).
+
+- **A commit is refused for record lines no approval covers.** The message names the lines. The agent registers a summary of them, shows it with its id, and commits once you approve it. A message that isn't only an approval word withdraws an approval that isn't committed, so the agent shows the summary again.
+- **Your "ok" didn't count.** It wasn't only the approval word (alone or with the id), or no summary had been registered since your previous message. Answer with the word and the summary's id, such as `ok S7`. Without Claude Code's hook, run `bash tools/records.sh approve <id>` in your own terminal.
+- **The agent's `git revert`, `cherry-pick`, `rebase` or `am` is refused.** They make commits without the gate, so you run them yourself.
+- **A write to the brief or the decisions with a file tool is refused.** It needs an open approval: one that is given and not yet used by a commit.
+
 ### The agent asks before every commit
 
 This is by design too: the agent commits only with your approval. Asking for a run, such as "Do the next 3 tasks" or "Work through the queue", approves its commits in advance for that run. The agent pushes only when you ask. See [How do I get things built?](build.md)
@@ -106,6 +115,6 @@ This is by design too: the agent commits only with your approval. Asking for a r
 ## Related
 
 - The install sections of [App-Director](../frameworks/app-director.md#install), [Godot-Director](../frameworks/godot-director.md#install) and [SaaSAllTheThings](../frameworks/saasallthethings.md#install).
-- The procedures: [App-Director onboarding](https://github.com/Freakling/App-Director/blob/v1.15.0/ONBOARDING.md), [Godot-Director onboarding](https://github.com/Freakling/Godot-Director/blob/v4.10.4/ONBOARDING.md) and [SaaSAllTheThings onboarding](https://github.com/Freakling/SaaSAllTheThings/blob/v0.16.3/ONBOARDING.md).
+- The procedures: [App-Director onboarding](https://github.com/Freakling/App-Director/blob/v1.16.0/ONBOARDING.md), [Godot-Director onboarding](https://github.com/Freakling/Godot-Director/blob/v4.10.4/ONBOARDING.md) and [SaaSAllTheThings onboarding](https://github.com/Freakling/SaaSAllTheThings/blob/v0.16.3/ONBOARDING.md).
 
 <div class="takeaway"><span>Update, restart, and the commands you expect are there.</span><span class="url"><a href="index.md">All questions</a></span></div>

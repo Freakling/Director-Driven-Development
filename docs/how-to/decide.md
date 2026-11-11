@@ -28,6 +28,7 @@ Saying it and typing the command run the same procedure. The explicit session pa
 4. **Let research run when facts are missing.** The agent starts the researcher, and its note appears in the research folder. See [I need facts before I decide](facts.md).
 5. **Review what was recorded.** One change holds the rewritten design text, one line in the decision log, the removed question, the stories you confirmed and the tasks the decision creates in `TASKS.md`. Each task names the stories it serves. The agent leaves `in-progress` items alone and tells you about any it would have changed.
 6. **Approve the commit.** The agent summarises what was decided and what is open, then commits the design files as `docs: <summary>` once you say yes. Run `/clear` before the next topic.
+    - **In App-Director** the agent shows the summary's exact lines with an id, such as `S7`. Approve with a message that is only an approval word (`ok`, `approved`, `godkänt`), alone or with the id, or with the Approve option of a question dialog that names the summary. Any other message, a question included, is a scope change and withdraws an approval that isn't committed. If an "ok" didn't count, answer with the word and the id. Without Claude Code's hook, run `bash tools/records.sh approve <id>` in your own terminal. More in [Records in files](../concept/records.md#the-records-gate).
 
 ## What can go wrong
 
@@ -43,6 +44,6 @@ Saying it and typing the command run the same procedure. The explicit session pa
 ## Related
 
 - The [`/design` skill page](../skills/design.md), and the concepts [Design calls](../concept/design-calls.md), [User stories](../concept/user-stories.md) and [Agent development flow](../concept/agent-flow.md).
-- The procedures: [App-Director](https://github.com/Freakling/App-Director/tree/v1.15.0/framework/.app-director/procedures/design.md), [Godot-Director](https://github.com/Freakling/Godot-Director/tree/v4.10.4/framework/.godot-director/procedures/design.md) and [SaaSAllTheThings](https://github.com/Freakling/SaaSAllTheThings/tree/v0.16.3/framework/.satt/procedures/design.md).
+- The procedures: [App-Director](https://github.com/Freakling/App-Director/tree/v1.16.0/framework/.app-director/procedures/design.md), [Godot-Director](https://github.com/Freakling/Godot-Director/tree/v4.10.4/framework/.godot-director/procedures/design.md) and [SaaSAllTheThings](https://github.com/Freakling/SaaSAllTheThings/tree/v0.16.3/framework/.satt/procedures/design.md).
 
 <div class="takeaway"><span>You make the call. The agent writes down only what you decided.</span><span class="url"><a href="index.md">All questions</a></span></div>

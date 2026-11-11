@@ -8,7 +8,7 @@ When the agent reaches a decision the brief does not settle, it stops and presen
 
 Only the director's choice is recorded. The design document holds what was decided; the decision log holds one line on why.
 
-Nothing is written while the session runs: the answers stay in the conversation. A chat message or an "Other" answer during it is a scope change, not an answer to record, and it re-opens the options it touches. Once every question is answered, the agent shows one summary of everything it will write, and writes and commits it only after the director approves that summary.
+Nothing is written while the session runs: the answers stay in the conversation. A chat message or an "Other" answer during it is a scope change, not an answer to record, and it re-opens the options it touches. Once every question is answered, the agent shows one summary of everything it will write, and writes and commits it only after the director approves that summary. In App-Director the summary is registered first, and the commit refuses decision and brief lines no approval covers ([the records gate](records.md#the-records-gate)).
 
 When an option depends on facts nobody has checked, such as a service's limits, a licence or a store requirement, the agent first runs a read-only research item. Its note gives the options, the sources with their confidence and a recommendation, and the call is made with the note in front of the director. The note informs the call and never makes it (see [/research](../skills/research.md), and [I need facts before I decide](../how-to/facts.md) for the steps).
 

@@ -22,6 +22,10 @@ Each fact lives in exactly one record. When a fact needs to appear somewhere els
 
 A duplicate is a bug. Two copies of the same fact drift apart, and then neither the director nor the agent can tell which one is true. So when a fact changes, its owning record changes in the same commit that makes the old version untrue. The old text is replaced, not struck through and not kept beside the new version.
 
+## The records gate
+
+In App-Director a commit refuses the record lines no approval of yours covers, and names them. The agent registers a summary of the exact lines, you approve it, and the commit message names the approval. What it covers, how you approve and its limits are on [the App-Director page](../frameworks/app-director.md#the-records-gate); what to do when something is refused is in [A commit was refused](../how-to/trouble.md#a-commit-was-refused-or-an-ok-didnt-count).
+
 ## Why clearing a session loses nothing
 
 Every session starts with an empty context. The records carry everything across the gap:

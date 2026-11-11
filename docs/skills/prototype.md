@@ -34,7 +34,7 @@ The procedure is at [`framework/.godot-director/procedures/prototype.md`](https:
 
 ### App-Director
 
-The procedure is at [`framework/.app-director/procedures/prototype.md`](https://github.com/Freakling/App-Director/tree/v1.15.0/framework/.app-director/procedures/prototype.md) in the App-Director repository.
+The procedure is at [`framework/.app-director/procedures/prototype.md`](https://github.com/Freakling/App-Director/tree/v1.16.0/framework/.app-director/procedures/prototype.md) in the App-Director repository.
 
 - The app runs from the worktree on this machine, with its own `.env` copied by you and its dependencies installed as in any new clone.
 - The pre-commit hook skips the project check and still scans the staged changes for secrets. It blocks the commit while gitleaks is missing, while `.gitleaksignore` or `.gitleaks.toml` differs from main's, and when a staged line adds `gitleaks:allow`. The protected-files hook refuses edits to the hooks, the guard, `tools/prototype.sh`, `tools/setup-clone.sh` and the two gitleaks files while `PROTOTYPE.md` sits at the project root.

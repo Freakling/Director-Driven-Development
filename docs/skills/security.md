@@ -34,7 +34,7 @@ A category is verified only for the checks in the checklist, read in that commit
 
 ### App-Director
 
-The procedure is at [`framework/.app-director/procedures/security.md`](https://github.com/Freakling/App-Director/tree/v1.15.0/framework/.app-director/procedures/security.md) in the App-Director repository.
+The procedure is at [`framework/.app-director/procedures/security.md`](https://github.com/Freakling/App-Director/tree/v1.16.0/framework/.app-director/procedures/security.md) in the App-Director repository.
 
 - `bash tools/security.sh` runs the tools: the dependency audit of the manifests it finds (npm, pnpm, yarn, pip-audit on fully pinned requirements, dotnet, and `flutter pub outdated` as information only), the check's secrets scan and UI purity step (`bash tools/check.sh --architecture`), and Semgrep with the `p/owasp-top-ten` rules when `semgrep` is installed.
 - The report is `product/security/YYYY-MM-DD.md`. It covers the OWASP Top 10 (2025), and the OWASP API Security Top 10 (2023) when the app serves an API.
