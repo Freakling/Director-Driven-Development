@@ -13,7 +13,8 @@ Read this before adding or editing an item.
 ```
 
 - **Heading.** It reads `ID · title · status · size · owner`, and a bug adds `· high|med|low`. New IDs (`T<n>`, `B<n>`, `R<n>`) come from the `Next IDs` line, which you then bump. If the line has no `R` counter yet, add `· R1`. IDs are never reused.
-- **Status.** `todo`, `in-progress YYYY-MM-DD` (the claim date) or `done`. "Ready" isn't stored: a `todo` item is ready when everything in `Depends on` is `done`.
+- **Status.** `proposed`, `todo`, `in-progress YYYY-MM-DD` (the claim date) or `done`. "Ready" isn't stored: a `todo` item is ready when everything in `Depends on` is `done`.
+  - `proposed` is an item the assistant filed by itself. No procedure picks, claims or builds it, an item that depends on it waits, and it counts as not built. It becomes `todo` when the human approves it in a summary (`procedures/design.md` › Summary and approval). `rules.md` › Doing the work says which items are filed `proposed`.
 - **Size.**
   - `XS`: a single value, label, copy change, or config line. No logic change and no new tests.
   - `S`: 1-2 files, a clear bug fix, or a small feature following an existing pattern.
@@ -51,4 +52,4 @@ Read this before adding or editing an item.
     - `L`: an architecture, security or requirements comparison across several areas, with sources to reconcile.
     - `XL`: several linked areas that feed more than one decision, such as a stack choice with security, cost and migration. Split it when you can.
 - **`Note:`** (optional). An item paused partway through gets `- Note: <where it stands, what's next>`. Delete the note when the item is done.
-- **Merge conflicts.** On a merge conflict in TASKS.md, keep both sides' items, give any duplicate ID a new number from `Next IDs`, and fix references to it.
+- **Merge conflicts.** On a merge conflict in TASKS.md, keep both sides' items, give any duplicate ID a new number from `Next IDs`, and fix references to it. The renumbered item is a record change: it goes through an approved summary (`procedures/design.md` › Summary and approval), like any item you add.

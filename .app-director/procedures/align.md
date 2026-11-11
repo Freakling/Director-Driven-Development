@@ -10,13 +10,13 @@ A consistency pass across the brief, decisions, the user stories, TASKS.md, AGEN
    - No `*.adir-new` files are left unmerged: `git ls-files -o -i --exclude-standard -- '*.adir-new' | grep '\.adir-new$'` (the grep drops nested clones, which `ls-files` lists as directories).
 3. **Items.**
    - IDs are unique and below `Next IDs`, which has a counter for each of `T`, `B` and `R` (add `· R1` to a line that lacks one), and every `Depends on` exists, in TASKS.md or the archive.
-   - No `done` item depends on a `todo` one.
+   - No `done` item depends on a `todo` or `proposed` one.
    - Every `agent` item has a Size, `Touches`, tagged `Done when` outcomes (or a Repro, for bugs; a research item has a `Question:` and an `Informs:` instead of both) and a `Brief:` value. That value is an existing heading, or `-` for items that aren't about the product design.
    - Every open question an item that isn't done names, in `Done when` or `Informs:`, is still in brief › Open Questions. If it's been answered, update the item.
    - Every done research item has a note in `product/research/` whose second line starts with its ID (`grep -l "^R3 · " product/research/*.md`).
    - Items follow `.app-director/tasks.md`.
    - Report `in-progress` items claimed before today.
-4. **Coverage.** Every flow in the brief is either built (a done item), planned (a todo item), or reported to the human as a gap. Only report the gaps; the human decides which ones become items.
+4. **Coverage.** Every flow in the brief is either built (a done item), planned (a todo item; a proposed one is not planned yet), or reported to the human as a gap. Only report the gaps; the human decides which ones become items.
 5. **Stories** (`product/user-stories.md`, `design.md` › User stories).
    - Story IDs are unique and below the header's Next ID, and the header has a Last validated line (add it as `never` when it's missing).
    - Every story's role is in Roles, and every ID in the `Stories:` line of an item that isn't done exists in the file. Report the ones that don't.
@@ -44,5 +44,5 @@ A consistency pass across the brief, decisions, the user stories, TASKS.md, AGEN
    - Every `director/ui/<screen>.excalidraw` has a spec whose recorded sha1 matches the file (`sha1sum`, or `shasum` on macOS). A newer drawing: report "drawing changed since it was processed".
    - Every item's `UI:` points at an existing spec.
    - On an upgrade, this is the check that lists the app's screens the catalog doesn't cover yet.
-10. **Report.** Say what needs the human, and list the mechanical fixes before they are written, each as it will read. Write nothing until the human approves a summary of all of it (`design.md` › Summary and approval); a chat message or an "Other" answer before then re-opens the options. Inside a session or onboarding the fixes join its summary. Once the human approves, write the fixes and commit them as `docs: align`, naming the conflicts that need the human in the commit body so the next align can tell a repeat; the approval of the summary is the approval to commit. During onboarding they go into the install commit instead.
+10. **Report.** Say what needs the human, and list the mechanical fixes before they are written, each as it will read. Write nothing until the human approves a summary of all of it, registered, shown and approved as `design.md` › Summary and approval says (a fix to the brief, the decisions, a confirmed story, a changed `Done when` or an item made `todo` is protected; a status, `Next IDs`, a `Note:` line, a `proposed` item or an `unconfirmed` story is free); a chat message or an "Other" answer before then re-opens the options. Inside a session or onboarding the fixes join its summary. Once the human approves, write the fixes and commit them as `docs: align`, naming the conflicts that need the human in the commit body so the next align can tell a repeat; the approval of the summary is the approval to commit. During onboarding they go into the install commit instead.
 11. **Recommend a reset when patching won't hold.** If a conflict you report has come up before (an earlier `docs: align` commit body names it, or `product/decisions.md` already settled it), or one conflict involves several brief principles, recommend `/drift-reset` (`drift-reset.md`) in the report instead of a patch. Never start it yourself.

@@ -1,7 +1,7 @@
 <!-- App Director · framework-owned: replaced on upgrade. -->
 # Build one item
 
-Build one TASKS.md item that has already been claimed, and report back briefly. Until you've written the report, don't pick items, don't edit TASKS.md, AGENTS.md or `product/`, and don't commit. Whoever handed you the item does that; if that's you, carry on with `next-task.md` afterwards.
+Build one TASKS.md item that has already been claimed, and report back briefly. Until you've written the report, don't pick items, don't edit TASKS.md, AGENTS.md or `product/`, and don't commit. Whoever handed you the item does that; if that's you, carry on with `next-task.md` afterwards. You report record text and never write it: not the brief, the decisions, a confirmed story or an item. Your `Found:` lines and the report carry it, and whoever handed you the item files it.
 
 Shell commands follow `.app-director/rules.md` › Shell commands. Write files with the file tools (Write or Edit in Claude Code), never with a shell heredoc or an `echo` or `printf` redirect of multi-line content, since a heredoc can hang the shell; write a multi-line script to a file and run it from there. Keep every shell call one short command that finishes well inside the tool's timeout; only the check, a build and a host start run long, with an explicit long timeout.
 
@@ -21,7 +21,9 @@ Shell commands follow `.app-director/rules.md` › Shell commands. Write files w
    - Run `bash tools/ui_capture.sh <id> --verify`. Look at the capture and its `.lint.txt` (or `.elements.json`, if you can't view images), then read the table it prints. The layout lint runs here, not in the check.
    - Fix the deviations that are in scope; report the rest in the `Screen:` line.
    - If it exits 3, the `(check)` outcome about the capture stays unverified: say so plainly in the report, as for the check's exit 3.
-6. **Verify** with `bash tools/check.sh` (foreground, long timeout), until it exits 0.
+6. **Verify** with `bash tools/check.sh --fast` (foreground, long timeout), until it exits 0. The fast tier runs UI purity, the secrets scan and the stack check on what the change needs: in a TypeScript app, tsc, eslint on the changed files and the tests related to the change, your new tests included.
+   - Never ask for the full tier. An outcome that names the check is met here by `--fast`, which runs as the full tier by itself where the stack has no fast mode; otherwise the full tier comes before a commit when it's due, at the end of a run and with a push (`rules.md` › Running the check).
+   - Never start a check beside a running one: the second waits for the first, and reuses its result when the files and the tier match.
    - After two failed attempts at the same problem, stop and report.
    - A failure in files the item doesn't touch, which was there before you started, isn't yours: report `failed: pre-existing` with its lines.
    - Exit 3 means the check couldn't run; report that.
