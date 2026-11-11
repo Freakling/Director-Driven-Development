@@ -1719,13 +1719,16 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Stories: -
 
 ### T335 · App-Director: the procedures write records through the approved summary · in-progress 2026-11-11 · M · agent
+- PRs: App-Director #54 (open)
+- Note: built on 2026-11-11 as App-Director's T59, the third commit of the second bundle, with a fourth that makes its selftest case find the changelog section under a release heading as well as under Unreleased. `prototype.md` needed no change: it points to the harvest in `design.md`. Selftest 1322 of 1322.
 - Depends on: T334
 - Touches: work/App-Director: framework/.app-director/rules.md, framework/.app-director/procedures/design.md, next-task.md, build.md, acceptance.md, align.md, research.md, ui-design.md, drift-reset.md, security.md, prune.md, prototype.md, framework/.claude/agents/builder.md, reviewer.md, researcher.md, README.md, ONBOARDING.md, selftest.sh, CHANGELOG.md, TASKS.md
 - Done when: `design.md` › Summary and approval registers the summary, shows its lines word for word with its id, and writes and commits only after the approval, and every procedure that writes from a conversation points there (check) · `next-task.md` commits a decision's records at once, before the rebuild, and a run's final report lists each record written with its approval and every `proposed` item filed, from `bash tools/records.sh report` (check) · `build.md` and the three agents say that a builder, reviewer or researcher reports record text and never writes it (check) · the CHANGELOG has Upgrade steps: the hook wiring in `.claude/settings.json`, `bash tools/setup-clone.sh` for the new git hook, the settings in `tools/check.cfg`, and that lines already committed aren't judged (check) · the selftest passes (check) · following AGENTS.md › Project rules for framework work
 - Brief: Scope › Planned framework changes
 - Stories: -
 
-### T336 · Release App-Director 1.16.0 · todo · S · agent
+### T336 · Release App-Director 1.16.0 · in-progress 2026-11-11 · S · agent
+- PRs: App-Director #54 (open)
 - Depends on: T335
 - Touches: work/App-Director: the version files, CHANGELOG.md
 - Done when: it ends the bundle that carries T332 to T335, the bundle is merged and `tools/work-release.sh` has tagged and published it
