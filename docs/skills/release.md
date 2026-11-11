@@ -22,7 +22,7 @@ Each framework reports what ran and the result of each step.
 
 ### App-Director
 
-The procedure is at [`framework/.app-director/procedures/release.md`](https://github.com/Freakling/App-Director/tree/v1.14.2/framework/.app-director/procedures/release.md) in the App-Director repository.
+The procedure is at [`framework/.app-director/procedures/release.md`](https://github.com/Freakling/App-Director/tree/v1.15.0/framework/.app-director/procedures/release.md) in the App-Director repository.
 
 - The request names the target: `web`, `mobile` (iOS or Android) or `desktop`. The stack and deploy method are in `tools/check.cfg` and AGENTS.md › Project facts.
 - The skill lists the `done` items since the last release tag, so the release says what it contains. A `high` bug that's done without a regression test goes into the next acceptance check.

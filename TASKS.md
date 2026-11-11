@@ -1650,7 +1650,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Brief: -
 - Stories: -
 
-### T328 · Docs follow App-Director 1.15.0 · todo · M · agent
+### T328 · Docs follow App-Director 1.15.0 · done 2026-11-11 · M · agent
 - Depends on: T327
 - Touches: frameworks.lock, docs/**/*.md (the App-Director links), docs/frameworks/app-director.md, docs/frameworks/index.md, docs/concept/check.md, docs/concept/cost-built-in.md, docs/how-to/check.md, docs/how-to/build.md
 - Done when: `frameworks.lock` and every App-Director link are at v1.15.0 (check) · the pages that describe App-Director's check say what the release ships, each statement checked against it: the fast and the full tier and when the full tier is due, which tier the pre-commit, pre-push and Stop hooks ask for, a stack with no fast mode running one suite, the time limit of each tier, the cache naming what changed on a miss, and one check at a time in a checkout (check) · `bash tools/audit.sh` prints PASS and `bash tools/check.sh` passes (check)

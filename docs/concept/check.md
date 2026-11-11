@@ -18,7 +18,7 @@ The check exits 0 on pass, 1 on fail and 3 when it cannot run, so "it could not 
 
 ## The pre-commit hook
 
-The git pre-commit hook runs the check before any commit that touches code. In all three it also scans every commit for secrets, whatever it touches (in Godot-Director, when gitleaks is installed). A failing task cannot land.
+The git pre-commit hook runs the check before any commit that touches code. In all three it also scans every commit for secrets, whatever it touches (in Godot-Director, when gitleaks is installed). A failing task cannot land. App-Director's check has a fast and a full tier, and the hook asks for the full tier when it is due and the fast tier otherwise: see [what App-Director's check enforces](../frameworks/app-director.md#what-the-check-enforces).
 
 ## What a person proves
 

@@ -38,10 +38,11 @@ A run covers commits only, not pushes, deploys or cloud changes. Each framework'
 
 ### App-Director
 
-The procedure is at [`framework/.app-director/procedures/next-task.md`](https://github.com/Freakling/App-Director/tree/v1.14.2/framework/.app-director/procedures/next-task.md) in the App-Director repository.
+The procedure is at [`framework/.app-director/procedures/next-task.md`](https://github.com/Freakling/App-Director/tree/v1.15.0/framework/.app-director/procedures/next-task.md) in the App-Director repository.
 
 - The building state file is `.app-director/state/building`. The Stop hook checks for it and leaves half-built files alone while it exists.
 - The review diff is written to `.app-director/state/review.diff`.
+- Step 4 runs the check's fast tier, `bash tools/check.sh --fast --if-changed`. Before a commit the skill asks `bash tools/check.sh --due` and, when the full tier is due, runs it in the background first, so the pre-commit hook reuses that pass. A run of several items ends with one full run, and a failure there becomes a bug item. See [the fast and the full tier](../frameworks/app-director.md#the-fast-and-the-full-tier).
 - New items are formatted following `.app-director/tasks.md`, and IDs come from `Next IDs` in that file.
 - The report notes that `(demo)` outcomes and bug fixes without regression tests will appear in the next acceptance check.
 - A research item (`R<n>`) goes to the `researcher` (which follows [`research.md`](research.md)) instead of the builder. No check runs and there is no review: the session writes the note to `product/research/` and commits it with the records.
