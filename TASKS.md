@@ -1699,8 +1699,8 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Brief: Scope › Planned framework changes
 - Stories: -
 
-### T333 · App-Director: `tools/records.sh` and a commit gate for records · in-progress 2026-11-11 · L · agent
-- PRs: App-Director #54 (open)
+### T333 · App-Director: `tools/records.sh` and a commit gate for records · done 2026-11-11 · L · agent
+- PRs: App-Director #54 (merged)
 - Depends on: T332
 - Touches: work/App-Director: framework/tools/records.sh (new), framework/.githooks/pre-commit, framework/.githooks/commit-msg (new), framework/tools/setup-clone.sh, project/tools/check.cfg, install.sh and the manifest where they list files, selftest.sh, CHANGELOG.md, TASKS.md
 - Done when: `bash tools/records.sh summary <file>` registers the exact lines a summary adds and removes, per file, and prints its id, its hash and the lines (test) · `bash tools/records.sh approve <id>`, and `approve --staged` for the director's own edits, record an approval from the director's own terminal, the path for an assistant without hooks (test) · the pre-commit hook refuses a commit that adds or removes a line of `product/brief.md` or `product/decisions.md`, sets, changes or removes a confirmed story or the Last validated line, adds an item that isn't `proposed` (except a bug the bugs setting frees), moves a `proposed` item on, changes an item's `Done when`, `Repro` or `Question`, removes an item that isn't `done`, or changes a `[records]` or `[approval]` setting, unless an approval covers exactly those lines; it names the lines and what to do (test) · status changes, the escalation label, `Note:` lines, `Next IDs`, pruned `done` items, `unconfirmed` stories and `proposed` items pass, and so do lines a merge brings from a commit, and a prototype checkout (test) · an approval covers only the text registered: a changed summary, an approval older than its summary and an approval whose lines are already committed are refused (test) · the commit-msg hook refuses a commit that carries approved record lines and doesn't name the approval, with the line to add (test) · `bash tools/records.sh report` lists the approvals used since a commit and the `proposed` items (test) · the record paths come from `[records]` in `tools/check.cfg`, with the defaults when it has none, on Git Bash, bash 3.2 and BSD tools (test) · the selftest passes (check) · following AGENTS.md › Project rules for framework work
@@ -1708,8 +1708,8 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Brief: Scope › Planned framework changes
 - Stories: -
 
-### T334 · App-Director: Claude Code records the director's approval and guards the records · in-progress 2026-11-11 · L · agent
-- PRs: App-Director #54 (open)
+### T334 · App-Director: Claude Code records the director's approval and guards the records · done 2026-11-11 · L · agent
+- PRs: App-Director #54 (merged)
 - Depends on: T333
 - Touches: work/App-Director: framework/.claude/hooks/record-approval.sh (new), framework/.claude/hooks/record-watch.sh (new), framework/.claude/hooks/guard-protected.sh, framework/.claude/hooks/guard-commands.sh, framework/.claude/settings.json, project/tools/check.cfg, selftest.sh, CHANGELOG.md, TASKS.md
 - Done when: a probe in a scratch repo, run by the orchestrating session before the build, shows what the hooks receive for a typed message, a dialog answer, a message typed while a dialog is open, a background subagent's report, another session's message and a scheduled prompt, and the hook's header and the CHANGELOG say what it showed (check) · a prompt hook records an approval when the director's message is nothing but a word from `[approval] words` in `tools/check.cfg` (godkänt, godkänd, approve, approved, ok, ja, yes and kör by default), alone for a summary registered since the previous message or followed by the summary's id; where the probe shows a hook receives a dialog's answer, the Approve option of a question that names the summary counts too (test) · any other message withdraws an approval that isn't committed yet and tells the assistant, as context, that nothing may be written; with no summary waiting the hook prints nothing; only the approval is stored, never another message's text (test) · the file tools can't change `product/brief.md` or `product/decisions.md` without an open approval, never from a subagent, and never the approval state; the command guard refuses `records.sh approve` and a prompt the assistant schedules or sends that is only an approval word (test) · an approval counts only in the session that registered its summary, and a prompt that equals one the session has scheduled is never an approval (test) · the command guard refuses `git cherry-pick`, `git revert`, `git rebase` and `git am`, which make commits the record gate never sees, and says to ask the director to run them (test) · after a file tool or a shell command changes a protected file, a hook tells the assistant at once which lines no approval covers, whatever wrote them (`sed -i`, `node -e`, a Python one-liner) (test) · the 2026-11-11 sequence, replayed against a fake repository, ends with no approval and a refused commit: a dialog left unanswered, a complaint, then a decision line, brief text and a `todo` item (test) · the guard's existing cases still pass, and the new hooks run on Git Bash and bash 3.2 (check) · the selftest passes (check) · following AGENTS.md › Project rules for framework work
@@ -1718,8 +1718,8 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Brief: Scope › Planned framework changes
 - Stories: -
 
-### T335 · App-Director: the procedures write records through the approved summary · in-progress 2026-11-11 · M · agent
-- PRs: App-Director #54 (open)
+### T335 · App-Director: the procedures write records through the approved summary · done 2026-11-11 · M · agent
+- PRs: App-Director #54 (merged)
 - Note: built on 2026-11-11 as App-Director's T59, the third commit of the second bundle, with a fourth that makes its selftest case find the changelog section under a release heading as well as under Unreleased. `prototype.md` needed no change: it points to the harvest in `design.md`. Selftest 1322 of 1322.
 - Depends on: T334
 - Touches: work/App-Director: framework/.app-director/rules.md, framework/.app-director/procedures/design.md, next-task.md, build.md, acceptance.md, align.md, research.md, ui-design.md, drift-reset.md, security.md, prune.md, prototype.md, framework/.claude/agents/builder.md, reviewer.md, researcher.md, README.md, ONBOARDING.md, selftest.sh, CHANGELOG.md, TASKS.md
@@ -1727,15 +1727,15 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Brief: Scope › Planned framework changes
 - Stories: -
 
-### T336 · Release App-Director 1.16.0 · in-progress 2026-11-11 · S · agent
-- PRs: App-Director #54 (open)
+### T336 · Release App-Director 1.16.0 · done 2026-11-11 · S · agent
+- PRs: App-Director #54 (merged)
 - Depends on: T335
 - Touches: work/App-Director: the version files, CHANGELOG.md
 - Done when: it ends the bundle that carries T332 to T335, the bundle is merged and `tools/work-release.sh` has tagged and published it
 - Brief: -
 - Stories: -
 
-### T337 · Docs follow App-Director 1.16.0 · todo · M · agent
+### T337 · Docs follow App-Director 1.16.0 · in-progress 2026-11-11 · M · agent
 - Depends on: T336
 - Touches: frameworks.lock, docs/**/*.md (the App-Director links), docs/frameworks/app-director.md, docs/skills/design.md, docs/skills/next-task.md, docs/how-to/decide.md, docs/how-to/trouble.md, docs/concept/design-calls.md, docs/concept/records.md
 - Done when: `frameworks.lock` and every App-Director link are at v1.16.0 (check) · the pages that describe App-Director's design session, its items and its commits say what the release ships, checked against it: the registered summary and its approval, the commit gate, `proposed` items and the bugs setting (check) · `bash tools/audit.sh` prints PASS and `bash tools/check.sh` passes (check)
