@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T338 · B71 · R10
+**Next IDs:** T338 · B71 · R11
 
 ## Milestones
 | Milestone | Status |
@@ -220,6 +220,13 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Question: Do sixteen outside statements from the post of 21 October 2026, on what production means beyond the code, still hold today?
 - Informs: -
 - Brief: -
+
+### R10 · Could `/ui-design` take a design kept in Penpot or Figma as its source through the tool's own MCP server · done 2026-11-12 · M · agent
+- Depends on: -
+- Note: product/research/2026-11-12-penpot-and-figma-mcp-as-ui-design-sources.md
+- Question: What would it take for App-Director's `/ui-design` to accept a design kept in Penpot or in Figma as its source, beside the Excalidraw drawing, by using each tool's own MCP server and the existing skills instead of a reader of our own? Assume a web app on App-Director, a director who may or may not already design in one of them, and that Excalidraw stays the default.
+- Informs: -
+- Brief: Scope › Framework features
 
 ### T162 · Release Godot-Director 4.2.0 · done 2026-10-21 · S · agent
 - PRs: Godot-Director #33 (merged); v4.2.0 tagged and published
