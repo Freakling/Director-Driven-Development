@@ -1879,7 +1879,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Brief: -
 - Stories: -
 
-### T338 · The UI How-to says how to start from a design kept in Penpot or Figma · todo · M · agent
+### T338 · The UI How-to says how to start from a design kept in Penpot or Figma · done 2026-11-12 · M · agent
 - Depends on: R10
 - Touches: docs/how-to/ui.md
 - Done when: "How do I work with UI changes?" says, with describing a change, that a design you keep in Penpot or Figma can be the starting point: you connect the tool's own MCP server to your agent yourself, give the agent the board or the frame's link in a design session, and it reads the design and proposes the screen's behaviour and items, which you approve as in any design session (check) · it says what this path leaves out: the frameworks ship no reader for either tool, so a screen spec, the compare image and `verify` still come from a drawing, and the agent records what the screen shows and does, not code the tool generated (check) · it links each vendor's own page for setup, seats and limits instead of copying numbers that change, and says the key or sign-in stays in your own client, outside the repository (check) · every statement about the two tools is in the research note of R10 with a source, and the page claims no support the frameworks don't ship (check) · `bash tools/check.sh` passes (check)

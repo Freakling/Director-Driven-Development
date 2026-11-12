@@ -6,7 +6,7 @@
 
 ## Three ways to do it
 
-**By describing it.** Works in all three frameworks. Say what the screen should show and do: "The shop screen needs a filter bar above the item list". Settle what a screen is for, and any flow or behaviour the design doesn't cover, in a design session (see [How do I decide what gets built?](decide.md)). The decision becomes design text and task items, and [`/next-task`](build.md) builds them. You can also hand a small, settled change straight to the agent in a normal session. A direct request the agent can't finish in that session becomes an item in `TASKS.md`.
+**By describing it.** Works in all three frameworks. Say what the screen should show and do: "The shop screen needs a filter bar above the item list". Settle what a screen is for, and any flow or behaviour the design doesn't cover, in a design session (see [How do I decide what gets built?](decide.md)). The decision becomes design text and task items, and [`/next-task`](build.md) builds them. You can also hand a small, settled change straight to the agent in a normal session. A direct request the agent can't finish in that session becomes an item in `TASKS.md`. When the design already lives in Penpot or Figma, it can be the starting point for describing the change: the steps are [below](#if-your-design-lives-in-penpot-or-figma).
 
 **With `/ui-design` and drawings.** Works in all three frameworks. You draw annotated boxes over a screenshot of the running game (Godot-Director) or the running web app (App-Director, and the web clients of SaaSAllTheThings), the agent reads exactly what you drew, records the layout once in a screen spec and builds the screen to it. Say "Capture the screens", "Redesign the shop screen", "Process my drawing" or "Verify the hero room", or type the command.
 
@@ -20,6 +20,18 @@ The drawing pays off when layout is the point and words are slow or vague: posit
 2. **Answer the options.** If the change is a design call, the agent gives two to four options with a recommendation, and records what you choose.
 3. **Let it be built.** Run `/next-task`, or give the task's ID. The check must pass before the commit.
 4. **Look at it running.** Whether a screen looks and feels right is checked by a person. It comes up in the next check by hand (see [How do I check that what was built works?](check.md)).
+
+### If your design lives in Penpot or Figma
+
+1. **Connect the tool's MCP server to your agent.** This is your own setup, outside the frameworks, and the vendor's page is the source for it. Penpot: [its MCP page](https://help.penpot.app/mcp). It needs a Penpot account or a self-hosted instance, a key, and the design open in a browser tab with the plugin connected. Figma: [its remote server setup](https://developers.figma.com/docs/figma-mcp-server/remote-server-installation/). It needs a Figma account and a sign-in, and it works from a link you copy to a frame. Figma limits how many reads a seat gets, so check [its seats and limits](https://developers.figma.com/docs/figma-mcp-server/rate-limits-access/) before you rely on it.
+2. **Start a design session about the screen** (see [How do I decide what gets built?](decide.md)) and give the agent the board's or the frame's link.
+3. **Approve what it proposes.** The agent reads the design and proposes what the screen shows and does, and the items. You approve the summary as in any design session, and [`/next-task`](build.md) builds the items.
+
+What this path leaves out:
+
+- None of the frameworks ships a reader for Penpot or Figma. A screen spec, the compare image and `verify` still come from a drawing, so use [the drawing steps](#steps-for-drawing-a-screen) when you want them.
+- The agent records what the screen shows and does, and builds it in your project's own stack. It doesn't build from code the tool generates, which comes as React and Tailwind by default in Figma.
+- The key or sign-in stays in your own client, outside the repository.
 
 ## Steps for editing a screen yourself
 
