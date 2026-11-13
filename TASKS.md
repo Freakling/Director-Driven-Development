@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T346 · B76 · R11
+**Next IDs:** T348 · B77 · R11
 
 ## Milestones
 | Milestone | Status |
@@ -1908,13 +1908,15 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Stories: -
 
 ### T341 · SaaSAllTheThings: the hooks and the procedures pick the check's tier · in-progress 2026-11-13 · L · agent
+- PRs: SaaSAllTheThings #51 (open)
+- Note: built 2026-11-13 as SaaSAllTheThings' T52 and reviewed twice; the first review's findings were rebuilt. The Stop hook asks for the fast tier, which T340 runs as the full tier for a dependency, a toolchain setting, a file under `tools/` or a `full-when` path, so the texts there say "the fast tier, as the full tier where the change needs it". The hooks ask the check which paths count (`--unignored`) instead of filtering Markdown themselves. `--due` reads its path rule from the changes from HEAD only, as App-Director's does: with the commits since the last full pass included, a commit that carried such a path ran the full tier and so did the next one. A change that arrives without the commit hook, such as a pull, is covered by the count and by the push. It also changed `framework/tools/check.sh` and `framework/tools/setup-clone.sh`, which Touches doesn't list; `framework/.claude/agents/builder.md` needed no change, since it points at `build.md`. A clone without the stack's toolchain can't push any more (T346 is proposed for that). The selftest passed 969 of 969; its .NET part was skipped, since this machine has no .NET SDK.
 - Depends on: T340
 - Touches: work/SaaSAllTheThings: framework/.githooks/pre-commit, framework/.githooks/pre-push, framework/.claude/hooks/stop-check.sh, framework/.satt/rules.md, framework/.satt/procedures/build.md, next-task.md, release.md, framework/.claude/agents/builder.md, README.md, ONBOARDING.md, selftest.sh, CHANGELOG.md, TASKS.md
 - Done when: the pre-commit hook runs the full tier when `--due` says so and the fast tier otherwise, says which and why, and reuses a builder's pass of the same files; the pre-push hook runs the full tier unless a full pass of the same files stands; the Stop hook runs only the fast tier (test) · `rules.md` › Done and Running the check say which tier runs where: the fast tier for a build, a commit and the turn end; the full tier when it's due, before a push, at the end of a run of several items, where a failure becomes a bug item, and for a release, which never takes a fast pass (check) · `build.md` verifies with the fast tier, `next-task.md` asks `--due` before a commit and runs a due full check in the background first, and the CHANGELOG has Upgrade steps for an app's `tools/check.cfg` and `tools/check.local.sh` (check) · the selftest passes (check) · following AGENTS.md › Project rules for framework work
 - Brief: Scope › Planned framework changes
 - Stories: -
 
-### T342 · SaaSAllTheThings: the TypeScript fast tier tests the changed packages and the packages that depend on them · todo · M · agent
+### T342 · SaaSAllTheThings: the TypeScript fast tier tests the changed packages and the packages that depend on them · in-progress 2026-11-13 · M · agent
 - Depends on: T340
 - Touches: work/SaaSAllTheThings: framework/tools/stacks/typescript.sh, framework/tools/check.sh, framework/.satt/reference/stacks.md, selftest.sh, CHANGELOG.md, TASKS.md
 - Done when: in the fast tier of an app with npm workspaces, the TypeScript stack tests only the changed packages and the packages that depend on them, by the dependencies their `package.json` files declare: through each such package's own `test` script, or through a root `test:fast` script that gets their folders in `CHECK_PACKAGES`; with neither, the root `test` runs whole and the check says so (test) · typecheck, lint and build cover the whole project as before, a changed backend file outside every package runs the whole `test`, and the run names the packages it tested and the ones it left to the full tier (test) · a change in `packages/functions` and one in `packages/domain` are each timed in a scratch clone of Project Director with a `test:fast` script, and the times are in the item's note (check) · the selftest passes (check) · following AGENTS.md › Project rules for framework work
@@ -1974,6 +1976,29 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Touches: work/SaaSAllTheThings: framework/tools/check.sh, selftest.sh, CHANGELOG.md, TASKS.md
 - Repro: 1. On Linux or macOS, in an app with a passing check, add a source file whose name holds a double quote or a backslash, and run `bash tools/check.sh`. 2. Change that file and run `bash tools/check.sh --if-changed`. Expected: the check runs, since a file changed. Actual: `fingerprint()` reads `git ls-files` without `-z`, git prints such a name quoted even with `core.quotePath=false`, the `[ -f ]` test fails on the quoted form, and the file is left out of the hash, so the last pass is reused. Windows allows neither character in a file name.
 - Found in: T340 (its review), read in `check.sh`; not reproduced
+- Brief: -
+- Stories: -
+
+### T346 · SaaSAllTheThings: a push that changes only documentation runs no check · proposed · M · agent
+- Depends on: T341
+- Touches: work/SaaSAllTheThings: framework/.githooks/pre-push, framework/tools/setup-clone.sh, framework/.satt/rules.md, selftest.sh, CHANGELOG.md, TASKS.md
+- Done when: the pre-push hook runs no check for a push whose commits change only paths the check doesn't count (Markdown outside `adr/` and outside `[tests] full-when`, asked of `bash tools/check.sh --unignored`), so a clone without the backend's toolchain can push documentation; every other push runs the full tier as before (test) · `rules.md` › Running the check and the comment in `tools/setup-clone.sh` say so (check) · the selftest passes (check) · following AGENTS.md › Project rules for framework work
+- Note: found in T341's review. With T341 the pre-push hook runs the full tier and blocks when the check can't run, so a clone without the stack's toolchain, such as a workshop or documentation collaborator's, can't push at all. App-Director's hook has the same gate.
+- Brief: -
+- Stories: -
+
+### T347 · SaaSAllTheThings: the Stop hook stops waiting for a running check at the fast tier's limit · proposed · M · agent
+- Depends on: T341
+- Touches: work/SaaSAllTheThings: framework/tools/check.sh, framework/.claude/hooks/stop-check.sh, framework/.satt/rules.md, selftest.sh, CHANGELOG.md, TASKS.md
+- Done when: a check that waits for another one stops waiting after the seconds in `CHECK_WAIT` (or the limit of the tier it names), prints a `check: busy:` line naming the run it waited for, and exits 3 without starting a second check (test) · the Stop hook asks with `CHECK_WAIT=fast` and lets the turn end on that line (test) · the selftest passes (check) · following AGENTS.md › Project rules for framework work
+- Note: found in T341's review. `rules.md` and `next-task.md` now start full runs in the background on purpose; a turn that ends while one runs, with no pass of the current files, waits for the lock for up to 30 minutes. App-Director's check and Stop hook at v1.16.0 are the model (`CHECK_WAIT`, `check: busy`).
+- Brief: -
+- Stories: -
+
+### B76 · A push of main from a prototype worktree runs no check · proposed · S · agent · low
+- Touches: work/SaaSAllTheThings: framework/.githooks/pre-push, selftest.sh, CHANGELOG.md, TASKS.md · work/App-Director: the same files
+- Repro: 1. In an app with a failing check committed on `main`, start a prototype (`bash tools/prototype.sh start try`). 2. In the prototype's worktree, run `git push origin main`. Expected: the push is checked like a push from the main checkout, or refused there. Actual: `main` holds no prototype commits, so the refusal doesn't apply, and the hook then skips the check because the checkout is a prototype: `main` is pushed unchecked.
+- Found in: T341 (its review), read in the hooks of SaaSAllTheThings and App-Director; not reproduced. The hook also checks the working tree and not the commits it pushes, which its comment says.
 - Brief: -
 - Stories: -
 
