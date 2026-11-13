@@ -1887,11 +1887,12 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Brief: Scope › How-to guides
 - Stories: US-9
 
-### T339 · SaaSAllTheThings: the check runs its backend, Bicep and project steps side by side · todo · M · agent
+### T339 · SaaSAllTheThings: the check runs its backend, Bicep and project steps side by side · in-progress 2026-11-13 · M · agent
 - Depends on: -
 - Touches: work/SaaSAllTheThings: framework/tools/check.sh, framework/tools/cfg.sh, project/tools/check.cfg, framework/.satt/rules.md, ONBOARDING.md, selftest.sh, CHANGELOG.md, TASKS.md
 - Done when: with the setting on, `bash tools/check.sh` runs the backend stack, the Bicep compile and `tools/check.local.sh` at the same time once the architecture step is done, each under its own time limit with its own log, prints each step's lines together in the order of a serial run, and exits 0, 1 or 3 as a serial run of the same files would (test) · the setting is a key in `tools/check.cfg`: the seed turns it on, an app without the key runs the steps in order as before, and the CHANGELOG's Upgrade steps say when to turn it on (an app whose own steps don't need the backend's build output) (test) · every run ends with each step's seconds and the total (test) · a full run in a scratch clone of Project Director is timed with the setting on and off, and both times are in the item's note (check) · the selftest passes (check) · following AGENTS.md › Project rules for framework work
 - Note: from the director on 2026-11-13: Project Director's full check takes about 7 minutes, one step after the other (architecture about 1, backend about 3, Bicep 0.5, the web client 2.2).
+- Note: paused on 2026-11-13 for a restart of the machine. The builder's edits are uncommitted in `work/SaaSAllTheThings` on `ddd/bundle-2026-11-13`: `framework/tools/check.sh`, `framework/tools/cfg.sh`, both `tools/check.cfg` files, `framework/.satt/rules.md` with its bundled copy, `selftest.sh`, `CHANGELOG.md` and `TASKS.md`. `check.sh` parses; the selftest was still running when the builder was stopped, so its result isn't known. Next: run `bash selftest.sh` there and finish what fails, then time a full run with the setting on and off in a scratch clone of Project Director.
 - Brief: Scope › Planned framework changes
 - Stories: -
 
