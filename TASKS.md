@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T346 · B73 · R11
+**Next IDs:** T346 · B76 · R11
 
 ## Milestones
 | Milestone | Status |
@@ -1893,19 +1893,21 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Touches: work/SaaSAllTheThings: framework/tools/check.sh, framework/tools/cfg.sh, project/tools/check.cfg, framework/.satt/rules.md, ONBOARDING.md, selftest.sh, CHANGELOG.md, TASKS.md
 - Done when: with the setting on, `bash tools/check.sh` runs the backend stack, the Bicep compile and `tools/check.local.sh` at the same time once the architecture step is done, each under its own time limit with its own log, prints each step's lines together in the order of a serial run, and exits 0, 1 or 3 as a serial run of the same files would (test) · the setting is a key in `tools/check.cfg`: the seed turns it on, an app without the key runs the steps in order as before, and the CHANGELOG's Upgrade steps say when to turn it on (an app whose own steps don't need the backend's build output) (test) · every run ends with each step's seconds and the total (test) · a full run in a scratch clone of Project Director is timed with the setting on and off, and both times are in the item's note (check) · the selftest passes (check) · following AGENTS.md › Project rules for framework work
 - Note: from the director on 2026-11-13: Project Director's full check takes about 7 minutes, one step after the other (architecture about 1, backend about 3, Bicep 0.5, the web client 2.2).
-- Note: built 2026-11-13 as SaaSAllTheThings' T50. The setting is `[tests] parallel = on` in `tools/check.cfg`: each step runs as a background job with its lines in `.satt/state/step-<name>.out`, and every run ends with a `check: seconds:` line. `ONBOARDING.md` needed no change. The selftest passed 834 of 834; its .NET part was skipped, since this machine has no .NET SDK. Timed on 2026-11-13 in a scratch clone of Project Director with the new `check.sh` and `cfg.sh`: in order 585 seconds (architecture 71, stack 285, Bicep 41, project steps 188), side by side 338 seconds (architecture 51, stack 287, Bicep 80, project steps 277), so a run now lasts as long as the architecture step and the backend stack together. The run in order came first, on a machine just restarted. Both runs exited 1 on the same two tests, `infra/scripts/modelDeployments.test.mjs` and `clients/web/src/styles/profile.test.ts`, with every other test run in both; the scratch clone checked its files out with CRLF line endings (seen for `tokens.css`, which the second test reads).
+- Note: built 2026-11-13 as SaaSAllTheThings' T50. The setting is `[tests] parallel = on` in `tools/check.cfg`: each step runs as a background job with its lines in `.satt/state/step-<name>.out`, and every run ends with a `check: seconds:` line. `ONBOARDING.md` needed no change. The selftest passed 834 of 834; its .NET part was skipped, since this machine has no .NET SDK. Timed on 2026-11-13 in a scratch clone of Project Director with the new `check.sh` and `cfg.sh`: in order 585 seconds (architecture 71, stack 285, Bicep 41, project steps 188), side by side 338 seconds (architecture 51, stack 287, Bicep 80, project steps 277), so a run now lasts as long as the architecture step and the backend stack together. The run in order came first, on a machine just restarted; a second run in order, after the side-by-side run and while a selftest ran on the same machine, took 494 seconds (architecture 35, stack 174, Bicep 59, project steps 226), so the gain is between 150 and 250 seconds a run on this machine. All three runs exited 1 on the same two tests, `infra/scripts/modelDeployments.test.mjs` and `clients/web/src/styles/profile.test.ts`, with every other test run in each (2,403 backend tests and 86 web test files); the scratch clone checked its files out with CRLF line endings (seen for `tokens.css`, which the second test reads).
 - Brief: Scope › Planned framework changes
 - Stories: -
 
 ### T340 · SaaSAllTheThings: a fast tier for the check, selected by area · in-progress 2026-11-13 · L · agent
+- PRs: SaaSAllTheThings #51 (open)
 - Depends on: T339
 - Touches: work/SaaSAllTheThings: framework/tools/check.sh, framework/tools/cfg.sh, project/tools/check.cfg, framework/.satt/rules.md, selftest.sh, CHANGELOG.md, TASKS.md
 - Done when: `bash tools/check.sh --fast` runs the architecture rules and the secrets scan over the whole project, then only the steps the change from HEAD touches: the Bicep compile for a change under `infra/`, the backend stack unless every changed path is under `infra/`, in the `client` layer or documentation, and `tools/check.local.sh` with `CHECK_TIER=fast` and the changed paths in `CHECK_CHANGED`, so an app's own steps can leave out what the change doesn't touch; `bash tools/check.sh` with no argument still runs everything (test) · a change to a dependency or its lockfile, a toolchain setting, a file under `tools/` or a `[tests] full-when` path runs as the full tier and says so (test) · a recorded result names its tier, a fast pass never stands for a full one, `--if-changed` reuses a pass of the same files and tier, and `bash tools/check.sh --due` says whether the full tier is due and why: no full pass recorded, `[tests] full-every` commits since the last one, or such a path changed (test) · each tier has its own time limit, and exit codes 0, 1 and 3 and the secrets scan on every commit are unchanged (test) · the selftest passes (check) · following AGENTS.md › Project rules for framework work
 - Note: App-Director's tiers are the model (its `framework/tools/check.sh` at v1.16.0): port what fits this check's steps.
+- Note: built 2026-11-13 as SaaSAllTheThings' T51 and reviewed twice; the first review's findings were rebuilt. Options: `--fast`, `--full` (the same as no argument), each with `--if-changed`, and `--due`, which always exits 0 and starts its line `check: full tier due:` or `check: full tier not due:`; an unknown flag exits 3. Settings under `[tests]`: `timeout-fast` (300), `timeout-full` (600; the older `timeout` counts when it isn't set), `full-every` (10; 0: never by count) and `full-when` (empty). A changed `bicepconfig.json` runs the Bicep compile too, and the full-tier paths count in the fingerprint even when they are Markdown. `CHECK_TIER` is exported in both tiers; `CHECK_CHANGED` is the path of a file that lists the changed paths, set in the fast tier only. It also changed `framework/tools/archcheck.awk` (a mode that prints each path's layer) and the example's `tools/check.cfg`, which Touches doesn't list. The selftest passed 916 of 916; its .NET part was skipped, since this machine has no .NET SDK.
 - Brief: Scope › Planned framework changes
 - Stories: -
 
-### T341 · SaaSAllTheThings: the hooks and the procedures pick the check's tier · todo · L · agent
+### T341 · SaaSAllTheThings: the hooks and the procedures pick the check's tier · in-progress 2026-11-13 · L · agent
 - Depends on: T340
 - Touches: work/SaaSAllTheThings: framework/.githooks/pre-commit, framework/.githooks/pre-push, framework/.claude/hooks/stop-check.sh, framework/.satt/rules.md, framework/.satt/procedures/build.md, next-task.md, release.md, framework/.claude/agents/builder.md, README.md, ONBOARDING.md, selftest.sh, CHANGELOG.md, TASKS.md
 - Done when: the pre-commit hook runs the full tier when `--due` says so and the fast tier otherwise, says which and why, and reuses a builder's pass of the same files; the pre-push hook runs the full tier unless a full pass of the same files stands; the Stop hook runs only the fast tier (test) · `rules.md` › Done and Running the check say which tier runs where: the fast tier for a build, a commit and the turn end; the full tier when it's due, before a push, at the end of a run of several items, where a failure becomes a bug item, and for a release, which never takes a fast pass (check) · `build.md` verifies with the fast tier, `next-task.md` asks `--due` before a commit and runs a due full check in the background first, and the CHANGELOG has Upgrade steps for an app's `tools/check.cfg` and `tools/check.local.sh` (check) · the selftest passes (check) · following AGENTS.md › Project rules for framework work
@@ -1951,6 +1953,27 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Touches: work/SaaSAllTheThings: framework/tools/check.sh, selftest.sh, CHANGELOG.md, TASKS.md
 - Repro: 1. In an app with `[tests] parallel = on` and a `tools/check.local.sh` that runs `sleep 300`, start `bash tools/check.sh` in Git Bash on Windows. 2. Send it `TERM` (`kill <pid>`). Expected: the step shells and the commands they started stop, as the CHANGELOG says ("An interrupted run stops its jobs"). Actual: `cleanup()` stops what a step started with `pkill -P`, and a plain Git Bash shell has no `pkill`, so only the step shells are killed, and `sleep`, or `npm` and `node` in a real app, run on until they end.
 - Found in: T339 (read in the script while verifying its build; `pkill` checked on this machine, the interrupt itself not reproduced)
+- Brief: -
+- Stories: -
+
+### B73 · SaaSAllTheThings: the selftest's `put` helper makes a folder out of a file name without a slash · proposed · XS · agent · low
+- Touches: work/SaaSAllTheThings: selftest.sh, TASKS.md
+- Repro: 1. In a case of `selftest.sh`, call `put notes.txt "x"` in a test folder. Expected: a file `notes.txt` holding `x`. Actual: `${1%/*}` is the whole name when it has no slash, so `put` runs `mkdir -p notes.txt` and the write to it fails: a folder named `notes.txt` and no file. No case calls it that way today, so nothing fails yet.
+- Found in: T340 (the builder's report), read in `selftest.sh` (the `put` helper)
+- Brief: -
+- Stories: -
+
+### B74 · SaaSAllTheThings: a check that waited for another one compares with the fingerprint from before the wait · proposed · S · agent · low
+- Touches: work/SaaSAllTheThings: framework/tools/check.sh, selftest.sh, CHANGELOG.md, TASKS.md
+- Repro: 1. Start `bash tools/check.sh` in an app. 2. While it runs, start `bash tools/check.sh --if-changed`, which waits for the lock. 3. Edit a source file in the two seconds between the first run recording its pass and the second run taking the lock. Expected: the second run checks the edited files. Actual: it took its fingerprint before the wait and asks `reuse_last` with that one, so it prints a pass for files it never saw. An edit earlier in the wait costs a run instead: the second run checks the current files, finds that its old fingerprint differs from the new one, and records no pass ("files changed while the check ran").
+- Found in: T340 (its review), read in `check.sh` at v0.16.3; not reproduced
+- Brief: -
+- Stories: -
+
+### B75 · SaaSAllTheThings: a file whose name git quotes is left out of the check's fingerprint · proposed · S · agent · low
+- Touches: work/SaaSAllTheThings: framework/tools/check.sh, selftest.sh, CHANGELOG.md, TASKS.md
+- Repro: 1. On Linux or macOS, in an app with a passing check, add a source file whose name holds a double quote or a backslash, and run `bash tools/check.sh`. 2. Change that file and run `bash tools/check.sh --if-changed`. Expected: the check runs, since a file changed. Actual: `fingerprint()` reads `git ls-files` without `-z`, git prints such a name quoted even with `core.quotePath=false`, the `[ -f ]` test fails on the quoted form, and the file is left out of the hash, so the last pass is reused. Windows allows neither character in a file name.
+- Found in: T340 (its review), read in `check.sh`; not reproduced
 - Brief: -
 - Stories: -
 
