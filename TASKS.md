@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T339 · B71 · R11
+**Next IDs:** T346 · B71 · R11
 
 ## Milestones
 | Milestone | Status |
@@ -1886,6 +1886,57 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Note: from the director on 2026-11-12, after R10, whose note recommends documenting this path.
 - Brief: Scope › How-to guides
 - Stories: US-9
+
+### T339 · SaaSAllTheThings: the check runs its backend, Bicep and project steps side by side · todo · M · agent
+- Depends on: -
+- Touches: work/SaaSAllTheThings: framework/tools/check.sh, framework/tools/cfg.sh, project/tools/check.cfg, framework/.satt/rules.md, ONBOARDING.md, selftest.sh, CHANGELOG.md, TASKS.md
+- Done when: with the setting on, `bash tools/check.sh` runs the backend stack, the Bicep compile and `tools/check.local.sh` at the same time once the architecture step is done, each under its own time limit with its own log, prints each step's lines together in the order of a serial run, and exits 0, 1 or 3 as a serial run of the same files would (test) · the setting is a key in `tools/check.cfg`: the seed turns it on, an app without the key runs the steps in order as before, and the CHANGELOG's Upgrade steps say when to turn it on (an app whose own steps don't need the backend's build output) (test) · every run ends with each step's seconds and the total (test) · a full run in a scratch clone of Project Director is timed with the setting on and off, and both times are in the item's note (check) · the selftest passes (check) · following AGENTS.md › Project rules for framework work
+- Note: from the director on 2026-11-13: Project Director's full check takes about 7 minutes, one step after the other (architecture about 1, backend about 3, Bicep 0.5, the web client 2.2).
+- Brief: Scope › Planned framework changes
+- Stories: -
+
+### T340 · SaaSAllTheThings: a fast tier for the check, selected by area · todo · L · agent
+- Depends on: T339
+- Touches: work/SaaSAllTheThings: framework/tools/check.sh, framework/tools/cfg.sh, project/tools/check.cfg, framework/.satt/rules.md, selftest.sh, CHANGELOG.md, TASKS.md
+- Done when: `bash tools/check.sh --fast` runs the architecture rules and the secrets scan over the whole project, then only the steps the change from HEAD touches: the Bicep compile for a change under `infra/`, the backend stack unless every changed path is under `infra/`, in the `client` layer or documentation, and `tools/check.local.sh` with `CHECK_TIER=fast` and the changed paths in `CHECK_CHANGED`, so an app's own steps can leave out what the change doesn't touch; `bash tools/check.sh` with no argument still runs everything (test) · a change to a dependency or its lockfile, a toolchain setting, a file under `tools/` or a `[tests] full-when` path runs as the full tier and says so (test) · a recorded result names its tier, a fast pass never stands for a full one, `--if-changed` reuses a pass of the same files and tier, and `bash tools/check.sh --due` says whether the full tier is due and why: no full pass recorded, `[tests] full-every` commits since the last one, or such a path changed (test) · each tier has its own time limit, and exit codes 0, 1 and 3 and the secrets scan on every commit are unchanged (test) · the selftest passes (check) · following AGENTS.md › Project rules for framework work
+- Note: App-Director's tiers are the model (its `framework/tools/check.sh` at v1.16.0): port what fits this check's steps.
+- Brief: Scope › Planned framework changes
+- Stories: -
+
+### T341 · SaaSAllTheThings: the hooks and the procedures pick the check's tier · todo · L · agent
+- Depends on: T340
+- Touches: work/SaaSAllTheThings: framework/.githooks/pre-commit, framework/.githooks/pre-push, framework/.claude/hooks/stop-check.sh, framework/.satt/rules.md, framework/.satt/procedures/build.md, next-task.md, release.md, framework/.claude/agents/builder.md, README.md, ONBOARDING.md, selftest.sh, CHANGELOG.md, TASKS.md
+- Done when: the pre-commit hook runs the full tier when `--due` says so and the fast tier otherwise, says which and why, and reuses a builder's pass of the same files; the pre-push hook runs the full tier unless a full pass of the same files stands; the Stop hook runs only the fast tier (test) · `rules.md` › Done and Running the check say which tier runs where: the fast tier for a build, a commit and the turn end; the full tier when it's due, before a push, at the end of a run of several items, where a failure becomes a bug item, and for a release, which never takes a fast pass (check) · `build.md` verifies with the fast tier, `next-task.md` asks `--due` before a commit and runs a due full check in the background first, and the CHANGELOG has Upgrade steps for an app's `tools/check.cfg` and `tools/check.local.sh` (check) · the selftest passes (check) · following AGENTS.md › Project rules for framework work
+- Brief: Scope › Planned framework changes
+- Stories: -
+
+### T342 · SaaSAllTheThings: the TypeScript fast tier tests the changed packages and the packages that depend on them · todo · M · agent
+- Depends on: T340
+- Touches: work/SaaSAllTheThings: framework/tools/stacks/typescript.sh, framework/tools/check.sh, framework/.satt/reference/stacks.md, selftest.sh, CHANGELOG.md, TASKS.md
+- Done when: in the fast tier of an app with npm workspaces, the TypeScript stack tests only the changed packages and the packages that depend on them, by the dependencies their `package.json` files declare: through each such package's own `test` script, or through a root `test:fast` script that gets their folders in `CHECK_PACKAGES`; with neither, the root `test` runs whole and the check says so (test) · typecheck, lint and build cover the whole project as before, a changed backend file outside every package runs the whole `test`, and the run names the packages it tested and the ones it left to the full tier (test) · a change in `packages/functions` and one in `packages/domain` are each timed in a scratch clone of Project Director with a `test:fast` script, and the times are in the item's note (check) · the selftest passes (check) · following AGENTS.md › Project rules for framework work
+- Brief: Scope › Planned framework changes
+- Stories: -
+
+### T343 · SaaSAllTheThings: the .NET fast tier tests the changed projects and the projects that reference them · todo · M · agent
+- Depends on: T342
+- Touches: work/SaaSAllTheThings: framework/tools/stacks/dotnet.sh, framework/tools/stacks/python.sh, framework/.satt/reference/stacks.md, selftest.sh, CHANGELOG.md, TASKS.md
+- Done when: in the fast tier the .NET stack builds the whole target and runs `dotnet test` only for the test projects that changed or that reference a changed project, directly or through other projects, read from their `ProjectReference` entries; a changed file outside every project runs every test project, and the run names the test projects it ran and the ones it left to the full tier (test) · the Python stack runs whole in both tiers and the check says so (test) · the selftest passes (check) · following AGENTS.md › Project rules for framework work
+- Brief: Scope › Planned framework changes
+- Stories: -
+
+### T344 · Release SaaSAllTheThings 0.17.0 · todo · S · agent
+- Depends on: T341, T343
+- Touches: work/SaaSAllTheThings: the version files, CHANGELOG.md
+- Done when: it ends the bundle that carries T339 to T343, the bundle is merged and `tools/work-release.sh` has tagged and published it
+- Brief: -
+- Stories: -
+
+### T345 · Docs follow SaaSAllTheThings 0.17.0 · todo · M · agent
+- Depends on: T344
+- Touches: frameworks.lock, docs/**/*.md (the SaaSAllTheThings links), docs/frameworks/saasallthethings.md, docs/concept/check.md, docs/how-to/check.md, docs/skills/next-task.md, docs/how-to/trouble.md
+- Done when: `frameworks.lock` and every SaaSAllTheThings link are at v0.17.0 (check) · the pages that describe SaaSAllTheThings' check say what the release ships, checked against it: the steps side by side, the two tiers and where each runs, and selection by area and by package (check) · `bash tools/audit.sh` prints PASS and `bash tools/check.sh` passes (check)
+- Brief: Scope › Framework features
+- Stories: US-5, US-9, US-10, US-11
 
 ### T312 · Release SaaSAllTheThings 0.16.1 · done 2026-11-04 · S · agent
 - PRs: SaaSAllTheThings #48 (merged)

@@ -116,6 +116,7 @@ What the three frameworks do as decided here, carried out through the orchestrat
 Changes the director has decided that aren't released yet.
 
 - **A pilot of SaaSAllTheThings in Azure:** the director deploys the example app to an Azure sandbox with Azure Policy Deny assignments and Defender for Cloud, tests it from outside and records the results.
+- **SaaSAllTheThings' check gets faster in two steps:** first its backend stack, Bicep compile and project steps run side by side; then a fast tier checks each build and commit by area and by package, and the full check runs when it's due, before a push, at the end of a run and for a release. The architecture rules and the secrets scan run in full every time.
 
 ## Core Flows
 
