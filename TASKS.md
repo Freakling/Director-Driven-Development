@@ -1960,13 +1960,14 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Stories: -
 
 ### B72 · SaaSAllTheThings: an interrupted side-by-side check leaves its steps' commands running in Git Bash · in-progress 2026-11-14 · S · agent · low
+- PRs: SaaSAllTheThings #52 (open)
 - Touches: work/SaaSAllTheThings: framework/tools/check.sh, selftest.sh, CHANGELOG.md, TASKS.md
 - Repro: 1. In an app with `[tests] parallel = on` and a `tools/check.local.sh` that runs `sleep 300`, start `bash tools/check.sh` in Git Bash on Windows. 2. Send it `TERM` (`kill <pid>`). Expected: the step shells and the commands they started stop, as the CHANGELOG says ("An interrupted run stops its jobs"). Actual: `cleanup()` stops what a step started with `pkill -P`, and a plain Git Bash shell has no `pkill`, so only the step shells are killed, and `sleep`, or `npm` and `node` in a real app, run on until they end.
 - Found in: T339 (read in the script while verifying its build; `pkill` checked on this machine, the interrupt itself not reproduced)
 - Brief: -
 - Stories: -
 
-### B73 · SaaSAllTheThings: the selftest's `put` helper makes a folder out of a file name without a slash · todo · XS · agent · low
+### B73 · SaaSAllTheThings: the selftest's `put` helper makes a folder out of a file name without a slash · in-progress 2026-11-14 · XS · agent · low
 - Touches: work/SaaSAllTheThings: selftest.sh, TASKS.md
 - Repro: 1. In a case of `selftest.sh`, call `put notes.txt "x"` in a test folder. Expected: a file `notes.txt` holding `x`. Actual: `${1%/*}` is the whole name when it has no slash, so `put` runs `mkdir -p notes.txt` and the write to it fails: a folder named `notes.txt` and no file. No case calls it that way today, so nothing fails yet.
 - Found in: T340 (the builder's report), read in `selftest.sh` (the `put` helper)
