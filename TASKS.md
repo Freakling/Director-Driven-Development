@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T350 · B80 · R11
+**Next IDs:** T352 · B80 · R11
 
 ## Milestones
 | Milestone | Status |
@@ -2051,6 +2051,20 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Touches: work/App-Director: framework/.githooks/pre-push, framework/tools/setup-clone.sh, framework/.app-director/rules.md, selftest.sh, CHANGELOG.md, TASKS.md
 - Done when: App-Director's pre-push hook runs no check for a push whose commits change only paths the check doesn't count, asked of `bash tools/check.sh --unignored`, as SaaSAllTheThings' hook does with T346, and runs the full tier whenever it can't tell what a push changes; every other push runs the full tier as before (test) · `rules.md` › Running the check and the comment in `tools/setup-clone.sh` say so (check) · the selftest passes (check) · following AGENTS.md › Project rules for framework work
 - Note: found in T346 (the builder's report; T346's own note names it too). App-Director's hook runs the full tier for every push that sends commits, so a clone without the stack's toolchain can't push documentation.
+- Brief: -
+- Stories: -
+
+### T350 · Release SaaSAllTheThings 0.18.0 · todo · S · agent
+- Depends on: B71, B72, B73, B74, B75, T346, T347, B76
+- Touches: work/SaaSAllTheThings: the version files, CHANGELOG.md
+- Done when: it ends the bundle that carries B71 to B76, T346 and T347 (SaaSAllTheThings #52), the bundle is merged and `tools/work-release.sh` has tagged and published it
+- Brief: -
+- Stories: -
+
+### T351 · Release App-Director 1.16.1 · todo · S · agent
+- Depends on: B76
+- Touches: work/App-Director: the version files, CHANGELOG.md
+- Done when: it ends the bundle that carries B76's App-Director half (App-Director #55), the bundle is merged and `tools/work-release.sh` has tagged and published it
 - Brief: -
 - Stories: -
 
