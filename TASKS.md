@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T349 · B77 · R11
+**Next IDs:** T349 · B78 · R11
 
 ## Milestones
 | Milestone | Status |
@@ -2014,6 +2014,13 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Touches: work/SaaSAllTheThings: selftest.sh, framework/tools/stacks/dotnet.sh, CHANGELOG.md, TASKS.md
 - Done when: `bash selftest.sh` in `work/SaaSAllTheThings` runs its .NET part on a machine with the .NET SDK 8 or newer and passes, the three fast-tier cases on `examples/order-desk` included: a change in the Domain project tests both test projects, and a change in the Application project tests its own and leaves the Domain's (check) · the lines `dotnet test <project> --no-build` prints come through the check as they do for the whole target (check) · what fails is fixed there, or filed as a bug item (check) · following AGENTS.md › Project rules for framework work
 - Note: found while building T343. This machine has no .NET SDK and SaaSAllTheThings' repository has no CI, so nothing has run the real `dotnet` against T343: its cases use a stand-in. It needs the SDK installed here, which is the director's call, or a run on another machine.
+- Brief: -
+- Stories: -
+
+### B77 · A change to a page, the theme, the pin or the selftest reuses the last pass of this repo's check · proposed · S · agent · low
+- Touches: tools/check.cfg
+- Repro: 1. After a passing `bash tools/check.sh`, change a page under `docs/` so that the selftest would fail (a broken link, or an en dash). 2. Run `bash tools/check.sh --if-changed`, or commit and push. Expected: the check runs the selftest again, since the pages are what it checks, and fails. Actual: it prints `check: PASS (reused the full pass ...; nothing changed)`. The check counts only source paths and `[tests] full-when` paths, `tools/check.cfg` has no `[tests]` section, and a page or the stylesheet under `docs/`, `overrides/main.html`, `frameworks.lock` and `selftest.sh` are neither (`bash tools/check.sh --unignored` prints none of them). The pre-commit and pre-push hooks reuse the same pass, so such a change is checked only by CI after the push, where a failure stops the deploy.
+- Found in: T345 (three sentences corrected after the builder's run were committed and pushed on a reused pass; a full run from scratch and CI passed afterwards)
 - Brief: -
 - Stories: -
 
