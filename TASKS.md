@@ -1936,6 +1936,8 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Stories: -
 
 ### T344 · Release SaaSAllTheThings 0.17.0 · in-progress 2026-11-14 · S · agent
+- PRs: SaaSAllTheThings #51 (open)
+- Note: the release commit ends the bundle on 2026-11-14: the version files are at 0.17.0, the changelog section is headed 0.17.0 with its entries in the order they were built, and the release notes are the pull request's description. The selftest passed 1060 of 1060 on the release commit's files; its .NET part was skipped, since this machine has no .NET SDK. Next, once the director has merged the bundle: `bash tools/work-release.sh work/SaaSAllTheThings 51`.
 - Depends on: T341, T343
 - Touches: work/SaaSAllTheThings: the version files, CHANGELOG.md
 - Done when: it ends the bundle that carries T339 to T343, the bundle is merged and `tools/work-release.sh` has tagged and published it
