@@ -2001,6 +2001,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Stories: -
 
 ### T347 · SaaSAllTheThings: the Stop hook stops waiting for a running check at the fast tier's limit · in-progress 2026-11-14 · M · agent
+- PRs: SaaSAllTheThings #52 (open)
 - Depends on: T341
 - Touches: work/SaaSAllTheThings: framework/tools/check.sh, framework/.claude/hooks/stop-check.sh, framework/.satt/rules.md, selftest.sh, CHANGELOG.md, TASKS.md
 - Done when: a check that waits for another one stops waiting after the seconds in `CHECK_WAIT` (or the limit of the tier it names), prints a `check: busy:` line naming the run it waited for, and exits 3 without starting a second check (test) · the Stop hook asks with `CHECK_WAIT=fast` and lets the turn end on that line (test) · the selftest passes (check) · following AGENTS.md › Project rules for framework work
@@ -2008,7 +2009,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Brief: -
 - Stories: -
 
-### B76 · A push of main from a prototype worktree runs no check · todo · S · agent · low
+### B76 · A push of main from a prototype worktree runs no check · in-progress 2026-11-14 · S · agent · low
 - Touches: work/SaaSAllTheThings: framework/.githooks/pre-push, selftest.sh, CHANGELOG.md, TASKS.md · work/App-Director: the same files
 - Repro: 1. In an app with a failing check committed on `main`, start a prototype (`bash tools/prototype.sh start try`). 2. In the prototype's worktree, run `git push origin main`. Expected: the push is checked like a push from the main checkout, or refused there. Actual: `main` holds no prototype commits, so the refusal doesn't apply, and the hook then skips the check because the checkout is a prototype: `main` is pushed unchecked.
 - Found in: T341 (its review), read in the hooks of SaaSAllTheThings and App-Director; not reproduced. The hook also checks the working tree and not the commits it pushes, which its comment says.
