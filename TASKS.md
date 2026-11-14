@@ -1951,42 +1951,42 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Brief: Scope › Framework features
 - Stories: US-5, US-9, US-10, US-11
 
-### B71 · SaaSAllTheThings: the .NET stack's build runs without the check's time limit · proposed · S · agent · low
+### B71 · SaaSAllTheThings: the .NET stack's build runs without the check's time limit · todo · S · agent · low
 - Touches: work/SaaSAllTheThings: framework/tools/stacks/dotnet.sh, selftest.sh, CHANGELOG.md, TASKS.md
 - Repro: 1. In an app with `stack = dotnet` and `[tests] timeout = 60`, make `dotnet build` hang (a build step that waits). 2. Run `bash tools/check.sh`. Expected: the build is stopped at the limit and the check exits 3, as `dotnet test` is. Actual: `stack_check` in `tools/stacks/dotnet.sh` runs `dotnet build` without `run_limited`, so only `dotnet test` is cut, and a hung build holds the check, or its stack step when the steps run side by side, for as long as it hangs.
 - Found in: T339 (the builder's report), read in the script; not reproduced, since this machine has no .NET SDK
 - Brief: -
 - Stories: -
 
-### B72 · SaaSAllTheThings: an interrupted side-by-side check leaves its steps' commands running in Git Bash · proposed · S · agent · low
+### B72 · SaaSAllTheThings: an interrupted side-by-side check leaves its steps' commands running in Git Bash · todo · S · agent · low
 - Touches: work/SaaSAllTheThings: framework/tools/check.sh, selftest.sh, CHANGELOG.md, TASKS.md
 - Repro: 1. In an app with `[tests] parallel = on` and a `tools/check.local.sh` that runs `sleep 300`, start `bash tools/check.sh` in Git Bash on Windows. 2. Send it `TERM` (`kill <pid>`). Expected: the step shells and the commands they started stop, as the CHANGELOG says ("An interrupted run stops its jobs"). Actual: `cleanup()` stops what a step started with `pkill -P`, and a plain Git Bash shell has no `pkill`, so only the step shells are killed, and `sleep`, or `npm` and `node` in a real app, run on until they end.
 - Found in: T339 (read in the script while verifying its build; `pkill` checked on this machine, the interrupt itself not reproduced)
 - Brief: -
 - Stories: -
 
-### B73 · SaaSAllTheThings: the selftest's `put` helper makes a folder out of a file name without a slash · proposed · XS · agent · low
+### B73 · SaaSAllTheThings: the selftest's `put` helper makes a folder out of a file name without a slash · todo · XS · agent · low
 - Touches: work/SaaSAllTheThings: selftest.sh, TASKS.md
 - Repro: 1. In a case of `selftest.sh`, call `put notes.txt "x"` in a test folder. Expected: a file `notes.txt` holding `x`. Actual: `${1%/*}` is the whole name when it has no slash, so `put` runs `mkdir -p notes.txt` and the write to it fails: a folder named `notes.txt` and no file. No case calls it that way today, so nothing fails yet.
 - Found in: T340 (the builder's report), read in `selftest.sh` (the `put` helper)
 - Brief: -
 - Stories: -
 
-### B74 · SaaSAllTheThings: a check that waited for another one compares with the fingerprint from before the wait · proposed · S · agent · low
+### B74 · SaaSAllTheThings: a check that waited for another one compares with the fingerprint from before the wait · todo · S · agent · low
 - Touches: work/SaaSAllTheThings: framework/tools/check.sh, selftest.sh, CHANGELOG.md, TASKS.md
 - Repro: 1. Start `bash tools/check.sh` in an app. 2. While it runs, start `bash tools/check.sh --if-changed`, which waits for the lock. 3. Edit a source file in the two seconds between the first run recording its pass and the second run taking the lock. Expected: the second run checks the edited files. Actual: it took its fingerprint before the wait and asks `reuse_last` with that one, so it prints a pass for files it never saw. An edit earlier in the wait costs a run instead: the second run checks the current files, finds that its old fingerprint differs from the new one, and records no pass ("files changed while the check ran").
 - Found in: T340 (its review), read in `check.sh` at v0.16.3; not reproduced
 - Brief: -
 - Stories: -
 
-### B75 · SaaSAllTheThings: a file whose name git quotes is left out of the check's fingerprint · proposed · S · agent · low
+### B75 · SaaSAllTheThings: a file whose name git quotes is left out of the check's fingerprint · todo · S · agent · low
 - Touches: work/SaaSAllTheThings: framework/tools/check.sh, selftest.sh, CHANGELOG.md, TASKS.md
 - Repro: 1. On Linux or macOS, in an app with a passing check, add a source file whose name holds a double quote or a backslash, and run `bash tools/check.sh`. 2. Change that file and run `bash tools/check.sh --if-changed`. Expected: the check runs, since a file changed. Actual: `fingerprint()` reads `git ls-files` without `-z`, git prints such a name quoted even with `core.quotePath=false`, the `[ -f ]` test fails on the quoted form, and the file is left out of the hash, so the last pass is reused. Windows allows neither character in a file name.
 - Found in: T340 (its review), read in `check.sh`; not reproduced
 - Brief: -
 - Stories: -
 
-### T346 · SaaSAllTheThings: a push that changes only documentation runs no check · proposed · M · agent
+### T346 · SaaSAllTheThings: a push that changes only documentation runs no check · todo · M · agent
 - Depends on: T341
 - Touches: work/SaaSAllTheThings: framework/.githooks/pre-push, framework/tools/setup-clone.sh, framework/.satt/rules.md, selftest.sh, CHANGELOG.md, TASKS.md
 - Done when: the pre-push hook runs no check for a push whose commits change only paths the check doesn't count (Markdown outside `adr/` and outside `[tests] full-when`, asked of `bash tools/check.sh --unignored`), so a clone without the backend's toolchain can push documentation; every other push runs the full tier as before (test) · `rules.md` › Running the check and the comment in `tools/setup-clone.sh` say so (check) · the selftest passes (check) · following AGENTS.md › Project rules for framework work
@@ -1994,7 +1994,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Brief: -
 - Stories: -
 
-### T347 · SaaSAllTheThings: the Stop hook stops waiting for a running check at the fast tier's limit · proposed · M · agent
+### T347 · SaaSAllTheThings: the Stop hook stops waiting for a running check at the fast tier's limit · todo · M · agent
 - Depends on: T341
 - Touches: work/SaaSAllTheThings: framework/tools/check.sh, framework/.claude/hooks/stop-check.sh, framework/.satt/rules.md, selftest.sh, CHANGELOG.md, TASKS.md
 - Done when: a check that waits for another one stops waiting after the seconds in `CHECK_WAIT` (or the limit of the tier it names), prints a `check: busy:` line naming the run it waited for, and exits 3 without starting a second check (test) · the Stop hook asks with `CHECK_WAIT=fast` and lets the turn end on that line (test) · the selftest passes (check) · following AGENTS.md › Project rules for framework work
@@ -2002,14 +2002,14 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Brief: -
 - Stories: -
 
-### B76 · A push of main from a prototype worktree runs no check · proposed · S · agent · low
+### B76 · A push of main from a prototype worktree runs no check · todo · S · agent · low
 - Touches: work/SaaSAllTheThings: framework/.githooks/pre-push, selftest.sh, CHANGELOG.md, TASKS.md · work/App-Director: the same files
 - Repro: 1. In an app with a failing check committed on `main`, start a prototype (`bash tools/prototype.sh start try`). 2. In the prototype's worktree, run `git push origin main`. Expected: the push is checked like a push from the main checkout, or refused there. Actual: `main` holds no prototype commits, so the refusal doesn't apply, and the hook then skips the check because the checkout is a prototype: `main` is pushed unchecked.
 - Found in: T341 (its review), read in the hooks of SaaSAllTheThings and App-Director; not reproduced. The hook also checks the working tree and not the commits it pushes, which its comment says.
 - Brief: -
 - Stories: -
 
-### T348 · SaaSAllTheThings: the selftest's .NET part runs against the fast tier's project selection · proposed · S · agent
+### T348 · SaaSAllTheThings: the selftest's .NET part runs against the fast tier's project selection · todo · S · agent
 - Depends on: T344
 - Touches: work/SaaSAllTheThings: selftest.sh, framework/tools/stacks/dotnet.sh, CHANGELOG.md, TASKS.md
 - Done when: `bash selftest.sh` in `work/SaaSAllTheThings` runs its .NET part on a machine with the .NET SDK 8 or newer and passes, the three fast-tier cases on `examples/order-desk` included: a change in the Domain project tests both test projects, and a change in the Application project tests its own and leaves the Domain's (check) · the lines `dotnet test <project> --no-build` prints come through the check as they do for the whole target (check) · what fails is fixed there, or filed as a bug item (check) · following AGENTS.md › Project rules for framework work
