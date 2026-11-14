@@ -45,7 +45,7 @@ The procedure is at [`framework/.godot-director/procedures/release.md`](https://
 
 ### SaaSAllTheThings
 
-The procedure is at [`framework/.satt/procedures/release.md`](https://github.com/Freakling/SaaSAllTheThings/tree/v0.16.3/framework/.satt/procedures/release.md) in the SaaSAllTheThings repository.
+The procedure is at [`framework/.satt/procedures/release.md`](https://github.com/Freakling/SaaSAllTheThings/tree/v0.17.0/framework/.satt/procedures/release.md) in the SaaSAllTheThings repository.
 
 - The request names the environment, `dev` (the default) or `prod`. Dev deploys from `main`; prod deploys from a tag.
 - Before it proposes the release, it runs a [`/security`](security.md) assessment when none exists yet or something was built since the last report. An open `high` bug that names an OWASP item blocks the release, unless an accepted ADR deviates from that item.

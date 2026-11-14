@@ -33,7 +33,7 @@ The procedure is at [`framework/.app-director/procedures/refresh-model-sizing.md
 
 ### SaaSAllTheThings
 
-The procedure is at [`framework/.satt/procedures/refresh-model-sizing.md`](https://github.com/Freakling/SaaSAllTheThings/tree/v0.16.3/framework/.satt/procedures/refresh-model-sizing.md) in the SaaSAllTheThings repository.
+The procedure is at [`framework/.satt/procedures/refresh-model-sizing.md`](https://github.com/Freakling/SaaSAllTheThings/tree/v0.17.0/framework/.satt/procedures/refresh-model-sizing.md) in the SaaSAllTheThings repository.
 
 - If a sizing block with five entries already exists, the skill shows the current values and asks whether to update them or leave them.
 - To turn sizing off, the skill writes `Model sizing: off` and removes the size entries.

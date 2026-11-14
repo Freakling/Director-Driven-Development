@@ -65,12 +65,12 @@ The procedure is at [`framework/.godot-director/procedures/research.md`](https:/
 
 ### SaaSAllTheThings
 
-The procedure is at [`framework/.satt/procedures/research.md`](https://github.com/Freakling/SaaSAllTheThings/tree/v0.16.3/framework/.satt/procedures/research.md) in the SaaSAllTheThings repository.
+The procedure is at [`framework/.satt/procedures/research.md`](https://github.com/Freakling/SaaSAllTheThings/tree/v0.17.0/framework/.satt/procedures/research.md) in the SaaSAllTheThings repository.
 
-- The domain file, [`research-domain.md`](https://github.com/Freakling/SaaSAllTheThings/tree/v0.16.3/framework/.satt/research-domain.md), covers Azure when Azure is central to the question, the reference architecture and the customer's security framework. The reference architecture holds unless an accepted ADR says otherwise, and the requirements in `compliance/` are tier 1. Each requirement is traced to its control, labelled direct, partial, interpretive or unverified.
+- The domain file, [`research-domain.md`](https://github.com/Freakling/SaaSAllTheThings/tree/v0.17.0/framework/.satt/research-domain.md), covers Azure when Azure is central to the question, the reference architecture and the customer's security framework. The reference architecture holds unless an accepted ADR says otherwise, and the requirements in `compliance/` are tier 1. Each requirement is traced to its control, labelled direct, partial, interpretive or unverified.
 - Notes go in `product/research/`, named `YYYY-MM-DD-<slug>.md`.
 - The item heading is `PRD:`, and an item that informs no question writes `Informs: none`.
-- For an architecture question, the note ends with an ADR-ready summary. The [`/architect`](https://github.com/Freakling/SaaSAllTheThings/tree/v0.16.3/framework/.satt/procedures/architect.md) session lists the research on file, and when a decision followed the research, the ADR names the note in its Context. The researcher never writes an ADR and never accepts one.
+- For an architecture question, the note ends with an ADR-ready summary. The [`/architect`](https://github.com/Freakling/SaaSAllTheThings/tree/v0.17.0/framework/.satt/procedures/architect.md) session lists the research on file, and when a decision followed the research, the ADR names the note in its Context. The researcher never writes an ADR and never accepts one.
 - The decision line in `product/decisions.md`, or the ADR, links to the note. The researcher never edits the PRD or `product/decisions.md`, and never answers an item in PRD › Open Questions.
 - Confidential text is wider here: PRD and ADR text, tenant and subscription identifiers, integration contracts and anything from `compliance/` stay out of search queries, including the query strings of URLs.
 

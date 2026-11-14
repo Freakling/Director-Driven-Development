@@ -44,7 +44,7 @@ The procedure is at [`framework/.app-director/procedures/drift-reset.md`](https:
 
 ### SaaSAllTheThings
 
-The procedure is at [`framework/.satt/procedures/drift-reset.md`](https://github.com/Freakling/SaaSAllTheThings/tree/v0.16.3/framework/.satt/procedures/drift-reset.md) in the SaaSAllTheThings repository.
+The procedure is at [`framework/.satt/procedures/drift-reset.md`](https://github.com/Freakling/SaaSAllTheThings/tree/v0.17.0/framework/.satt/procedures/drift-reset.md) in the SaaSAllTheThings repository.
 
 - The scope is the product design the director owns: the Product Pillars, the PRD (`product/prd.md`), the decision log and the business rules in integration contracts. The architecture is out of scope. A framework rule that conflicts with the product goes through `architect.md` and an ADR, and an accepted ADR is never dropped without a new one.
 - "Contradictory" means the build contradicts the text, or two texts contradict each other, such as the PRD and `product/decisions.md`, or the PRD and a contract. "Divergent" means the principle is built two or more ways, each defensible from the text.

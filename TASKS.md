@@ -1944,7 +1944,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Brief: -
 - Stories: -
 
-### T345 · Docs follow SaaSAllTheThings 0.17.0 · todo · M · agent
+### T345 · Docs follow SaaSAllTheThings 0.17.0 · done 2026-11-14 · M · agent
 - Depends on: T344
 - Touches: frameworks.lock, docs/**/*.md (the SaaSAllTheThings links), docs/frameworks/saasallthethings.md, docs/concept/check.md, docs/how-to/check.md, docs/skills/next-task.md, docs/how-to/trouble.md
 - Done when: `frameworks.lock` and every SaaSAllTheThings link are at v0.17.0 (check) · the pages that describe SaaSAllTheThings' check say what the release ships, checked against it: the steps side by side, the two tiers and where each runs, and selection by area and by package (check) · `bash tools/audit.sh` prints PASS and `bash tools/check.sh` passes (check)

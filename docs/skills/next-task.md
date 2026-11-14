@@ -68,7 +68,7 @@ The procedure is at [`framework/.godot-director/procedures/next-task.md`](https:
 
 ### SaaSAllTheThings
 
-The procedure is at [`framework/.satt/procedures/next-task.md`](https://github.com/Freakling/SaaSAllTheThings/tree/v0.16.3/framework/.satt/procedures/next-task.md) in the SaaSAllTheThings repository.
+The procedure is at [`framework/.satt/procedures/next-task.md`](https://github.com/Freakling/SaaSAllTheThings/tree/v0.17.0/framework/.satt/procedures/next-task.md) in the SaaSAllTheThings repository.
 
 - The building state file is `.satt/state/building`. The Stop hook checks for it and leaves half-built files alone while it exists.
 - The review diff is written to `.satt/state/review.diff`.
@@ -76,6 +76,7 @@ The procedure is at [`framework/.satt/procedures/next-task.md`](https://github.c
 - A blocked report can carry `blocked: architecture`, which triggers the `architect.md` procedure. The director chooses to comply or to accept a deviation; a deviation requires an accepted Architecture Decision Record (ADR) before the rebuild.
 - If the current stage of the roadmap has no items left, the skill offers `roadmap.md` for the next stage.
 - Its settings ask before the `az` and `azd` commands.
+- Step 4 runs the check's fast tier, `bash tools/check.sh --fast --if-changed`, as in App-Director. Before a commit the skill asks `bash tools/check.sh --due` and, when the full tier is due, runs it in the background first, so the pre-commit hook reuses that pass. A run of several items ends with one full run, and a failure there becomes a bug item. See [the fast and the full tier](../frameworks/saasallthethings.md#the-fast-and-the-full-tier).
 - A research item (`R<n>`) goes to the `researcher` (which follows [`research.md`](research.md)) instead of the builder. No check runs and there is no review: the session writes the note to `product/research/` and commits it with the records.
 - The report notes that `(demo)` outcomes and bug fixes without regression tests will appear in the next acceptance check.
 - When a [`/security`](security.md) assessment is due, it proposes one before picking an item, and you can decline. In a run of several items it carries on picking and only names the assessment in the final report.

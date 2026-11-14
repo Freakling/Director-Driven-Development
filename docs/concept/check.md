@@ -8,7 +8,7 @@ One check defines done. Each framework ships it as `bash tools/check.sh`, and ea
 |---|---|
 | Godot-Director | Secrets with gitleaks, when it's installed; Godot's import pass; loads every script, scene and resource; fails screen scripts that hold game rules; runs the tests in parallel and times each file; scans Godot's output for errors; runs the layout lint and plays the smoke scenario headless when switched on (new games start with both on) |
 | App-Director | UI purity (UI files may not import the data layer); secrets with gitleaks; the stack's type check, lint and tests |
-| SaaSAllTheThings | The architecture rules (layers, tenant source, secrets, file sizes, cost SKUs and more); the backend build and tests; the Bicep files |
+| SaaSAllTheThings | The architecture rules (layers, tenant source, secrets, file sizes, cost SKUs and more); the backend build and tests; the Bicep files; the backend, Bicep and project steps run side by side when `[tests] parallel` is on |
 
 All three also run `tools/check.local.sh` when a project has one.
 
@@ -18,7 +18,7 @@ The check exits 0 on pass, 1 on fail and 3 when it cannot run, so "it could not 
 
 ## The pre-commit hook
 
-The git pre-commit hook runs the check before any commit that touches code. In all three it also scans every commit for secrets, whatever it touches (in Godot-Director, when gitleaks is installed). A failing task cannot land. App-Director's check has a fast and a full tier, and the hook asks for the full tier when it is due and the fast tier otherwise: see [what App-Director's check enforces](../frameworks/app-director.md#what-the-check-enforces).
+The git pre-commit hook runs the check before any commit that touches code. In all three it also scans every commit for secrets, whatever it touches (in Godot-Director, when gitleaks is installed). A failing task cannot land. App-Director's and SaaSAllTheThings' checks have a fast and a full tier, and the hook asks for the full tier when it is due and the fast tier otherwise; a push runs the full tier. The fast tier does only what a change needs: see [App-Director's tiers](../frameworks/app-director.md#the-fast-and-the-full-tier) and [SaaSAllTheThings' tiers](../frameworks/saasallthethings.md#the-fast-and-the-full-tier).
 
 ## What a person proves
 

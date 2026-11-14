@@ -47,7 +47,7 @@ The check, `bash tools/check.sh`, ends with one of three results.
 |---|---|---|
 | 0 | It passed | Nothing |
 | 1 | It ran and found something | Read the output: the agent shows it and fixes what it points at. The pre-commit hook blocks the commit until the check passes |
-| 3 | It couldn't run | Fix what the output names. For a missing tool, run `bash tools/setup-clone.sh`, which checks the toolchain and says what is missing. For a timeout, see App-Director and Godot-Director below. Another check still running past `CHECK_WAIT` in App-Director also exits 3: run it again once that check ends |
+| 3 | It couldn't run | Fix what the output names. For a missing tool, run `bash tools/setup-clone.sh`, which checks the toolchain and says what is missing. For a timeout, see the framework below. Another check still running past `CHECK_WAIT` in App-Director also exits 3: run it again once that check ends |
 
 What can be missing depends on the framework:
 
@@ -55,7 +55,7 @@ What can be missing depends on the framework:
 - **Godot-Director:** Godot is not found, or is older than 4.5. Give the agent the path to Godot; `setup-clone.sh` records it for this machine. Where GNU `timeout` is installed, a Godot run that passes its timeout also exits 3, and the report names the test file it was in. A hung test needs fixing; a suite that is only slow can have a longer `[tests] timeout` in `tools/check.cfg` (600 seconds by default). The check ends each run with its ten slowest test files, which show where the time goes. More in [what the check enforces](../frameworks/godot-director.md#what-the-check-enforces).
 
 Balanced test jobs are opt-in. `[tests] balance = true` in `tools/check.cfg` deals the test files to the parallel jobs by the last run's times, and `split_over` (seconds) splits a slow file by test method. A file whose tests share state across methods keeps a line `# gdir: no-split` among its first ten lines and runs whole, and `bash tools/check.sh --jobs 1` measures every file whole again. Where heavy test files compete for the CPU, balancing may not help, so measure with the slowest-files summary before and after. Turn it on only once no test depends on the order the files run in.
-- **SaaSAllTheThings:** the toolchain of your backend stack is missing, such as the .NET SDK for the default stack.
+- **SaaSAllTheThings:** the toolchain of your backend stack is missing, such as the .NET SDK for the default stack. A run past its tier's time limit also exits 3 (`[tests] timeout-fast` or `timeout-full` in `tools/check.cfg`); raise the setting. More in [the fast and the full tier](../frameworks/saasallthethings.md#the-fast-and-the-full-tier).
 
 An exit 3 is not a failure of your work. The agent reports the work as unverified rather than done, and says why.
 
@@ -115,6 +115,6 @@ This is by design too: the agent commits only with your approval. Asking for a r
 ## Related
 
 - The install sections of [App-Director](../frameworks/app-director.md#install), [Godot-Director](../frameworks/godot-director.md#install) and [SaaSAllTheThings](../frameworks/saasallthethings.md#install).
-- The procedures: [App-Director onboarding](https://github.com/Freakling/App-Director/blob/v1.16.0/ONBOARDING.md), [Godot-Director onboarding](https://github.com/Freakling/Godot-Director/blob/v4.10.4/ONBOARDING.md) and [SaaSAllTheThings onboarding](https://github.com/Freakling/SaaSAllTheThings/blob/v0.16.3/ONBOARDING.md).
+- The procedures: [App-Director onboarding](https://github.com/Freakling/App-Director/blob/v1.16.0/ONBOARDING.md), [Godot-Director onboarding](https://github.com/Freakling/Godot-Director/blob/v4.10.4/ONBOARDING.md) and [SaaSAllTheThings onboarding](https://github.com/Freakling/SaaSAllTheThings/blob/v0.17.0/ONBOARDING.md).
 
 <div class="takeaway"><span>Update, restart, and the commands you expect are there.</span><span class="url"><a href="index.md">All questions</a></span></div>
