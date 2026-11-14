@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T352 · B80 · R11
+**Next IDs:** T353 · B80 · R11
 
 ## Milestones
 | Milestone | Status |
@@ -1951,48 +1951,48 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Brief: Scope › Framework features
 - Stories: US-5, US-9, US-10, US-11
 
-### B71 · SaaSAllTheThings: the .NET stack's build runs without the check's time limit · in-progress 2026-11-14 · S · agent · low
-- PRs: SaaSAllTheThings #52 (open)
+### B71 · SaaSAllTheThings: the .NET stack's build runs without the check's time limit · done 2026-11-15 · S · agent · low
+- PRs: SaaSAllTheThings #52 (merged)
 - Touches: work/SaaSAllTheThings: framework/tools/stacks/dotnet.sh, selftest.sh, CHANGELOG.md, TASKS.md
 - Repro: 1. In an app with `stack = dotnet` and `[tests] timeout = 60`, make `dotnet build` hang (a build step that waits). 2. Run `bash tools/check.sh`. Expected: the build is stopped at the limit and the check exits 3, as `dotnet test` is. Actual: `stack_check` in `tools/stacks/dotnet.sh` runs `dotnet build` without `run_limited`, so only `dotnet test` is cut, and a hung build holds the check, or its stack step when the steps run side by side, for as long as it hangs.
 - Found in: T339 (the builder's report), read in the script; not reproduced, since this machine has no .NET SDK
 - Brief: -
 - Stories: -
 
-### B72 · SaaSAllTheThings: an interrupted side-by-side check leaves its steps' commands running in Git Bash · in-progress 2026-11-14 · S · agent · low
-- PRs: SaaSAllTheThings #52 (open)
+### B72 · SaaSAllTheThings: an interrupted side-by-side check leaves its steps' commands running in Git Bash · done 2026-11-15 · S · agent · low
+- PRs: SaaSAllTheThings #52 (merged)
 - Touches: work/SaaSAllTheThings: framework/tools/check.sh, selftest.sh, CHANGELOG.md, TASKS.md
 - Repro: 1. In an app with `[tests] parallel = on` and a `tools/check.local.sh` that runs `sleep 300`, start `bash tools/check.sh` in Git Bash on Windows. 2. Send it `TERM` (`kill <pid>`). Expected: the step shells and the commands they started stop, as the CHANGELOG says ("An interrupted run stops its jobs"). Actual: `cleanup()` stops what a step started with `pkill -P`, and a plain Git Bash shell has no `pkill`, so only the step shells are killed, and `sleep`, or `npm` and `node` in a real app, run on until they end.
 - Found in: T339 (read in the script while verifying its build; `pkill` checked on this machine, the interrupt itself not reproduced)
 - Brief: -
 - Stories: -
 
-### B73 · SaaSAllTheThings: the selftest's `put` helper makes a folder out of a file name without a slash · in-progress 2026-11-14 · XS · agent · low
-- PRs: SaaSAllTheThings #52 (open)
+### B73 · SaaSAllTheThings: the selftest's `put` helper makes a folder out of a file name without a slash · done 2026-11-15 · XS · agent · low
+- PRs: SaaSAllTheThings #52 (merged)
 - Touches: work/SaaSAllTheThings: selftest.sh, TASKS.md
 - Repro: 1. In a case of `selftest.sh`, call `put notes.txt "x"` in a test folder. Expected: a file `notes.txt` holding `x`. Actual: `${1%/*}` is the whole name when it has no slash, so `put` runs `mkdir -p notes.txt` and the write to it fails: a folder named `notes.txt` and no file. No case calls it that way today, so nothing fails yet.
 - Found in: T340 (the builder's report), read in `selftest.sh` (the `put` helper)
 - Brief: -
 - Stories: -
 
-### B74 · SaaSAllTheThings: a check that waited for another one compares with the fingerprint from before the wait · in-progress 2026-11-14 · S · agent · low
-- PRs: SaaSAllTheThings #52 (open)
+### B74 · SaaSAllTheThings: a check that waited for another one compares with the fingerprint from before the wait · done 2026-11-15 · S · agent · low
+- PRs: SaaSAllTheThings #52 (merged)
 - Touches: work/SaaSAllTheThings: framework/tools/check.sh, selftest.sh, CHANGELOG.md, TASKS.md
 - Repro: 1. Start `bash tools/check.sh` in an app. 2. While it runs, start `bash tools/check.sh --if-changed`, which waits for the lock. 3. Edit a source file in the two seconds between the first run recording its pass and the second run taking the lock. Expected: the second run checks the edited files. Actual: it took its fingerprint before the wait and asks `reuse_last` with that one, so it prints a pass for files it never saw. An edit earlier in the wait costs a run instead: the second run checks the current files, finds that its old fingerprint differs from the new one, and records no pass ("files changed while the check ran").
 - Found in: T340 (its review), read in `check.sh` at v0.16.3; not reproduced
 - Brief: -
 - Stories: -
 
-### B75 · SaaSAllTheThings: a file whose name git quotes is left out of the check's fingerprint · in-progress 2026-11-14 · S · agent · low
-- PRs: SaaSAllTheThings #52 (open)
+### B75 · SaaSAllTheThings: a file whose name git quotes is left out of the check's fingerprint · done 2026-11-15 · S · agent · low
+- PRs: SaaSAllTheThings #52 (merged)
 - Touches: work/SaaSAllTheThings: framework/tools/check.sh, selftest.sh, CHANGELOG.md, TASKS.md
 - Repro: 1. On Linux or macOS, in an app with a passing check, add a source file whose name holds a double quote or a backslash, and run `bash tools/check.sh`. 2. Change that file and run `bash tools/check.sh --if-changed`. Expected: the check runs, since a file changed. Actual: `fingerprint()` reads `git ls-files` without `-z`, git prints such a name quoted even with `core.quotePath=false`, the `[ -f ]` test fails on the quoted form, and the file is left out of the hash, so the last pass is reused. Windows allows neither character in a file name.
 - Found in: T340 (its review), read in `check.sh`; not reproduced
 - Brief: -
 - Stories: -
 
-### T346 · SaaSAllTheThings: a push that changes only documentation runs no check · in-progress 2026-11-14 · M · agent
-- PRs: SaaSAllTheThings #52 (open)
+### T346 · SaaSAllTheThings: a push that changes only documentation runs no check · done 2026-11-15 · M · agent
+- PRs: SaaSAllTheThings #52 (merged)
 - Depends on: T341
 - Touches: work/SaaSAllTheThings: framework/.githooks/pre-push, framework/tools/setup-clone.sh, framework/.satt/rules.md, selftest.sh, CHANGELOG.md, TASKS.md
 - Done when: the pre-push hook runs no check for a push whose commits change only paths the check doesn't count (Markdown outside `adr/` and outside `[tests] full-when`, asked of `bash tools/check.sh --unignored`), so a clone without the backend's toolchain can push documentation; every other push runs the full tier as before (test) · `rules.md` › Running the check and the comment in `tools/setup-clone.sh` say so (check) · the selftest passes (check) · following AGENTS.md › Project rules for framework work
@@ -2000,8 +2000,8 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Brief: -
 - Stories: -
 
-### T347 · SaaSAllTheThings: the Stop hook stops waiting for a running check at the fast tier's limit · in-progress 2026-11-14 · M · agent
-- PRs: SaaSAllTheThings #52 (open)
+### T347 · SaaSAllTheThings: the Stop hook stops waiting for a running check at the fast tier's limit · done 2026-11-15 · M · agent
+- PRs: SaaSAllTheThings #52 (merged)
 - Depends on: T341
 - Touches: work/SaaSAllTheThings: framework/tools/check.sh, framework/.claude/hooks/stop-check.sh, framework/.satt/rules.md, selftest.sh, CHANGELOG.md, TASKS.md
 - Done when: a check that waits for another one stops waiting after the seconds in `CHECK_WAIT` (or the limit of the tier it names), prints a `check: busy:` line naming the run it waited for, and exits 3 without starting a second check (test) · the Stop hook asks with `CHECK_WAIT=fast` and lets the turn end on that line (test) · the selftest passes (check) · following AGENTS.md › Project rules for framework work
@@ -2009,8 +2009,8 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Brief: -
 - Stories: -
 
-### B76 · A push of main from a prototype worktree runs no check · in-progress 2026-11-14 · S · agent · low
-- PRs: SaaSAllTheThings #52 (open), App-Director #55 (open)
+### B76 · A push of main from a prototype worktree runs no check · done 2026-11-15 · S · agent · low
+- PRs: SaaSAllTheThings #52 (merged), App-Director #55 (merged)
 - Touches: work/SaaSAllTheThings: framework/.githooks/pre-push, selftest.sh, CHANGELOG.md, TASKS.md · work/App-Director: the same files
 - Repro: 1. In an app with a failing check committed on `main`, start a prototype (`bash tools/prototype.sh start try`). 2. In the prototype's worktree, run `git push origin main`. Expected: the push is checked like a push from the main checkout, or refused there. Actual: `main` holds no prototype commits, so the refusal doesn't apply, and the hook then skips the check because the checkout is a prototype: `main` is pushed unchecked.
 - Found in: T341 (its review), read in the hooks of SaaSAllTheThings and App-Director; not reproduced. The hook also checks the working tree and not the commits it pushes, which its comment says.
@@ -2054,21 +2054,29 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Brief: -
 - Stories: -
 
-### T350 · Release SaaSAllTheThings 0.18.0 · in-progress 2026-11-14 · S · agent
-- PRs: SaaSAllTheThings #52 (open)
+### T350 · Release SaaSAllTheThings 0.18.0 · done 2026-11-15 · S · agent
+- PRs: SaaSAllTheThings #52 (merged)
 - Depends on: B71, B72, B73, B74, B75, T346, T347, B76
 - Touches: work/SaaSAllTheThings: the version files, CHANGELOG.md
 - Done when: it ends the bundle that carries B71 to B76, T346 and T347 (SaaSAllTheThings #52), the bundle is merged and `tools/work-release.sh` has tagged and published it
 - Brief: -
 - Stories: -
 
-### T351 · Release App-Director 1.16.1 · in-progress 2026-11-14 · S · agent
-- PRs: App-Director #55 (open)
+### T351 · Release App-Director 1.16.1 · done 2026-11-15 · S · agent
+- PRs: App-Director #55 (merged)
 - Depends on: B76
 - Touches: work/App-Director: the version files, CHANGELOG.md
 - Done when: it ends the bundle that carries B76's App-Director half (App-Director #55), the bundle is merged and `tools/work-release.sh` has tagged and published it
 - Brief: -
 - Stories: -
+
+### T352 · Docs follow SaaSAllTheThings 0.18.0 and App-Director 1.16.1 · proposed · M · agent
+- Depends on: T350, T351
+- Touches: frameworks.lock, docs/**/*.md (the SaaSAllTheThings and App-Director links), docs/frameworks/saasallthethings.md, docs/frameworks/app-director.md, docs/concept/check.md, docs/how-to/check.md, docs/skills/prototype.md, docs/how-to/prototype.md, docs/how-to/trouble.md
+- Done when: `frameworks.lock` and every SaaSAllTheThings and App-Director link are at v0.18.0 and v1.16.1 (check) · the pages say what the releases ship, checked against them: in SaaSAllTheThings a push that changes only documentation runs no check and the Stop hook stops waiting for a running check at the fast tier's limit, and in both frameworks a push that sends commits from a prototype's checkout is refused (check) · `bash tools/audit.sh` prints PASS and `bash tools/check.sh` passes (check)
+- Note: filed when SaaSAllTheThings #52 and App-Director #55 were merged and both releases published. Until it is built the selftest warns that both frameworks are released past their pins, and stays green.
+- Brief: Scope › Framework features
+- Stories: US-5, US-9, US-10, US-11
 
 ### T312 · Release SaaSAllTheThings 0.16.1 · done 2026-11-04 · S · agent
 - PRs: SaaSAllTheThings #48 (merged)
