@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T348 · B77 · R11
+**Next IDs:** T349 · B77 · R11
 
 ## Milestones
 | Milestone | Status |
@@ -1927,13 +1927,15 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Stories: -
 
 ### T343 · SaaSAllTheThings: the .NET fast tier tests the changed projects and the projects that reference them · in-progress 2026-11-13 · M · agent
+- PRs: SaaSAllTheThings #51 (open)
+- Note: built 2026-11-14 as SaaSAllTheThings' T54 and reviewed twice, because this machine has no .NET SDK: the selftest's real .NET part was skipped, so `dotnet` never ran against the change. The reviewer walked the selection by hand over `examples/order-desk` and got what the three cases of the real .NET part expect; about 60 cases with a stand-in `dotnet` run on every machine. The selection stays inside the target (the projects a `.sln`, `.slnx` or `.slnf` names, or a project-file target and what it references), the test step has one time budget, and every selected project runs. When the selection can't be sure, the whole `dotnet test` of the target runs and the check says why: a test SDK from a `Directory.Build.props`, a project that imports a file, a name or folder ending in `test` or `tests` without a test SDK, a reference it can't resolve, and more. `<IsTestProject>false</IsTestProject>` in a project's own file says it is no test project. The same commit fixes the two faults in T342's selection. It also changed `framework/tools/stacks/typescript.sh`, which Touches doesn't list. The selftest passed 1060 of 1060. T348 is proposed for the run with the real SDK.
 - Depends on: T342
 - Touches: work/SaaSAllTheThings: framework/tools/stacks/dotnet.sh, framework/tools/stacks/python.sh, framework/.satt/reference/stacks.md, selftest.sh, CHANGELOG.md, TASKS.md
 - Done when: in the fast tier the .NET stack builds the whole target and runs `dotnet test` only for the test projects that changed or that reference a changed project, directly or through other projects, read from their `ProjectReference` entries; a changed file outside every project runs every test project, and the run names the test projects it ran and the ones it left to the full tier (test) · the Python stack runs whole in both tiers and the check says so (test) · the selftest passes (check) · following AGENTS.md › Project rules for framework work
 - Brief: Scope › Planned framework changes
 - Stories: -
 
-### T344 · Release SaaSAllTheThings 0.17.0 · todo · S · agent
+### T344 · Release SaaSAllTheThings 0.17.0 · in-progress 2026-11-14 · S · agent
 - Depends on: T341, T343
 - Touches: work/SaaSAllTheThings: the version files, CHANGELOG.md
 - Done when: it ends the bundle that carries T339 to T343, the bundle is merged and `tools/work-release.sh` has tagged and published it
@@ -2002,6 +2004,14 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Touches: work/SaaSAllTheThings: framework/.githooks/pre-push, selftest.sh, CHANGELOG.md, TASKS.md · work/App-Director: the same files
 - Repro: 1. In an app with a failing check committed on `main`, start a prototype (`bash tools/prototype.sh start try`). 2. In the prototype's worktree, run `git push origin main`. Expected: the push is checked like a push from the main checkout, or refused there. Actual: `main` holds no prototype commits, so the refusal doesn't apply, and the hook then skips the check because the checkout is a prototype: `main` is pushed unchecked.
 - Found in: T341 (its review), read in the hooks of SaaSAllTheThings and App-Director; not reproduced. The hook also checks the working tree and not the commits it pushes, which its comment says.
+- Brief: -
+- Stories: -
+
+### T348 · SaaSAllTheThings: the selftest's .NET part runs against the fast tier's project selection · proposed · S · agent
+- Depends on: T344
+- Touches: work/SaaSAllTheThings: selftest.sh, framework/tools/stacks/dotnet.sh, CHANGELOG.md, TASKS.md
+- Done when: `bash selftest.sh` in `work/SaaSAllTheThings` runs its .NET part on a machine with the .NET SDK 8 or newer and passes, the three fast-tier cases on `examples/order-desk` included: a change in the Domain project tests both test projects, and a change in the Application project tests its own and leaves the Domain's (check) · the lines `dotnet test <project> --no-build` prints come through the check as they do for the whole target (check) · what fails is fixed there, or filed as a bug item (check) · following AGENTS.md › Project rules for framework work
+- Note: found while building T343. This machine has no .NET SDK and SaaSAllTheThings' repository has no CI, so nothing has run the real `dotnet` against T343: its cases use a stand-in. It needs the SDK installed here, which is the director's call, or a run on another machine.
 - Brief: -
 - Stories: -
 
