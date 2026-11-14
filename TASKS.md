@@ -1968,13 +1968,14 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Stories: -
 
 ### B73 · SaaSAllTheThings: the selftest's `put` helper makes a folder out of a file name without a slash · in-progress 2026-11-14 · XS · agent · low
+- PRs: SaaSAllTheThings #52 (open)
 - Touches: work/SaaSAllTheThings: selftest.sh, TASKS.md
 - Repro: 1. In a case of `selftest.sh`, call `put notes.txt "x"` in a test folder. Expected: a file `notes.txt` holding `x`. Actual: `${1%/*}` is the whole name when it has no slash, so `put` runs `mkdir -p notes.txt` and the write to it fails: a folder named `notes.txt` and no file. No case calls it that way today, so nothing fails yet.
 - Found in: T340 (the builder's report), read in `selftest.sh` (the `put` helper)
 - Brief: -
 - Stories: -
 
-### B74 · SaaSAllTheThings: a check that waited for another one compares with the fingerprint from before the wait · todo · S · agent · low
+### B74 · SaaSAllTheThings: a check that waited for another one compares with the fingerprint from before the wait · in-progress 2026-11-14 · S · agent · low
 - Touches: work/SaaSAllTheThings: framework/tools/check.sh, selftest.sh, CHANGELOG.md, TASKS.md
 - Repro: 1. Start `bash tools/check.sh` in an app. 2. While it runs, start `bash tools/check.sh --if-changed`, which waits for the lock. 3. Edit a source file in the two seconds between the first run recording its pass and the second run taking the lock. Expected: the second run checks the edited files. Actual: it took its fingerprint before the wait and asks `reuse_last` with that one, so it prints a pass for files it never saw. An edit earlier in the wait costs a run instead: the second run checks the current files, finds that its old fingerprint differs from the new one, and records no pass ("files changed while the check ran").
 - Found in: T340 (its review), read in `check.sh` at v0.16.3; not reproduced
