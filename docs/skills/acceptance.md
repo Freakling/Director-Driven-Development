@@ -32,7 +32,7 @@ The skill is `/function-check`. Its procedure is at [`framework/.godot-director/
 
 ### App-Director
 
-The procedure is at [`framework/.app-director/procedures/acceptance.md`](https://github.com/Freakling/App-Director/tree/v1.16.0/framework/.app-director/procedures/acceptance.md) in the App-Director repository.
+The procedure is at [`framework/.app-director/procedures/acceptance.md`](https://github.com/Freakling/App-Director/tree/v1.16.1/framework/.app-director/procedures/acceptance.md) in the App-Director repository.
 
 - It collects the `(demo)` outcomes, and the checklist is written to `validation/YYYY-MM-DD-acceptance.md`.
 - The checklist header names the environment, `local`, `staging` or `prod`, and the *How* hints name the test account and any state the item needs.
@@ -42,7 +42,7 @@ The procedure is at [`framework/.app-director/procedures/acceptance.md`](https:/
 
 ### SaaSAllTheThings
 
-The procedure is at [`framework/.satt/procedures/acceptance.md`](https://github.com/Freakling/SaaSAllTheThings/tree/v0.17.0/framework/.satt/procedures/acceptance.md) in the SaaSAllTheThings repository.
+The procedure is at [`framework/.satt/procedures/acceptance.md`](https://github.com/Freakling/SaaSAllTheThings/tree/v0.18.0/framework/.satt/procedures/acceptance.md) in the SaaSAllTheThings repository.
 
 - It collects the `(demo)` outcomes, and the checklist is written to `validation/YYYY-MM-DD-acceptance.md` with the environment, `local` or `dev`.
 - Each item names the client and the role to use. Items about tenant isolation tell the tester to sign in as the second test tenant and confirm that the first tenant's data isn't visible.

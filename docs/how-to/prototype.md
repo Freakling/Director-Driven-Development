@@ -23,7 +23,7 @@ A prototype is for feeling an idea, so it skips the parts of the loop that make 
 - **The command guard,** which blocks work-destroying git commands.
 - **The secrets scan on every commit.** It is the only gate, so a finding blocks the commit, and so does a scan that can't run. Excusing a secret goes through you, in the main session.
 - **Your protected space,** `director/`, which stays yours.
-- **No push and no merge.** The pre-push hook refuses a `proto/` branch and any commit only such a branch has, and the agent never merges a prototype into another branch, or another into it.
+- **No push and no merge.** The pre-push hook refuses a `proto/` branch and any commit only such a branch has, and in App-Director and SaaSAllTheThings also any push that sends commits from a prototype's checkout (push from the main checkout), and the agent never merges a prototype into another branch, or another into it.
 
 **Off:**
 
@@ -64,6 +64,6 @@ A prototype is for feeling an idea, so it skips the parts of the loop that make 
 
 - The [`/prototype` skill page](../skills/prototype.md), with what the gates are in each framework.
 - The harvest files stories as well as decisions: [User stories](../concept/user-stories.md), and [How do I decide what gets built?](decide.md) for the session itself.
-- The procedures: [App-Director](https://github.com/Freakling/App-Director/tree/v1.16.0/framework/.app-director/procedures/prototype.md), [Godot-Director](https://github.com/Freakling/Godot-Director/tree/v4.10.4/framework/.godot-director/procedures/prototype.md) and [SaaSAllTheThings](https://github.com/Freakling/SaaSAllTheThings/tree/v0.17.0/framework/.satt/procedures/prototype.md).
+- The procedures: [App-Director](https://github.com/Freakling/App-Director/tree/v1.16.1/framework/.app-director/procedures/prototype.md), [Godot-Director](https://github.com/Freakling/Godot-Director/tree/v4.10.4/framework/.godot-director/procedures/prototype.md) and [SaaSAllTheThings](https://github.com/Freakling/SaaSAllTheThings/tree/v0.18.0/framework/.satt/procedures/prototype.md).
 
 <div class="takeaway"><span>Try it fast in a prototype, then build what you keep from main.</span><span class="url"><a href="index.md">All questions</a></span></div>

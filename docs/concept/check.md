@@ -18,7 +18,7 @@ The check exits 0 on pass, 1 on fail and 3 when it cannot run, so "it could not 
 
 ## The pre-commit hook
 
-The git pre-commit hook runs the check before any commit that touches code. In all three it also scans every commit for secrets, whatever it touches (in Godot-Director, when gitleaks is installed). A failing task cannot land. App-Director's and SaaSAllTheThings' checks have a fast and a full tier, and the hook asks for the full tier when it is due and the fast tier otherwise; a push runs the full tier. The fast tier does only what a change needs: see [App-Director's tiers](../frameworks/app-director.md#the-fast-and-the-full-tier) and [SaaSAllTheThings' tiers](../frameworks/saasallthethings.md#the-fast-and-the-full-tier).
+The git pre-commit hook runs the check before any commit that touches code. In all three it also scans every commit for secrets, whatever it touches (in Godot-Director, when gitleaks is installed). A failing task cannot land. App-Director's and SaaSAllTheThings' checks have a fast and a full tier, and the hook asks for the full tier when it is due and the fast tier otherwise; a push runs the full tier, except that SaaSAllTheThings runs no check for a push that changes only documentation. The fast tier does only what a change needs: see [App-Director's tiers](../frameworks/app-director.md#the-fast-and-the-full-tier) and [SaaSAllTheThings' tiers](../frameworks/saasallthethings.md#the-fast-and-the-full-tier).
 
 ## What a person proves
 

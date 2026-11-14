@@ -47,7 +47,7 @@ The check, `bash tools/check.sh`, ends with one of three results.
 |---|---|---|
 | 0 | It passed | Nothing |
 | 1 | It ran and found something | Read the output: the agent shows it and fixes what it points at. The pre-commit hook blocks the commit until the check passes |
-| 3 | It couldn't run | Fix what the output names. For a missing tool, run `bash tools/setup-clone.sh`, which checks the toolchain and says what is missing. For a timeout, see the framework below. Another check still running past `CHECK_WAIT` in App-Director also exits 3: run it again once that check ends |
+| 3 | It couldn't run | Fix what the output names. For a missing tool, run `bash tools/setup-clone.sh`, which checks the toolchain and says what is missing. For a timeout, see the framework below. Another check still running past `CHECK_WAIT` in App-Director and SaaSAllTheThings also exits 3, with a `check: busy:` line: run it again once that check ends |
 
 What can be missing depends on the framework:
 
@@ -115,6 +115,6 @@ This is by design too: the agent commits only with your approval. Asking for a r
 ## Related
 
 - The install sections of [App-Director](../frameworks/app-director.md#install), [Godot-Director](../frameworks/godot-director.md#install) and [SaaSAllTheThings](../frameworks/saasallthethings.md#install).
-- The procedures: [App-Director onboarding](https://github.com/Freakling/App-Director/blob/v1.16.0/ONBOARDING.md), [Godot-Director onboarding](https://github.com/Freakling/Godot-Director/blob/v4.10.4/ONBOARDING.md) and [SaaSAllTheThings onboarding](https://github.com/Freakling/SaaSAllTheThings/blob/v0.17.0/ONBOARDING.md).
+- The procedures: [App-Director onboarding](https://github.com/Freakling/App-Director/blob/v1.16.1/ONBOARDING.md), [Godot-Director onboarding](https://github.com/Freakling/Godot-Director/blob/v4.10.4/ONBOARDING.md) and [SaaSAllTheThings onboarding](https://github.com/Freakling/SaaSAllTheThings/blob/v0.18.0/ONBOARDING.md).
 
 <div class="takeaway"><span>Update, restart, and the commands you expect are there.</span><span class="url"><a href="index.md">All questions</a></span></div>
