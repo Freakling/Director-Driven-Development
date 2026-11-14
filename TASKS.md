@@ -2010,6 +2010,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Stories: -
 
 ### B76 · A push of main from a prototype worktree runs no check · in-progress 2026-11-14 · S · agent · low
+- PRs: SaaSAllTheThings #52 (open), App-Director #55 (open)
 - Touches: work/SaaSAllTheThings: framework/.githooks/pre-push, selftest.sh, CHANGELOG.md, TASKS.md · work/App-Director: the same files
 - Repro: 1. In an app with a failing check committed on `main`, start a prototype (`bash tools/prototype.sh start try`). 2. In the prototype's worktree, run `git push origin main`. Expected: the push is checked like a push from the main checkout, or refused there. Actual: `main` holds no prototype commits, so the refusal doesn't apply, and the hook then skips the check because the checkout is a prototype: `main` is pushed unchecked.
 - Found in: T341 (its review), read in the hooks of SaaSAllTheThings and App-Director; not reproduced. The hook also checks the working tree and not the commits it pushes, which its comment says.
