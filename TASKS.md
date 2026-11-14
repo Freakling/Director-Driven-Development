@@ -1887,8 +1887,8 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Brief: Scope › How-to guides
 - Stories: US-9
 
-### T339 · SaaSAllTheThings: the check runs its backend, Bicep and project steps side by side · in-progress 2026-11-13 · M · agent
-- PRs: SaaSAllTheThings #51 (open)
+### T339 · SaaSAllTheThings: the check runs its backend, Bicep and project steps side by side · done 2026-11-14 · M · agent
+- PRs: SaaSAllTheThings #51 (merged)
 - Depends on: -
 - Touches: work/SaaSAllTheThings: framework/tools/check.sh, framework/tools/cfg.sh, project/tools/check.cfg, framework/.satt/rules.md, ONBOARDING.md, selftest.sh, CHANGELOG.md, TASKS.md
 - Done when: with the setting on, `bash tools/check.sh` runs the backend stack, the Bicep compile and `tools/check.local.sh` at the same time once the architecture step is done, each under its own time limit with its own log, prints each step's lines together in the order of a serial run, and exits 0, 1 or 3 as a serial run of the same files would (test) · the setting is a key in `tools/check.cfg`: the seed turns it on, an app without the key runs the steps in order as before, and the CHANGELOG's Upgrade steps say when to turn it on (an app whose own steps don't need the backend's build output) (test) · every run ends with each step's seconds and the total (test) · a full run in a scratch clone of Project Director is timed with the setting on and off, and both times are in the item's note (check) · the selftest passes (check) · following AGENTS.md › Project rules for framework work
@@ -1897,8 +1897,8 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Brief: Scope › Planned framework changes
 - Stories: -
 
-### T340 · SaaSAllTheThings: a fast tier for the check, selected by area · in-progress 2026-11-13 · L · agent
-- PRs: SaaSAllTheThings #51 (open)
+### T340 · SaaSAllTheThings: a fast tier for the check, selected by area · done 2026-11-14 · L · agent
+- PRs: SaaSAllTheThings #51 (merged)
 - Depends on: T339
 - Touches: work/SaaSAllTheThings: framework/tools/check.sh, framework/tools/cfg.sh, project/tools/check.cfg, framework/.satt/rules.md, selftest.sh, CHANGELOG.md, TASKS.md
 - Done when: `bash tools/check.sh --fast` runs the architecture rules and the secrets scan over the whole project, then only the steps the change from HEAD touches: the Bicep compile for a change under `infra/`, the backend stack unless every changed path is under `infra/`, in the `client` layer or documentation, and `tools/check.local.sh` with `CHECK_TIER=fast` and the changed paths in `CHECK_CHANGED`, so an app's own steps can leave out what the change doesn't touch; `bash tools/check.sh` with no argument still runs everything (test) · a change to a dependency or its lockfile, a toolchain setting, a file under `tools/` or a `[tests] full-when` path runs as the full tier and says so (test) · a recorded result names its tier, a fast pass never stands for a full one, `--if-changed` reuses a pass of the same files and tier, and `bash tools/check.sh --due` says whether the full tier is due and why: no full pass recorded, `[tests] full-every` commits since the last one, or such a path changed (test) · each tier has its own time limit, and exit codes 0, 1 and 3 and the secrets scan on every commit are unchanged (test) · the selftest passes (check) · following AGENTS.md › Project rules for framework work
@@ -1907,8 +1907,8 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Brief: Scope › Planned framework changes
 - Stories: -
 
-### T341 · SaaSAllTheThings: the hooks and the procedures pick the check's tier · in-progress 2026-11-13 · L · agent
-- PRs: SaaSAllTheThings #51 (open)
+### T341 · SaaSAllTheThings: the hooks and the procedures pick the check's tier · done 2026-11-14 · L · agent
+- PRs: SaaSAllTheThings #51 (merged)
 - Note: built 2026-11-13 as SaaSAllTheThings' T52 and reviewed twice; the first review's findings were rebuilt. The Stop hook asks for the fast tier, which T340 runs as the full tier for a dependency, a toolchain setting, a file under `tools/` or a `full-when` path, so the texts there say "the fast tier, as the full tier where the change needs it". The hooks ask the check which paths count (`--unignored`) instead of filtering Markdown themselves. `--due` reads its path rule from the changes from HEAD only, as App-Director's does: with the commits since the last full pass included, a commit that carried such a path ran the full tier and so did the next one. A change that arrives without the commit hook, such as a pull, is covered by the count and by the push. It also changed `framework/tools/check.sh` and `framework/tools/setup-clone.sh`, which Touches doesn't list; `framework/.claude/agents/builder.md` needed no change, since it points at `build.md`. A clone without the stack's toolchain can't push any more (T346 is proposed for that). The selftest passed 969 of 969; its .NET part was skipped, since this machine has no .NET SDK.
 - Depends on: T340
 - Touches: work/SaaSAllTheThings: framework/.githooks/pre-commit, framework/.githooks/pre-push, framework/.claude/hooks/stop-check.sh, framework/.satt/rules.md, framework/.satt/procedures/build.md, next-task.md, release.md, framework/.claude/agents/builder.md, README.md, ONBOARDING.md, selftest.sh, CHANGELOG.md, TASKS.md
@@ -1916,8 +1916,8 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Brief: Scope › Planned framework changes
 - Stories: -
 
-### T342 · SaaSAllTheThings: the TypeScript fast tier tests the changed packages and the packages that depend on them · in-progress 2026-11-13 · M · agent
-- PRs: SaaSAllTheThings #51 (open)
+### T342 · SaaSAllTheThings: the TypeScript fast tier tests the changed packages and the packages that depend on them · done 2026-11-14 · M · agent
+- PRs: SaaSAllTheThings #51 (merged)
 - Note: built 2026-11-13 as SaaSAllTheThings' T53. A root `test:fast` script comes first and gets the selected packages' folders in `CHECK_PACKAGES` (relative to the repository root, separated by spaces, sorted); without it, each selected package's own `test` script runs in one `npm run test --workspace` call; with neither, or when a changed backend path is outside every package, the root `test` runs whole and the check says why. The check gives the stack profile `CHECK_BACKEND_CHANGED`, the changed paths that make the backend run. The selftest passed 995 of 995; its .NET part was skipped, since this machine has no .NET SDK.
 - Note: timed on 2026-11-14 in a scratch clone of Project Director with a `test:fast` script that runs `node --test` over the selected packages' built tests. A change in `packages/functions` tests that package alone, 426 of the 2,403 backend tests; a change in `packages/domain` tests every package but `contracts`, 2,349 tests, since the others depend on it. The test step alone, three rounds each while other sessions' checks ran on the machine: 30, 30 and 43 seconds for the functions change and 76, 181 and 146 for the domain change, against 82, 95 and 107 for the whole test. Whole fast runs under that load took 286 seconds (functions) and 448 (domain), with the architecture step at 92 and 113 of them, so the totals say little. The timing found two faults in T53, fixed in T343's build: the profile wrote its node script to `.satt/state/select-packages.js`, which node loaded as an ES module in an app whose root `package.json` says `"type": "module"`, so the selection fell back to the whole test, and which the app's own `eslint .` then linted and failed on. The script now goes to node on stdin.
 - Depends on: T340
@@ -1926,8 +1926,8 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Brief: Scope › Planned framework changes
 - Stories: -
 
-### T343 · SaaSAllTheThings: the .NET fast tier tests the changed projects and the projects that reference them · in-progress 2026-11-13 · M · agent
-- PRs: SaaSAllTheThings #51 (open)
+### T343 · SaaSAllTheThings: the .NET fast tier tests the changed projects and the projects that reference them · done 2026-11-14 · M · agent
+- PRs: SaaSAllTheThings #51 (merged)
 - Note: built 2026-11-14 as SaaSAllTheThings' T54 and reviewed twice, because this machine has no .NET SDK: the selftest's real .NET part was skipped, so `dotnet` never ran against the change. The reviewer walked the selection by hand over `examples/order-desk` and got what the three cases of the real .NET part expect; about 60 cases with a stand-in `dotnet` run on every machine. The selection stays inside the target (the projects a `.sln`, `.slnx` or `.slnf` names, or a project-file target and what it references), the test step has one time budget, and every selected project runs. When the selection can't be sure, the whole `dotnet test` of the target runs and the check says why: a test SDK from a `Directory.Build.props`, a project that imports a file, a name or folder ending in `test` or `tests` without a test SDK, a reference it can't resolve, and more. `<IsTestProject>false</IsTestProject>` in a project's own file says it is no test project. The same commit fixes the two faults in T342's selection. It also changed `framework/tools/stacks/typescript.sh`, which Touches doesn't list. The selftest passed 1060 of 1060. T348 is proposed for the run with the real SDK.
 - Depends on: T342
 - Touches: work/SaaSAllTheThings: framework/tools/stacks/dotnet.sh, framework/tools/stacks/python.sh, framework/.satt/reference/stacks.md, selftest.sh, CHANGELOG.md, TASKS.md
@@ -1935,8 +1935,8 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Brief: Scope › Planned framework changes
 - Stories: -
 
-### T344 · Release SaaSAllTheThings 0.17.0 · in-progress 2026-11-14 · S · agent
-- PRs: SaaSAllTheThings #51 (open)
+### T344 · Release SaaSAllTheThings 0.17.0 · done 2026-11-14 · S · agent
+- PRs: SaaSAllTheThings #51 (merged)
 - Note: the release commit ends the bundle on 2026-11-14: the version files are at 0.17.0, the changelog section is headed 0.17.0 with its entries in the order they were built, and the release notes are the pull request's description. The selftest passed 1060 of 1060 on the release commit's files; its .NET part was skipped, since this machine has no .NET SDK. Next, once the director has merged the bundle: `bash tools/work-release.sh work/SaaSAllTheThings 51`.
 - Depends on: T341, T343
 - Touches: work/SaaSAllTheThings: the version files, CHANGELOG.md
