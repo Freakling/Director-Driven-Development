@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T349 · B79 · R11
+**Next IDs:** T349 · B80 · R11
 
 ## Milestones
 | Milestone | Status |
@@ -1984,13 +1984,14 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Stories: -
 
 ### B75 · SaaSAllTheThings: a file whose name git quotes is left out of the check's fingerprint · in-progress 2026-11-14 · S · agent · low
+- PRs: SaaSAllTheThings #52 (open)
 - Touches: work/SaaSAllTheThings: framework/tools/check.sh, selftest.sh, CHANGELOG.md, TASKS.md
 - Repro: 1. On Linux or macOS, in an app with a passing check, add a source file whose name holds a double quote or a backslash, and run `bash tools/check.sh`. 2. Change that file and run `bash tools/check.sh --if-changed`. Expected: the check runs, since a file changed. Actual: `fingerprint()` reads `git ls-files` without `-z`, git prints such a name quoted even with `core.quotePath=false`, the `[ -f ]` test fails on the quoted form, and the file is left out of the hash, so the last pass is reused. Windows allows neither character in a file name.
 - Found in: T340 (its review), read in `check.sh`; not reproduced
 - Brief: -
 - Stories: -
 
-### T346 · SaaSAllTheThings: a push that changes only documentation runs no check · todo · M · agent
+### T346 · SaaSAllTheThings: a push that changes only documentation runs no check · in-progress 2026-11-14 · M · agent
 - Depends on: T341
 - Touches: work/SaaSAllTheThings: framework/.githooks/pre-push, framework/tools/setup-clone.sh, framework/.satt/rules.md, selftest.sh, CHANGELOG.md, TASKS.md
 - Done when: the pre-push hook runs no check for a push whose commits change only paths the check doesn't count (Markdown outside `adr/` and outside `[tests] full-when`, asked of `bash tools/check.sh --unignored`), so a clone without the backend's toolchain can push documentation; every other push runs the full tier as before (test) · `rules.md` › Running the check and the comment in `tools/setup-clone.sh` say so (check) · the selftest passes (check) · following AGENTS.md › Project rules for framework work
@@ -2032,6 +2033,13 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Touches: work/SaaSAllTheThings: selftest.sh, TASKS.md
 - Repro: 1. Run `bash selftest.sh` in `work/SaaSAllTheThings` on a machine that is busy for a few seconds while the guard's timing case runs. Expected: the case passes, since the guard reads the 14 KB here-string in about the heredoc's time (0.6 seconds against 0.7 when the two are timed alone). Actual: `FAIL the guard is too slow on a long body that names bash.exe and git.exe -c ...: (PowerShell) the here-string took 2.257s against 0.922s for the heredoc: its body is read as commands`. The case says it takes the best of three runs, and it compares whole seconds only (`${slow_s%%.*}`), so a first run under a second is never bettered and three runs between 2 and 3 seconds keep the first of them. The heredoc and the here-string are timed one after the other, so a load that comes between them fails the ratio (1.5 times the heredoc's time plus half a second).
 - Found in: B71 (its first gate run: 1064 passed and this case failed; the second run of the same files passed, 1065 of 1065)
+- Brief: -
+- Stories: -
+
+### B79 · SaaSAllTheThings: a file whose name git quotes is missing from the check's other file lists · proposed · S · agent · low
+- Touches: work/SaaSAllTheThings: framework/tools/check.sh, framework/.githooks/pre-commit, framework/.claude/hooks/stop-check.sh, selftest.sh, CHANGELOG.md, TASKS.md
+- Repro: 1. In an app, add a source file whose name holds a DEL character (or, on Linux or macOS, a double quote or a backslash) and that breaks an architecture rule or holds a secret pattern. 2. Run `bash tools/check.sh`, then stage only that file and commit. Expected: the architecture step and the secrets scan read the file, and the commit runs the check. Actual: the architecture step lists the files with `git ls-files` without `-z`, so the name arrives quoted and the file isn't read; `--unignored` reads the paths the hooks give it line by line, so the quoted name isn't counted and the commit starts no check; and the changed paths of the fast tier are turned from `-z` back into lines, so a name with a newline splits in two.
+- Found in: B75 (the builder's report), read in `check.sh`; not reproduced
 - Brief: -
 - Stories: -
 
