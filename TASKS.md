@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T349 · B78 · R11
+**Next IDs:** T349 · B79 · R11
 
 ## Milestones
 | Milestone | Status |
@@ -1951,14 +1951,15 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Brief: Scope › Framework features
 - Stories: US-5, US-9, US-10, US-11
 
-### B71 · SaaSAllTheThings: the .NET stack's build runs without the check's time limit · todo · S · agent · low
+### B71 · SaaSAllTheThings: the .NET stack's build runs without the check's time limit · in-progress 2026-11-14 · S · agent · low
+- PRs: SaaSAllTheThings #52 (open)
 - Touches: work/SaaSAllTheThings: framework/tools/stacks/dotnet.sh, selftest.sh, CHANGELOG.md, TASKS.md
 - Repro: 1. In an app with `stack = dotnet` and `[tests] timeout = 60`, make `dotnet build` hang (a build step that waits). 2. Run `bash tools/check.sh`. Expected: the build is stopped at the limit and the check exits 3, as `dotnet test` is. Actual: `stack_check` in `tools/stacks/dotnet.sh` runs `dotnet build` without `run_limited`, so only `dotnet test` is cut, and a hung build holds the check, or its stack step when the steps run side by side, for as long as it hangs.
 - Found in: T339 (the builder's report), read in the script; not reproduced, since this machine has no .NET SDK
 - Brief: -
 - Stories: -
 
-### B72 · SaaSAllTheThings: an interrupted side-by-side check leaves its steps' commands running in Git Bash · todo · S · agent · low
+### B72 · SaaSAllTheThings: an interrupted side-by-side check leaves its steps' commands running in Git Bash · in-progress 2026-11-14 · S · agent · low
 - Touches: work/SaaSAllTheThings: framework/tools/check.sh, selftest.sh, CHANGELOG.md, TASKS.md
 - Repro: 1. In an app with `[tests] parallel = on` and a `tools/check.local.sh` that runs `sleep 300`, start `bash tools/check.sh` in Git Bash on Windows. 2. Send it `TERM` (`kill <pid>`). Expected: the step shells and the commands they started stop, as the CHANGELOG says ("An interrupted run stops its jobs"). Actual: `cleanup()` stops what a step started with `pkill -P`, and a plain Git Bash shell has no `pkill`, so only the step shells are killed, and `sleep`, or `npm` and `node` in a real app, run on until they end.
 - Found in: T339 (read in the script while verifying its build; `pkill` checked on this machine, the interrupt itself not reproduced)
@@ -2021,6 +2022,13 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Touches: tools/check.cfg
 - Repro: 1. After a passing `bash tools/check.sh`, change a page under `docs/` so that the selftest would fail (a broken link, or an en dash). 2. Run `bash tools/check.sh --if-changed`, or commit and push. Expected: the check runs the selftest again, since the pages are what it checks, and fails. Actual: it prints `check: PASS (reused the full pass ...; nothing changed)`. The check counts only source paths and `[tests] full-when` paths, `tools/check.cfg` has no `[tests]` section, and a page or the stylesheet under `docs/`, `overrides/main.html`, `frameworks.lock` and `selftest.sh` are neither (`bash tools/check.sh --unignored` prints none of them). The pre-commit and pre-push hooks reuse the same pass, so such a change is checked only by CI after the push, where a failure stops the deploy.
 - Found in: T345 (three sentences corrected after the builder's run were committed and pushed on a reused pass; a full run from scratch and CI passed afterwards)
+- Brief: -
+- Stories: -
+
+### B78 · SaaSAllTheThings: the selftest's guard timing case fails when the machine is busy for a few seconds · proposed · S · agent · low
+- Touches: work/SaaSAllTheThings: selftest.sh, TASKS.md
+- Repro: 1. Run `bash selftest.sh` in `work/SaaSAllTheThings` on a machine that is busy for a few seconds while the guard's timing case runs. Expected: the case passes, since the guard reads the 14 KB here-string in about the heredoc's time (0.6 seconds against 0.7 when the two are timed alone). Actual: `FAIL the guard is too slow on a long body that names bash.exe and git.exe -c ...: (PowerShell) the here-string took 2.257s against 0.922s for the heredoc: its body is read as commands`. The case says it takes the best of three runs, and it compares whole seconds only (`${slow_s%%.*}`), so a first run under a second is never bettered and three runs between 2 and 3 seconds keep the first of them. The heredoc and the here-string are timed one after the other, so a load that comes between them fails the ratio (1.5 times the heredoc's time plus half a second).
+- Found in: B71 (its first gate run: 1064 passed and this case failed; the second run of the same files passed, 1065 of 1065)
 - Brief: -
 - Stories: -
 
