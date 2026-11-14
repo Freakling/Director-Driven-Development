@@ -2,7 +2,7 @@
 
 Milestones, the work queue and bugs: the only place work is tracked. Item format: `.app-director/tasks.md`. Queue order is priority; reorder by moving items. Pruning moves done items to `TASKS-archive.md`.
 
-**Next IDs:** T349 · B80 · R11
+**Next IDs:** T350 · B80 · R11
 
 ## Milestones
 | Milestone | Status |
@@ -1992,6 +1992,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Stories: -
 
 ### T346 · SaaSAllTheThings: a push that changes only documentation runs no check · in-progress 2026-11-14 · M · agent
+- PRs: SaaSAllTheThings #52 (open)
 - Depends on: T341
 - Touches: work/SaaSAllTheThings: framework/.githooks/pre-push, framework/tools/setup-clone.sh, framework/.satt/rules.md, selftest.sh, CHANGELOG.md, TASKS.md
 - Done when: the pre-push hook runs no check for a push whose commits change only paths the check doesn't count (Markdown outside `adr/` and outside `[tests] full-when`, asked of `bash tools/check.sh --unignored`), so a clone without the backend's toolchain can push documentation; every other push runs the full tier as before (test) · `rules.md` › Running the check and the comment in `tools/setup-clone.sh` say so (check) · the selftest passes (check) · following AGENTS.md › Project rules for framework work
@@ -1999,7 +2000,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Brief: -
 - Stories: -
 
-### T347 · SaaSAllTheThings: the Stop hook stops waiting for a running check at the fast tier's limit · todo · M · agent
+### T347 · SaaSAllTheThings: the Stop hook stops waiting for a running check at the fast tier's limit · in-progress 2026-11-14 · M · agent
 - Depends on: T341
 - Touches: work/SaaSAllTheThings: framework/tools/check.sh, framework/.claude/hooks/stop-check.sh, framework/.satt/rules.md, selftest.sh, CHANGELOG.md, TASKS.md
 - Done when: a check that waits for another one stops waiting after the seconds in `CHECK_WAIT` (or the limit of the tier it names), prints a `check: busy:` line naming the run it waited for, and exits 3 without starting a second check (test) · the Stop hook asks with `CHECK_WAIT=fast` and lets the turn end on that line (test) · the selftest passes (check) · following AGENTS.md › Project rules for framework work
@@ -2040,6 +2041,14 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Touches: work/SaaSAllTheThings: framework/tools/check.sh, framework/.githooks/pre-commit, framework/.claude/hooks/stop-check.sh, selftest.sh, CHANGELOG.md, TASKS.md
 - Repro: 1. In an app, add a source file whose name holds a DEL character (or, on Linux or macOS, a double quote or a backslash) and that breaks an architecture rule or holds a secret pattern. 2. Run `bash tools/check.sh`, then stage only that file and commit. Expected: the architecture step and the secrets scan read the file, and the commit runs the check. Actual: the architecture step lists the files with `git ls-files` without `-z`, so the name arrives quoted and the file isn't read; `--unignored` reads the paths the hooks give it line by line, so the quoted name isn't counted and the commit starts no check; and the changed paths of the fast tier are turned from `-z` back into lines, so a name with a newline splits in two.
 - Found in: B75 (the builder's report), read in `check.sh`; not reproduced
+- Brief: -
+- Stories: -
+
+### T349 · App-Director: a push that changes only documentation runs no check · proposed · M · agent
+- Depends on: T346
+- Touches: work/App-Director: framework/.githooks/pre-push, framework/tools/setup-clone.sh, framework/.app-director/rules.md, selftest.sh, CHANGELOG.md, TASKS.md
+- Done when: App-Director's pre-push hook runs no check for a push whose commits change only paths the check doesn't count, asked of `bash tools/check.sh --unignored`, as SaaSAllTheThings' hook does with T346, and runs the full tier whenever it can't tell what a push changes; every other push runs the full tier as before (test) · `rules.md` › Running the check and the comment in `tools/setup-clone.sh` say so (check) · the selftest passes (check) · following AGENTS.md › Project rules for framework work
+- Note: found in T346 (the builder's report; T346's own note names it too). App-Director's hook runs the full tier for every push that sends commits, so a clone without the stack's toolchain can't push documentation.
 - Brief: -
 - Stories: -
 
