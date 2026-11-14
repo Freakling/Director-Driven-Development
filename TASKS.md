@@ -2054,14 +2054,15 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Brief: -
 - Stories: -
 
-### T350 · Release SaaSAllTheThings 0.18.0 · todo · S · agent
+### T350 · Release SaaSAllTheThings 0.18.0 · in-progress 2026-11-14 · S · agent
 - Depends on: B71, B72, B73, B74, B75, T346, T347, B76
 - Touches: work/SaaSAllTheThings: the version files, CHANGELOG.md
 - Done when: it ends the bundle that carries B71 to B76, T346 and T347 (SaaSAllTheThings #52), the bundle is merged and `tools/work-release.sh` has tagged and published it
 - Brief: -
 - Stories: -
 
-### T351 · Release App-Director 1.16.1 · todo · S · agent
+### T351 · Release App-Director 1.16.1 · in-progress 2026-11-14 · S · agent
+- PRs: App-Director #55 (open)
 - Depends on: B76
 - Touches: work/App-Director: the version files, CHANGELOG.md
 - Done when: it ends the bundle that carries B76's App-Director half (App-Director #55), the bundle is merged and `tools/work-release.sh` has tagged and published it
