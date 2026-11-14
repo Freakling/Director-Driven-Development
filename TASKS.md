@@ -1976,13 +1976,14 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Stories: -
 
 ### B74 · SaaSAllTheThings: a check that waited for another one compares with the fingerprint from before the wait · in-progress 2026-11-14 · S · agent · low
+- PRs: SaaSAllTheThings #52 (open)
 - Touches: work/SaaSAllTheThings: framework/tools/check.sh, selftest.sh, CHANGELOG.md, TASKS.md
 - Repro: 1. Start `bash tools/check.sh` in an app. 2. While it runs, start `bash tools/check.sh --if-changed`, which waits for the lock. 3. Edit a source file in the two seconds between the first run recording its pass and the second run taking the lock. Expected: the second run checks the edited files. Actual: it took its fingerprint before the wait and asks `reuse_last` with that one, so it prints a pass for files it never saw. An edit earlier in the wait costs a run instead: the second run checks the current files, finds that its old fingerprint differs from the new one, and records no pass ("files changed while the check ran").
 - Found in: T340 (its review), read in `check.sh` at v0.16.3; not reproduced
 - Brief: -
 - Stories: -
 
-### B75 · SaaSAllTheThings: a file whose name git quotes is left out of the check's fingerprint · todo · S · agent · low
+### B75 · SaaSAllTheThings: a file whose name git quotes is left out of the check's fingerprint · in-progress 2026-11-14 · S · agent · low
 - Touches: work/SaaSAllTheThings: framework/tools/check.sh, selftest.sh, CHANGELOG.md, TASKS.md
 - Repro: 1. On Linux or macOS, in an app with a passing check, add a source file whose name holds a double quote or a backslash, and run `bash tools/check.sh`. 2. Change that file and run `bash tools/check.sh --if-changed`. Expected: the check runs, since a file changed. Actual: `fingerprint()` reads `git ls-files` without `-z`, git prints such a name quoted even with `core.quotePath=false`, the `[ -f ]` test fails on the quoted form, and the file is left out of the hash, so the last pass is reused. Windows allows neither character in a file name.
 - Found in: T340 (its review), read in `check.sh`; not reproduced
