@@ -2070,7 +2070,7 @@ Milestones, the work queue and bugs: the only place work is tracked. Item format
 - Brief: -
 - Stories: -
 
-### T352 · Docs follow SaaSAllTheThings 0.18.0 and App-Director 1.16.1 · proposed · M · agent
+### T352 · Docs follow SaaSAllTheThings 0.18.0 and App-Director 1.16.1 · todo · M · agent
 - Depends on: T350, T351
 - Touches: frameworks.lock, docs/**/*.md (the SaaSAllTheThings and App-Director links), docs/frameworks/saasallthethings.md, docs/frameworks/app-director.md, docs/concept/check.md, docs/how-to/check.md, docs/skills/prototype.md, docs/how-to/prototype.md, docs/how-to/trouble.md
 - Done when: `frameworks.lock` and every SaaSAllTheThings and App-Director link are at v0.18.0 and v1.16.1 (check) · the pages say what the releases ship, checked against them: in SaaSAllTheThings a push that changes only documentation runs no check and the Stop hook stops waiting for a running check at the fast tier's limit, and in both frameworks a push that sends commits from a prototype's checkout is refused (check) · `bash tools/audit.sh` prints PASS and `bash tools/check.sh` passes (check)
